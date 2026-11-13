@@ -1,0 +1,38 @@
+{
+  "epic": "MVP",
+  "title": "swimcoach | MVP",
+  "subtitle": "Cloudflare Worker + Durable Object + Access",
+  "spec_note": "The approved mock is the specification",
+  "spec_note_bold": "Behavior must survive into V2; code need not",
+  "columns": [
+    {"key": "contract", "label": "Contract", "color": "#5A6573"},
+    {"key": "platform", "label": "Platform", "color": "#3B6FB6"},
+    {"key": "data", "label": "Data / API", "color": "#2F7F6B"},
+    {"key": "metrics", "label": "Metrics", "color": "#2F7F6B"},
+    {"key": "security", "label": "Access", "color": "#6E4FA3"},
+    {"key": "agents", "label": "Agents", "color": "#9A6B1F"},
+    {"key": "page", "label": "Page", "color": "#3B6FB6"},
+    {"key": "qual", "label": "Qualification", "color": "#5A6573"}
+  ],
+  "turns": ["T1", "T2", "T3", "T4", "T5", "T6"],
+  "stories": [
+    {"id": "MVP-01", "title": "MVP contract", "hours": 2.5, "turn": 1, "column": "contract", "deps": []},
+    {"id": "MVP-02", "title": "Worker scaffold + deploy", "hours": 2.0, "turn": 1, "column": "platform", "deps": []},
+    {"id": "MVP-03", "title": "Board Durable Object", "hours": 2.5, "turn": 2, "column": "data", "deps": ["MVP-01", "MVP-02"]},
+    {"id": "MVP-04", "title": "Metrics module", "hours": 2.5, "turn": 2, "column": "metrics", "deps": ["MVP-01"]},
+    {"id": "MVP-05", "title": "Access + service tokens", "hours": 2.0, "turn": 2, "column": "security", "deps": ["MVP-02"]},
+    {"id": "MVP-06", "title": "State + report API", "hours": 2.0, "turn": 3, "column": "data", "deps": ["MVP-03", "MVP-04", "MVP-05"]},
+    {"id": "MVP-08", "title": "Agent reporter", "hours": 2.0, "turn": 3, "column": "agents", "deps": ["MVP-01", "MVP-05"]},
+    {"id": "MVP-07", "title": "Page on live data", "hours": 2.5, "turn": 4, "column": "page", "deps": ["MVP-06"]},
+    {"id": "MVP-09", "title": "API acceptance suite", "hours": 2.0, "turn": 4, "column": "qual", "deps": ["MVP-06"]},
+    {"id": "MVP-10", "title": "UI acceptance + UX ledger", "hours": 2.5, "turn": 5, "column": "qual", "deps": ["MVP-07", "MVP-09"]},
+    {"id": "MVP-11", "title": "Phone + home screen", "hours": 1.5, "turn": 5, "column": "page", "deps": ["MVP-07"]},
+    {"id": "MVP-12", "title": "MVP qualification", "hours": 2.0, "turn": 6, "column": "qual", "deps": ["MVP-08", "MVP-10", "MVP-11"]}
+  ],
+  "gates": [
+    {"before_turn": 2, "text": "Terry decides D1-D3 before T2"},
+    {"before_turn": 5, "text": "Terry's phone check of MVP-07 precedes T5"}
+  ],
+  "footer_left": "Solid = adjacent turn; dashed = skips a turn. Arrowheads point to dependent work. Time runs downward.",
+  "footer_right": "Source: swimcoach docs/planning/mvp-plan.json"
+}

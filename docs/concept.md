@@ -540,9 +540,26 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
    two-column layout was dropped.
 7. **Screen staying awake.** Not handled; Terry would set auto-lock himself. The Wake Lock API needs
    HTTPS.
-8. **Stack for the MVP: proposed 2026-11-13, see section 14.** (This item used to say localswim is Go
-   and TypeScript; the localswim repository is Python, `src/localswim/api_endpoint.py`.)
+8. **Stack for the MVP: decided 2026-11-13, see section 14.** On localswim's languages: there are two
+   repositories. `TerryOtt/localswim` is localswim's **MVP** (called V1 in its own docs), in Python
+   (`src/localswim/api_endpoint.py`), and is what runs today; Terry calls it "a huge win".
+   `localswim/localswim` is its "do it right" rebuild (V2 there), in Go with a fresh TypeScript UI: the
+   same play swimcoach is now running. An earlier edit of this item wrongly said localswim is only
+   Python.
 9. **Whether the `at` field should exist in production.** It lets any caller backdate a report.
+10. **What a time block really is, from localswim's own planning (read 2026-11-13).** A time block is a
+    dependency **turn** (T1, T2, ...) inside an epic; "FGA T04" and "localswim V2 T14" are turns.
+    Turns hold **1 to 11 stories** (epic #0514: T1 has 1, T5 has 11, T9 has 1), not the 5 to 9 this
+    document assumed. A one-story turn makes RTR binary (0, then a jump), and the trend, chance and
+    "too early to call" math cannot say anything useful. Open: what the card shows for a 1–2 story
+    turn.
+11. **Stories carry hour estimates** (1.5 to 2.5 h each in epic #0514's plan), and the old Codex watcher
+    already reported each In Progress ticket's wall-clock time against its estimate. Open: whether RTR
+    should weight finished work by estimate instead of counting tickets, which would answer the known
+    weakness that "tickets differ in size" (section 4.4).
+12. **Gates are the Needs-Terry moments.** Turns wait on explicit gates (Architect release, Terry's
+    visual confirmation before T3, Terry owns Completed and cutover). Open: whether agents report a
+    pending gate as a Needs Terry ticket, so it reaches GO TO KEYBOARD.
 
 ## 9. Design history (superseded; source not kept)
 
@@ -663,6 +680,17 @@ Terry's plan, 2026-11-13. RFC 2119 keywords; the capitals are load-bearing.
     for a hardware reason. A purely in-memory variant was set aside separately: agents push only the
     present, so a restart loses the history that trend, projection, chance, the "too early to call"
     gate and the RTR timeline need (at least 45 minutes of samples).
+- **Lesson from localswim, which runs the same play.** localswim's Python MVP worked; its rebuild
+  (Terry: "a UI/UX I adore but Do It Right") reproduces that MVP's UI from observation with no code
+  reuse (`localswim/localswim` `docs/planning/0514-v1-drop-in-remit.md`). Its first
+  candidate "passed technical and functional checks but failed Terry's UI/UX review", and the team
+  then had to reconstruct an observed contract from the running V1 (`0582-observed-contract.md`),
+  whose own review found that screenshots without a recorded CSS viewport, scale and zoom, and stills
+  without recorded interactions, could not prove equivalence. **So the swimcoach MVP MUST keep its UX
+  contract as it goes, not reconstruct it later:** the rules and measurements in this document, renders
+  at a recorded viewport (402 × 874 CSS px at 3×, already true of `design/ui-mock/`), a written ledger
+  of states and transitions, and Terry's visual acceptance as an explicit gate alongside the black-box
+  suite.
 - **Leading V2 candidate: Terry's design.** A statically linked Go binary in `scratch` with SQLite,
   hosted anywhere (QNAP, Fargate). Open requirement if it ever drops persistence: agents backfill
   today's samples from localswim's persisted lane history after a server restart.
