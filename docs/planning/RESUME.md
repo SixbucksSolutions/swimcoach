@@ -154,7 +154,9 @@ splits depend on (MVP-02: the npm script names).
 ## Known loose ends (none block T1)
 
 - **TypeScript language server:** not available on TypeScript 7 (no `tsserver`); recorded, not skipped.
-  Biome is the TypeScript linter, wired in MVP-02.
+  Biome is the TypeScript linter, wired in MVP-02. Terry said in chat on 2026-11-13: "Waived for now
+  until TS 7.1 drop in a few months." By his global rule only an override he writes in this project's
+  `CLAUDE.md` counts, and an agent MUST NOT write it for him; until he does, report the gap.
 - **Python linting in this repo:** `ruff` and `pyright` are not wired to a gate for `mocks/tools/*.py`
   and `docs/planning/render-plan.py`; checks so far were run by hand.
 - **`render-logo.py`** stamps 300 DPI without the retry `render-mock.py` has; it runs rarely.
