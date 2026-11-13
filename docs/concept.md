@@ -168,8 +168,18 @@ position (the first dot is square). Tapping a project card jumps to that project
   101.7 px, measured so a full two-line status ends the same 18 px above the bottom edge as the name's
   capitals sit below the top (18.0 and 18.2 px; the 0.2 px is layout rounding, under one device pixel at
   3×). With more projects than fit, the overview scrolls rather than squeezing a card; tested with eight
-  cards, each with a two-line status. The old minimum was 74 px. This closes the card layout round: name
-  top-left, indented two-line status, RTR and clock hand on the right, 18 px on every side. The project display's large RTR still
+  cards, each with a two-line status. The old minimum was 74 px.
+- **All cards are the same height: all two-line, or all one-line.** Terry, 2026-11-13: "cards are all
+  one line or all or two -- identical card height." When two-line cards do not fit the screen, every
+  card drops to one status line ending in "..." with an 83.5 px minimum, keeping the 18 px bottom
+  margin. If even that does not fit, the overview scrolls. The mode is chosen in the same step that
+  draws the cards, before the page paints, so it never flickers (section 3.4). Measured at 402 × 874
+  with no GO TO KEYBOARD banner: up to 7 projects two-line, 8 compact without scrolling, 9 and more
+  compact and scrolling.
+- **Open: the GO TO KEYBOARD banner grows with every ask.** It lists each waiting project's full ask, so
+  several long asks push the cards into compact mode early: with five projects all waiting on Terry,
+  the banner alone forced compact cards. Whether to cap the banner (for example the first ask plus "and
+  N more") is Terry's call. The project display's large RTR still
   uses the plain arrow beside the number; whether it should follow is open.
 
 Card states, first match wins:

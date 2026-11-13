@@ -102,6 +102,11 @@ header h1 .word{color:var(--lane-blue)} header h1 .word span{color:var(--lane-am
    Every card reserves room for two status lines: min-height 101.7px is measured so a full two-line status
    ends 18px above the bottom edge, the same 18px the name's capitals sit below the top. With more cards
    than fit, the page scrolls rather than squeezing a card. */
+/* All cards or none: when two-line cards do not fit the screen, EVERY card drops to one status line
+   ending in "..." and a matching shorter reserve (83.5px = 101.7px less one 18.2px line), so all cards
+   stay the same height (Terry, 2026-11-13). fitCards() decides before the browser paints. */
+.cards.compact .pc{min-height:83.5px}
+.cards.compact .pc .nm span{-webkit-line-clamp:1}
 /* The RTR and its clock hand are the second tier after card color, so they take whatever height the
    card has: the hand reaches 1.3em above and below the final digit's center, and the size is the
    largest that still leaves 16px to the card edge (50cqh - 16px), between 28px and 52px. */
@@ -399,7 +404,15 @@ function dots(){ const i = current(); [...$('dots').children].forEach((el, j) =>
 pages.addEventListener('scroll', dots, {passive:true});
 phone.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
 $('dots').addEventListener('click', e => { const b = e.target.closest('button'); if (b) go(keys()[[...$('dots').children].indexOf(b)]); });
-window.addEventListener('resize', () => { const k = pages.dataset.cur; if (k) go(k, false); });
+window.addEventListener('resize', () => { fitCards(); const k = pages.dataset.cur; if (k) go(k, false); });
+// Two status lines on every card if they all fit; otherwise one line on every card (concept.md 3.2).
+// Runs synchronously after render, so the browser never paints the wrong mode.
+function fitCards(){
+  const page = pages.children[0], cards = page && page.querySelector('.cards');
+  if (!cards) return;
+  cards.classList.remove('compact');
+  if (page.scrollHeight > page.clientHeight + 1) cards.classList.add('compact');
+}
 document.addEventListener('keydown', e => {
   if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
   const i = current() + (e.key === 'ArrowRight' ? 1 : -1), k = keys();
@@ -421,6 +434,7 @@ function render(d){
   have.forEach(el => el.remove());
   $('dots').innerHTML = want.map((k, i) => '<button type="button" aria-label="'+(i ? esc(k) : 'All projects')+'"><i></i></button>').join('');
   if (keys()[current()] !== here) go(want.includes(here) ? here : ALL, false);
+  fitCards();
   dots();
   const asking = fs.filter(f => f.needs.length).length;
   document.title = (asking ? '('+asking+') ' : '') + 'swimcoach · clickable mock';
