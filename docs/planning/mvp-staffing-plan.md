@@ -87,20 +87,23 @@ about three. These are estimates; T1 and T2 will show how good they are.
 One fresh reviewer per story, independent of every author of that story, plus a second where a story's
 parts need different expertise and would otherwise queue behind one reviewer.
 
-| Story | Reviewers |
-| --- | --- |
-| MVP-01 | 2: Opus 5.5 / high for contract and fixtures; Sonnet 5.5 / medium for the ledger |
-| MVP-02 | 1: Sonnet 5.5 / medium |
-| MVP-03 | 1: Opus 5.5 / high |
-| MVP-04 | 2: Opus 5.5 / high each, one per module; the chance model needs its own careful read |
-| MVP-05 | 1: Opus 5.5 / high |
-| MVP-06 | 1: Sonnet 5.5 / medium |
-| MVP-07 | 1: Sonnet 5.5 / medium |
-| MVP-08 | 3: Sonnet 5.5 / medium for the renderers, Opus 5.5 / high for the controller, and the visual reviewer |
-| MVP-09 | 1: Opus 5.5 / high; a gap here becomes a gap in V2 |
-| MVP-10 | 1: Sonnet 5.5 / medium |
-| MVP-11 | 2: Sonnet 5.5 / medium technical, and the visual reviewer |
-| MVP-12 | 2: Opus 5.5 / high, and the visual reviewer |
+**Every reviewer MUST be Opus 5.5 / high** (Terry, 2026-11-13), including the visual reviewer and
+every re-reviewer after a correction. Author roles keep the model and effort their row names.
+
+| Story | Reviewers | Each reviewer's focus |
+| --- | --- | --- |
+| MVP-01 | 2, Opus 5.5 / high | One for contract and fixtures; one for the UX ledger |
+| MVP-02 | 1, Opus 5.5 / high | Scaffold, Biome configuration and the CI workflow |
+| MVP-03 | 1, Opus 5.5 / high | Storage, migrations and ingest |
+| MVP-04 | 2, Opus 5.5 / high | One per module; the chance model needs its own careful read |
+| MVP-05 | 1, Opus 5.5 / high | Token verification and the Access runbook |
+| MVP-06 | 1, Opus 5.5 / high | CLI client and the agents' instruction text |
+| MVP-07 | 1, Opus 5.5 / high | Both route modules against the contract |
+| MVP-08 | 3, Opus 5.5 / high | Renderers; the controller; and the visual reviewer |
+| MVP-09 | 1, Opus 5.5 / high | The suite; a gap here becomes a gap in V2 |
+| MVP-10 | 1, Opus 5.5 / high | Phone assets and the device checklist |
+| MVP-11 | 2, Opus 5.5 / high | Technical review; and the visual reviewer |
+| MVP-12 | 2, Opus 5.5 / high | The qualification; and the visual reviewer |
 
 ## The relay, turn by turn
 
