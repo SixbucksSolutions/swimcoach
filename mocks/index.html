@@ -97,7 +97,10 @@ header h1 .word{color:var(--lane-blue)} header h1 .word span{color:var(--lane-am
    card has: the hand reaches 1.3em above and below the final digit's center, and the size is the
    largest that still leaves 16px to the card edge (50cqh - 16px), between 28px and 52px. */
 .pc{container-type:size}
-.pc .rt{display:flex;align-items:center;font-size:clamp(28px, calc((50cqh - 16px) / 1.3), 52px);font-weight:900;letter-spacing:-.01em;font-variant-numeric:tabular-nums;padding-right:1.05em}
+.pc .rt{display:flex;align-items:center;font-size:clamp(28px, calc((50cqh - 16px) / 1.3), 52px);font-weight:900;letter-spacing:-.01em;font-variant-numeric:tabular-nums;padding-right:.883em}
+/* .883em is measured, not chosen: it puts the inked tip of a 3 o'clock hand exactly the card's 18px
+   padding from the right edge, mirroring the 18px in front of the project name (Terry, 2026-11-13).
+   Every part of the hand is in em, so the match holds at every card size. */
 .arr{width:.85em;height:.85em;flex:none}
 /* Trend on a clock (concept.md 3.2): the final digit is the clock's center and the arrow is its hand.
    rotate() points the hand at the hour, then translateX() slides it out along that line, so the arrow

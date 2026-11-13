@@ -144,7 +144,12 @@ position (the first dot is square). Tapping a project card jumps to that project
   MUST NOT crowd the card edges ("don't crowd the edges just use more dead space"). The number is weight
   900 and scales with the card's height through a container query: the largest size that keeps the hand
   16 px from the card edge, between 28 px and 52 px. Measured at 402 px: 44 px with three cards (hand 28
-  px from the edge), 28 px with six (15 px from the edge). A fixed 36 px had left 5 px. The project display's large RTR still
+  px from the edge), 28 px with six (15 px from the edge). A fixed 36 px had left 5 px.
+- **The card's two side margins MUST match.** Terry, 2026-11-13: unequal padding "triggers the eye". The
+  inked tip of a 3 o'clock hand sits exactly the card's 18 px padding from the right edge, mirroring the
+  18 px in front of the project name. Measured at the ink level, it is 18.0 px on both sides at 44 px and
+  at 28 px. Before, the tip was 25.3 px in. The number and hand sit in the same place on every card,
+  whatever the direction, so the 12 and 6 o'clock hands sit a little in from that edge. The project display's large RTR still
   uses the plain arrow beside the number; whether it should follow is open.
 
 Card states, first match wins:
