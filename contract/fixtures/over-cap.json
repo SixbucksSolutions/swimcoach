@@ -34,6 +34,8 @@
     "total": 5,
     "trend": {"delta": -0.09036668018305039, "minutes": 60, "pace": 0.40000000000000013, "proj": null, "finish": 1.9149999999999998, "recent_done": 1, "to_go": 1},
     "stalled": false,
-    "color": "yellow"
+    "mode": "ratio",
+    "color": "yellow",
+    "reason": "running_late"
   }
 }

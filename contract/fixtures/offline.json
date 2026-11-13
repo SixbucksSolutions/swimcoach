@@ -28,6 +28,8 @@
     "total": 5,
     "trend": {"delta": -0.263348475870696, "minutes": 60, "pace": 0.0, "proj": 0.2, "finish": null, "recent_done": 0, "to_go": 4},
     "stalled": false,
-    "color": "red"
+    "mode": "ratio",
+    "color": "red",
+    "reason": "needs_terry"
   }
 }

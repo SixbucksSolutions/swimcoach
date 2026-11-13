@@ -20,6 +20,8 @@
     "total": 7,
     "trend": null,
     "stalled": false,
-    "color": "gray"
+    "mode": "ratio",
+    "color": "gray",
+    "reason": "too_early"
   }
 }

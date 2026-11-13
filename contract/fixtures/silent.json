@@ -26,6 +26,8 @@
     "total": 9,
     "trend": {"delta": 0.2222222222222222, "minutes": 60, "pace": 0.9999999999999999, "proj": 0.9444444444444444, "finish": 1.0555555555555558, "recent_done": 3, "to_go": 5},
     "stalled": false,
-    "color": "yellow"
+    "mode": "ratio",
+    "color": "yellow",
+    "reason": "toss_up"
   }
 }

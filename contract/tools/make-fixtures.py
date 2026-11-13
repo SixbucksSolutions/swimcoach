@@ -7,8 +7,13 @@ the metrics the prototype computes after the newest report. This script owns the
 expected value comes from reference/prototype/server.py, loaded as a module and called directly:
 normalize() reads each report, progress() makes the stored sample, trend_of() makes the trend,
 projection and chance, and lane_sig() decides when a lane last moved. Only the page-side rules (the
-five trend bins, the call cutoffs, the card color) are restated here, because the prototype keeps them in
+five trend bins, the call cutoffs) are restated here, because the prototype keeps them in
 reference/prototype/static/index.html, which Python cannot call. Each one cites its source line.
+
+The card's display verdict (mode, color, reason) does not come from the prototype. It follows
+contract/api.md sections 6.5 and 6.6, which carry Terry's decision D1 (docs/planning/mvp-stories.md):
+a milestone with fewer than 3 stories is green while under budget, yellow once over it, and red only for
+Needs Terry. D1 outranks the prototype. The metric keys ignore D1 on purpose (api.md 6.3).
 
     uv run --no-project python contract/tools/make-fixtures.py            # write every fixture
     uv run --no-project python contract/tools/make-fixtures.py --check    # exit 1 if a file differs
@@ -39,6 +44,9 @@ BIN_SHARP = 0.2  # |delta| at or above this is a sharp arrow
 BIN_PLAIN = 0.05  # |delta| at or above this is a plain arrow; below it is flat
 CALL_ON_TIME = 0.7  # chance at or above this is "on time"
 CALL_LATE = 0.3  # chance at or below this is "running late"
+
+# Decision D1, contract/api.md 6.5 and 6.8: below this many stories the card is in count_and_time mode.
+MIN_STORIES_FOR_RTR = 3
 
 # The frozen lane keys (docs/planning/t1-interfaces.md) and the prototype lane name each maps to.
 # The prototype's own regexes then classify them: DONE_RE makes "Ready for review" and "Completed"
@@ -173,23 +181,46 @@ def the_call(chance: float) -> str:
     return "toss_up"
 
 
-def card_color(*, status: str, needs: bool, call: str | None, early: bool, stalled: bool) -> str:
-    """Color the card as static/index.html lines 169-171 do, with stale false (now is the last report)."""
-    if status == "done":
-        return "done"
-    if needs:
-        return "red"
-    off = (
-        status == "blocked"
-        or call in {"running_late", "toss_up"}
-        or stalled
-        or (call is None and not early and status in {"at_risk", "behind"})
+@dataclass(frozen=True)
+class CardInputs:
+    """What contract/api.md 6.5 and 6.6 read to decide the card's mode, color and reason."""
+
+    done: bool
+    needs_me: bool
+    stale: bool
+    total: int
+    active_hours: float
+    cap_hours: float
+    call: str | None
+    stalled: bool
+    too_early: bool
+
+
+def card_mode(total: int) -> str:
+    """Pick the card's mode by decision D1, as contract/api.md 6.5 does."""
+    return "ratio" if total >= MIN_STORIES_FOR_RTR else "count_and_time"
+
+
+def card_verdict(card: CardInputs) -> tuple[str, str]:
+    """Return (color, reason) by contract/api.md 6.6's table: the first matching row wins.
+
+    The rows below are that table's ten rows, in order. In count_and_time mode (D1) only rows 1, 2, 3, 5
+    and 10 apply: green while under budget, yellow once over it, red only for Needs Terry.
+    """
+    ratio = card_mode(card.total) == "ratio"
+    rows: tuple[tuple[str, str, bool], ...] = (
+        ("done", "done", card.done),
+        ("red", "needs_terry", card.needs_me),
+        ("yellow", "silent", card.stale),
+        ("yellow", "running_late", ratio and card.call == "running_late"),
+        ("yellow", "over_budget", not ratio and card.active_hours > card.cap_hours),
+        ("yellow", "stalled", ratio and card.stalled),
+        ("yellow", "toss_up", ratio and card.call == "toss_up"),
+        ("gray", "too_early", ratio and card.too_early),
+        ("green", "on_time", ratio),
+        ("green", "under_budget", True),
     )
-    if off:
-        return "yellow"
-    if early:
-        return "gray"
-    return "green"
+    return next((color, reason) for color, reason, hit in rows if hit)
 
 
 def reports_of(spec: Spec) -> list[Report]:
@@ -260,8 +291,12 @@ def expected_of(spec: Spec, reports: list[Report]) -> dict[str, JsonValue]:
 
     latest = proto_progress(snap, now)
     rtr = latest[0] / latest[1] if latest is not None else None
-    status = str(snap["status"])
-    finished = status == "done"
+    newest = reports[-1].lanes
+    lanes_total = sum(newest.values())
+    lanes_finished = newest["ready_for_review"] + newest["completed"]
+    finished = lanes_total > 0 and lanes_finished == lanes_total  # "done" in contract/api.md 6.2
+    if finished != (str(snap["status"]) == "done"):
+        sys.exit(f"{spec.name}: api.md's done and the prototype's status disagree")
     stalled = not finished and now - last_move > STALL_SECONDS
     # The metrics do not depend on whether the card is finished; the color does.
     chance = trend["chance"] if trend is not None else None
@@ -278,13 +313,19 @@ def expected_of(spec: Spec, reports: list[Report]) -> dict[str, JsonValue]:
             "recent_done": trend["recent_done"],
             "to_go": trend["to_go"],
         }
-    page_early = not finished and rtr is not None and trend is None  # static/index.html line 165
-    color = card_color(
-        status=status,
-        needs=bool(snap["needs_me"]),
-        call=call,
-        early=page_early,
-        stalled=stalled,
+    mode = card_mode(lanes_total)
+    color, reason = card_verdict(
+        CardInputs(
+            done=finished,
+            needs_me=newest["needs_terry"] > 0,  # api.md 6.4; the fixtures send no needs_me text
+            stale=False,  # "now" is the newest report's arrival, so the agent is never silent here
+            total=lanes_total,
+            active_hours=reports[-1].active_hours,
+            cap_hours=spec.cap_hours,
+            call=call,
+            stalled=stalled,
+            too_early=trend is None,
+        ),
     )
     return {
         # The frozen keys.
@@ -301,7 +342,10 @@ def expected_of(spec: Spec, reports: list[Report]) -> dict[str, JsonValue]:
         "total": latest[3] if latest is not None else None,
         "trend": trend_out,
         "stalled": stalled,
+        # The card's display verdict: contract/api.md 6.5 and 6.6, decision D1 included.
+        "mode": mode,
         "color": color,
+        "reason": reason,
     }
 
 
@@ -398,7 +442,8 @@ SPECS: tuple[Spec, ...] = (
     ),
     Spec(
         "one-story",
-        "A one-story milestone, still in progress after 2h10m of a 4h cap: RTR is 0 and the chance is a coin toss.",
+        "A one-story milestone, still in progress after 2h10m of a 4h cap: RTR is 0 and the chance is a coin "
+        "toss, but by decision D1 the card is green while under budget.",
         4.0,
         1,
         (0,) * 13,
@@ -417,9 +462,14 @@ SPECS: tuple[Spec, ...] = (
         5,
         (0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4),
     ),
+    # MVP-09 MUST replay this fixture with the first report at 22:40:00 UTC, set through the
+    # Swimcoach-Test-Now header (contract/api.md section 9), so the series crosses 00:00 UTC at
+    # at_hours 1.3333. A Worker's clock is UTC and the contract has no local time, so naming the instant
+    # is what keeps an implementation that wrongly cuts at UTC midnight from passing. MVP-09 SHOULD
+    # replay it a second time with the first report at 22:40 in the phone's time zone.
     Spec(
         "midnight-rollover",
-        "First report at 22:40 local time, last at 00:20: the series crosses midnight at at_hours 1.3333 "
+        "First report at 22:40 UTC, last at 00:20 UTC: the series crosses 00:00 UTC at at_hours 1.3333 "
         "and the trend MUST use the samples from before it.",
         4.0,
         7,

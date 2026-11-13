@@ -28,6 +28,8 @@
     "total": 7,
     "trend": {"delta": 0.5605560414961954, "minutes": 60, "pace": 1.7142857142857142, "proj": 1.5014285714285713, "finish": 0.7075, "recent_done": 3, "to_go": 3},
     "stalled": false,
-    "color": "green"
+    "mode": "ratio",
+    "color": "green",
+    "reason": "on_time"
   }
 }

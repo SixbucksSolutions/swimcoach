@@ -48,9 +48,15 @@ Backlog and Blocked counts are dropped; the prototype left them out of every met
 
 The generator runs each report through `normalize()` (with `hours.used` = `active_hours` and
 `hours.allocated` = `cap_hours`), stores a sample whenever `progress()` returns one, exactly as
-`ingest()` does, and then calls `trend_of()` on the whole series. The prototype keeps the trend bins,
-the call and the card color in its page, `reference/prototype/static/index.html`, which Python cannot
-call. The generator restates those three rules and cites the page's lines.
+`ingest()` does, and then calls `trend_of()` on the whole series. The prototype keeps the trend bins
+and the call in its page, `reference/prototype/static/index.html`, which Python cannot call. The
+generator restates those two rules and cites the page's lines.
+
+**`mode`, `color` and `reason` follow Terry's decision D1** (`docs/planning/mvp-stories.md`), as
+`contract/api.md` sections 6.5 and 6.6 state it, and not the prototype's page: a milestone with fewer
+than 3 stories is green while under budget, yellow once over it, and red only for Needs Terry. D1
+outranks the prototype. **The metric keys stay the prototype's math**, D1 or not, as api.md 6.3
+requires.
 
 ### The frozen keys
 
@@ -67,7 +73,7 @@ call. The generator restates those three rules and cites the page's lines.
 
 The interfaces document allows extra `expected` keys that the prototype computes. These are all of
 them. Their names match MVP-01 A's draft `contract/schemas/state.schema.json` (`metrics` and the
-milestone's `finished`, `total`, `stalled` and `color`):
+milestone's `finished`, `total`, `stalled`, `mode`, `color` and `reason`):
 
 | Key | Value | Prototype source |
 | --- | --- | --- |
@@ -75,12 +81,14 @@ milestone's `finished`, `total`, `stalled` and `color`):
 | `finished`, `total` | The newest stored sample's counts | `progress()` |
 | `trend` | `trend_of()`'s own dict without `chance` (that is `chance_on_time`): `delta`, `minutes`, `pace`, `proj`, `finish`, `recent_done`, `to_go`; `null` while too early | `trend_of()` |
 | `stalled` | No lane count changed in 45 minutes, measured at the newest report | `lane_sig()`, as `ingest()` uses it |
-| `color` | Card color: `done`, `red`, `yellow`, `gray` or `green` | Page lines 165 and 169-171 |
+| `mode` | `ratio` when total >= 3, else `count_and_time` | api.md 6.5 (D1) |
+| `color` | Card color: `done`, `red`, `yellow`, `gray` or `green` | api.md 6.6 (D1 included) |
+| `reason` | Which row of api.md 6.6's table matched first | api.md 6.6 (D1 included) |
 
-Two of these need a clock, and the format carries none. `stalled` and `color` are measured with
-"now" equal to the newest report's arrival, so `color` never reflects a silent agent.
+Three of these need a clock, and the format carries none. `stalled`, `color` and `reason` are measured
+with "now" equal to the newest report's arrival, so they never reflect a silent agent.
 
-The metric keys do not change when a milestone finishes; only `color` does. `trend_of()` keeps
+The metric keys do not change when a milestone finishes; only `color` and `reason` do. `trend_of()` keeps
 returning a trend after the last story lands, so `alldone` carries `sharp_up`, a chance of 1.0 and
 `on_time`, with `color` `done`. The prototype's page hides all of that once a milestone is done.
 
@@ -102,18 +110,22 @@ pace, projection, finish, chance) within `1e-9`.
 | `stale` | Mock: docs-site, from the afternoon | 1.00 | sharp_down | 38.1% | toss_up | yellow |
 | `offline` | Mock: search-index, from the afternoon | 0.22 | sharp_down | 0.01% | running_late | red |
 | `alldone` | Mock: FGA T04, finished | 3.01 | sharp_up | 100% | on_time | done |
-| `one-story` | Edge: 1 story, unfinished at 2h10m of 4h | 0.00 | flat | 40.6% | toss_up | yellow |
+| `one-story` | Edge: 1 story, unfinished at 2h10m of 4h | 0.00 | flat | 40.6% | toss_up | green (D1, `under_budget`) |
 | `zero-progress` | Edge: 6 stories, none finished at 2h10m of 4h | 0.00 | flat | 2.5% | running_late | yellow |
 | `over-cap` | Edge: 2h cap, 2h50m used, 4 of 5 done | 0.57 | down | 0.0% | running_late | yellow |
-| `midnight-rollover` | Edge: 22:40 to 00:20 local | 1.25 | down | 73.4% | on_time | green |
+| `midnight-rollover` | Edge: 22:40 to 00:20 UTC | 1.25 | down | 73.4% | on_time | green |
 
 The `silent`, `stale` and `offline` scenarios differ from the others by time passing after the last
 report, or by the page losing the board. The frozen format has no "now", so those fixtures carry only
 the metrics, which the page shows unchanged. A later format MAY add a top-level `now_hours` to cover
 staleness; that is the Lead's call, because the format is frozen.
 
-`midnight-rollover` crosses midnight at `at_hours` 1.3333, and its comparison sample (60 minutes back)
-is from before midnight. To exercise the rollover, MVP-09 MUST start the replay at 22:40 local time.
+`midnight-rollover` crosses 00:00 UTC at `at_hours` 1.3333, and its comparison sample (60 minutes back)
+is from before midnight. **MVP-09 MUST replay this fixture with the first report at 22:40:00 UTC**, set
+through the `Swimcoach-Test-Now` header (`contract/api.md` section 9), so the series crosses 00:00 UTC.
+The contract has no local time and a Worker's clock is UTC, so naming the instant is what stops an
+implementation that wrongly cuts at UTC midnight from passing. **MVP-09 SHOULD replay it a second time
+with the first report at 22:40 in the phone's time zone**, which catches a cut at the phone's midnight.
 
 ## Regenerate
 
@@ -134,29 +146,24 @@ an edge would flip between two correct implementations on floating-point noise a
 
 ## Open for Terry
 
-Where the prototype and `docs/concept.md` disagree, the fixture keeps the prototype's value.
+Where the prototype and `docs/concept.md` disagree and Terry has not decided, the fixture keeps the
+prototype's value. D1 is decided, so it is not here: see "Expected keys".
 
-1. **D1, the small-block rule (concept.md section 8, item 10).** D1 says a milestone with fewer than 3
-   stories shows no RTR and no clock hand, shows "0 of 1 done" and hours used, and is green while under
-   the cap. The prototype has no such rule: `one-story` gets RTR 0.00, a flat arrow, a 40.6% chance,
-   `toss_up`, and a yellow card at 2h10m of a 4h cap. The fixture keeps the prototype's numbers. A's
-   draft schema keeps the metrics and moves D1 into `mode`, `color` and `reason`, so the MVP's metrics
-   SHOULD match this fixture while its card shows green under budget, not this fixture's `color`.
-2. **Midnight rollover (concept.md section 11).** The prototype's page fetches samples since local
+1. **Midnight rollover (concept.md section 11).** The prototype's page fetches samples since local
    midnight, so it would show `midnight-rollover` as too early to call (3 samples, 20 minutes of
    history). The concept lists that as a defect. `trend_of()` itself has no day boundary, so the
    fixture expects the full-series value: `on_time`. If Terry wants the day boundary kept, this fixture
    flips to `too_early`.
-3. **Needs Terry counts against RTR (concept.md section 8, item 1, still unanswered).** The prototype
+2. **Needs Terry counts against RTR (concept.md section 8, item 1, still unanswered).** The prototype
    counts a Needs Terry card as unfinished. `keyboard` and `offline` depend on it. If Terry rules that
    those cards leave the total, both change.
-4. **"At least 4 samples lie in that span" (concept.md section 4.6).** The prototype counts the samples
+3. **"At least 4 samples lie in that span" (concept.md section 4.6).** The prototype counts the samples
    from the comparison sample (the one closest to 60 minutes back) through the newest, both included,
    not the samples in the 45-minute history span. The concept's wording allows either reading.
-5. **No time span gives no chance (concept.md section 4.4).** The concept says only that no time left
+4. **No time span gives no chance (concept.md section 4.4).** The concept says only that no time left
    gives 0. `chance_to_finish()` also returns 0 when the clock did not move over the look-back. No
    fixture hits this.
-6. **Almost every arrow is sharp (concept.md section 4.2, a known weakness).** Six of the eleven
+5. **Almost every arrow is sharp (concept.md section 4.2, a known weakness).** Six of the eleven
    fixtures with a trend are `sharp_up` or `sharp_down`. The bins are untuned, as the concept says.
 
 ## Notes for the Lead

@@ -30,6 +30,8 @@
     "total": 6,
     "trend": {"delta": 0.0, "minutes": 60, "pace": 0.0, "proj": 0.0, "finish": null, "recent_done": 0, "to_go": 6},
     "stalled": true,
-    "color": "yellow"
+    "mode": "ratio",
+    "color": "yellow",
+    "reason": "running_late"
   }
 }
