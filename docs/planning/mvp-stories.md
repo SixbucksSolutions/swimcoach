@@ -35,6 +35,9 @@ they are part of MVP-01's contract.
 - An HTTP contract for `POST /api/report`, `GET /api/state` and `DELETE /api/projects/<name>`, with
   JSON Schema for the report and state bodies. It starts from `docs/concept.md` section 6.3 and adds the
   answers to D1-D3.
+- The JSON Schema for the project state file that running projects write to disk for the swimcoach
+  agent (MVP-06): project name, the current milestone's time frame, and its work counts. It also fixes
+  where the files live.
 - Metric definitions as executable golden fixtures: input sample series and the expected RTR, trend
   bin, projection, chance and call, taken from the prototype's math (`reference/prototype/server.py`)
   for the eight mock scenarios plus edge cases (one-story turn, zero progress, block over time, midnight
@@ -95,17 +98,30 @@ authenticated", in the contract.
 
 ## T3: API and agents
 
-### MVP-06: Agent reporter (2 h)
+### MVP-06: swimcoach CLI client and agent (2 h)
 
-**Goal:** a monitoring agent pushes a real time block every 10 minutes.
+**Goal:** a swimcoach agent pushes every running project's current milestone every 10 minutes.
 
-- A small script the agent runs (PowerShell or Python with `argparse`), reading the current time block
-  from localswim's CLI and posting with its service token.
-- Text for the agent's scheduled task, replacing `reference/prototype/AGENT_PROMPT.md`, with the
-  section 11 defects fixed (no bash heredoc; Windows-safe).
+The data path, as Terry set it on 2026-11-13:
 
-**Done when:** a real localswim time block appears on the phone and updates every 10 minutes.
-**Survives:** the report format and the prompt text.
+1. Each running project's own agent writes its state, including the time frame of the milestone being
+   worked, to a JSON file on disk (schema in MVP-01).
+2. A swimcoach agent, run in both Codex and Claude, picks those files up.
+3. The agent pushes each one to the swimcoach backend with a swimcoach CLI client, which calls the
+   Worker's API with an Access service token.
+
+Cards are not tied to time blocks in localswim, so the board alone cannot say which cards belong to a
+milestone.
+
+- The swimcoach CLI client: reads a project state file, validates it against MVP-01's schema, and
+  posts it. It reads its service token from a file, never an environment variable, the same way as
+  `scripts/wrangler.ps1`.
+- The swimcoach agent's prompt for Codex and for Claude, replacing `reference/prototype/AGENT_PROMPT.md`
+  and fixing its section 11 defects (no bash heredoc; Windows-safe).
+- Two agents can push the same project, so a repeated report MUST NOT create a duplicate sample.
+
+**Done when:** a real project's milestone appears on the phone and updates every 10 minutes.
+**Survives:** the state file schema, the report format and the prompt text.
 
 ### MVP-07: State and report API (2 h)
 

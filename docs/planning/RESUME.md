@@ -91,8 +91,13 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
      not `localswim-v2`, not `localswim-legacy-v1`, not `localswim-state-store` (V1, before the
      cutover), and not the uv-installed `localswim` on `PATH`, a broken Python V1 install whose
      `localswim.pth` points at the removed `C:\Projects\localswim\src`.
-   - Still open for MVP-06: how a card is tied to a time block, and where the reporter gets the
-     service URL and its Bot token. Neither blocks T1 or T2.
+   - **Superseded the same day by Terry's data path** (now in `mvp-stories.md` MVP-06): cards are not
+     tied to time blocks. Each running project's agent writes its state, including the current
+     milestone's time frame, to a JSON file on disk. A swimcoach agent, run in Codex and in Claude,
+     picks the files up and pushes them with a swimcoach CLI client that calls the Worker's API.
+     MVP-01 defines that file's schema.
+   - Still open: whether the project's state file carries the milestone's work counts itself, or the
+     swimcoach agent reads them through the localswim CLI. MVP-01 MUST settle it.
 2. **The Zero Trust organization is unconfirmed.** The local token lists Access applications (there are
    none) but gets 403 on `access/organizations`, because it lacks an Organizations Read permission.
    MVP-05 needs an organization with a team domain. Terry SHOULD check the Zero Trust dashboard before
