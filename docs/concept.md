@@ -540,7 +540,8 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
    two-column layout was dropped.
 7. **Screen staying awake.** Not handled; Terry would set auto-lock himself. The Wake Lock API needs
    HTTPS.
-8. **Stack for v1.** Never discussed. localswim is Go and TypeScript; the prototype is Python.
+8. **Stack for the MVP: proposed 2026-11-13, see section 14.** (This item used to say localswim is Go
+   and TypeScript; the localswim repository is Python, `src/localswim/api_endpoint.py`.)
 9. **Whether the `at` field should exist in production.** It lets any caller backdate a report.
 
 ## 9. Design history (superseded; source not kept)
@@ -626,3 +627,31 @@ confirmed by Terry yet; each is up for review in the mock.
 | A swimcoach mark replaces the wave favicon: the localswim mark, unchanged, on a stack of two gray boards stepping up and right. It is the favicon, the iPhone home-screen icon, and a 26 px mark beside the wordmark | Terry, 2026-11-13: swimcoach watches many localswim boards, and its logo should come from the same family. Chosen from four design rounds; see `design/logo/README.md`. **Confirmed by Terry** |
 | Text set in the Inter typeface (v4.1, Latin subset, embedded in the mock) instead of the system font | Terry's choice, 2026-11-13. Embedded as a data URI so the mock stays one file with no network. OFL 1.1 credit in `THIRD-PARTY-NOTICES.md` and `third_party/inter/`. **Confirmed by Terry** |
 | One good-news fill: the LIVE box and green cards both use `--ok-fill` `#166534` with pure white text; green-card subtitles lose their 85% opacity | Terry, 2026-11-13: the LIVE box (`#166534`) and the cards (`#15803d`) were two near-identical greens. He asked for one green, kept white on green, and set WCAG AAA for that pairing. White on `#15803d` measured 5.02:1, and the 85% white subtitles 4.09:1, which fails even AA. White on `#166534` measures 7.13:1. **Confirmed by Terry** |
+
+## 14. Build plan: MVP, then a greenfield V2
+
+Terry's plan, 2026-11-13. RFC 2119 keywords; the capitals are load-bearing.
+
+- **The MVP exists to get the UX right on the real phone, with real agents.** It ships fast and
+  changes until it "feels right". Vendor and language lock-in do not matter for it.
+- **V2 rebuilds exactly what the MVP does, from greenfield, with no code inherited.** Terry: "build
+  _exactly what the MVP does right now_ from greenfield ... burn the tech debt to the ground", with
+  "the _rare perfect requirements_: 'I want EXACTLY THE MVP FUNCTIONALITY no more no less.'" V2 MAY
+  choose a different language, host and design.
+- **Consequence for the MVP: its behavior is the deliverable, so it MUST be pinned down outside its
+  code.** The things that cross to V2 are the HTTP API contract, the report and state schemas, the
+  metric definitions (section 4), the display rules (sections 3 and 13, `docs/brand.md`), and a
+  black-box acceptance suite that drives the running MVP through its API and pages. The suite SHOULD
+  NOT import MVP code, so V2 can run the same suite unchanged and pass it. Code, tests of internals
+  and build tooling are throwaway.
+- **MVP stack, proposed 2026-11-13; Terry accepted that lock-in does not matter for the MVP:**
+  - One Cloudflare Worker (Terry already has Workers Paid) serving the page as static assets plus
+    `/api/state` and `/api/report`.
+  - One SQLite-backed Durable Object holding the board: the prototype's `projects`, `samples` and
+    `events` tables, and the metric math ported to one TypeScript module.
+  - Cloudflare Access in front of the whole host: one login per long session on the phone, and an
+    Access service token for each monitoring agent.
+  - Why not a home server: the laptop that runs the agents travels, so the server has to be reachable
+    from anywhere anyway, and a home box going down would show OFFLINE for a hardware reason, the
+    exact false alarm the health box exists to avoid. Runner-up: the prototype `server.py` on the QNAP
+    behind a Cloudflare Tunnel.

@@ -15,8 +15,11 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 - **The mock phase closed on 2026-11-13.** Terry: "an MVP is worth a lot more than a concept I never
   pushed to prod." `mocks/index.html` is now the approved design, with every decision and its reason in
   `docs/concept.md` sections 2 and 3 and `docs/brand.md`. The MVP MUST match it.
-- **Next: choose the v1 stack (concept.md section 8), then build the MVP.** Nothing is built yet. The
-  stack choice is Terry's call; propose one, do not pick it unasked.
+- **Next: build the MVP, then a greenfield V2 (concept.md section 14).** The MVP exists to get the UX
+  right and MAY be locked to any vendor or language. V2 rebuilds exactly its behavior with no code
+  inherited, so the MVP's API contract, schemas and black-box acceptance suite are what MUST survive;
+  its code does not. Proposed MVP stack: a Cloudflare Worker, one SQLite-backed Durable Object,
+  TypeScript, Cloudflare Access. Nothing is built yet.
 - `reference/prototype/` is the earlier "super prototype": a runnable reference and a spec, not code to
   extend. Its known defects are in concept.md section 11.
 
