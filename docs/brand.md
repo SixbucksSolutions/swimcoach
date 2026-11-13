@@ -164,5 +164,7 @@ on. A color that asks for no action, or for an action he cannot take, wears out 
   fallback font.
 - **This is a swimcoach exception to Terry's global three-periods rule, and it is narrow.** It covers
   only what the page draws. Source code MUST still not contain the literal character: write `&hellip;`
-  in markup and `'…'` in JavaScript. Docs, commit messages and conversation keep three periods.
+  in markup and `String.fromCharCode(0x2026)` in JavaScript. (A `\u` escape is not safe here: one
+  editing tool already rewrote it into the literal glyph on save.) Docs, commit messages and
+  conversation keep three periods.
   When Terry writes "..." about the swimcoach UI, he means the glyph.

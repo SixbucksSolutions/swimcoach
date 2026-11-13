@@ -503,7 +503,7 @@ function poll(){
 function tick(){
   $('clock').textContent = fmtTime(new Date());
   const el = $('health'), nowMs = Date.now(); let st, label, age = null, msg = '';
-  if (!lastOk){ st = 'wait'; label = '…'; }   // the ellipsis glyph, drawn in Inter (docs/brand.md section 7)
+  if (!lastOk){ st = 'wait'; label = String.fromCharCode(0x2026); }   // the ellipsis glyph, drawn in Inter (docs/brand.md section 7)
   else if (nowMs-lastOk > POLL_MS*3){
     st = 'off'; label = 'OFFLINE'; age = (nowMs-lastOk)/1000;
     msg = 'Can\'t reach the board for '+dur(age)+'. Everything below is old.';

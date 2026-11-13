@@ -580,7 +580,7 @@ In order, each replaced by the next:
 - **"‹ All projects" does nothing.** The overview's page key is `'\u0000all'`; HTML parsing turns the
   NUL in the link's `data-go` attribute into U+FFFD, so the key never matches. Swiping back works.
   Found while click-testing the mock, which uses `'*all*'` instead.
-- **Long project names truncate on the overview cards** ("demo: mobile-o…"). Fine for short real names,
+- **Long project names truncate on the overview cards** ("demo: mobile-o..."). Fine for short real names,
   but worth deciding on.
 - **No tests.** Checks were manual: curl, JSON inspection and screenshots.
 - **Not verified:** real swipe behavior and scroll-snap on iOS Safari, the chime on iOS, safe-area
@@ -603,7 +603,7 @@ confirmed by Terry yet; each is up for review in the mock.
 | Change | Why |
 |---|---|
 | "Alerts off/on" text button replaced by a bell icon (slashed when off) | The text button made the header wrap to two lines in the OFFLINE state at iPhone width |
-| Project names on overview cards wrap to two lines, then truncate | Names like "mobile-onboarding" were cut to "mobile-o…" |
+| Project names on overview cards wrap to two lines, then truncate | Names like "mobile-onboarding" were cut to "mobile-o..." |
 | Page dots are tappable | A second way to move between displays besides swiping |
 | Overview key changed from `'\u0000all'` to `'*all*'` | Fixes the broken "‹ All projects" link (section 11) |
 | LIVE box drops "now"; it shows an age only from 1 min ("7m") | Terry, 2026-11-13: "now" was noise next to LIVE. **Confirmed by Terry** |
