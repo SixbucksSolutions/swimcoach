@@ -32,7 +32,8 @@ they are part of MVP-01's contract.
 
 **Goal:** freeze, as documents and data, everything V2 must reproduce.
 
-- An HTTP contract for `POST /api/report`, `GET /api/state` and `DELETE /api/projects/<name>`, with
+- An HTTP contract for `POST /api/report`, `GET /api/state`, and creating and deleting a (project,
+  milestone) tuple (replacing the prototype's `DELETE /api/projects/<name>`), with
   JSON Schema for the report and state bodies. It starts from `docs/concept.md` section 6.3 and adds the
   answers to D1-D3.
 - The swimcoach CLI's command line (MVP-06), which project agents call directly. **Terry,
@@ -46,12 +47,24 @@ they are part of MVP-01's contract.
   | Milestone | The milestone or increment being worked | `T06`, `M12` |
   | Active time | Total active time spent on the milestone so far | 1.85 h |
   | Time cap | The milestone's maximum time | 4 h |
-  | Story cards per lane | The milestone's story cards in Ready For Work, In Progress, Needs Terry and Ready For Review | 2, 1, 0, 4 |
+  | Story cards per lane | The milestone's story cards in Ready For Work, In Progress, Needs Terry, Ready For Review and Completed | 2, 1, 0, 3, 1 |
 
   One epic per milestone, several stories per epic (Terry, 2026-11-13), so the cards counted are that
   epic's stories. A total card count is not enough: RTR needs the finished count, a Needs Terry card
-  raises GO TO KEYBOARD, and the Swimlanes display draws one bar per lane. The optional `needs_me`
-  sentence stays optional.
+  raises GO TO KEYBOARD, and the Swimlanes display draws one bar per lane. Ready For Review and
+  Completed both count as finished; without Completed, a card moving on from Ready For Review would
+  look like lost work. The optional `needs_me` sentence stays optional.
+- **The milestone lifecycle (Terry, 2026-11-13).** The unit swimcoach tracks is the tuple (project,
+  milestone), for example (`FGA`, `M12`).
+  1. The project's agent creates the tuple with the CLI's admin commands.
+  2. The agent sends complete status updates for it while it works.
+  3. Terry reviews and approves the milestone, and every card goes to Completed.
+  4. Terry tells the agent to stop monitoring it, and the agent deletes the tuple with the CLI's admin
+     commands.
+
+  A status update for a tuple that was never created SHOULD be refused, so a mistyped project or
+  milestone name fails loudly instead of putting a stray card on the phone. (The agent's design call;
+  the prototype had exactly that defect.)
 - Metric definitions as executable golden fixtures: input sample series and the expected RTR, trend
   bin, projection, chance and call, taken from the prototype's math (`reference/prototype/server.py`)
   for the eight mock scenarios plus edge cases (one-story turn, zero progress, block over time, midnight
@@ -121,6 +134,7 @@ the swimcoach CLI itself and pushes its milestone's wall-clock hours and card co
 agent and no state file on disk. Cards are not tied to time blocks in localswim, so the project's agent
 is the one that knows what its milestone holds.
 
+- The CLI's admin commands: create and delete a (project, milestone) tuple, per MVP-01's lifecycle.
 - The swimcoach CLI client: takes a project's milestone report as arguments or a JSON file, validates
   it against MVP-01's schema, and posts it to the Worker's API with an Access service token. It reads
   the token from a file, never an environment variable, the same way as `scripts/wrangler.ps1`.
@@ -146,7 +160,8 @@ is the one that knows what its milestone holds.
 
 - `GET /api/state?since=` assembles snapshots, trend, `spark`, staleness and the health fields the page
   needs (`docs/concept.md` section 6.3).
-- `POST /api/report` and `DELETE /api/projects/<name>` call the Durable Object.
+- `POST /api/report` and the create and delete routes for a (project, milestone) tuple call the
+  Durable Object.
 
 **Done when:** responses validate against MVP-01's schemas. **Survives:** the contract it implements.
 
