@@ -48,7 +48,10 @@ const P = __PLAN__;
 const W = 1344, LEFT = 176, RIGHT = 40, TOP = 134, ROWH = 98, GAP = 9, CW = 132, CH = 60;
 // Columns are plain position slots: any story can sit in any slot, so placement can follow the arrows.
 // Color comes from the story's work area, named once in the legend.
-const areas = P.areas, colW = (W - LEFT - RIGHT) / P.slots, area = s => areas.find(a => a.key === s.area);
+// A slot is at most 180 px wide, and the slot grid is centered in the turn rows, so a plan with few
+// columns stays compact instead of stretching across the page.
+const areas = P.areas, colW = Math.min(180, (W - LEFT - RIGHT) / P.slots), area = s => areas.find(a => a.key === s.area);
+const GRID_X = LEFT + ((W - LEFT - RIGHT) - colW * P.slots) / 2;
 const root = document.getElementById('root');
 const add = h => root.insertAdjacentHTML('beforeend', h);
 add('<h1>' + P.title + '</h1><div class="sub">Epic ' + P.epic + '  /  ' + P.stories.length + ' stories  /  '
@@ -64,7 +67,7 @@ P.turns.forEach((t, i) => {
 });
 const pos = {};
 P.stories.forEach(s => {
-  const x = LEFT + s.slot * colW + (colW - CW) / 2, y = rowY(s.turn) + (ROWH - CH) / 2;
+  const x = GRID_X + s.slot * colW + (colW - CW) / 2, y = rowY(s.turn) + (ROWH - CH) / 2;
   pos[s.id] = {x, y};
   const color = area(s).color;
   add('<div class="card" style="--c:' + color + ';left:' + x + 'px;top:' + y + 'px;width:' + CW + 'px;height:' + CH + 'px">'
