@@ -100,9 +100,20 @@ Status colors carry meaning on the phone and MUST NOT be used for decoration.
 | `--bad-fill`, `--bad` | Needs Terry | `#dc2626` | white | 4.83:1, **not yet AAA** |
 | `--done` (`= --dim`) | Finished | `--board` card | `--dim` | 6.32:1 |
 
+- **Color follows message: same message, same color; different message, different color.** This is
+  the principle behind both the greens and the amber (section 3).
+- **The LIVE box and the green cards share one green because they say the same thing: you can stop
+  worrying.** Terry, 2026-11-13, in his words. LIVE: "hey relax this legit is fresh data, I know Terry
+  has scars from stale dashboards showing good data when the system was actually on fire so I'm telling
+  you stop worrying my dude." A green card: "current value is good plus trend is where it needs to be
+  to safely ignore for now." Two shades of green here would claim two different messages, and that is
+  why the eye read the old pair as a mistake.
 - **Good news is lane green.** `--ok` is `--lane-green` itself, for green text on the page (9.68:1).
   `--ok-fill` is the same hue darkened until pure white on it measures 7.11:1. Light and dark, they are
   one green. A second green MUST NOT be introduced.
+- **Green MUST only ever mean "safe to ignore".** It MUST NOT be used for decoration, or for anything
+  merely positive that still wants a look. That is what keeps it trustworthy, and the LIVE box only works
+  if it never says "relax" when the data is stale (concept.md section 3.1).
 - **Done is quiet slate, not a color.** It used to be sky blue `#7dd3fc`, a near-twin of lane blue with a
   different meaning.
 - **Two near-identical colors MUST NOT sit side by side** when they mean different things. The eye reads
