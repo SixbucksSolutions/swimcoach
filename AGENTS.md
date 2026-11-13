@@ -60,7 +60,11 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
    `pip install` into it fails; `uv run --with` gives the script a throwaway environment instead. The
    first time on a machine, also run `uv run --no-project --with playwright python -m playwright install
    chromium`.
-5. Commit, push, and pull into `C:\Projects\swimcoach`.
+5. Republish the hosted mock. Terry checks the mock on desktop and phone at a private claude.ai
+   artifact, published from `mocks/index.html`. A Claude session republishes it by publishing that same
+   file to the artifact's URL, which keeps the link stable. Ask Terry for the URL if the session does
+   not have it. A publish without the URL creates a second artifact and a new link.
+6. Commit, push, and pull into `C:\Projects\swimcoach`.
 
 ## Pushing from a sandbox without GitHub credentials
 
