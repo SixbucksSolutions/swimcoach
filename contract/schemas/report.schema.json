@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/SixbucksSolutions/swimcoach/main/contract/schemas/report.schema.json",
+  "title": "swimcoach status report",
+  "description": "The body of POST /api/report: a complete picture of one (project, milestone). Every field except needs_me is required, and unknown fields are refused, so a partial or misspelled update fails instead of landing. contract/api.md is the normative text; this schema is its machine-checkable half. The $defs also hold the stop-tracking body and the response bodies of both write routes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agent", "project", "milestone", "active_hours", "cap_hours", "lanes"],
+  "properties": {
+    "agent": { "$ref": "#/$defs/agent" },
+    "project": { "$ref": "#/$defs/project" },
+    "milestone": { "$ref": "#/$defs/milestone" },
+    "active_hours": {
+      "description": "Total active time spent on the milestone so far, in decimal hours. MAY exceed cap_hours.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 168
+    },
+    "cap_hours": {
+      "description": "The milestone's maximum time, in decimal hours. The 168 h ceiling catches minutes or seconds sent by mistake.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 168
+    },
+    "lanes": { "$ref": "#/$defs/lanes" },
+    "needs_me": { "$ref": "#/$defs/needsMe" }
+  },
+  "$defs": {
+    "agent": {
+      "description": "The agent framework that sent the report.",
+      "enum": ["codex", "claude"]
+    },
+    "name": {
+      "description": "Shared rule for project and milestone names: no leading or trailing whitespace, and no control characters anywhere (so no line breaks). The control-character ban is a separate unanchored check because Python's $ also matches before a final newline; the split gives the same verdict in Python and ECMA-262 engines.",
+      "type": "string",
+      "pattern": "^\\S(?:.*\\S)?$",
+      "not": { "pattern": "[\\u0000-\\u001f\\u007f]" }
+    },
+    "project": {
+      "description": "The project's stable name, for example \"localswim V2\" or \"FGA\". Matched ASCII case-insensitively; see contract/api.md.",
+      "$ref": "#/$defs/name",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "milestone": {
+      "description": "The milestone or increment, for example \"T06\" or \"M12\". Matched ASCII case-insensitively; see contract/api.md.",
+      "$ref": "#/$defs/name",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "laneCount": {
+      "description": "Story cards in one lane for this milestone's epic. The 999 ceiling catches a whole-board count sent by mistake.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 999
+    },
+    "lanes": {
+      "description": "Story card count per lane. All five keys are required. Backlog and Blocked are never reported.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ready_for_work", "in_progress", "needs_terry", "ready_for_review", "completed"],
+      "properties": {
+        "ready_for_work": { "$ref": "#/$defs/laneCount" },
+        "in_progress": { "$ref": "#/$defs/laneCount" },
+        "needs_terry": { "$ref": "#/$defs/laneCount" },
+        "ready_for_review": { "$ref": "#/$defs/laneCount" },
+        "completed": { "$ref": "#/$defs/laneCount" }
+      }
+    },
+    "needsMe": {
+      "description": "One sentence: what Terry must do. Omit the field when there is no ask; an empty string or null is refused.",
+      "$ref": "#/$defs/name",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "epochSeconds": {
+      "description": "A moment as Unix epoch seconds, UTC, with an optional fraction.",
+      "type": "number",
+      "minimum": 0
+    },
+    "stopRequest": {
+      "description": "The body of POST /api/stop: the (project, milestone) to stop tracking.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project", "milestone"],
+      "properties": {
+        "project": { "$ref": "#/$defs/project" },
+        "milestone": { "$ref": "#/$defs/milestone" }
+      }
+    },
+    "reportResponse": {
+      "description": "The 200 body of POST /api/report.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ok", "project", "milestone", "received_at", "added", "sample"],
+      "properties": {
+        "ok": { "const": true },
+        "project": { "$ref": "#/$defs/project" },
+        "milestone": { "$ref": "#/$defs/milestone" },
+        "received_at": { "$ref": "#/$defs/epochSeconds" },
+        "added": {
+          "description": "True when this report put the (project, milestone) on the board.",
+          "type": "boolean"
+        },
+        "sample": {
+          "description": "stored: a new sample was written. duplicate: identical to the newest sample within 60 s, so none was written. none: no sample is defined (total is 0 or active_hours is 0).",
+          "enum": ["stored", "duplicate", "none"]
+        }
+      }
+    },
+    "stopResponse": {
+      "description": "The 200 body of POST /api/stop.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ok", "project", "milestone"],
+      "properties": {
+        "ok": { "const": true },
+        "project": { "$ref": "#/$defs/project" },
+        "milestone": { "$ref": "#/$defs/milestone" }
+      }
+    },
+    "errorResponse": {
+      "description": "The body of every JSON error response from the Worker.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ok", "error", "message"],
+      "properties": {
+        "ok": { "const": false },
+        "error": {
+          "enum": [
+            "invalid_json",
+            "invalid_report",
+            "invalid_stop",
+            "unsupported_media_type",
+            "body_too_large",
+            "not_found",
+            "method_not_allowed",
+            "not_tracked",
+            "unauthenticated",
+            "test_clock_disabled",
+            "invalid_test_clock",
+            "clock_went_backward",
+            "internal"
+          ]
+        },
+        "message": {
+          "description": "One human-readable sentence, starting with a capital.",
+          "type": "string",
+          "minLength": 1
+        },
+        "problems": {
+          "description": "Present on invalid_report and invalid_stop: one entry per schema violation found.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "message"],
+            "properties": {
+              "path": {
+                "description": "JSON Pointer (RFC 6901) to the offending value; empty string for the whole body.",
+                "type": "string"
+              },
+              "message": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

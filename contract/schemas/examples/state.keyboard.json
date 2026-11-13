@@ -1,0 +1,277 @@
+{
+  "now": 1794573043.4759386,
+  "last_report_at": 1794573043.0,
+  "feed": "live",
+  "thresholds": {
+    "stale_minutes": 25,
+    "stall_minutes": 45,
+    "trend_minutes": 60,
+    "min_history_minutes": 45,
+    "min_block_used": 0.15,
+    "min_stories_for_rtr": 3
+  },
+  "milestones": [
+    {
+      "project": "FGA",
+      "milestone": "T04",
+      "agent": "claude",
+      "active_hours": 1.83,
+      "cap_hours": 4.0,
+      "lanes": {
+        "ready_for_work": 2,
+        "in_progress": 1,
+        "needs_terry": 0,
+        "ready_for_review": 4,
+        "completed": 0
+      },
+      "needs_me": null,
+      "first_report_at": 1794567043,
+      "updated_at": 1794573043.0,
+      "last_move_at": 1794572443.0,
+      "finished": 4,
+      "total": 7,
+      "stale": false,
+      "stalled": false,
+      "mode": "ratio",
+      "color": "green",
+      "reason": "on_time",
+      "metrics": {
+        "work": 0.5714285714285714,
+        "clock": 0.4575,
+        "rtr": 1.2490241998438718,
+        "too_early": false,
+        "trend": {
+          "delta": 0.5605560414961954,
+          "minutes": 60,
+          "pace": 1.7142857142857142,
+          "proj": 1.5014285714285713,
+          "finish": 0.7075,
+          "recent_done": 3,
+          "to_go": 3
+        },
+        "trend_bin": "sharp_up",
+        "projection_hours": 2.83,
+        "chance_on_time": 0.8750602493238056,
+        "call": "on_time"
+      },
+      "spark": [
+        [
+          1794567043,
+          0.0
+        ],
+        [
+          1794567643,
+          0.0
+        ],
+        [
+          1794568243,
+          1.1429
+        ],
+        [
+          1794568843,
+          0.8529
+        ],
+        [
+          1794569443,
+          0.6885
+        ],
+        [
+          1794570043,
+          1.1429
+        ],
+        [
+          1794570643,
+          0.9768
+        ],
+        [
+          1794571243,
+          1.2889
+        ],
+        [
+          1794571843,
+          1.1429
+        ],
+        [
+          1794572443,
+          1.3687
+        ],
+        [
+          1794573043,
+          1.249
+        ]
+      ]
+    },
+    {
+      "project": "localswim V2",
+      "milestone": "T06",
+      "agent": "codex",
+      "active_hours": 1.5,
+      "cap_hours": 2.5,
+      "lanes": {
+        "ready_for_work": 0,
+        "in_progress": 1,
+        "needs_terry": 1,
+        "ready_for_review": 4,
+        "completed": 0
+      },
+      "needs_me": "1 ticket in Needs Terry",
+      "first_report_at": 1794568243,
+      "updated_at": 1794573043.0,
+      "last_move_at": 1794573043.0,
+      "finished": 4,
+      "total": 6,
+      "stale": false,
+      "stalled": false,
+      "mode": "ratio",
+      "color": "red",
+      "reason": "needs_terry",
+      "metrics": {
+        "work": 0.6666666666666666,
+        "clock": 0.6,
+        "rtr": 1.1111111111111112,
+        "too_early": false,
+        "trend": {
+          "delta": 0.2777777777777779,
+          "minutes": 60,
+          "pace": 1.25,
+          "proj": 1.1666666666666665,
+          "finish": 0.8666666666666667,
+          "recent_done": 3,
+          "to_go": 2
+        },
+        "trend_bin": "sharp_up",
+        "projection_hours": 2.166666666666667,
+        "chance_on_time": 0.7569320439671242,
+        "call": "on_time"
+      },
+      "spark": [
+        [
+          1794568243,
+          0.0
+        ],
+        [
+          1794568843,
+          1.2626
+        ],
+        [
+          1794569443,
+          0.8333
+        ],
+        [
+          1794570043,
+          1.2438
+        ],
+        [
+          1794570643,
+          1.004
+        ],
+        [
+          1794571243,
+          1.25
+        ],
+        [
+          1794571843,
+          1.0684
+        ],
+        [
+          1794572443,
+          0.9398
+        ],
+        [
+          1794573043,
+          1.1111
+        ]
+      ]
+    },
+    {
+      "project": "search-index",
+      "milestone": "T03",
+      "agent": "codex",
+      "active_hours": 1.83,
+      "cap_hours": 2.0,
+      "lanes": {
+        "ready_for_work": 2,
+        "in_progress": 1,
+        "needs_terry": 1,
+        "ready_for_review": 1,
+        "completed": 0
+      },
+      "needs_me": "Pick an index strategy: per-tenant or shared",
+      "first_report_at": 1794567043,
+      "updated_at": 1794573043.0,
+      "last_move_at": 1794571843.0,
+      "finished": 1,
+      "total": 5,
+      "stale": false,
+      "stalled": false,
+      "mode": "ratio",
+      "color": "red",
+      "reason": "needs_terry",
+      "metrics": {
+        "work": 0.2,
+        "clock": 0.915,
+        "rtr": 0.2185792349726776,
+        "too_early": false,
+        "trend": {
+          "delta": -0.263348475870696,
+          "minutes": 60,
+          "pace": 0.0,
+          "proj": 0.2,
+          "finish": null,
+          "recent_done": 0,
+          "to_go": 4
+        },
+        "trend_bin": "sharp_down",
+        "projection_hours": null,
+        "chance_on_time": 0.00012967546406117414,
+        "call": "running_late"
+      },
+      "spark": [
+        [
+          1794567043,
+          0.0
+        ],
+        [
+          1794567643,
+          0.0
+        ],
+        [
+          1794568243,
+          0.0
+        ],
+        [
+          1794568843,
+          0.597
+        ],
+        [
+          1794569443,
+          0.4819
+        ],
+        [
+          1794570043,
+          0.4
+        ],
+        [
+          1794570643,
+          0.3419
+        ],
+        [
+          1794571243,
+          0.3008
+        ],
+        [
+          1794571843,
+          0.2667
+        ],
+        [
+          1794572443,
+          0.2395
+        ],
+        [
+          1794573043,
+          0.2186
+        ]
+      ]
+    }
+  ]
+}

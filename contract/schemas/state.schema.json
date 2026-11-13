@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/SixbucksSolutions/swimcoach/main/contract/schemas/state.schema.json",
+  "title": "swimcoach board state",
+  "description": "The 200 body of GET /api/state: everything the page renders, with every metric and verdict already computed by the server. contract/api.md is the normative text; this schema is its machine-checkable half.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["now", "last_report_at", "feed", "thresholds", "milestones"],
+  "properties": {
+    "now": {
+      "description": "The server's clock for this request (the test clock when one is in use). Every age on the page is measured from it.",
+      "$ref": "report.schema.json#/$defs/epochSeconds"
+    },
+    "last_report_at": {
+      "description": "The newest updated_at across all tracked milestones, or null when none is tracked.",
+      "oneOf": [{ "$ref": "report.schema.json#/$defs/epochSeconds" }, { "type": "null" }]
+    },
+    "feed": {
+      "description": "The server's half of the health box at now. The page adds OFFLINE from its own failed polls.",
+      "enum": ["live", "stale", "idle", "no_data"]
+    },
+    "thresholds": { "$ref": "#/$defs/thresholds" },
+    "milestones": {
+      "description": "One entry per tracked (project, milestone): one card on the overview and one project display each. Sorted as contract/api.md says.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/milestone" }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "milestones": { "maxItems": 0 } } },
+      "then": { "properties": { "feed": { "const": "no_data" }, "last_report_at": { "type": "null" } } },
+      "else": { "properties": { "feed": { "not": { "const": "no_data" } }, "last_report_at": { "type": "number" } } }
+    }
+  ],
+  "$defs": {
+    "thresholds": {
+      "description": "The rule constants in force, so the page can word its explanations. Values are given in contract/api.md.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stale_minutes",
+        "stall_minutes",
+        "trend_minutes",
+        "min_history_minutes",
+        "min_block_used",
+        "min_stories_for_rtr"
+      ],
+      "properties": {
+        "stale_minutes": { "type": "number", "exclusiveMinimum": 0 },
+        "stall_minutes": { "type": "number", "exclusiveMinimum": 0 },
+        "trend_minutes": { "type": "number", "exclusiveMinimum": 0 },
+        "min_history_minutes": { "type": "number", "exclusiveMinimum": 0 },
+        "min_block_used": { "type": "number", "minimum": 0, "maximum": 1 },
+        "min_stories_for_rtr": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "nullableNumber": { "oneOf": [{ "type": "number" }, { "type": "null" }] },
+    "trend": {
+      "description": "The prototype's trend_of() result, field for field. Null while too early to call.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["delta", "minutes", "pace", "proj", "finish", "recent_done", "to_go"],
+      "properties": {
+        "delta": { "description": "RTR now minus RTR at the comparison sample.", "type": "number" },
+        "minutes": { "description": "Minutes between the comparison sample and the newest, rounded.", "type": "integer", "minimum": 0 },
+        "pace": { "description": "RTR of the recent stretch alone, floored at 0; null when the clock did not advance.", "$ref": "#/$defs/nullableNumber" },
+        "proj": { "description": "Projected RTR at the end of the block; null when the clock did not advance or the block is used up.", "$ref": "#/$defs/nullableNumber" },
+        "finish": { "description": "Share of the block at which the last card lands; null when pace is 0 and work remains.", "$ref": "#/$defs/nullableNumber" },
+        "recent_done": { "description": "Cards finished in the look-back span, floored at 0.", "type": "integer", "minimum": 0 },
+        "to_go": { "description": "Cards still unfinished.", "type": "integer", "minimum": 0 }
+      }
+    },
+    "metrics": {
+      "description": "The metric math of docs/concept.md section 4, computed the same way whatever the card shows. D1's display rule lives in mode, color and reason, not here.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["work", "clock", "rtr", "too_early", "trend", "trend_bin", "projection_hours", "chance_on_time", "call"],
+      "properties": {
+        "work": { "description": "finished / total; null when total is 0.", "oneOf": [{ "type": "number", "minimum": 0, "maximum": 1 }, { "type": "null" }] },
+        "clock": { "description": "active_hours / cap_hours. MAY exceed 1.", "type": "number", "minimum": 0 },
+        "rtr": { "description": "work / clock; null when total is 0 or clock is 0.", "oneOf": [{ "type": "number", "minimum": 0 }, { "type": "null" }] },
+        "too_early": { "description": "True exactly when trend is null.", "type": "boolean" },
+        "trend": { "oneOf": [{ "$ref": "#/$defs/trend" }, { "type": "null" }] },
+        "trend_bin": { "oneOf": [{ "enum": ["sharp_up", "up", "flat", "down", "sharp_down"] }, { "type": "null" }] },
+        "projection_hours": { "description": "trend.finish × cap_hours: the active hours at which the last card lands. Null when trend or trend.finish is null.", "oneOf": [{ "type": "number", "minimum": 0 }, { "type": "null" }] },
+        "chance_on_time": { "description": "Chance that every remaining card lands within the cap.", "oneOf": [{ "type": "number", "minimum": 0, "maximum": 1 }, { "type": "null" }] },
+        "call": { "oneOf": [{ "enum": ["on_time", "toss_up", "running_late"] }, { "type": "null" }] }
+      },
+      "if": { "properties": { "trend": { "type": "null" } } },
+      "then": {
+        "properties": {
+          "too_early": { "const": true },
+          "trend_bin": { "type": "null" },
+          "projection_hours": { "type": "null" },
+          "chance_on_time": { "type": "null" },
+          "call": { "type": "null" }
+        }
+      },
+      "else": {
+        "properties": {
+          "too_early": { "const": false },
+          "trend_bin": { "type": "string" },
+          "chance_on_time": { "type": "number" },
+          "call": { "type": "string" }
+        }
+      }
+    },
+    "sparkPoint": {
+      "description": "[sample time in whole epoch seconds, RTR rounded to 4 decimals].",
+      "type": "array",
+      "prefixItems": [{ "type": "integer", "minimum": 0 }, { "type": "number", "minimum": 0 }],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": false
+    },
+    "milestone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project",
+        "milestone",
+        "agent",
+        "active_hours",
+        "cap_hours",
+        "lanes",
+        "needs_me",
+        "first_report_at",
+        "updated_at",
+        "last_move_at",
+        "finished",
+        "total",
+        "stale",
+        "stalled",
+        "mode",
+        "color",
+        "reason",
+        "metrics",
+        "spark"
+      ],
+      "properties": {
+        "project": { "description": "Spelling from the newest report.", "$ref": "report.schema.json#/$defs/project" },
+        "milestone": { "description": "Spelling from the newest report.", "$ref": "report.schema.json#/$defs/milestone" },
+        "agent": { "description": "The agent field of the newest report.", "$ref": "report.schema.json#/$defs/agent" },
+        "active_hours": { "type": "number", "minimum": 0 },
+        "cap_hours": { "type": "number", "exclusiveMinimum": 0 },
+        "lanes": { "$ref": "report.schema.json#/$defs/lanes" },
+        "needs_me": {
+          "description": "The ask the page shows: the newest report's needs_me, else the server's \"N ticket(s) in Needs Terry\" when lanes.needs_terry > 0, else null.",
+          "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        },
+        "first_report_at": { "description": "When the report that added this milestone arrived.", "$ref": "report.schema.json#/$defs/epochSeconds" },
+        "updated_at": { "description": "When the newest report arrived.", "$ref": "report.schema.json#/$defs/epochSeconds" },
+        "last_move_at": { "description": "When a report last changed any lane count, or first_report_at.", "$ref": "report.schema.json#/$defs/epochSeconds" },
+        "finished": { "description": "lanes.ready_for_review + lanes.completed.", "type": "integer", "minimum": 0 },
+        "total": { "description": "The sum of all five lanes.", "type": "integer", "minimum": 0 },
+        "stale": { "description": "Not done, and now - updated_at > stale_minutes.", "type": "boolean" },
+        "stalled": { "description": "Not done, and now - last_move_at > stall_minutes.", "type": "boolean" },
+        "mode": {
+          "description": "ratio: RTR, clock hand and call are shown. count_and_time: decision D1, for total < min_stories_for_rtr; the card shows \"N of M done\" and hours used of the cap instead.",
+          "enum": ["ratio", "count_and_time"]
+        },
+        "color": { "enum": ["done", "red", "yellow", "gray", "green"] },
+        "reason": {
+          "description": "Which card-state rule matched first; contract/api.md has the table.",
+          "enum": [
+            "done",
+            "needs_terry",
+            "silent",
+            "running_late",
+            "stalled",
+            "toss_up",
+            "over_budget",
+            "too_early",
+            "on_time",
+            "under_budget"
+          ]
+        },
+        "metrics": { "$ref": "#/$defs/metrics" },
+        "spark": {
+          "description": "The RTR timeline: one point per stored sample, thinned as contract/api.md says. Newest last.",
+          "type": "array",
+          "maxItems": 160,
+          "items": { "$ref": "#/$defs/sparkPoint" }
+        }
+      },
+      "allOf": [
+        { "if": { "properties": { "color": { "const": "done" } } }, "then": { "properties": { "reason": { "const": "done" }, "stale": { "const": false }, "stalled": { "const": false } } } },
+        { "if": { "properties": { "color": { "const": "red" } } }, "then": { "properties": { "reason": { "const": "needs_terry" }, "needs_me": { "type": "string" } } } },
+        { "if": { "properties": { "color": { "const": "yellow" } } }, "then": { "properties": { "reason": { "enum": ["silent", "running_late", "stalled", "toss_up", "over_budget"] } } } },
+        { "if": { "properties": { "color": { "const": "gray" } } }, "then": { "properties": { "reason": { "const": "too_early" } } } },
+        { "if": { "properties": { "color": { "const": "green" } } }, "then": { "properties": { "reason": { "enum": ["on_time", "under_budget"] } } } },
+        {
+          "if": { "properties": { "mode": { "const": "ratio" } } },
+          "then": { "properties": { "total": { "minimum": 3 }, "reason": { "not": { "enum": ["over_budget", "under_budget"] } } } },
+          "else": { "properties": { "total": { "maximum": 2 }, "reason": { "enum": ["done", "needs_terry", "silent", "over_budget", "under_budget"] } } }
+        }
+      ]
+    }
+  }
+}
