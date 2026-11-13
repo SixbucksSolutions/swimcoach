@@ -8,7 +8,7 @@ glance whether everything is still moving and which project needs you.
 
 <img src="docs/img/display-1-all-projects.png" alt="The all-projects display, rendered from the prototype on sample data" width="280">
 
-> **Status:** concept stage. Nothing has been built for v2 yet. The design and a runnable reference
+> **Status:** concept stage. Nothing has been built for v1 yet. The design and a runnable reference
 > prototype are captured below.
 
 ## Start here

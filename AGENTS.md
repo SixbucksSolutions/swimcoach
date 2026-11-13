@@ -12,9 +12,9 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 
 ## Current phase: clickable mocks, not the app
 
-- **Nothing is built for v2 yet, and nothing should be until Terry says so.** The current phase is HTML
+- **Nothing is built for v1 yet, and nothing should be until Terry says so.** The current phase is HTML
   clickable mocks, so Terry and the agent agree on look, feel and UX intent before any build.
-- The stack for v2 has not been chosen (concept.md section 8).
+- The stack for v1 has not been chosen (concept.md section 8).
 - `reference/prototype/` is the earlier "super prototype": a runnable reference and a spec, not code to
   extend. Its known defects are in concept.md section 11.
 
@@ -33,10 +33,10 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 ## Working agreements
 
 - **Push every commit to GitHub right away.** The repo is public and pushes are Terry's backups.
-- **`C:\Projects\swimcoach\v002` on Terry's laptop is the authoritative working copy.** Keep it and
+- **`C:\Projects\swimcoach` on Terry's laptop is the authoritative working copy.** Keep it and
   `github.com/SixbucksSolutions/swimcoach` in sync; after pushing from anywhere else, pull it there.
 - **Don't force-push** unless Terry explicitly asks. History was reset once, on Terry's instruction, when
-  v2 started.
+  the current design started and an earlier chatops collector was retired.
 - **Images and diagrams are PNGs at 300 DPI.**
 - **US English spelling.**
 - **Windows commands are for cmd, not PowerShell.** Use `cd /d`, and `python` or `py` rather than
@@ -56,13 +56,14 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 3. Click-test at 393 × 852: every card opens its project, "‹ All projects" returns, the dots and swipes
    move between displays, and the scenario switcher works.
 4. Run `python mocks/tools/render-mock.py` to refresh `design/ui-mock/` (needs Playwright and Pillow).
-5. Commit, push, and pull into `v002`.
+5. Commit, push, and pull into `C:\Projects\swimcoach`.
 
 ## Pushing from a sandbox without GitHub credentials
 
 If the laptop copy has commits that a credential-less shell cannot push: run `git bundle create
-<file> origin/main..main` in `v002`, fetch the bundle into a clone that can push, fast-forward `main`,
-push, then delete the bundle and `git fetch` in `v002`. Commit hashes stay identical.
+<file> origin/main..main` in `C:\Projects\swimcoach`, fetch the bundle into a clone that can push,
+fast-forward `main`, push, then delete the bundle and `git fetch` in `C:\Projects\swimcoach`. Commit
+hashes stay identical.
 
 ## Open questions waiting on Terry
 

@@ -1,5 +1,5 @@
 > **Reference only.** This is the prototype from the design conversation, kept so its behavior can be run
-> and read while v2 is designed. It is not the code going forward. Gaps and known defects are listed in
+> and read while v1 is designed. It is not the code going forward. Gaps and known defects are listed in
 > [docs/concept.md, section 11](../../docs/concept.md#11-known-gaps-and-defects-in-the-prototype). On Windows,
 > use `python` (or `py`) where this file says `python3`.
 

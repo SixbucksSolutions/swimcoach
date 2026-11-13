@@ -3,7 +3,7 @@
 Knowledge transfer written 2026-11-13 by the Claude chat that designed swimcoach with Terry (the
 "Architecture chat"), for the chat that builds it in this repo. Everything here comes from that one
 conversation. It was brought into the repo with file paths updated and a screenshots section added
-(section 0.1). Nothing has been built for v2 yet.
+(section 0.1). Nothing has been built for v1 yet.
 
 ## 0. Read this first: what exists and what does not
 
@@ -401,7 +401,7 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
    two-column layout was dropped.
 7. **Screen staying awake.** Not handled; Terry would set auto-lock himself. The Wake Lock API needs
    HTTPS.
-8. **Stack for v2.** Never discussed. localswim is Go and TypeScript; the prototype is Python.
+8. **Stack for v1.** Never discussed. localswim is Go and TypeScript; the prototype is Python.
 9. **Whether the `at` field should exist in production.** It lets any caller backdate a report.
 
 ## 9. Design history (superseded; source not kept)
@@ -464,12 +464,12 @@ In order, each replaced by the next:
 
 - [`reference/prototype/README.md`](../reference/prototype/README.md) was last rewritten at the final
   design step and **matches the prototype source.** Nothing in it is outdated relative to that code.
-- **It describes the prototype, not v2.** Every feature it lists is unbuilt in v2.
+- **It describes the prototype, not v1.** Every feature it lists is unbuilt in v1.
 - "Run it" says `python3 server.py`; on Terry's Windows machines that is `python server.py` or
   `py server.py`.
 - It does not mention the `at` field, the `events` field, or the gaps in section 11.
 
-## 13. Changes made in the v2 mocks
+## 13. Changes made in the v1 mocks
 
 Design changes in [`mocks/index.html`](../mocks/index.html) relative to the prototype. None is
 confirmed by Terry yet; each is up for review in the mock.
