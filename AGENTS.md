@@ -9,7 +9,8 @@ Guidance for any agent (Claude, Codex, ...) working in this repo. Read this firs
 ## What this is
 
 swimcoach is a self-hosted, mobile-first status board for Terry's agent-run software projects.
-Monitoring agents report each in-flight project; Terry watches a page on his phone. The full concept
+Each project's own agent reports its milestone with the swimcoach CLI; Terry watches a page on his
+phone. There is no swimcoach agent and no monitoring agent. The full concept
 (displays, card rules, RTR math, localswim lane mapping, architecture, decisions, open questions) is in
 `docs/concept.md`.
 

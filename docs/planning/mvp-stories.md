@@ -115,7 +115,7 @@ model as described in the contract.
 **Goal:** nothing on the host answers without Cloudflare Access.
 
 - An Access application on the whole hostname, with a long session for Terry's phone.
-- One Access service token per monitoring agent.
+- An Access service token for the swimcoach CLI, stored in a file the project agents' CLI runs read.
 - The Worker verifies the `Cf-Access-Jwt-Assertion` header on every request and refuses anything
   unsigned, so a misconfigured Access policy fails closed.
 

@@ -125,7 +125,7 @@ exact instructions and stop.
 | Story | Terry's step |
 | --- | --- |
 | MVP-02 | Choose the hostname, and approve the Worker's first deploy to his account |
-| MVP-05 | Create the Access application and its policy; create one service token per monitoring agent and store each where that agent can read it |
+| MVP-05 | Create the Access application and its policy; create the swimcoach CLI's service token and store it in a file the CLI reads |
 | MVP-10 | Set the Access session length, add the page to his iPhone's home screen, and confirm the session lasts the evening |
 
 ## Integration ownership

@@ -62,6 +62,11 @@ Every project display is in [`img/`](img/), top and bottom, one per card state i
 - Every 10 minutes each monitoring agent runs a scheduled task. It pulls stats with the localswim CLI,
   reads the chats of the worker agents it monitors, and posts a summary to its own chat ("chatops").
   Terry keeps that chat open on his phone. A real post:
+- **swimcoach does not keep this shape.** Terry, 2026-11-13: there is no swimcoach agent and no
+  monitoring agent in the swimcoach design. Each project's own agent, the one moving the cards, reports
+  its milestone straight to swimcoach with the swimcoach CLI (section 6.1). The monitoring agents
+  above are how Terry works without swimcoach, and the prototype's design; calling the reporter "the
+  swimcoach agent" is the old mental model.
 
 ```
 2026-11-11 10:29pm
@@ -416,15 +421,28 @@ review, Completed. Each has a description on the board; the relevant parts are q
 
 ### 6.1 Components
 
+The MVP shape, set by Terry on 2026-11-13:
+
+```
+project agent (Codex or Claude) --> swimcoach CLI --> Worker API (Cloudflare Access) --> Durable Object
+                                                                                            |
+                                     phone browser <-- GET / and GET /api/state (every 10 s)
+```
+
+- **Project agents push their own status.** The agent working a project runs the swimcoach CLI on
+  every card move and as a 10-minute heartbeat. Each update is a complete picture of its (project,
+  milestone). There is no swimcoach agent, no monitoring agent and no relay. Contract:
+  `docs/planning/mvp-stories.md` MVP-01 and MVP-06.
+
+The prototype's shape, kept for reference only:
+
 ```
 localswim (CLI) --> monitoring agent (Codex)      --\
 worker chats ----> monitoring agent (Claude Code) ---+--> POST /api/report --> swimcoach server --> SQLite
-                                                                                   |
-                                             phone or tablet browser <-- GET / and GET /api/state (every 10 s)
 ```
 
-- **Monitoring agents push.** Each one adds an HTTP POST per project to its existing 10-minute task. It
-  already has the numbers.
+- **Prototype only:** monitoring agents pushed, each adding an HTTP POST per project to its existing
+  10-minute task.
 - **Server:** one Python file, standard library only (`http.server`, `sqlite3`), Python 3.9+. Listens
   on 0.0.0.0:8787.
 - **Page:** one static HTML file with inline CSS and JS, no framework, no build step.
@@ -504,7 +522,7 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
 | Decision | Why | Rejected alternative |
 |---|---|---|
 | Self-hosted web page | Terry: not tied to "any single agent framework like Claude or Codex" | A hosted Claude artifact page |
-| Agents push JSON | The monitoring agent already computes these numbers every 10 minutes and also reads worker chats, which no board can supply | Server reading localswim directly (deferred, section 8); parsing the chatops text (fragile) |
+| Project agents push complete updates through the swimcoach CLI (2026-11-13) | The agent moving the cards knows its milestone's cards and time, which no board can supply because cards are not tied to milestones; one hop, no relay | A swimcoach or monitoring agent relaying (the prototype's shape); server reading localswim directly; parsing the chatops text (fragile) |
 | Agents send raw counts and hours; server computes RTR | One definition in one place; the agent's 1.23 and the server's 1.24 differ only by rounding | Trusting each agent's own ratio |
 | Standard library Python, one HTML file | Runs on a dev box or NAS with nothing to install or build | A framework stack |
 | Page polls every 10 s | Phones suspend tabs; polling recovers on its own | Server push (SSE, WebSocket) |
@@ -677,7 +695,7 @@ Terry's plan, 2026-11-13. RFC 2119 keywords; the capitals are load-bearing.
   - One SQLite-backed Durable Object holding the board: the prototype's `projects`, `samples` and
     `events` tables, and the metric math ported to one TypeScript module.
   - Cloudflare Access in front of the whole host: one login per long session on the phone, and an
-    Access service token for each monitoring agent.
+    Access service token the swimcoach CLI uses on behalf of the project agents.
   - Why not a home server: the laptop that runs the agents travels, so the server has to be reachable
     from anywhere anyway, and a home box going down would show OFFLINE for a hardware reason, the
     exact false alarm the health box exists to avoid.
