@@ -95,7 +95,15 @@ Rules the schema enforces, stated here so V2 does not have to read JSON Schema t
   tests).
 - **Names** (`project`, `milestone`, `needs_me`) MUST NOT start or end with whitespace and MUST NOT
   contain control characters, line breaks included. The server MUST NOT trim or repair them; it refuses
-  them.
+  them. Both sets are fixed lists of code points, so every engine gives the same verdict:
+  - **Whitespace** is every Unicode `White_Space` code point plus U+FEFF, and nothing else: U+0009-U+000D,
+    U+0020, U+0085, U+00A0, U+1680, U+2000-U+200A, U+2028, U+2029, U+202F, U+205F, U+3000 and U+FEFF.
+    U+FEFF is in the set because it is what a pasted byte order mark leaves behind. A whitespace
+    character that is not also in the next list MAY appear inside a name.
+  - **Control characters and line breaks** are U+0000-U+001F, U+007F-U+009F, U+2028 and U+2029. They
+    MUST NOT appear anywhere in a name.
+  - An implementation MUST NOT check either set with a regex `\s` or `\S` class. Engines disagree on
+    it: Python's `\s` leaves out U+FEFF, ECMA-262's includes it, and Go's is ASCII-only.
 - `needs_me` MUST be omitted rather than sent as `""` or `null`.
 - **One report per request.** A JSON array MUST be refused. The CLI sends one milestone at a time, and a
   single object needs no partial-failure rule.

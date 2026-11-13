@@ -69,6 +69,21 @@ registry holding both schemas under their `$id`s:
   `localswim V2`, `a/b`, an accented name, `x`) and refused all 201 bad ones, the 67 code points above at
   the start, middle and end of a name. Against the previous pattern, each engine accepted 96 of the 201,
   and not the same 96. All 17 examples validated again in both engines.
+- **The name pattern was rewritten a third time after review 2 of PR #5.** The edge-whitespace half
+  used `\S`, and engines disagree on what `\s` means: Python accepted U+FEFF at a name's start or end
+  where Ajv refused it, and Go's ASCII-only `\s` accepted U+00A0, U+2003, U+3000 and U+FEFF there.
+  The anchored pattern is now `^[^W](?:.*[^W])?$`, where `W` is the set `api.md` 4.1 lists, written
+  as `\u` escapes: every Unicode `White_Space` code point (U+0009-U+000D, U+0020, U+0085, U+00A0,
+  U+1680, U+2000-U+200A, U+2028, U+2029, U+202F, U+205F, U+3000) plus U+FEFF. The `not` pattern is
+  unchanged. Checked on 2026-11-13 by a sweep of every non-surrogate BMP code point plus U+10000, U+1F600, U+E0001 and U+10FFFF, each at the start, middle and end of a name
+  and alone (253,968 names), in Python `jsonschema`, Ajv 8.20.0 (`ajv/dist/2020`, `u` flag, node
+  26.13.0) and Go 1.27.3 `regexp` (the schema's two patterns, with each `\uXXXX` written as
+  `\x{XXXX}`). All three gave identical verdicts: 322 names refused, which are the 67 control and
+  separator code points in every position and the other 18 whitespace code points at an edge or alone.
+  Python and Ajv also accepted the 2,048 lone surrogates in every position; a Go string cannot hold one.
+  **The sweep was shown to fail:** against the previous pattern, every pair of engines disagreed.
+  Python and Ajv differed on 3 names (U+FEFF), Python and Go on 48, and Ajv and Go on 51. All 17
+  examples validated again in both Python and Ajv.
 
 ## What V2 MUST reproduce
 
@@ -91,7 +106,7 @@ Each of these was a judgment call the stories left open. The reasons are in the 
 | D1 cards turn yellow for `silent` and `over_budget` only, not for stalled | `api.md` 6.6 | D1's own words, plus the silent-feed rule; a one-story milestone has nothing to move for hours |
 | A done milestone is `total > 0` and every card finished | `api.md` 6.2 | The report has no `status` field any more |
 | Project and milestone match ASCII case-insensitively; the newest spelling displays | `api.md` 4.3 | Catches `fga`/`FGA` strays; ASCII-only folding gives every language the same answer |
-| Names with edge whitespace or control characters are refused, never trimmed | `api.md` 4.1 | The server never silently changes a key |
+| Names with edge whitespace or control characters are refused, never trimmed; both sets are fixed code point lists, never a regex `\s` | `api.md` 4.1 | The server never silently changes a key, and every engine agrees on which names are refused |
 | Unknown fields are refused | `api.md` 4.1 | A misspelled optional field fails loudly instead of vanishing |
 | One report per request; arrays refused | `api.md` 4.1 | The CLI sends one; no partial-failure rule needed |
 | A duplicate is the same sample within 60 s, and it stores nothing | `api.md` 4.4 | Codex and Claude on one project must not double the evidence; a 10-minute heartbeat still stores |
