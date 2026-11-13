@@ -138,10 +138,11 @@ header h1 .word{color:var(--lane-blue)} header h1 .word span{color:var(--lane-am
 /* display 2+: one project */
 .back{align-self:flex-start;background:none;border:0;padding:4px 0 8px;color:var(--dim);font-size:15px}
 .page h2{margin:0;font-size:26px;line-height:1.15;overflow-wrap:anywhere}
-.hero{display:flex;align-items:flex-end;gap:14px;margin:6px 0 4px}
-.hero .big{display:flex;align-items:center;gap:8px;font-size:64px;font-weight:800;line-height:1;color:var(--c);font-variant-numeric:tabular-nums}
-.hero .big .arr{color:var(--text);width:.6em;height:.6em}
-.hero .lab{padding-bottom:7px;font-size:13px;color:var(--dim)} .hero .lab b{display:block;font-size:20px;color:var(--c)}
+.hero{display:flex;align-items:center;gap:14px;margin:0}
+/* The hero RTR uses the same clock hand as the cards (concept.md 3.2): padding reserves the hand's reach,
+   .8em above and below the line box and .883em on the right, so it never overlaps the name or the label. */
+.hero .big{display:flex;align-items:center;font-size:64px;font-weight:900;letter-spacing:-.01em;line-height:1;color:var(--c);font-variant-numeric:tabular-nums;padding:.8em .883em .8em 0}
+.hero .lab{font-size:13px;color:var(--dim)} .hero .lab b{display:block;font-size:20px;color:var(--c)}
 .flag{margin:10px 0 0;padding:9px 12px;border-radius:10px;font-size:15px}
 .flag.me{background:#2a1215;color:#fecaca;border:1px solid var(--me)}
 .flag.st{background:#231c10;color:#fde68a;border:1px solid #7c5e10}
@@ -155,7 +156,7 @@ h4{margin:20px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08e
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
 .tile small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
 .tile b{display:block;font-size:22px;line-height:1.2;margin-top:2px;font-variant-numeric:tabular-nums}
-.tile span{display:block;font-size:12px;color:var(--dim);margin-top:1px}
+.tile span{display:block;font-size:12px;color:var(--dim);margin-top:1px;text-wrap:pretty}
 .meter{display:grid;grid-template-columns:44px 1fr;gap:4px 10px;align-items:center;margin-bottom:8px}
 .meter label{font-size:12px;color:var(--dim)}
 .meter .bar{height:12px;background:var(--panel2);border-radius:6px;overflow:hidden}
@@ -366,7 +367,7 @@ function detail(f, now, d){
   const p = f.p, t = f.t, tone = TONE[f.level];
   let h = '<button class="back" data-go="'+ALL+'">‹ All projects</button><h2>'+esc(p.project)+'</h2>';
   h += '<div class="hero" style="--c:var('+tone+')">'
-    + (f.ratio !== null ? '<div class="big">'+f.ratio.toFixed(2)+arrow(f.dir)+'</div>' : '')
+    + (f.ratio !== null ? '<div class="big">'+clockRtr(f.ratio, f.dir)+'</div>' : '')
     + '<div class="lab">'+(f.ratio !== null ? 'RTR'+(f.dir !== null ? ' · '+TREND[f.dir][0].toLowerCase() : '') : '')+'<b>'+esc(f.why)+'</b></div></div>';
   f.needs.forEach(n => h += '<div class="flag me"><b>Go to keyboard:</b> '+esc(n)+'</div>');
   if (p.stale) h += '<div class="flag st">No report for '+dur(now-p.updated_at)+'. The monitoring agent may have stopped.</div>';
@@ -397,7 +398,11 @@ function detail(f, now, d){
   if (p.lanes.length){
     const shades = ['var(--stack-2)','var(--dim)','var(--text)'], attn = p.attention_lanes || [];
     let n = 0; const off = l => f.parked.includes(l.name);
-    const color = l => off(l) ? 'var(--line)' : f.dl.includes(l.name) ? 'var(--ok)' : attn.includes(l.name) ? 'var(--me)' : shades[n++ % shades.length];
+    // Color follows message (docs/brand.md section 5): done lanes take this display's own state color, as
+    // the Work bar does, so a yellow display never shows green. The attention lane is red only when it
+    // holds a ticket; at 0 it is a neutral slate, because red means "get up".
+    const color = l => off(l) ? 'var(--line)' : f.dl.includes(l.name) ? 'var('+tone+')'
+      : attn.includes(l.name) ? (l.count > 0 ? 'var(--me)' : 'var(--stack-1)') : shades[n++ % shades.length];
     const ls = p.lanes.map(l => ({l, c: color(l), off: off(l), share: f.total ? l.count/f.total : 0}));
     h += '<h4>Swimlanes</h4><div class="stack">'+ls.filter(x => x.l.count && !x.off).map(x => '<i style="background:'+x.c+';flex:'+x.l.count+' 0 0"></i>').join('')+'</div><ul class="lanes">'
       + ls.map(x => '<li'+(x.off ? ' class="off"' : '')+'><i style="background:'+x.c+'"></i>'+esc(x.l.name)+'<b>'+x.l.count+'</b><span>'+(x.off ? '–' : Math.round(x.share*100)+'%')+'</span></li>').join('')+'</ul>';

@@ -231,8 +231,9 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 - **OBE: the GO TO KEYBOARD banner growing with every ask.** The old banner listed each red project's
   full ask and could push the cards into compact mode. Overtaken by the slot grid: GO TO KEYBOARD is now
   one slot with one detail line of project names, so it can no longer grow.
-- **Open: the project display's large RTR** still uses the plain arrow beside the number; whether it
-  should move onto a clock like the cards is not decided.
+- **Decided: the project display's large RTR uses the clock hand too** (Terry, 2026-11-13). Weight 900
+  like the cards, the hand in the number's color, and padding that reserves the hand's reach so it
+  never touches the project name or the label; the label is centered on the number.
 
 Card states, first match wins:
 
@@ -262,7 +263,11 @@ Top to bottom:
    states the gates.
 6. **Work against time:** two bars: tickets done of total, and hours used of allocated.
 7. **Swimlanes:** stacked bar of counted lanes, then every lane with count and share. Parked lanes are
-   dimmed with a dash for share.
+   dimmed with a dash for share. **Done lanes take the display's own state color**, like the Work bar,
+   so a yellow display never shows green (color follows message, `docs/brand.md` section 5). **The
+   attention lane (Needs Terry) is red only when it holds a ticket**, and neutral slate at 0, because
+   red means "get up". Both decided by Terry, 2026-11-13. Tile captions use `text-wrap:pretty` so a
+   word such as "go" is never stranded alone on a line.
 8. Footer: last ticket move, last report time, reporting agent.
 
 ### 3.4 Loading: no render flicker
