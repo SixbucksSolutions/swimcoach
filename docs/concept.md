@@ -264,12 +264,16 @@ Top to bottom:
    or late), RTR at end of block, RTR trend (signed change). When it is too early, one tile says so and
    states the gates.
 6. **Work against time:** two bars: tickets done of total, and hours used of allocated.
-7. **Swimlanes:** stacked bar of counted lanes, then every lane with count and share. Parked lanes are
-   dimmed with a dash for share. **Done lanes take the display's own state color**, like the Work bar,
-   so a yellow display never shows green (color follows message, `docs/brand.md` section 5). **The
-   attention lane (Needs Terry) is red only when it holds a ticket**, and neutral slate at 0, because
-   red means "get up". Both decided by Terry, 2026-11-13. Tile captions use `text-wrap:pretty` so a
-   word such as "go" is never stranded alone on a line.
+7. **Swimlanes:** one row per counted lane (name, count, share, and its own bar under the row), then
+   the 100% bar below them, split into those lanes. Terry, 2026-11-13. Parked lanes (Backlog, Blocked)
+   are not shown, and neither is an empty Needs Terry lane: on a green or yellow display it is always 0,
+   so those displays show exactly Ready For Work, In progress and Ready for review. **Done lanes take
+   the display's color only on green and yellow displays**, like the Work bar, so a yellow display
+   never shows green (color follows message, `docs/brand.md` section 5). On red, gray and done
+   displays they use the lightest neutral: the first version also tinted them on red displays, which
+   painted finished work "get up" red beside Needs Terry, and it was corrected the same day. **Needs
+   Terry is red only when it holds a ticket.** Tile captions use `text-wrap:pretty` so a word such as
+   "go" is never stranded alone on a line.
 8. Footer: last ticket move, last report time, reporting agent.
 
 ### 3.4 Loading: no render flicker
