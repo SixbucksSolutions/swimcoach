@@ -20,7 +20,7 @@
     {"id": "MVP-01", "title": "MVP contract", "hours": 2.5, "turn": 1, "slot": 0, "area": "contract", "deps": []},
     {"id": "MVP-02", "title": "Worker scaffold + deploy", "hours": 2.0, "turn": 1, "slot": 1, "area": "platform", "deps": []},
     {"id": "MVP-03", "title": "Board Durable Object", "hours": 2.5, "turn": 2, "slot": 0, "area": "data",
-     "deps": [{"id": "MVP-01", "route": "vertical"}, "MVP-02"]},
+     "deps": [{"id": "MVP-01", "route": "vertical"}, {"id": "MVP-02", "route": "corner"}]},
     {"id": "MVP-04", "title": "Metrics module", "hours": 2.5, "turn": 2, "slot": 1, "area": "data",
      "deps": [{"id": "MVP-01", "route": "corner"}]},
     {"id": "MVP-05", "title": "Access + service tokens", "hours": 2.0, "turn": 2, "slot": 2, "area": "security",
