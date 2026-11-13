@@ -149,7 +149,13 @@ position (the first dot is square). Tapping a project card jumps to that project
   inked tip of a 3 o'clock hand sits exactly the card's 18 px padding from the right edge, mirroring the
   18 px in front of the project name. Measured at the ink level, it is 18.0 px on both sides at 44 px and
   at 28 px. Before, the tip was 25.3 px in. The number and hand sit in the same place on every card,
-  whatever the direction, so the 12 and 6 o'clock hands sit a little in from that edge. The project display's large RTR still
+  whatever the direction, so the 12 and 6 o'clock hands sit a little in from that edge.
+- **The name sits top-left; the status below it wraps to two lines and MUST NOT end in "...".** Terry,
+  2026-11-13: "Rather get two lines of smaller status than '...' as the '...' defeats the purpose of the
+  detail update." The status is 14 px, weight 500, two lines at most; the RTR block stays centered on
+  the right. Measured at 402 px: the name's capitals start 18 px below the card edge, matching the 18 px
+  to their left, and in the tightest card (102 px, six cards) a full two-line status ends 18 px above
+  the bottom edge. search-index's full ask, "Pick an index strategy: per-tenant or shared", now fits. The project display's large RTR still
   uses the plain arrow beside the number; whether it should follow is open.
 
 Card states, first match wins:
