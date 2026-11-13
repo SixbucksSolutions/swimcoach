@@ -136,7 +136,12 @@ Workers.
 
 - **First deploy: pre-approved.** When MVP-02 passes review, the Lead runs the first deploy through
   `scripts/wrangler.ps1` without stopping. It creates only the `swimcoach` Worker.
-- **Pacing: stop after T1.** Finish MVP-01 and MVP-02, demo them, and wait for Terry.
+- **Pacing: the Lead decides** (Terry, 2026-11-13, replacing the earlier "stop after T1"). The Lead
+  opens each next turn under relay rule 8 and stops only at Terry's own gates. The first is MVP-05's
+  Access steps in T2, which also need the Zero Trust organization confirmed (risk 2).
+- **Open questions for Terry** collect in the contract's "Open for Terry" lists and wait for a natural
+  stop; work proceeds on the prototype's behavior meanwhile. A decision Terry already made (D1-D3)
+  outranks the prototype without asking.
 - **Subagents: as planned** in `mvp-staffing-plan.md`, five T1 authors at once.
 - A reboot is no longer needed for credentials: nothing reads environment variables.
 
