@@ -31,10 +31,10 @@
       "enum": ["codex", "claude"]
     },
     "name": {
-      "description": "Shared rule for project and milestone names: no leading or trailing whitespace, and no control characters anywhere (so no line breaks). The control-character ban is a separate unanchored check because Python's $ also matches before a final newline; the split gives the same verdict in Python and ECMA-262 engines.",
+      "description": "Shared rule for project and milestone names: no leading or trailing whitespace, and no control characters or line breaks anywhere. The not pattern refuses every C0 control (U+0000-U+001F), U+007F, every C1 control (U+0080-U+009F, so U+0085 NEL too), and the separators U+2028 and U+2029. It is a separate unanchored check because Python's $ also matches before a final newline, and because ECMA-262's . refuses U+2028 and U+2029 where Python's accepts them; once the not pattern removes every character the engines read differently, the anchored pattern's . never meets one, and Python and ECMA-262 engines give the same verdict.",
       "type": "string",
       "pattern": "^\\S(?:.*\\S)?$",
-      "not": { "pattern": "[\\u0000-\\u001f\\u007f]" }
+      "not": { "pattern": "[\\u0000-\\u001f\\u007f-\\u009f\\u2028\\u2029]" }
     },
     "project": {
       "description": "The project's stable name, for example \"localswim V2\" or \"FGA\". Matched ASCII case-insensitively; see contract/api.md.",

@@ -389,9 +389,16 @@ switched on.**
 - **Time MUST NOT run backward per milestone.** A report whose `T` is earlier than that milestone's
   `updated_at` MUST get `409 clock_went_backward` and change nothing. With the real clock this cannot
   happen in practice; with the header it catches a suite replaying samples out of order.
-- **How a deployment gets the test clock is the implementation's business.** The MVP uses a Worker
-  variable that is on only in a separate test Worker (MVP-09); the production `swimcoach` Worker MUST
-  NOT have it on.
+- **The switch MUST fail closed.** Exactly one specific value of the deployment's switch turns the test
+  clock on, and the implementation MUST compare the switch to that one value exactly. An absent switch,
+  an empty value and every other value (`false`, `0`, `off` and a padded copy of the enabling value
+  included) MUST mean the production behavior: `400 test_clock_disabled`. The reason: a natural check
+  such as `if (env.X)` treats the string `"false"` or `"0"` as on.
+- **The production deployment's configuration MUST NOT define the switch at all,** so no value there can
+  turn the test clock on.
+- **The switch's name and its one enabling value are the implementation's business.** The MVP uses a
+  Worker variable that only a separate test Worker (MVP-09) defines. V2 MAY use another mechanism, and
+  it MUST fail closed in the same way.
 
 **Why this one.** It keeps the report free of timestamps, as the frozen vocabulary requires. It is
 stateless: each request carries its own time, so there is no shared clock to set, reset or leave behind,

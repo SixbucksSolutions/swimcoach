@@ -32,8 +32,10 @@ Common options, on `report` and `stop`:
 | --- | --- |
 | `--dry-run` | Validate and print the JSON body that would be sent, then exit. Nothing is sent, and the config file is not read |
 | `--json` | Print the server's JSON response body on stdout instead of the one-line summary |
-| `--config <path>` | Read this config file instead of the default (section 5) |
-| `--url <base url>` | Use this base URL instead of the config file's `url`. It is not a secret |
+| `--config <path>` | Read this config file instead of the default (section 5). It is the only way to reach a different service |
+
+There is **no `--url` option**, and the CLI MUST refuse one as an unknown flag (exit 2). Section 5 says
+why.
 
 There is **no create command.** The first `report` for a (project, milestone) adds it to the board, and
 `stop` removes it.
@@ -132,7 +134,11 @@ follows.
 
 - The file SHOULD be readable only by Terry's own account. The `.secrets\swimcoach` folder already is.
 - Unknown keys MUST be ignored, so a later version can add one without breaking an older CLI.
-- `--url` overrides `url`. The two secret keys have no override.
+- **No key in the file has a command-line override,** `url` included. The URL and the secret live in the
+  same file, so the CLI only ever sends the secret to the `url` beside it. A different service means a
+  different config file, passed with `--config`.
+- **Why there is no `--url`:** the callers are LLM agents that act on text they read, and an injected
+  `--url` would send the Access service token secret to another host.
 
 ## 6. HTTP behavior
 

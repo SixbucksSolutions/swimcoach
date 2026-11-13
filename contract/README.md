@@ -59,7 +59,16 @@ registry holding both schemas under their `$id`s:
   lane, and `no_data` beside tracked milestones.
 - The name pattern was rewritten once during that run. Python's `$` also matches before a final newline,
   so `"FGA\n"` passed Python's validator where an ECMA-262 engine (the Worker's) would refuse it. The
-  control-character ban is now a separate unanchored `not` pattern, which both engines read the same way.
+  control-character ban became a separate unanchored `not` pattern.
+- **The name pattern was rewritten again after review 1 of PR #5.** The two engines still disagreed:
+  ECMA-262's `.` refuses U+2028 and U+2029 where Python's accepts them, and both accepted U+0085 (NEL)
+  and the other C1 controls. The `not` pattern is now `[\u0000-\u001f\u007f-\u009f\u2028\u2029]`: every
+  C0 control, U+007F, every C1 control, and the two separators. The anchored pattern's `.` then never
+  meets a character the engines read differently. Checked on 2026-11-13 in both Python `jsonschema` and
+  Ajv 8.20.0 (`ajv/dist/2020`, `u` flag, node 26.13.0): each accepted five good names (`FGA`,
+  `localswim V2`, `a/b`, an accented name, `x`) and refused all 201 bad ones, the 67 code points above at
+  the start, middle and end of a name. Against the previous pattern, each engine accepted 96 of the 201,
+  and not the same 96. All 17 examples validated again in both engines.
 
 ## What V2 MUST reproduce
 
@@ -76,7 +85,7 @@ Each of these was a judgment call the stories left open. The reasons are in the 
 
 | Decision | Where | Short reason |
 | --- | --- | --- |
-| Tests control time with a per-request `Swimcoach-Test-Now` header, honored only by a test deployment; production refuses it | `api.md` 9 | Keeps the report timestamp-free; stateless; same build in both places; V2 implements one header |
+| Tests control time with a per-request `Swimcoach-Test-Now` header, honored only by a test deployment; production refuses it. The switch fails closed, and production does not define it | `api.md` 9 | Keeps the report timestamp-free; stateless; same build in both places; V2 implements one header |
 | The server returns every metric and verdict (`metrics`, `mode`, `color`, `reason`, `feed`) in `GET /api/state` | `api.md` 6 | One definition in one place, and the black-box suite can check the math through HTTP alone |
 | `metrics` is pure math and ignores D1; D1 lives in `mode`, `color` and `reason` | `api.md` 6.3, 6.5 | The golden fixtures check one formula everywhere |
 | D1 cards turn yellow for `silent` and `over_budget` only, not for stalled | `api.md` 6.6 | D1's own words, plus the silent-feed rule; a one-story milestone has nothing to move for hours |
@@ -90,7 +99,7 @@ Each of these was a judgment call the stories left open. The reasons are in the 
 | Stopping an untracked milestone is `404 not_tracked`, CLI exit 3 | `api.md` 5, `cli.md` 3 | A mistyped stop must not pass for success |
 | No day boundary: a milestone shows from first report to stop, and its trend uses all its samples | `api.md` 6.9 | The lifecycle says only stop removes a card; it also fixes the midnight rollover defect |
 | `tldr`, `cards`, `block`, `events` and lane overrides are gone | `api.md` 6.10 | The frozen report carries none of them, and the page showed no events |
-| The CLI reads URL and token from `%USERPROFILE%\.secrets\swimcoach\cli.json` | `cli.md` 5 | Terry's files-not-environment rule; secrets stay out of argv |
+| The CLI reads URL and token from `%USERPROFILE%\.secrets\swimcoach\cli.json`, and has no `--url` | `cli.md` 5 | Terry's files-not-environment rule; secrets stay out of argv; the secret only goes to the URL beside it |
 
 ## Open for Terry
 
