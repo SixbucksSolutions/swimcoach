@@ -87,7 +87,10 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
    - The board data is `C:\Projects\localswim-state-store` (`TerryOtt/localswim-state-store`): one
      folder per project with V1 JSON boards, for example `localswim\localswim.json`. A `swimcoach`
      folder already exists there.
-   - A built V2 CLI is `C:\Projects\localswim-v2\localswim.exe`. It reads the live service through
+   - **Terry, 2026-11-13: do not use `C:\Projects\localswim-v2`.** MVP-06 MUST NOT run its
+     `localswim.exe` or read its data. The CLI notes below came from that binary's help and describe the
+     V2 command set only.
+   - The V2 CLI reads the live service through
      `LOCALSWIM_URL` and `LOCALSWIM_TOKEN` (credentials in Clixml files, per
      `C:\Projects\localswim\docs\windows-operations.md`), or a saved snapshot with `--data DIRECTORY`.
      `card list BOARD_ID`, `board get --view lanes` and `activity list --view monitor` look like the
@@ -97,8 +100,8 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
      `ModuleNotFoundError: No module named 'localswim'`. MVP-06 MUST NOT use it.
    - **Decided, Terry, 2026-11-13: the reporter reads boards through the localswim CLI, which can read
      and write. It MUST NOT parse the JSON files in the state store.**
-   - Still open for MVP-06: which CLI build serves the live boards, and how a card is tied to a time
-     block. The V1 source now sits in `C:\Projects\localswim-legacy-v1\src\localswim`, which is why
+   - Still open for MVP-06: which CLI build serves the live boards (not `localswim-v2`, and not the
+     broken uv install on `PATH`), and how a card is tied to a time block. The V1 source now sits in `C:\Projects\localswim-legacy-v1\src\localswim`, which is why
      the uv install's old `src` path broke. Neither question blocks T1 or T2.
 2. **The Zero Trust organization is unconfirmed.** The local token lists Access applications (there are
    none) but gets 403 on `access/organizations`, because it lacks an Organizations Read permission.
