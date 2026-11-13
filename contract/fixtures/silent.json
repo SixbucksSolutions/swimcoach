@@ -1,0 +1,31 @@
+{
+  "name": "silent",
+  "description": "Mock 'One agent silent', project mobile-onboarding: its agent's last report, 32 minutes before now.",
+  "cap_hours": 3.0,
+  "samples": [
+    {"at_hours": 0.0, "active_hours": 0.17, "lanes": {"ready_for_work": 8, "in_progress": 1, "needs_terry": 0, "ready_for_review": 0, "completed": 0}},
+    {"at_hours": 0.1667, "active_hours": 0.33, "lanes": {"ready_for_work": 8, "in_progress": 1, "needs_terry": 0, "ready_for_review": 0, "completed": 0}},
+    {"at_hours": 0.3333, "active_hours": 0.5, "lanes": {"ready_for_work": 7, "in_progress": 1, "needs_terry": 0, "ready_for_review": 1, "completed": 0}},
+    {"at_hours": 0.5, "active_hours": 0.67, "lanes": {"ready_for_work": 7, "in_progress": 1, "needs_terry": 0, "ready_for_review": 1, "completed": 0}},
+    {"at_hours": 0.6667, "active_hours": 0.83, "lanes": {"ready_for_work": 6, "in_progress": 1, "needs_terry": 0, "ready_for_review": 2, "completed": 0}},
+    {"at_hours": 0.8333, "active_hours": 1.0, "lanes": {"ready_for_work": 6, "in_progress": 1, "needs_terry": 0, "ready_for_review": 2, "completed": 0}},
+    {"at_hours": 1.0, "active_hours": 1.17, "lanes": {"ready_for_work": 5, "in_progress": 1, "needs_terry": 0, "ready_for_review": 3, "completed": 0}},
+    {"at_hours": 1.1667, "active_hours": 1.33, "lanes": {"ready_for_work": 5, "in_progress": 1, "needs_terry": 0, "ready_for_review": 3, "completed": 0}},
+    {"at_hours": 1.3333, "active_hours": 1.5, "lanes": {"ready_for_work": 4, "in_progress": 1, "needs_terry": 0, "ready_for_review": 4, "completed": 0}}
+  ],
+  "expected": {
+    "rtr": 0.8888888888888888,
+    "trend_bin": "sharp_up",
+    "projection_hours": 3.1666666666666674,
+    "chance_on_time": 0.5104677810241454,
+    "call": "toss_up",
+    "too_early": false,
+    "work": 0.4444444444444444,
+    "clock": 0.5,
+    "finished": 4,
+    "total": 9,
+    "trend": {"delta": 0.2222222222222222, "minutes": 60, "pace": 0.9999999999999999, "proj": 0.9444444444444444, "finish": 1.0555555555555558, "recent_done": 3, "to_go": 5},
+    "stalled": false,
+    "color": "yellow"
+  }
+}
