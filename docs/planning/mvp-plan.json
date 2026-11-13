@@ -25,7 +25,7 @@
      "deps": [{"id": "MVP-01", "route": "corner"}]},
     {"id": "MVP-05", "title": "Access + service tokens", "hours": 2.0, "turn": 2, "slot": 2, "area": "security",
      "deps": [{"id": "MVP-02", "route": "corner"}]},
-    {"id": "MVP-06", "title": "Agent reporter", "hours": 2.0, "turn": 3, "slot": 0, "area": "agents",
+    {"id": "MVP-06", "title": "CLI client and agent", "hours": 2.0, "turn": 3, "slot": 0, "area": "agents",
      "deps": [{"id": "MVP-01", "route": "left"}, {"id": "MVP-05", "route": "corner"}]},
     {"id": "MVP-07", "title": "State + report API", "hours": 2.0, "turn": 3, "slot": 1, "area": "data",
      "deps": [{"id": "MVP-03", "route": "corner"}, "MVP-04", {"id": "MVP-05", "route": "corner"}]},
