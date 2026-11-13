@@ -89,7 +89,11 @@ header h1 .word{color:var(--lane-blue)} header h1 .word span{color:var(--lane-am
    card's content needs, so more than 8 cards scroll instead of squeezing. */
 .cards{flex:1 0 auto;display:grid;grid-auto-rows:var(--slot,105.7px);gap:10px;align-content:start}
 .pc{display:flex;align-items:center;gap:12px;width:100%;min-width:0;text-align:left;border:0;border-radius:18px;padding:12px 18px;background:var(--b);color:var(--f)}
-.pc.kbd{--b:var(--bad-fill);--f:#fff;animation:throb 1.6s ease-in-out infinite}
+/* GO TO KEYBOARD breathes in step with the LIVE dot (Terry, 2026-11-13): the same 2s ease-in-out cycle
+   peaking at 50%, the same 8 cycles, restarted by the same successful poll (syncBreath). Only while the
+   header says LIVE, so a frozen or stale page stops both together instead of looking alive. */
+.pc.kbd{--b:var(--bad-fill);--f:#fff}
+#phone[data-health=live] .pc.kbd{animation:throb 2s ease-in-out 8}
 .pc.kbd .nm b{font-weight:900;letter-spacing:.04em}
 .pc.green{--b:var(--ok-fill);--f:#fff} .pc.green .nm span{opacity:1} .pc.yellow{--b:var(--risk);--f:#231a00} .pc.red{--b:var(--bad-fill);--f:#fff}
 .pc.gray{--b:var(--stack-1);--f:#e2e8f0} .pc.done{--b:var(--board);--f:var(--dim)}
@@ -455,6 +459,7 @@ function render(d){
   $('dots').innerHTML = want.map((k, i) => '<button type="button" aria-label="'+(i ? esc(k) : 'All projects')+'"><i></i></button>').join('');
   if (keys()[current()] !== here) go(want.includes(here) ? here : ALL, false);
   fitCards();
+  syncBreath();
   dots();
   const asking = fs.filter(f => f.needs.length).length;
   document.title = (asking ? '('+asking+') ' : '') + 'swimcoach · clickable mock';
@@ -508,9 +513,20 @@ function tick(){
   if (el.className !== st) el.className = st;
   el.querySelector('b').textContent = label;
   el.querySelector('span').textContent = age === null || age < 60 ? '' : dur(age);
-  phone.dataset.health = st; $('warn').textContent = msg;
+  if (phone.dataset.health !== st){ phone.dataset.health = st; syncBreath(); }
+  $('warn').textContent = msg;
 }
-function pulse(){ const i = $('health').querySelector('i'); i.style.animation = 'none'; void i.offsetWidth; i.style.animation = ''; }
+function pulse(){ const i = $('health').querySelector('i'); i.style.animation = 'none'; void i.offsetWidth; i.style.animation = ''; syncBreath(); }
+// Lock every GO TO KEYBOARD slot to the LIVE dot's breath: same animation clock, same phase.
+function syncBreath(){
+  const dot = $('health').querySelector('i').getAnimations()[0];
+  document.querySelectorAll('.pc.kbd').forEach(k => {
+    let a = k.getAnimations()[0];
+    if (!dot){ return; }                       // not LIVE: the CSS rule has already stopped the slot
+    if (!a){ k.style.animation = 'none'; void k.offsetWidth; k.style.animation = ''; a = k.getAnimations()[0]; }
+    if (a) a.currentTime = dot.currentTime;
+  });
+}
 
 // ---------- mock controls ----------
 function scenList(){

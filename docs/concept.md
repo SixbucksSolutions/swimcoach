@@ -134,6 +134,11 @@ position (the first dot is square). Tapping a project card jumps to that project
   remaining cards keep their order below it, even if a project between them went red. **No space is
   reserved for it:** with nothing red, row one is the first green or yellow card. The breathing red is
   confirmed: Terry, "chefs kiss to draw my eye." Each red project's own display still shows its full ask.
+- **GO TO KEYBOARD breathes in step with the LIVE dot.** Terry, 2026-11-13. Same 2 s `ease-in-out` cycle
+  peaking together, same 8 cycles, restarted by the same successful poll, and only while the header
+  says LIVE. So a frozen or stale page stops both at once rather than leaving the red slot looking alive
+  (the dead-page tell in section 3.1). Measured: both animations read the same time to the millisecond
+  after load, between polls and after a poll, both stop when OFFLINE and both restart together.
 - **One card per non-red project.** Solid background color, project name, RTR, trend arrow. Fixed
   alphabetical order so a card never changes position; a color change in a known spot is the signal.
 - **The trend arrow is a clock hand.** Terry's idea, 2026-11-13. The RTR's final digit is the clock's
