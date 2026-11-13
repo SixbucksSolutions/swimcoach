@@ -585,6 +585,11 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
     visual confirmation before T3, Terry owns Completed and cutover). **Decided 2026-11-13 (D3):** only
     Terry's own gates are Needs Terry items (red, GO TO KEYBOARD, with the ask); agent-owned gates change
     nothing, and a ticket in Ready for Review is not by itself a request.
+13. **Hiding a finished milestone from the phone (deferred, after the MVP).** Terry, 2026-11-13: a
+    simple tap on the page MAY later let him dismiss a (project, milestone) he no longer wants to see,
+    for example once the next increment has started. For the MVP, entries are removed only by the
+    project agent's swimcoach CLI stop command, because that is easier. The MVP's page MUST NOT grow
+    this control.
 
 ## 9. Design history (superseded; source not kept)
 
