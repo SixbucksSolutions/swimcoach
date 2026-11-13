@@ -123,11 +123,19 @@ position (the first dot is square). Tapping a project card jumps to that project
 
 ### 3.2 Display 1: all projects ("ruthlessly minimalist")
 
-- **GO TO KEYBOARD banner.** Hidden unless a project needs Terry. Red, gently pulsing. Lists each such
-  project and its ask. Tap goes to the first one.
-- **One card per project.** Solid background color, project name, RTR, trend arrow. Fixed alphabetical
-  order so a card never changes position; a color change in a known spot is the signal. Cards stretch
-  to fill the screen.
+- **A 4/8 slot grid.** Terry, 2026-11-13. The overview has four equal slots, or eight half-height slots
+  once there are five or more things to show. Slot height comes from the screen height, so eight half
+  slots fill exactly the space of four full ones; it never drops below the height a card's content
+  needs, so more than eight slots scroll instead of squeezing. Measured at 402 × 874: full slots
+  185.5 px, half slots 87.8 px. Every slot on a screen is the same height.
+- **GO TO KEYBOARD takes a slot, only when needed.** When any project needs Terry, red projects leave
+  the list and become one slot in row one: red, breathing, the title GO TO KEYBOARD, and the red
+  projects' names as its detail line ("..." if they do not all fit). Tap goes to the first one. The
+  remaining cards keep their order below it, even if a project between them went red. **No space is
+  reserved for it:** with nothing red, row one is the first green or yellow card. The breathing red is
+  confirmed: Terry, "chefs kiss to draw my eye." Each red project's own display still shows its full ask.
+- **One card per non-red project.** Solid background color, project name, RTR, trend arrow. Fixed
+  alphabetical order so a card never changes position; a color change in a known spot is the signal.
 - **The trend arrow is a clock hand.** Terry's idea, 2026-11-13. The RTR's final digit is the clock's
   center, and the arrow sits around it at the hour its trend points to: strong up at 12, up at 1:30,
   flat at 3, down at 4:30, hard down at 6. The arrow both sits at the hour and points at it. Every card
@@ -143,49 +151,48 @@ position (the first dot is square). Tapping a project card jumps to that project
   Terry, 2026-11-13: they are "the _truly valuable_ second tier data beyond card color", and the size
   MUST NOT crowd the card edges ("don't crowd the edges just use more dead space"). The number is weight
   900 and scales with the card's height through a container query: the largest size that keeps the hand
-  16 px from the card edge, between 28 px and 52 px. Measured at 402 px: 44 px with three cards (hand 28
-  px from the edge), 28 px with six (15 px from the edge). A fixed 36 px had left 5 px.
+  16 px from the card edge, between 18 px and 52 px. Measured at 402 × 874: 52 px in a full slot (hand
+  25 px from the edge), 21.4 px in a half slot (hand exactly 16 px from the edge). A fixed 36 px had left
+  5 px. An earlier version of the formula forgot the card's 12 px padding and claimed 16 px while leaving
+  more; it was corrected when the half slots exposed it.
 - **The card's two side margins MUST match.** Terry, 2026-11-13: unequal padding "triggers the eye". The
   inked tip of a 3 o'clock hand sits exactly the card's 18 px padding from the right edge, mirroring the
   18 px in front of the project name. Measured at the ink level, it is 18.0 px on both sides at 44 px and
   at 28 px. Before, the tip was 25.3 px in. The number and hand sit in the same place on every card,
   whatever the direction, so the 12 and 6 o'clock hands sit a little in from that edge.
-- **The name sits top-left; the status below it wraps to two lines and MUST NOT end in "...".** Terry,
+- **The name sits top-left on one line; the status below it gets two lines in a full slot.** Terry,
   2026-11-13: "Rather get two lines of smaller status than '...' as the '...' defeats the purpose of the
-  detail update." The status is 14 px, weight 500, two lines at most; the RTR block stays centered on
-  the right. Measured at 402 px: the name's capitals start 18 px below the card edge, matching the 18 px
-  to their left, and in the tightest card (102 px, six cards) a full two-line status ends 18 px above
-  the bottom edge. search-index's full ask, "Pick an index strategy: per-tenant or shared", now fits.
+  detail update." The status is 14 px, weight 500; the RTR block stays centered on the right. The name's
+  capitals start 18.0 px below the card edge in both slot sizes, matching the 18 px to their left.
+- **The name MUST stay on one line.** A name too long for its column shrinks its font until it fits,
+  down to 14 px, then ends in "...". Terry: "It'll incentivize me to use shortened names for localswim."
+  Full slots set names at 24 px, half slots at 20 px. In a full slot the 52 px RTR leaves the name about
+  174 px, so a 26-character name such as "mobile-onboarding-redesign" reaches the floor and truncates.
 - **No separator line between the name and the status.** Considered and declined, 2026-11-13. Size
   (24 px against 14 px), weight (800 against 500) and a 5 px gap already make the two tiers. A rule
   inside a colored card adds one more shape to scan at a glance, and it would compete with the clock
   hand at 12 o'clock on the same card. Hierarchy comes from type, not lines.
 - **The status is indented 12 px under the name instead**, half the name's 24 px em. Terry's idea,
   2026-11-13: "The lighter weight font and a modest indent will be gorgeous to my brain." It separates
-  detail from title without adding a shape. The longest sample status still fits two lines, ending
-  18 px above the bottom of the tightest card.
-- **Every card reserves room for two status lines.** Terry, 2026-11-13. A card's minimum height is
-  101.7 px, measured so a full two-line status ends the same 18 px above the bottom edge as the name's
-  capitals sit below the top (18.0 and 18.2 px; the 0.2 px is layout rounding, under one device pixel at
-  3×). With more projects than fit, the overview scrolls rather than squeezing a card; tested with eight
-  cards, each with a two-line status. The old minimum was 74 px.
-- **All cards are the same height: all two-line, or all one-line.** Terry, 2026-11-13: "cards are all
-  one line or all or two -- identical card height." When two-line cards do not fit the screen, every
-  card drops to one status line ending in "..." with an 83.5 px minimum, keeping the 18 px bottom
-  margin. If even that does not fit, the overview scrolls. The mode is chosen in the same step that
-  draws the cards, before the page paints, so it never flickers (section 3.4). Measured at 402 × 874
-  with no GO TO KEYBOARD banner: up to 7 projects two-line, 8 compact without scrolling, 9 and more
-  compact and scrolling.
+  detail from title without adding a shape.
+- **Full slots: two status lines. Half slots: one status line, ending in "...".** Every card on a screen
+  has the same height and the same number of status lines (Terry: "cards are all one line or all or
+  two -- identical card height"). The slot mode is chosen in the same step that draws the cards, before
+  the page paints, so it never flickers (section 3.4).
+- **A little more room below the status than above the name, paid from the slot budget.** Terry,
+  2026-11-13. The content minimum keeps 22 px below the last status line, 4 px more than the 18 px above
+  the name: 105.7 px for a full card with two lines, 87.5 px for a half card with one. A half slot at
+  402 × 874 is 87.8 px, so the minimum fits with 0.3 px to spare; on a shorter screen the grid scrolls
+  rather than cutting into it. Measured: the status ends 26.1 px above the edge in a half slot.
 - **Design for one to three projects; more is the edge case.** Terry, 2026-11-13: "When I juggle three
   projects at once I basically never leave the PC, too much attention needed. Eight would require VERY
   independent work." Polish SHOULD go to the 1–3 card screens. Compact mode is "a reasonable trade in
   what feels like an unlikely case."
-- **Deferred: the GO TO KEYBOARD banner grows with every ask.** It lists each waiting project's full ask,
-  so several long asks push the cards into compact mode early: with five projects all waiting on Terry,
-  the banner alone forced compact cards. Deferred, not dropped: at one to three projects the banner holds
-  at most three asks. Revisit (for example the first ask plus "and N more") if Terry starts running more
-  projects at once. The project display's large RTR still
-  uses the plain arrow beside the number; whether it should follow is open.
+- **OBE: the GO TO KEYBOARD banner growing with every ask.** The old banner listed each red project's
+  full ask and could push the cards into compact mode. Overtaken by the slot grid: GO TO KEYBOARD is now
+  one slot with one detail line of project names, so it can no longer grow.
+- **Open: the project display's large RTR** still uses the plain arrow beside the number; whether it
+  should move onto a clock like the cards is not decided.
 
 Card states, first match wins:
 
