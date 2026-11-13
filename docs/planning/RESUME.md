@@ -114,7 +114,21 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
    re-scope the CI token's Editor role to that one Worker. Creating any extra Worker (such as a test
    Worker) stays with the local token.
 
-Checked and fine: the account's `workers.dev` subdomain is `sixbuckssolutions`, so the URL will be
+6. **Agent sandboxes and approval prompts can block or nag the CLI (MVP-06).** Codex's default
+   workspace sandbox blocks outbound network, so a project agent's `swimcoach` push may fail there.
+   Claude Code asks approval for a command it has not been allowed, so every card move could prompt
+   Terry. Both need a one-time allow rule for the `swimcoach` command, which is Terry's call per tool.
+7. **The CLI must be installed where every project's agent finds it (MVP-06):** on `PATH` for all
+   projects, with its Access service token in a file it reads. Its language decides its LSP and linter
+   under Terry's global rule.
+8. **The iPhone home-screen app keeps its own cookies (MVP-10).** iOS gives a home-screen web app
+   storage separate from Chrome, so Terry logs in to Access once more inside it, and the session length
+   decides how often. It MUST be tested on the phone, not assumed.
+9. **Access in front of `workers.dev` (MVP-05):** believed supported, not yet verified. MVP-05 MUST
+   confirm it before building on it; a custom hostname is the fallback.
+
+Checked and fine: the mock and the report agree on lanes. Backlog and Blocked never appear on the
+dashboard (`concept.md`, 2026-11-13), and the report carries neither. The account's `workers.dev` subdomain is `sixbuckssolutions`, so the URL will be
 `swimcoach.sixbuckssolutions.workers.dev`. The account already runs the `fga-api` and `fga-m28-stage`
 Workers.
 
