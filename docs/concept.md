@@ -246,7 +246,7 @@ Card states, first match wins:
 |---|---|---|---|
 | 1 | Done (dark slate) | Report says `status: done`, or every counted ticket is finished | Name |
 | 2 | **Red** | The project has a needs-you item: a ticket in an attention lane (Needs Terry) or a `needs_me` text | Name, the ask, RTR, arrow |
-| 3 | **Yellow** | Any of: agent silent over 25 min; status `blocked`; the call is "Running late"; no ticket moved in 45 min; the call is "Toss-up" | Name, one line saying which, RTR, arrow |
+| 3 | **Yellow** | Any of: agent silent over 25 min; the call is "Running late"; no ticket moved in 45 min; the call is "Toss-up" | Name, one line saying which, RTR, arrow |
 | 4 | Gray | Too early to call | Name, "Too early to call", RTR, no arrow |
 | 5 | **Green** | Everything else, which means the call is "On time" | Name, RTR, arrow, nothing else |
 
@@ -262,7 +262,8 @@ Top to bottom:
 
 1. "All projects" back link, project name.
 2. RTR as a very large number in the state color, trend arrow, trend bin in words, the call in words.
-3. Needs-you text and a stale-agent warning, when they apply. The agent's `tldr` if sent.
+3. Needs-you text and a stale-agent warning, when they apply. (The prototype also showed an agent
+   `tldr`; the MVP report carries none, 2026-11-13.)
 4. **RTR today:** line chart of RTR across the day, dashed line at 1.00, start and end times. Terry on
    seeing a timeline: "that timeline of RTR feels right, that is better than a snapshot."
 5. **Projection:** four tiles: chance on time (with "3 landed in last 60m, 3 to go"), lands (how early
@@ -459,7 +460,12 @@ worker chats ----> monitoring agent (Claude Code) ---+--> POST /api/report --> s
 
 ### 6.3 Report schema
 
-Minimal report, which is all an agent needs to send:
+**Prototype only.** The MVP's report, state and CLI are defined in `contract/` (MVP-01): a complete
+update of `agent`, `project`, `milestone`, `active_hours`, `cap_hours`, five lane counts and an
+optional `needs_me`, with no `status`, `cards` or `tldr`. The prototype's schema below is kept for
+reference.
+
+Minimal report, which is all an agent needed to send to the prototype:
 
 ```json
 {
