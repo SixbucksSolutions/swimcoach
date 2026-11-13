@@ -28,11 +28,19 @@ credentials need and MAY start at once.
 2. **Create the local token as an account API token, not a personal (user) token** (Cloudflare
    dashboard, Manage Account, Account API Tokens). An account token belongs to the account, not to a
    person, and Cloudflare recommends it for CI and integrations; its compatibility table marks Workers,
-   DNS and Access as supported. Give it Workers Scripts Edit, Account Settings Read (Wrangler's account
-   lookup), Access: Apps and Policies Edit, Access: Service Tokens Edit, and, on the one zone, Workers
-   Routes Edit and DNS Edit. If a later step is refused, add exactly the permission the error names.
-3. **Create the CI token:** a second account API token with the same permissions minus the two Access
-   ones.
+   DNS and Access as supported. Give it the **Workers: Admin** role at Entire Account scope, Account
+   Settings Read (Wrangler's account lookup), Access: Apps and Policies Edit, Access: Service Tokens
+   Edit, and, on the one zone, Workers Routes Edit and DNS Edit. If a later step is refused, add exactly
+   the permission the error names.
+   - The dashboard now offers Workers roles (Metadata Read-only, Content Read-only, Editor, Admin) and
+     marks the old "Workers Scripts" permission **Legacy**; it MUST NOT be used. Legacy Workers
+     Scripts Edit maps to Editor.
+   - Admin is required here because Cloudflare's docs say Editor "can read, update, deploy, and
+     rename existing Workers" and cannot create one. The first deploy creates the swimcoach Worker.
+3. **Create the CI token:** a second account API token with **Workers: Editor** instead of Admin and
+   without the two Access permissions. CI only deploys the Worker the local token created. The docs do
+   not say whether a Durable Object migration needs more than Editor; if a CI deploy with a migration
+   is refused, raise the CI token to Admin.
 4. **Store them, never in chat:** user environment variables `CLOUDFLARE_API_TOKEN` (the local token)
    and `CLOUDFLARE_ACCOUNT_ID`; then `gh secret set CLOUDFLARE_API_TOKEN --repo SixbucksSolutions/swimcoach`
    with the CI token. The reboot makes new sessions see the variables.
