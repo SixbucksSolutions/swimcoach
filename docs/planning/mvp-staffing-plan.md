@@ -2,7 +2,8 @@
 
 Drafted 2026-11-13 for Terry's review, in the shape of localswim's epic #0581 staffing plan. RFC 2119
 keywords; the capitals are load-bearing. Stories are in [`mvp-stories.md`](mvp-stories.md); the
-dependency diagram is [`mvp-execution-plan-legal-landscape-300ppi.png`](mvp-execution-plan-legal-landscape-300ppi.png).
+dependency diagram is [`mvp-execution-plan-legal-portrait-300ppi.png`](mvp-execution-plan-legal-portrait-300ppi.png)
+(print [`mvp-execution-plan-legal-portrait.pdf`](mvp-execution-plan-legal-portrait.pdf), US legal portrait).
 
 All workers are Claude Code subagents. Terry moved fully to Claude on 2026-11-13, so the localswim
 plan's Sol and Terra roles map to Claude models: **Opus** where correctness is subtle (contract,

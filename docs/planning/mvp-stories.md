@@ -8,7 +8,8 @@ deliverable, and V2 rebuilds it from greenfield. So every story below names what
 under **Survives**. Code is never on that list.
 
 The stack is decided: one Cloudflare Worker, one SQLite-backed Durable Object, TypeScript, Cloudflare
-Access. The diagram is [`mvp-execution-plan-legal-landscape-300ppi.png`](mvp-execution-plan-legal-landscape-300ppi.png),
+Access. The diagram is [`mvp-execution-plan-legal-portrait-300ppi.png`](mvp-execution-plan-legal-portrait-300ppi.png)
+(print [`mvp-execution-plan-legal-portrait.pdf`](mvp-execution-plan-legal-portrait.pdf)),
 rendered from [`mvp-plan.json`](mvp-plan.json). Staffing is in [`mvp-staffing-plan.md`](mvp-staffing-plan.md).
 
 Story IDs are provisional (`MVP-01` to `MVP-12`). They map to localswim cards when the board exists.
