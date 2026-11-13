@@ -57,7 +57,9 @@ they are part of MVP-01's contract.
 - **The milestone lifecycle (Terry, 2026-11-13).** The unit swimcoach tracks is the tuple (project,
   milestone), for example (`FGA`, `M12`).
   1. swimcoach adds the tuple to the UI on the first status update it receives for it. There is no
-     separate create step.
+     separate create step and no confirmation. Terry, 2026-11-13: an agent reports only because Terry
+     told it to put itself on his phone, and Cloudflare Access proves every sender is his own, so a
+     first update IS that instruction.
   2. The project's agent sends complete status updates for it while it works.
   3. Terry reviews and approves the milestone, and every card goes to Completed.
   4. Terry tells the project's agent the milestone is complete, and the agent runs the swimcoach CLI
