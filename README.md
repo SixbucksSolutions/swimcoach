@@ -40,4 +40,9 @@ agents update through its CLI.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) for swimcoach's own code.
+
+## Credits
+
+Text is set in the [Inter](https://github.com/rsms/inter) typeface by Rasmus Andersson and The Inter
+Project Authors, under the SIL Open Font License 1.1. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
