@@ -14,16 +14,16 @@ rendered from [`mvp-plan.json`](mvp-plan.json). Staffing is in [`mvp-staffing-pl
 Story IDs are provisional (`MVP-01` to `MVP-12`). They map to localswim cards when the board exists.
 Hours are author estimates, in the same 1.5 to 2.5 h range as localswim's stories.
 
-## Decisions Terry owns before T2
+## Decisions Terry made before T2 (2026-11-13)
 
-These are open items 10 to 12 in `docs/concept.md` section 8. MVP-04 and MVP-08 MUST NOT be authored
-until they are answered; the answers become part of MVP-01's contract.
+These were open items 10 to 12 in `docs/concept.md` section 8. Terry decided all three on 2026-11-13;
+they are part of MVP-01's contract.
 
-| ID | Question | Why it blocks |
+| ID | Question | Decision |
 |---|---|---|
-| D1 | What does a card show for a 1-2 story turn, where RTR is binary? | MVP-04's "too early" gate and the card's call depend on it |
-| D2 | Should RTR weight finished work by story estimate instead of counting tickets? | Changes the metric, the report schema and what agents send |
-| D3 | Do agents report a pending gate (Architect release, Terry's visual confirmation) as a Needs Terry item? | Decides whether gates reach GO TO KEYBOARD |
+| D1 | What does a card show for a 1-2 story turn, where RTR is binary? | **Count and time.** A turn with fewer than 3 stories shows no RTR and no clock hand. The card shows "1 of 2 done" and hours used of allocated. It is green while time is under budget, yellow once it runs over, and red only for Needs Terry. |
+| D2 | Should RTR weight finished work by story estimate instead of counting tickets? | **Count tickets now; allow estimates.** RTR counts tickets, as the mock does. The report contract accepts an optional per-ticket `estimate_hours`, so switching later needs no agent change; real data decides whether weighting matters. |
+| D3 | Do agents report a pending gate as a Needs Terry item? | **Only Terry's gates.** A gate waiting on Terry (visual confirmation, Completed, cutover) is a Needs Terry item: red, GO TO KEYBOARD, with the ask. Agent-owned gates (Architect release) change nothing. A ticket sitting in Ready for Review is not by itself a request. |
 
 ## T1: foundation
 

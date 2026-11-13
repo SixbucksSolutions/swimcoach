@@ -551,15 +551,18 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
     dependency **turn** (T1, T2, ...) inside an epic; "FGA T04" and "localswim V2 T14" are turns.
     Turns hold **1 to 11 stories** (epic #0514: T1 has 1, T5 has 11, T9 has 1), not the 5 to 9 this
     document assumed. A one-story turn makes RTR binary (0, then a jump), and the trend, chance and
-    "too early to call" math cannot say anything useful. Open: what the card shows for a 1–2 story
-    turn.
+    "too early to call" math cannot say anything useful. **Decided 2026-11-13 (D1):** a turn with fewer
+    than 3 stories shows no RTR or clock hand; its card shows "1 of 2 done" and hours used of
+    allocated, green under budget, yellow once over, red only for Needs Terry.
 11. **Stories carry hour estimates** (1.5 to 2.5 h each in epic #0514's plan), and the old Codex watcher
-    already reported each In Progress ticket's wall-clock time against its estimate. Open: whether RTR
-    should weight finished work by estimate instead of counting tickets, which would answer the known
-    weakness that "tickets differ in size" (section 4.4).
+    already reported each In Progress ticket's wall-clock time against its estimate. **Decided
+    2026-11-13 (D2):** RTR keeps counting tickets in the MVP; the report contract accepts an optional
+    per-ticket `estimate_hours`, so weighting can be switched on later, if real data shows the "tickets
+    differ in size" weakness (section 4.4) matters, without changing the agents.
 12. **Gates are the Needs-Terry moments.** Turns wait on explicit gates (Architect release, Terry's
-    visual confirmation before T3, Terry owns Completed and cutover). Open: whether agents report a
-    pending gate as a Needs Terry ticket, so it reaches GO TO KEYBOARD.
+    visual confirmation before T3, Terry owns Completed and cutover). **Decided 2026-11-13 (D3):** only
+    Terry's own gates are Needs Terry items (red, GO TO KEYBOARD, with the ask); agent-owned gates change
+    nothing, and a ticket in Ready for Review is not by itself a request.
 
 ## 9. Design history (superseded; source not kept)
 

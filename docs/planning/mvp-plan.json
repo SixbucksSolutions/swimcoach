@@ -30,7 +30,6 @@
     {"id": "MVP-12", "title": "MVP qualification", "hours": 2.0, "turn": 6, "column": "qual", "deps": ["MVP-08", "MVP-10", "MVP-11"]}
   ],
   "gates": [
-    {"before_turn": 2, "text": "Terry decides D1-D3 before T2"},
     {"before_turn": 5, "text": "Terry's phone check of MVP-07 precedes T5"}
   ],
   "footer_left": "Solid = adjacent turn; dashed = skips a turn. Arrowheads point to dependent work. Time runs downward.",
