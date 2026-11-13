@@ -115,7 +115,16 @@ position (the first dot is square). Tapping a project card jumps to that project
 
 Called the "header" in earlier text and in the prototype; section 2 has the agreed name.
 
-- Wordmark, **health box**, clock, "Alerts off/on" button.
+- **Layout, left to right:** mark and wordmark alone on the left; then, locked together on the right,
+  the clock, the **health box** and the alerts bell, each 8 px from the next. Terry, 2026-11-13: the
+  health box groups with time, not with the name. Read right to left, it is bell, freshness, time.
+- **Clock and every other time on the page: `H:mm` with lowercase am/pm and no space**, 12-hour, for
+  example "1:32am" and "12:47pm". One formatter, `fmtTime()`, serves the clock and the footers so they
+  cannot disagree.
+- **The health box shows an age only when LIVE** (from 1 minute, for example "LIVE 7m"). STALE and
+  OFFLINE show just the word: the warning line under the status line already gives the exact duration,
+  and "OFFLINE 1h 05m" beside a "12:47pm" clock overflowed the status line at 402 px. With the word
+  alone, that worst case keeps 35 px between the wordmark and the clock.
 - **Health box.** This was a firm requirement: "nothing sucks worse than a dashboard that says all good
   in the hood but it's because it stopped updating yesterday."
 

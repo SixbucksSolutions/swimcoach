@@ -54,6 +54,8 @@ header{display:flex;align-items:center;gap:8px;padding:10px 14px 8px;flex:none;m
 header h1{display:flex;align-items:center;gap:8px;font-size:16px;margin:0;font-weight:700;letter-spacing:.02em;white-space:nowrap}
 #brand{flex:none;width:26px;height:26px;background:center/contain no-repeat var(--brand)}
 header h1 .word{color:var(--lane-blue)} header h1 .word span{color:var(--lane-amber)}
+/* Status line, right to left: bell, health box, clock, locked together at one 8px gap (header gap);
+   margin-left:auto on the clock pushes the group right and leaves the mark and wordmark alone on the left. */
 #clock{font-variant-numeric:tabular-nums;font-size:16px;font-weight:600;margin-left:auto;white-space:nowrap}
 #snd{flex:none;display:grid;place-items:center;width:34px;height:34px;padding:0;background:var(--panel);color:var(--dim);border:1px solid var(--line);border-radius:50%}
 #snd svg{width:18px;height:18px}
@@ -202,8 +204,8 @@ h4{margin:20px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08e
 <div id="phone">
   <header>
     <h1><i id="brand" aria-hidden="true"></i><span class="word">swim<span>coach</span></span></h1>
-    <span id="health" class="wait"><i></i><b>…</b><span></span></span>
     <span id="clock"></span>
+    <span id="health" class="wait"><i></i><b>...</b><span></span></span>
     <button id="snd" type="button" aria-label="Alerts off"></button>
   </header>
   <div id="warn"></div>
@@ -253,7 +255,10 @@ const TREND = {'2':['Sharp up',-90], '1':['Up',-45], '0':['Flat',0], '-1':['Down
 const BELL = on => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>'+(on ? '' : '<path d="M3 3l18 18"/>')+'</svg>';
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const hm = t => new Date(t*1000).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+// Every time on the page reads like "1:32am" or "12:47pm": 12-hour, lowercase am/pm, no space
+// (Terry, 2026-11-13). One formatter, so the status line clock and the footers can never disagree.
+const fmtTime = d => (d.getHours() % 12 || 12) + ':' + String(d.getMinutes()).padStart(2, '0') + (d.getHours() < 12 ? 'am' : 'pm');
+const hm = t => fmtTime(new Date(t*1000));
 const pct = x => Math.round(Math.max(0, Math.min(1, x))*100);
 function dur(sec){ sec = Math.abs(Math.round(sec)); const h = Math.floor(sec/3600), m = Math.round((sec%3600)/60);
   return h ? h+'h '+String(m).padStart(2,'0')+'m' : Math.max(m,1)+'m'; }
@@ -496,9 +501,9 @@ function poll(){
   tick();
 }
 function tick(){
-  $('clock').textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  $('clock').textContent = fmtTime(new Date());
   const el = $('health'), nowMs = Date.now(); let st, label, age = null, msg = '';
-  if (!lastOk){ st = 'wait'; label = '…'; }
+  if (!lastOk){ st = 'wait'; label = '...'; }
   else if (nowMs-lastOk > POLL_MS*3){
     st = 'off'; label = 'OFFLINE'; age = (nowMs-lastOk)/1000;
     msg = 'Can\'t reach the board for '+dur(age)+'. Everything below is old.';
@@ -512,7 +517,9 @@ function tick(){
   }
   if (el.className !== st) el.className = st;
   el.querySelector('b').textContent = label;
-  el.querySelector('span').textContent = age === null || age < 60 ? '' : dur(age);
+  // Age shows only when LIVE (from 1 minute). STALE and OFFLINE drop it: the warning line below already
+  // gives the exact duration, and "OFFLINE 1h 05m" beside a "12:47pm" clock overflowed the status line.
+  el.querySelector('span').textContent = st !== 'live' || age === null || age < 60 ? '' : dur(age);
   if (phone.dataset.health !== st){ phone.dataset.health = st; syncBreath(); }
   $('warn').textContent = msg;
 }
