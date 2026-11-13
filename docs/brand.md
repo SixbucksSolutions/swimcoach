@@ -91,7 +91,21 @@ logo's grays are the same grays.
 
 ### Status colors (settled in part)
 
-Status colors carry meaning on the phone and MUST NOT be used for decoration.
+**Every status color is a call to action, and relaxing is an action.** Terry, 2026-11-13: "I like color
+to push me to action -- and 'relaxing' is an action." A status color MUST name what Terry should do,
+not just describe a state. Status colors MUST NOT be used for decoration.
+
+| Color | Action it asks for |
+|---|---|
+| Green (LIVE, on-time card) | **Relax.** Look away; this is safe to ignore for now |
+| Yellow (needs attention) | **Keep an eye on it.** Not bad, but slipping in a direction worth knowing |
+| Red (GO TO KEYBOARD) | **Get up.** Only Terry can move this |
+| Gray (too early to call) | **Nothing yet.** There is not enough history to judge, so do not try |
+| Slate (done) | **Nothing.** It is finished |
+| Orange / red header (STALE, OFFLINE) | **Distrust the page.** Everything below is old |
+
+This is the same rule as the build-chain banner in Terry's global setup: loudness tracks what he can act
+on. A color that asks for no action, or for an action he cannot take, wears out the reflex.
 
 | Token | Meaning | Fill | Text on it | Contrast |
 |---|---|---|---|---|
