@@ -32,7 +32,7 @@ they are part of MVP-01's contract.
 
 **Goal:** freeze, as documents and data, everything V2 must reproduce.
 
-- An HTTP contract for `POST /api/report`, `GET /api/state`, and creating and deleting a (project,
+- An HTTP contract for `POST /api/report`, `GET /api/state`, and stopping the tracking of a (project,
   milestone) tuple (replacing the prototype's `DELETE /api/projects/<name>`), with
   JSON Schema for the report and state bodies. It starts from `docs/concept.md` section 6.3 and adds the
   answers to D1-D3.
@@ -56,15 +56,15 @@ they are part of MVP-01's contract.
   look like lost work. The optional `needs_me` sentence stays optional.
 - **The milestone lifecycle (Terry, 2026-11-13).** The unit swimcoach tracks is the tuple (project,
   milestone), for example (`FGA`, `M12`).
-  1. The project's agent creates the tuple with the CLI's admin commands.
-  2. The agent sends complete status updates for it while it works.
+  1. swimcoach adds the tuple to the UI on the first status update it receives for it. There is no
+     separate create step.
+  2. The project's agent sends complete status updates for it while it works.
   3. Terry reviews and approves the milestone, and every card goes to Completed.
-  4. Terry tells the agent to stop monitoring it, and the agent deletes the tuple with the CLI's admin
-     commands.
+  4. Terry tells the project's agent the milestone is complete, and the agent runs the swimcoach CLI
+     to make swimcoach stop tracking that tuple. swimcoach removes it from the UI.
 
-  A status update for a tuple that was never created SHOULD be refused, so a mistyped project or
-  milestone name fails loudly instead of putting a stray card on the phone. (The agent's design call;
-  the prototype had exactly that defect.)
+  Consequence, accepted: a mistyped project or milestone name creates a stray card. The same stop
+  command removes it.
 - Metric definitions as executable golden fixtures: input sample series and the expected RTR, trend
   bin, projection, chance and call, taken from the prototype's math (`reference/prototype/server.py`)
   for the eight mock scenarios plus edge cases (one-story turn, zero progress, block over time, midnight
@@ -134,7 +134,8 @@ the swimcoach CLI itself and pushes its milestone's wall-clock hours and card co
 agent and no state file on disk. Cards are not tied to time blocks in localswim, so the project's agent
 is the one that knows what its milestone holds.
 
-- The CLI's admin commands: create and delete a (project, milestone) tuple, per MVP-01's lifecycle.
+- The CLI's stop command: tells swimcoach to stop tracking a (project, milestone) tuple, per MVP-01's
+  lifecycle. The first status update adds a tuple, so there is no create command.
 - The swimcoach CLI client: takes a project's milestone report as arguments or a JSON file, validates
   it against MVP-01's schema, and posts it to the Worker's API with an Access service token. It reads
   the token from a file, never an environment variable, the same way as `scripts/wrangler.ps1`.
@@ -160,8 +161,8 @@ is the one that knows what its milestone holds.
 
 - `GET /api/state?since=` assembles snapshots, trend, `spark`, staleness and the health fields the page
   needs (`docs/concept.md` section 6.3).
-- `POST /api/report` and the create and delete routes for a (project, milestone) tuple call the
-  Durable Object.
+- `POST /api/report` and the stop-tracking route for a (project, milestone) tuple call the Durable
+  Object.
 
 **Done when:** responses validate against MVP-01's schemas. **Survives:** the contract it implements.
 
