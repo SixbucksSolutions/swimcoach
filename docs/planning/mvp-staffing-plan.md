@@ -41,9 +41,9 @@ Use a second author only where independently owned modules shorten the turn.
 
 | Story | Author A | Author B | Boundary |
 | --- | --- | --- | --- |
-| MVP-06 | Sonnet / medium: `GET /api/state` assembler | Sonnet / medium: `POST /api/report` and `DELETE` routes | Both call the Board Durable Object's typed methods; neither edits the Object |
-| MVP-07 | Sonnet / medium: renderer port of `mocks/index.html` | Opus / high: data, polling, health and breathing controller | The renderer consumes a typed state projection; only the controller advances state |
-| MVP-10 | Sonnet / medium: browser checks | Sonnet / medium: UX ledger and matched renders | Checks cite ledger row IDs; the ledger author does not write checks |
+| MVP-07 | Sonnet / medium: `GET /api/state` assembler | Sonnet / medium: `POST /api/report` and `DELETE` routes | Both call the Board Durable Object's typed methods; neither edits the Object |
+| MVP-08 | Sonnet / medium: renderer port of `mocks/index.html` | Opus / high: data, polling, health and breathing controller | The renderer consumes a typed state projection; only the controller advances state |
+| MVP-11 | Sonnet / medium: browser checks | Sonnet / medium: UX ledger and matched renders | Checks cite ledger row IDs; the ledger author does not write checks |
 
 Single-author stories and their models:
 
@@ -54,9 +54,9 @@ Single-author stories and their models:
 | MVP-03 Board Durable Object | Opus / high | Opus / high |
 | MVP-04 metrics module | Opus / high | Opus / high |
 | MVP-05 Access and service tokens | Opus / high | Opus / high |
-| MVP-08 agent reporter | Sonnet / medium | Sonnet / medium |
+| MVP-06 agent reporter | Sonnet / medium | Sonnet / medium |
 | MVP-09 API acceptance suite | Sonnet / medium | Opus / high |
-| MVP-11 phone and home screen | Sonnet / medium | Sonnet / medium |
+| MVP-10 phone and home screen | Sonnet / medium | Sonnet / medium |
 | MVP-12 qualification | Opus / high, plus 2 Sonnet evidence workers | Opus / high |
 
 MVP-09's reviewer is Opus because the suite is what V2 must pass: a gap in it becomes a gap in V2.
@@ -69,7 +69,7 @@ MVP-09's reviewer is Opus because the suite is what V2 must pass: a gap in it be
    finished authors idle.
 3. As slots free, start a fresh reviewer for each completed, integrated story. A reviewer MUST be
    independent of every author of that story.
-4. Run the visual reviewer as soon as a rendered surface exists (MVP-07, MVP-10, MVP-12). It compares
+4. Run the visual reviewer as soon as a rendered surface exists (MVP-08, MVP-11, MVP-12). It compares
    matched states at the recorded viewport, exits, and returns only for a material visual correction.
 5. Route findings to bounded corrections, then get an independent re-review. The Lead integrates and
    hands the turn to Terry when a gate is due.

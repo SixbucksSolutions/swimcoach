@@ -95,7 +95,19 @@ authenticated", in the contract.
 
 ## T3: API and agents
 
-### MVP-06: State and report API (2 h)
+### MVP-06: Agent reporter (2 h)
+
+**Goal:** a monitoring agent pushes a real time block every 10 minutes.
+
+- A small script the agent runs (PowerShell or Python with `argparse`), reading the current time block
+  from localswim's CLI and posting with its service token.
+- Text for the agent's scheduled task, replacing `reference/prototype/AGENT_PROMPT.md`, with the
+  section 11 defects fixed (no bash heredoc; Windows-safe).
+
+**Done when:** a real localswim time block appears on the phone and updates every 10 minutes.
+**Survives:** the report format and the prompt text.
+
+### MVP-07: State and report API (2 h)
 
 **Goal:** the three endpoints, exactly as contracted.
 
@@ -105,21 +117,9 @@ authenticated", in the contract.
 
 **Done when:** responses validate against MVP-01's schemas. **Survives:** the contract it implements.
 
-### MVP-08: Agent reporter (2 h)
-
-**Goal:** a monitoring agent pushes a real turn every 10 minutes.
-
-- A small script the agent runs (PowerShell or Python with `argparse`), reading the current turn from
-  localswim's CLI and posting with its service token.
-- Text for the agent's scheduled task, replacing `reference/prototype/AGENT_PROMPT.md`, with the
-  section 11 defects fixed (no bash heredoc; Windows-safe).
-
-**Done when:** a real localswim turn appears on the phone and updates every 10 minutes.
-**Survives:** the report format and the prompt text.
-
 ## T4: the page, and the API proven
 
-### MVP-07: Page on live data (2.5 h)
+### MVP-08: Page on live data (2.5 h)
 
 **Goal:** the approved mock, unchanged in look, fed by the real API.
 
@@ -144,7 +144,18 @@ new; it proves the ledger.
 
 ## T5: the page proven, and the phone
 
-### MVP-10: UI acceptance and UX ledger (2.5 h)
+### MVP-10: Phone and home screen (1.5 h)
+
+**Goal:** swimcoach behaves like an app on Terry's iPhone 16 Pro.
+
+- Home-screen icon (`design/logo/swimcoach-touch-180.png`), manifest and full-screen launch.
+- An Access session long enough that the couch view does not log out mid-evening.
+- Checked on the real phone in Chrome (WebKit): safe areas, swipe, chime after the first tap.
+
+**Done when:** Terry launches it from the home screen and it stays signed in. **Survives:** the
+recorded device behavior in the ledger.
+
+### MVP-11: UI acceptance and UX ledger (2.5 h)
 
 **Goal:** the visual and interaction contract, proven against the running page.
 
@@ -156,24 +167,13 @@ new; it proves the ledger.
 **Done when:** every ledger row has a passing check or a recorded manual observation. **Survives:** the
 checks and the ledger.
 
-### MVP-11: Phone and home screen (1.5 h)
-
-**Goal:** swimcoach behaves like an app on Terry's iPhone 16 Pro.
-
-- Home-screen icon (`design/logo/swimcoach-touch-180.png`), manifest and full-screen launch.
-- An Access session long enough that the couch view does not log out mid-evening.
-- Checked on the real phone in Chrome (WebKit): safe areas, swipe, chime after the first tap.
-
-**Done when:** Terry launches it from the home screen and it stays signed in. **Survives:** the
-recorded device behavior in the ledger.
-
 ## T6: qualification
 
 ### MVP-12: MVP qualification (2 h)
 
 **Goal:** prove the whole MVP and hand it to Terry.
 
-- Run MVP-09 and MVP-10 against production; confirm MVP-08's real reports for a full turn.
+- Run MVP-09 and MVP-11 against production; confirm MVP-06's real reports for a full turn.
 - Terry's hands-on demo on his phone. **Terry owns acceptance.**
 
 **Done when:** both suites pass in production and Terry accepts. **Survives:** the qualification record
