@@ -97,6 +97,12 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
 4. **Terry's gates set the pace:** MVP-02's first deploy, the MVP-05 Access steps, the MVP-08 phone
    check, MVP-10 on the phone, and MVP-12 acceptance.
 
+5. **The CI token SHOULD get narrower, not wider.** Workers Editor at Entire Account scope can deploy
+   over ANY existing Worker on the account, including FlickrGroupAddr's `fga-api`. Workers Admin would
+   add creating and deleting them. After MVP-02's first deploy creates `swimcoach`, Terry SHOULD
+   re-scope the CI token's Editor role to that one Worker. Creating any extra Worker (such as a test
+   Worker) stays with the local token.
+
 Checked and fine: the account's `workers.dev` subdomain is `sixbuckssolutions`, so the URL will be
 `swimcoach.sixbuckssolutions.workers.dev`. The account already runs the `fga-api` and `fga-m28-stage`
 Workers.
