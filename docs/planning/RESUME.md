@@ -20,8 +20,8 @@ MVP T1 is underway, so it never goes stale.
 
 ## Blocked on Terry, before T1 can deploy
 
-The next session MUST NOT start MVP-02's deploy until these are done. MVP-01 (the contract) has no
-credentials need and MAY start at once.
+**All five steps were done on 2026-11-13.** Nothing here blocks T1 any more. MVP-02's first deploy
+still needs Terry's go-ahead at the time, because it creates the Worker on his account.
 
 1. **Hostname: decided.** Terry, 2026-11-13: the MVP runs on `*.workers.dev` for now. So no zone, no
    DNS record and no zone-scoped token permissions are needed. A custom hostname MAY come later and
@@ -53,7 +53,8 @@ credentials need and MAY start at once.
 4. **Store the CI token as a GitHub secret. Done 2026-11-13:** Terry ran
    `gh secret set CLOUDFLARE_API_TOKEN --repo SixbucksSolutions/swimcoach`, and `gh secret list` shows
    it, set at 2026-11-13T22:49:41Z.
-5. **Give CI the account ID. Not done yet.** The workflow needs `CLOUDFLARE_ACCOUNT_ID`. Cloudflare
+5. **Give CI the account ID. Done 2026-11-13:** the `CLOUDFLARE_ACCOUNT_ID` Actions secret is set, at
+   2026-11-13T22:51:17Z, on Terry's go-ahead. The workflow reads it as a secret. Cloudflare
    does not treat it as a secret, but a GitHub secret masks it in this public repo's workflow logs,
    so it SHOULD be a secret. The value is in `%USERPROFILE%\.secrets\swimcoach\cloudflare-account-id.txt`.
 
