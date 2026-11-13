@@ -56,7 +56,7 @@ Fixture format (frozen):
       "lanes": { "ready_for_work": 6, "in_progress": 1, "needs_terry": 0, "ready_for_review": 1, "completed": 0 } }
   ],
   "expected": { "rtr": 1.0, "trend_bin": "flat", "projection_hours": 4.0, "chance_on_time": 0.5,
-                "call": "green", "too_early": false }
+                "call": "on_time", "color": "green", "too_early": false }
 }
 ```
 
