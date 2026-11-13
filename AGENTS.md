@@ -23,6 +23,7 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 | Path | What |
 |---|---|
 | `docs/concept.md` | The concept and knowledge transfer. Keep it current when decisions change |
+| `docs/brand.md` | The brand guide: mark, wordmark, typeface, colors, motion, voice. Check it before adding any visual |
 | `docs/img/` | Screenshots of the prototype |
 | `mocks/index.html` | The clickable mock: one self-contained file, no server |
 | `mocks/tools/make-scenarios.py` | Builds the mock's sample data with the prototype's math and writes it into `mocks/index.html` |
