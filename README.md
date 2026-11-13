@@ -1,4 +1,4 @@
-# swimcoach
+# <img src="design/logo/swimcoach-512.png" alt="" width="40" align="top"> swimcoach
 
 A self-hosted, mobile-first status board for agent-run software work.
 

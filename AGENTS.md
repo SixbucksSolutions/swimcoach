@@ -28,6 +28,9 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 | `mocks/tools/make-scenarios.py` | Builds the mock's sample data with the prototype's math and writes it into `mocks/index.html` |
 | `mocks/tools/render-mock.py` | Renders every mock screen to `design/ui-mock/` |
 | `mocks/tools/embed-font.py` | Writes the Inter font file into `mocks/index.html` between the `FONT` markers |
+| `design/logo/` | The swimcoach mark: `swimcoach.svg` is the one definition; PNGs, design history and rules in its README |
+| `mocks/tools/render-logo.py` | Renders the mark to PNG, including the iPhone home-screen icon |
+| `mocks/tools/embed-logo.py` | Writes the mark into `mocks/index.html` between the `LOGO` markers: favicon, touch icon, header `--brand` |
 | `third_party/inter/` | The Inter font file (Latin subset), its OFL license, and how it was made |
 | `THIRD-PARTY-NOTICES.md` | Credits and licenses for everything not under swimcoach's MIT license |
 | `design/ui-mock/` | PNG renders of the mock, with an index README |

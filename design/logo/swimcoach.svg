@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- swimcoach mark: the localswim mark, unchanged, on a stack of two boards stepping up and right.
+       "Watches many localswim boards." Each tile is 25 units with rx 5.46875 (localswim's 7 scaled by
+       25/32) and steps 3.5 up and right. Each back tile has a 1.2-unit gap masked out around the tile in
+       front, so the layers stay separate on any background. See design/logo/README.md. -->
+  <defs>
+    <mask id="sc-gap-2"><rect width="32" height="32" fill="#fff"/><rect x="2.3" y="2.3" width="27.4" height="27.4" rx="6.66875" fill="#000"/></mask>
+    <mask id="sc-gap-1"><rect width="32" height="32" fill="#fff"/><rect x="-1.2" y="5.8" width="27.4" height="27.4" rx="6.66875" fill="#000"/></mask>
+  </defs>
+  <rect x="7" y="0" width="25" height="25" rx="5.46875" fill="#5A6573" mask="url(#sc-gap-2)"/>
+  <rect x="3.5" y="3.5" width="25" height="25" rx="5.46875" fill="#3B4550" mask="url(#sc-gap-1)"/>
+  <rect x="0" y="7" width="25" height="25" rx="5.46875" fill="#1D2125"/>
+  <rect x="4.6875" y="13.25" width="3.90625" height="12.5" rx="1.953125" fill="#85B8FF"/>
+  <rect x="10.546875" y="17.15625" width="3.90625" height="8.59375" rx="1.953125" fill="#E2A100"/>
+  <rect x="16.40625" y="21.0625" width="3.90625" height="4.6875" rx="1.953125" fill="#4BCE97"/>
+</svg>
