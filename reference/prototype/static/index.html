@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>swimcoach</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0f14'/%3E%3Cpath d='M4 12q4-4 8 0t8 0 8 0M4 20q4-4 8 0t8 0 8 0' fill='none' stroke='%235eead4' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0b0f14; --panel:#131a22; --panel2:#1b2530; --line:#243140;
+  --text:#e8eef4; --dim:#93a3b3; --faint:#5f7082;
+  --ok:#4ade80; --risk:#facc15; --bad:#f87171; --done:#7dd3fc; --me:#f87171; --accent:#5eead4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);overflow:hidden;
+  font:16px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+body{display:flex;flex-direction:column;height:100dvh;padding-top:env(safe-area-inset-top)}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+
+header{display:flex;align-items:center;gap:10px;padding:10px 14px 8px;flex:none}
+header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.02em}
+header h1 span{color:var(--accent)}
+#clock{font-variant-numeric:tabular-nums;font-size:16px;font-weight:600;margin-left:auto}
+#snd{background:var(--panel);color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:12px}
+#snd.on{color:var(--accent);border-color:var(--accent)}
+#health{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:7px;font-size:13px;color:#fff;background:var(--panel2);font-variant-numeric:tabular-nums;white-space:nowrap}
+#health b{font-weight:800;letter-spacing:.07em} #health span{opacity:.85}
+#health i{width:8px;height:8px;border-radius:50%;background:#fff;opacity:.3}
+#health.live{background:#166534} #health.live i{animation:breathe 2s ease-in-out 8}
+#health.stale{background:#9a3412} #health.off{background:#991b1b}
+@keyframes breathe{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+#warn{margin:2px 14px 8px;padding:11px 14px;border-radius:12px;background:#3b1408;border:1px solid #fb923c;color:#fed7aa;font-size:17px;font-weight:600;flex:none}
+#warn:empty{display:none}
+body[data-health=off] #pages, body[data-health=stale] #pages{opacity:.4;filter:grayscale(1)}
+
+/* swipeable displays */
+#pages{flex:1;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+#pages::-webkit-scrollbar{display:none}
+.page{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;padding:4px 14px 14px;display:flex;flex-direction:column}
+.page>*{flex-shrink:0}
+#dots{flex:none;display:flex;justify-content:center;gap:8px;padding:8px 0 max(10px,env(safe-area-inset-bottom))}
+#dots i{width:8px;height:8px;border-radius:50%;background:var(--line)} #dots i.on{background:var(--text)}
+#dots i:first-child{border-radius:2px}
+
+/* display 1: all projects */
+.kbd{flex:none;display:block;width:100%;text-align:left;border:0;border-radius:16px;padding:14px 18px;margin-bottom:10px;background:#dc2626;color:#fff;animation:throb 1.6s ease-in-out infinite}
+.kbd b{display:block;font-size:26px;font-weight:900;letter-spacing:.04em;line-height:1.1}
+.kbd span{display:block;font-size:15px;font-weight:600;margin-top:4px}
+@keyframes throb{50%{filter:brightness(1.18)}}
+.cards{flex:1 0 auto;display:flex;flex-direction:column;gap:10px}
+.pc{flex:1 1 0;min-height:74px;max-height:170px;display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-radius:18px;padding:12px 18px;background:var(--b);color:var(--f)}
+.pc.green{--b:#15803d;--f:#fff} .pc.yellow{--b:#facc15;--f:#231a00} .pc.red{--b:#dc2626;--f:#fff}
+.pc.gray{--b:#334155;--f:#e2e8f0} .pc.done{--b:#1e293b;--f:#94a3b8}
+.pc .nm{flex:1;min-width:0}
+.pc .nm b{display:block;font-size:24px;font-weight:800;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc .nm span{display:block;font-size:15px;font-weight:600;opacity:.85;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc .rt{display:flex;align-items:center;gap:4px;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.arr{width:.85em;height:.85em;flex:none}
+.empty{color:var(--dim);background:var(--panel);border:1px dashed var(--line);border-radius:14px;padding:18px;font-size:15px}
+.empty code{background:var(--panel2);padding:1px 5px;border-radius:4px;font-size:13px}
+
+/* display 2+: one project */
+.back{align-self:flex-start;background:none;border:0;padding:4px 0 8px;color:var(--dim);font-size:15px}
+.page h2{margin:0;font-size:26px;line-height:1.15;overflow-wrap:anywhere}
+.hero{display:flex;align-items:flex-end;gap:14px;margin:6px 0 4px}
+.hero .big{display:flex;align-items:center;gap:8px;font-size:64px;font-weight:800;line-height:1;color:var(--c);font-variant-numeric:tabular-nums}
+.hero .big .arr{color:var(--text);width:.6em;height:.6em}
+.hero .lab{padding-bottom:7px;font-size:13px;color:var(--dim)} .hero .lab b{display:block;font-size:20px;color:var(--c)}
+.flag{margin:10px 0 0;padding:9px 12px;border-radius:10px;font-size:15px}
+.flag.me{background:#2a1215;color:#fecaca;border:1px solid var(--me)}
+.flag.st{background:#231c10;color:#fde68a;border:1px solid #7c5e10}
+h4{margin:20px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:600}
+.chart{position:relative;height:150px;margin-right:38px;border-left:1px solid var(--line);border-bottom:1px solid var(--line)}
+.chart svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.chart span{position:absolute;left:100%;margin-left:6px;transform:translateY(-50%);font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums}
+.chart span.one{color:var(--dim);font-weight:700}
+.xax{display:flex;justify-content:space-between;margin:4px 38px 0 0;font-size:11px;color:var(--faint)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.tile small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+.tile b{display:block;font-size:22px;line-height:1.2;margin-top:2px;font-variant-numeric:tabular-nums}
+.tile span{display:block;font-size:12px;color:var(--dim);margin-top:1px}
+.meter{display:grid;grid-template-columns:44px 1fr;gap:4px 10px;align-items:center;margin-bottom:8px}
+.meter label{font-size:12px;color:var(--dim)}
+.meter .bar{height:12px;background:var(--panel2);border-radius:6px;overflow:hidden}
+.meter .bar i{display:block;height:100%;border-radius:6px;background:var(--c)} .meter .bar.t i{background:var(--dim)}
+.meter .cap{grid-column:2;font-size:13px;color:var(--dim);font-variant-numeric:tabular-nums} .meter .cap b{color:var(--text)}
+.stack{display:flex;height:18px;border-radius:6px;overflow:hidden;background:var(--panel2);gap:2px}
+.stack i{display:block;height:100%}
+.lanes{margin:8px 0 0;padding:0;list-style:none}
+.lanes li{display:grid;grid-template-columns:14px 1fr auto 48px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px}
+.lanes li i{width:12px;height:12px;border-radius:3px} .lanes li b{font-variant-numeric:tabular-nums}
+.lanes li.off{color:var(--faint)}
+.lanes li span{text-align:right;color:var(--dim);font-variant-numeric:tabular-nums}
+.foot{margin-top:16px;font-size:12px;color:var(--faint)}
+.tldr{margin:10px 0 0;font-size:15px}
+@media (min-width:700px){ .page{padding-left:max(14px,calc(50% - 330px));padding-right:max(14px,calc(50% - 330px))} }
+</style>
+</head>
+<body>
+<header>
+  <h1>swim<span>coach</span></h1>
+  <span id="health" class="wait"><i></i><b>…</b><span></span></span>
+  <span id="clock"></span>
+  <button id="snd" type="button">Alerts off</button>
+</header>
+<div id="warn"></div>
+<main id="pages"></main>
+<nav id="dots"></nav>
+
+<script>
+const POLL_MS = 10000, ALL = '\u0000all';
+const LABEL = {on_track:'On track', at_risk:'At risk', behind:'Behind', blocked:'Blocked', done:'Done'};
+const TONE = {green:'--ok', yellow:'--risk', red:'--bad', gray:'--dim', done:'--done'};
+const TREND = {'2':['Sharp up',-90], '1':['Up',-45], '0':['Flat',0], '-1':['Down',45], '-2':['Sharp down',90]};
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hm = t => new Date(t*1000).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+const pct = x => Math.round(Math.max(0, Math.min(1, x))*100);
+function dur(sec){ sec = Math.abs(Math.round(sec)); const h = Math.floor(sec/3600), m = Math.round((sec%3600)/60);
+  return h ? h+'h '+String(m).padStart(2,'0')+'m' : Math.max(m,1)+'m'; }
+const arrow = dir => dir === null ? '' : '<svg class="arr" viewBox="0 0 24 24" style="transform:rotate('+TREND[dir][1]+'deg)" role="img" aria-label="'+TREND[dir][0]+'"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+let lastData = null, knownNeeds = null, soundOn = false, actx = null, lastOk = 0;
+const pages = $('pages');
+
+function needKeys(p){ // one key per distinct ask, so a new ask on the same project alerts again
+  const k = []; if (p.needs_me) k.push(p.project+'|'+p.needs_me);
+  (p.cards||[]).forEach(c => { if (c.needs_me) k.push(p.project+'|card|'+c.id); });
+  return k;
+}
+function needText(p){
+  const parts = []; if (p.needs_me) parts.push(p.needs_me);
+  (p.cards||[]).filter(c => c.needs_me).forEach(c => parts.push(c.title + (c.note ? ' — '+c.note : '')));
+  return parts;
+}
+
+// Everything both displays need, worked out once per project.
+function facts(p, now, d){
+  const f = {p};
+  f.dl = p.done_lanes || (p.done_lane ? [p.done_lane] : []);
+  f.parked = p.parked_lanes || [];                        // Backlog, Blocked: watched, but not part of the RTR math
+  f.total = p.lanes.filter(l => !f.parked.includes(l.name)).reduce((a,l) => a+l.count, 0);
+  f.watch = p.lanes.filter(l => f.parked.includes(l.name) && !/backlog/i.test(l.name) && l.count > 0);
+  f.done = p.lanes.filter(l => f.dl.includes(l.name)).reduce((a,l) => a+l.count, 0);
+  f.work = f.total ? f.done/f.total : null;
+  f.clock = p.hours_alloc ? (p.hours_used||0)/p.hours_alloc
+          : (p.block_start && p.block_end) ? (now-p.block_start)/(p.block_end-p.block_start) : null;
+  f.ratio = (f.work !== null && f.clock !== null && f.clock > 0) ? f.work/f.clock : null;   // RTR
+  f.finished = p.status === 'done';
+  f.idle = now - (p.last_move_at || p.updated_at);
+  f.stalled = !f.finished && f.idle > d.stall_minutes*60;
+  f.needs = needText(p);
+  const t = f.t = f.finished ? null : p.trend;
+  // RTR trend over the look-back window, in five bins: 2 sharp up, 1 up, 0 flat, -1 down, -2 sharp down
+  f.dir = !t ? null : t.delta >= 0.2 ? 2 : t.delta >= 0.05 ? 1 : t.delta <= -0.2 ? -2 : t.delta <= -0.05 ? -1 : 0;
+  const blockSec = p.hours_alloc ? p.hours_alloc*3600 : (p.block_start && p.block_end) ? p.block_end-p.block_start : null;
+  f.proj = (t && t.proj != null) ? t.proj : null;                                    // projected RTR at end of block
+  f.margin = (t && t.finish != null && blockSec) ? (1-t.finish)*blockSec : null;     // seconds early (+) or over (-)
+  f.chance = (t && t.chance != null) ? t.chance : null;                              // chance every ticket lands in the block
+  f.early = !f.finished && f.ratio !== null && !t;                                   // too early to call
+  // The call: will the work land at or before the end of the time block?
+  f.call = f.finished ? null : f.early ? 'early' : f.chance === null ? null : f.chance >= 0.7 ? 'on' : f.chance <= 0.3 ? 'late' : 'toss';
+  // Red is reserved for "Terry has to act". Every other kind of trouble is yellow.
+  const off = p.stale || p.status === 'blocked' || f.call === 'late' || f.stalled || f.call === 'toss'
+           || (f.call === null && (p.status === 'at_risk' || p.status === 'behind'));
+  f.level = f.finished ? 'done' : f.needs.length ? 'red' : off ? 'yellow' : f.early ? 'gray' : 'green';
+  f.why = f.finished ? 'Done'
+        : p.stale ? 'Agent silent for '+dur(now-p.updated_at)
+        : p.status === 'blocked' ? 'Blocked'
+        : f.call === 'late' ? 'Running late'
+        : f.stalled ? 'No ticket moved in '+dur(f.idle)
+        : f.call === 'toss' ? 'Toss-up'
+        : f.early ? 'Too early to call'
+        : f.call === 'on' ? 'On time' : 'Moving';
+  return f;
+}
+
+// ---------- display 1: all projects ----------
+function overview(fs){
+  const asking = fs.filter(f => f.needs.length);
+  let h = '';
+  if (asking.length) h += '<button class="kbd" data-go="'+esc(asking[0].p.project)+'"><b>GO TO KEYBOARD</b>'
+    + asking.map(f => '<span>'+esc(f.p.project)+': '+esc(f.needs.join('; '))+'</span>').join('')+'</button>';
+  if (!fs.length) return h + '<div class="empty">No reports yet today. Projects appear here as soon as a monitoring agent POSTs to <code>/api/report</code>.</div>';
+  h += '<div class="cards">';
+  fs.forEach(f => {
+    // a green card says nothing but its name and number, unless something is parked in Blocked
+    const notes = [f.needs.length ? f.needs[0] : f.level === 'green' ? '' : f.why, ...f.watch.map(l => l.count+' '+l.name.toLowerCase())].filter(Boolean);
+    h += '<button class="pc '+f.level+'" data-go="'+esc(f.p.project)+'"><div class="nm"><b>'+esc(f.p.project)+'</b>'+(notes.length ? '<span>'+esc(notes.join(' · '))+'</span>' : '')+'</div>'
+      + (f.ratio !== null && !f.finished ? '<div class="rt">'+f.ratio.toFixed(2)+arrow(f.dir)+'</div>' : '')+'</button>';
+  });
+  return h + '</div>';
+}
+
+// ---------- display 2+: one project ----------
+function chart(p, tone){
+  const s = (p.spark || []).map(x => [x[0], Math.min(x[1], 3)]);
+  if (s.length < 2) return '<div class="empty">The RTR timeline appears after the second report.</div>';
+  const vals = s.map(x => x[1]), t0 = s[0][0], t1 = s[s.length-1][0];
+  let lo = Math.min(0.5, ...vals), hi = Math.max(1.5, ...vals); const pad = (hi-lo)*0.06; lo -= pad; hi += pad;
+  const X = t => (t-t0)/Math.max(t1-t0, 1)*100, Y = v => (1-(v-lo)/(hi-lo))*100;
+  const last = vals[vals.length-1];
+  return '<div class="chart"><svg viewBox="0 0 100 100" preserveAspectRatio="none">'
+    + '<line x1="0" x2="100" y1="'+Y(1)+'" y2="'+Y(1)+'" stroke="var(--dim)" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/>'
+    + '<polyline fill="none" stroke="var('+tone+')" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" points="'+s.map(x => X(x[0]).toFixed(2)+','+Y(x[1]).toFixed(2)).join(' ')+'"/></svg>'
+    + '<span class="one" style="top:'+Y(1)+'%">1.00</span>'
+    + (Math.abs(Y(last)-Y(1)) > 9 ? '<span style="top:'+Y(last)+'%;color:var('+tone+');font-weight:700">'+last.toFixed(2)+'</span>' : '')
+    + '</div><div class="xax"><span>'+hm(t0)+'</span><span>'+hm(t1)+'</span></div>';
+}
+
+function detail(f, now, d){
+  const p = f.p, t = f.t, tone = TONE[f.level];
+  let h = '<button class="back" data-go="'+ALL+'">‹ All projects</button><h2>'+esc(p.project)+'</h2>';
+  h += '<div class="hero" style="--c:var('+tone+')">'
+    + (f.ratio !== null ? '<div class="big">'+f.ratio.toFixed(2)+arrow(f.dir)+'</div>' : '')
+    + '<div class="lab">'+(f.ratio !== null ? 'RTR'+(f.dir !== null ? ' · '+TREND[f.dir][0].toLowerCase() : '') : '')+'<b>'+esc(f.why)+'</b></div></div>';
+  f.needs.forEach(n => h += '<div class="flag me"><b>Go to keyboard:</b> '+esc(n)+'</div>');
+  if (p.stale) h += '<div class="flag st">No report for '+dur(now-p.updated_at)+'. The monitoring agent may have stopped.</div>';
+  if (p.tldr) h += '<p class="tldr">'+esc(p.tldr)+'</p>';
+
+  h += '<h4>RTR today</h4>'+chart(p, tone);
+
+  h += '<h4>Projection</h4><div class="tiles">';
+  if (f.early) h += '<div class="tile" style="grid-column:1/-1"><small>The call</small><b>Too early to call</b><span>Needs '+d.min_history_minutes+'m of history and '+Math.round(d.min_block_used*100)+'% of the time block used.</span></div>';
+  else if (t){
+    const odds = f.chance === null ? '–' : Math.min(99, Math.max(1, Math.round(f.chance*100)))+'%';
+    const land = f.margin === null ? ['No progress', 'at the recent pace'] : f.margin >= 0 ? [dur(f.margin)+' early', 'projected landing'] : [dur(-f.margin)+' late', 'projected landing'];
+    h += '<div class="tile"><small>Chance on time</small><b>'+odds+'</b><span>'+t.recent_done+' landed in last '+t.minutes+'m, '+t.to_go+' to go</span></div>';
+    h += '<div class="tile"><small>Lands</small><b>'+land[0]+'</b><span>'+land[1]+'</span></div>';
+    h += '<div class="tile"><small>RTR at end of block</small><b>'+(f.proj !== null ? f.proj.toFixed(2) : '–')+'</b><span>if the recent pace holds</span></div>';
+    h += '<div class="tile"><small>RTR trend</small><b>'+(t.delta >= 0 ? '+' : '−')+Math.abs(t.delta).toFixed(2)+'</b><span>over the last '+t.minutes+'m</span></div>';
+  } else h += '<div class="tile" style="grid-column:1/-1"><small>The call</small><b>'+esc(f.why)+'</b></div>';
+  h += '</div>';
+
+  if (f.work !== null || f.clock !== null){
+    h += '<h4>Work against time</h4><div class="meter" style="--c:var('+tone+')">';
+    if (f.work !== null) h += '<label>Work</label><div class="bar"><i style="width:'+pct(f.work)+'%"></i></div><div class="cap"><b>'+f.done+' of '+f.total+'</b> tickets · '+Math.round(f.work*100)+'%</div>';
+    if (f.clock !== null){
+      const cap = p.hours_alloc ? '<b>'+Number((p.hours_used||0).toFixed(2))+' of '+p.hours_alloc.toFixed(1)+'</b> hrs · '+Math.round(f.clock*100)+'%'
+        : '<b>'+hm(p.block_start)+'–'+hm(p.block_end)+'</b> · '+Math.round(f.clock*100)+'%';
+      h += '<label>Time</label><div class="bar t"><i style="width:'+pct(f.clock)+'%"></i></div><div class="cap">'+cap+'</div>';
+    }
+    h += '</div>';
+  }
+
+  if (p.lanes.length){
+    const shades = ['#64748b','#94a3b8','#cbd5e1'], attn = p.attention_lanes || [];
+    let n = 0; const off = l => f.parked.includes(l.name);
+    const color = l => off(l) ? 'var(--line)' : f.dl.includes(l.name) ? 'var(--ok)' : attn.includes(l.name) ? 'var(--me)' : shades[n++ % shades.length];
+    const ls = p.lanes.map(l => ({l, c: color(l), off: off(l), share: f.total ? l.count/f.total : 0}));
+    h += '<h4>Swimlanes</h4><div class="stack">'+ls.filter(x => x.l.count && !x.off).map(x => '<i style="background:'+x.c+';flex:'+x.l.count+' 0 0"></i>').join('')+'</div><ul class="lanes">'
+      + ls.map(x => '<li'+(x.off ? ' class="off"' : '')+'><i style="background:'+x.c+'"></i>'+esc(x.l.name)+'<b>'+x.l.count+'</b><span>'+(x.off ? '–' : Math.round(x.share*100)+'%')+'</span></li>').join('')+'</ul>';
+    if (ls.some(x => x.off)) h += '<div class="foot" style="margin-top:8px">'+esc(ls.filter(x => x.off).map(x => x.l.name).join(' and '))+' are watched but not counted in RTR.</div>';
+  }
+  h += '<div class="foot">Last ticket move '+hm(p.last_move_at || p.updated_at)+' · reported '+hm(p.updated_at)+' by '+esc(p.source)+'</div>';
+  return h;
+}
+
+// ---------- paging ----------
+const keys = () => [...pages.children].map(el => el.dataset.key);
+const current = () => Math.round(pages.scrollLeft / Math.max(pages.clientWidth, 1));
+function go(key, smooth = true){
+  const i = keys().indexOf(key); if (i < 0) return;
+  pages.scrollTo({left: i*pages.clientWidth, behavior: smooth ? 'smooth' : 'auto'});
+}
+function dots(){ const i = current(); [...$('dots').children].forEach((el, j) => el.classList.toggle('on', j === i)); }
+pages.addEventListener('scroll', dots, {passive:true});
+pages.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
+window.addEventListener('resize', () => { const k = pages.dataset.cur; if (k) go(k, false); });
+
+function render(d){
+  const now = d.now;
+  const fs = d.projects.map(p => facts(p, now, d)).sort((a,b) => a.p.project.localeCompare(b.p.project));   // fixed order: cards never jump around
+  const want = [ALL, ...fs.map(f => f.p.project)], here = keys()[current()] || ALL;
+  const have = new Map([...pages.children].map(el => [el.dataset.key, el]));
+  want.forEach((k, i) => {            // reuse each page's element so swipes and scroll positions survive a refresh
+    let el = have.get(k);
+    if (!el){ el = document.createElement('section'); el.className = 'page'; el.dataset.key = k; }
+    if (pages.children[i] !== el) pages.insertBefore(el, pages.children[i] || null);
+    el.innerHTML = k === ALL ? overview(fs) : detail(fs[i-1], now, d);
+    have.delete(k);
+  });
+  have.forEach(el => el.remove());
+  $('dots').innerHTML = want.map(() => '<i></i>').join('');
+  if (keys()[current()] !== here) go(want.includes(here) ? here : ALL, false);
+  pages.dataset.cur = keys()[current()]; dots();
+
+  const asking = fs.filter(f => f.needs.length).length;
+  document.title = (asking ? '('+asking+') ' : '') + 'swimcoach';
+  const nk = new Set(d.projects.flatMap(needKeys));
+  if (knownNeeds && [...nk].some(k => !knownNeeds.has(k))){ alertMe(); go(ALL); }
+  knownNeeds = nk;
+}
+
+function alertMe(){
+  if (!soundOn) return;
+  try { navigator.vibrate && navigator.vibrate([200,100,200]); } catch(e){}
+  try { [0,0.22].forEach(t => { const o = actx.createOscillator(), g = actx.createGain();
+    o.frequency.value = t ? 990 : 740; o.connect(g); g.connect(actx.destination);
+    g.gain.setValueAtTime(0.0001, actx.currentTime+t); g.gain.exponentialRampToValueAtTime(0.25, actx.currentTime+t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+t+0.2); o.start(actx.currentTime+t); o.stop(actx.currentTime+t+0.22); }); } catch(e){}
+}
+$('snd').addEventListener('click', () => {
+  soundOn = !soundOn;
+  if (soundOn){ actx = actx || new (window.AudioContext||window.webkitAudioContext)(); actx.resume(); }
+  $('snd').textContent = soundOn ? 'Alerts on' : 'Alerts off';
+  $('snd').classList.toggle('on', soundOn);
+  if (soundOn) alertMe();
+});
+
+let touching = false;
+pages.addEventListener('touchstart', () => touching = true, {passive:true});
+pages.addEventListener('touchend', () => touching = false, {passive:true});
+pages.addEventListener('touchcancel', () => touching = false, {passive:true});
+
+async function poll(){
+  try {
+    const mid = new Date(); mid.setHours(0,0,0,0);
+    const r = await fetch('/api/state?since='+(mid.getTime()/1000), {cache:'no-store'});
+    if (!r.ok) throw new Error(r.status);
+    lastData = await r.json(); lastOk = Date.now(); pulse();
+    const paint = () => touching ? setTimeout(paint, 300) : render(lastData);   // never redraw under a finger mid-swipe
+    paint();
+  } catch(e){ console.error(e); }
+  tick();
+}
+function tick(){
+  $('clock').textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  const el = $('health'), nowMs = Date.now(); let st, label, age = null, msg = '';
+  if (!lastOk){ st = 'wait'; label = '…'; }
+  else if (nowMs-lastOk > POLL_MS*3){
+    st = 'off'; label = 'OFFLINE'; age = (nowMs-lastOk)/1000;
+    msg = 'Can\'t reach the board for '+dur(age)+'. Everything below is old.';
+  } else {
+    const d = lastData;
+    age = d.last_report_at ? (d.now-d.last_report_at) + (nowMs-lastOk)/1000 : null;   // age of the newest agent report
+    if (age === null || !d.projects.length){ st = 'idle'; label = 'NO DATA'; age = null; }
+    else if (!d.projects.some(p => p.status !== 'done')){ st = 'idle'; label = 'IDLE'; }
+    else if (age > d.stale_minutes*60){ st = 'stale'; label = 'STALE'; msg = 'No agent has reported for '+dur(age)+'. Everything below is old.'; }
+    else { st = 'live'; label = 'LIVE'; }
+  }
+  if (el.className !== st) el.className = st;
+  el.querySelector('b').textContent = label;
+  el.querySelector('span').textContent = age === null ? '' : age < 60 ? 'now' : dur(age);
+  document.body.dataset.health = st; $('warn').textContent = msg;
+}
+// The dot breathes for ~16s after each successful refresh, then goes dim on its own,
+// so a frozen page cannot keep looking alive.
+function pulse(){ const i = $('health').querySelector('i'); i.style.animation = 'none'; void i.offsetWidth; i.style.animation = ''; }
+poll(); setInterval(poll, POLL_MS); setInterval(tick, 1000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
+</script>
+</body>
+</html>

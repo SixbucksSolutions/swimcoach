@@ -6,23 +6,29 @@ Monitoring agents (one per agent-based dev system, such as Codex or Claude Code)
 each in-flight project every few minutes. You keep the page open on a phone or tablet and can see at a
 glance whether everything is still moving and which project needs you.
 
-> **Status:** early. Nothing is built yet; this repo holds the design while v1 is written.
+<img src="docs/img/display-1-all-projects.png" alt="The all-projects display, rendered from the prototype on sample data" width="280">
 
-## Planned for v1
+> **Status:** concept stage. Nothing has been built for v2 yet. The design and a runnable reference
+> prototype are captured below.
 
-- **Framework-neutral.** Anything that can make an HTTP request can report, so the board isn't tied to
-  one agent framework. Self-hosted on a dev box or a NAS on the LAN.
-- **Swipe-between displays.** A ruthlessly minimal "all projects" display, plus one full-screen detail
-  display per project.
-- **GO TO KEYBOARD.** A banner that stays hidden unless a card lands in the localswim *Needs Terry*
-  swimlane.
-- **One card per project.** Green when it's on track, yellow when it needs a look, red only for
-  Needs Terry, gray when it's too early to call. Cards with Blocked items are noted but don't change
-  color.
-- **RTR (RFR / Time ratio).** Share of tickets Ready for Review divided by share of the time block used.
-  Each project gets an RTR value, a five-bin trend arrow, an RTR timeline over the day, and a call on
-  whether the work lands within its time block (held back as "too early to call" while history is thin).
-- **LIVE indicator.** Shows the data is fresh, so a stalled feed never reads as all-good.
+## Start here
+
+- **[docs/concept.md](docs/concept.md)**: the full concept, including the problem, displays, card
+  rules, RTR math, the localswim lane mapping, the architecture, the decisions and their reasons, open
+  questions, and what's out of scope.
+- **[docs/img/](docs/img/)**: screenshots of every display, rendered from the prototype on sample data
+  at iPhone 16 size.
+- **[reference/prototype/](reference/prototype/)**: the prototype from the design conversation. It's
+  kept so it can be run and read, not as the codebase going forward.
+
+## In one paragraph
+
+Agents POST per-project lane counts and hours to the server. The server computes **RTR** (share of
+tickets Ready for Review ÷ share of the time block used), a five-bin trend, a projection, and the
+chance of landing inside the block, and holds back a verdict while history is thin. The phone shows a
+ruthlessly minimal row of project cards (green, yellow, red only for *Needs Terry*), a GO TO KEYBOARD
+banner when Terry has to act, one swipe-over detail display per project, and a LIVE indicator so a
+stalled feed never reads as all-good.
 
 ## Data source
 

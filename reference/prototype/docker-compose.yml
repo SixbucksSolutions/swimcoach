@@ -1,0 +1,14 @@
+services:
+  swimcoach:
+    build: .
+    container_name: swimcoach
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    volumes:
+      - ./data:/data
+    environment:
+      TZ: America/New_York
+      SWIMCOACH_TOKEN: ""            # set a value to require "Authorization: Bearer <value>" on writes
+      SWIMCOACH_STALE_MINUTES: "25"  # flag a project when its agent has been silent this long
+      SWIMCOACH_STALL_MINUTES: "45"  # call a project stalled when no ticket has moved for this long
