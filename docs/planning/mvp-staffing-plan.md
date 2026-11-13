@@ -128,6 +128,18 @@ every re-reviewer after a correction. Author roles keep the model and effort the
 5. A turn closes when every story is reviewed clean and integrated. Gates are Terry's.
 6. A split MUST be reconsidered if its integration takes longer than the time it saved. The first
    two turns are the test.
+7. **Pull requests and squash merges (Terry, 2026-11-13).** All MVP work lands on the integration
+   branch `mvp/integration`, never directly on `main`.
+   - Each author works in its own git worktree, on a branch `t<N>/mvp-<NN>-<letter>` cut from
+     `mvp/integration`, and submits its work as a pull request into `mvp/integration`.
+   - The story's reviewer reviews the pull request. On approval, the reviewer squash-merges it into
+     `mvp/integration`. A finding goes back as a review comment, and the correction lands on the same
+     pull request.
+   - Authors MUST NOT merge their own pull requests. Nobody pushes straight to `mvp/integration`.
+   - `mvp/integration` does not deploy; only `main` does, through CI.
+   - T1 exception: T1's authors were dispatched into the shared checkout before this rule existed. The
+     Lead turns each T1 author's files into that author's branch and pull request; from T2 on, authors
+     do it themselves.
 
 ## Steps only Terry can do
 
