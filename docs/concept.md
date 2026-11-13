@@ -201,7 +201,8 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 - **More room below the status line, paid from the slot budget.** Terry, 2026-11-13. The health box
   sits 13 px below the top of the screen; the card display area now starts 24 px below it (it was
   15 px, close enough to read as crowded). The 9 px comes out of the slots: at 402 × 874, full slots are
-  183.3 px and half slots 86.6 px.
+  183.3 px and half slots 86.6 px. **Confirmed by Terry**: "now my brain feels a clear separation between
+  LIVE and GTK widgets." The two breathing widgets MUST NOT be pulled back together.
 - **Inside a card, 18 px above the title line and 18 px below the last detail-blurb line** at the
   content minimum: 101.7 px for a full card with two blurb lines, 83.5 px for a half card with one. A half
   slot fits that with 3.1 px to spare; a shorter screen scrolls rather than cutting into it.
