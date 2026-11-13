@@ -95,8 +95,11 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
    - `localswim` on `PATH` is stale: a uv tool install of the Python V1 whose `localswim.pth` points
      at `C:\Projects\localswim\src`, a path the Go rewrite removed. It fails with
      `ModuleNotFoundError: No module named 'localswim'`. MVP-06 MUST NOT use it.
-   - MVP-06 MUST decide between reading the V1 JSON files and querying the V2 service, and how a card
-     is tied to a time block. This does not block T1 or T2.
+   - **Decided, Terry, 2026-11-13: the reporter reads boards through the localswim CLI, which can read
+     and write. It MUST NOT parse the JSON files in the state store.**
+   - Still open for MVP-06: which CLI build serves the live boards, and how a card is tied to a time
+     block. The V1 source now sits in `C:\Projects\localswim-legacy-v1\src\localswim`, which is why
+     the uv install's old `src` path broke. Neither question blocks T1 or T2.
 2. **The Zero Trust organization is unconfirmed.** The local token lists Access applications (there are
    none) but gets 403 on `access/organizations`, because it lacks an Organizations Read permission.
    MVP-05 needs an organization with a team domain. Terry SHOULD check the Zero Trust dashboard before
