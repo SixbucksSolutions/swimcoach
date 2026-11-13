@@ -132,6 +132,17 @@ dashboard (`concept.md`, 2026-11-13), and the report carries neither. The accoun
 `swimcoach.sixbuckssolutions.workers.dev`. The account already runs the `fga-api` and `fga-m28-stage`
 Workers.
 
+## Live (2026-11-13)
+
+- **First deploy done** from `mvp/integration` at `c935e71`, by the Lead through `scripts/wrangler.ps1`:
+  `https://swimcoach.sixbuckssolutions.workers.dev`, version `146ddcd3-5908-4953-a637-e10abf529c29`.
+  `/` serves `mocks/index.html` byte-identical (SHA2-256 match), `/api/health` answers `{"ok":true}`,
+  `/tools/` is 404.
+- **It is public until MVP-05** puts Access in front of `workers.dev`. Today it serves only the mock,
+  which is public in this repo anyway, and the health route.
+- Deferred from MVP-02 review: a Vitest test for `GET /` needs `miniflare.assets` in
+  `vitest.config.ts`; MVP-11's browser checks cover `/` meanwhile.
+
 ## Terry's go-aheads for T1 (2026-11-13)
 
 - **First deploy: pre-approved.** When MVP-02 passes review, the Lead runs the first deploy through
