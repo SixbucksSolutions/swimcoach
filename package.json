@@ -1,0 +1,22 @@
+{
+  "name": "swimcoach",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Self-hosted, mobile-first status board for agent-run software projects",
+  "license": "MIT",
+  "scripts": {
+    "types": "wrangler types src/worker-configuration.d.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm run lint && npm test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.7",
+    "@cloudflare/vitest-plugin": "1.8.2",
+    "typescript": "7.0.2",
+    "vitest": "5.1.0",
+    "wrangler": "4.162.0"
+  }
+}

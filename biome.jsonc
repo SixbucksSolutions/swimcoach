@@ -1,0 +1,47 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": [
+      "src/**",
+      "test/**",
+      "*.ts",
+      "*.json",
+      "*.jsonc",
+      "!package-lock.json",
+      "!src/worker-configuration.d.ts"
+    ]
+  },
+  "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
+  // Assist actions: preset all was tried and reported 5 findings: useSortedKeys x4 and
+  // useSortedPackageJson x1. They would alphabetize wrangler.jsonc, tsconfig.json and
+  // package.json, which buries name and main below the settings. Taste, so the recommended
+  // set (import organizing) stays.
+  "assist": { "enabled": true, "actions": { "preset": "recommended" } },
+  "linter": {
+    "enabled": true,
+    // Method (global rule of 2026-08-17): run every rule once, keep what reports defects,
+    // drop what reports taste, record the evidence here. Measured 2026-11-13, Biome 2.6.7,
+    // with linter.rules.preset all over 7 files (the empty scaffold). The corpus is tiny, so
+    // these counts are weak evidence: re-run with preset all when real code lands and revisit
+    // each exclusion below. Nursery rules are outside preset all and are NOT enabled: they are
+    // unstable and may change meaning between releases.
+    "rules": {
+      "preset": "all",
+      "correctness": {
+        // 1 finding: the cloudflare:workers import in the test. A virtual module supplied by
+        // the Workers runtime and typed by @cloudflare/vitest-plugin, so Biome cannot resolve
+        // it. False positive; tsc resolves it and is the real check.
+        "noUnresolvedImports": "off"
+      },
+      "style": {
+        // 2 findings: src/index.ts and vitest.config.ts. A Worker MUST default-export its
+        // handler and Vitest reads a default-exported config. The platform requires it.
+        "noDefaultExport": "off",
+        // 1 finding: an HTTP status code (404) in the handler. A status code is its own name,
+        // and a named constant for it hides the meaning. Taste, not a defect.
+        "noMagicNumbers": "off"
+      }
+    }
+  }
+}
