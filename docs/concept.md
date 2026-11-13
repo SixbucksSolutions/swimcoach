@@ -128,6 +128,13 @@ position (the first dot is square). Tapping a project card jumps to that project
 - **One card per project.** Solid background color, project name, RTR, trend arrow. Fixed alphabetical
   order so a card never changes position; a color change in a known spot is the signal. Cards stretch
   to fill the screen.
+- **The trend arrow is a clock hand.** Terry's idea, 2026-11-13. The RTR's final digit is the clock's
+  center, and the arrow sits around it at the hour its trend points to: strong up at 12, up at 1:30,
+  flat at 3, down at 4:30, hard down at 6. The arrow both sits at the hour and points at it. Every card
+  reserves the same room on the right, so the numbers line up whichever way a hand points. Tested at
+  402 px: the hand stays inside the card with at least 13 px to spare even with six cards on screen.
+  Terry: "that worked _way_ better than I hoped." The project display's large RTR still uses the plain
+  arrow beside the number.
 
 Card states, first match wins:
 
@@ -502,6 +509,7 @@ confirmed by Terry yet; each is up for review in the mock.
 | Page dots are tappable | A second way to move between displays besides swiping |
 | Overview key changed from `'\u0000all'` to `'*all*'` | Fixes the broken "‹ All projects" link (section 11) |
 | LIVE box drops "now"; it shows an age only from 1 min ("7m") | Terry, 2026-11-13: "now" was noise next to LIVE. **Confirmed by Terry** |
+| Overview trend arrows sit on a clock around the RTR's final digit (12 strong up, 1:30 up, 3 flat, 4:30 down, 6 hard down) instead of beside the number | Terry's idea, 2026-11-13, tried in the mock because "changes are cheap". Section 3.2 has the details. **Confirmed by Terry** |
 | The mock's 45 one-off colors folded into a token palette: four brand colors from the mark, a slate ramp that includes the mark's grays, and status colors. Good news becomes lane green (`--ok` `#4BCE97`, fill `#1B6445`, white 7.11:1 AAA); done becomes quiet slate; the teal accent becomes lane blue | Terry, 2026-11-13: "now that we're building a brand palette, let's use it." See `docs/brand.md` section 5. **Confirmed by Terry** |
 | Wordmark recolored: "swim" in lane blue `#85B8FF`, "coach" in lane amber `#E2A100`, replacing white plus teal `#5eead4` | Terry, 2026-11-13, chose W2 of four measured pairs. Both colors come from the mark; see `docs/brand.md` section 3. **Confirmed by Terry** |
 | A swimcoach mark replaces the wave favicon: the localswim mark, unchanged, on a stack of two gray boards stepping up and right. It is the favicon, the iPhone home-screen icon, and a 26 px mark beside the wordmark | Terry, 2026-11-13: swimcoach watches many localswim boards, and its logo should come from the same family. Chosen from four design rounds; see `design/logo/README.md`. **Confirmed by Terry** |

@@ -93,8 +93,14 @@ header h1 .word{color:var(--lane-blue)} header h1 .word span{color:var(--lane-am
 .pc .nm{flex:1;min-width:0}
 .pc .nm b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:24px;font-weight:800;line-height:1.12;overflow-wrap:anywhere}
 .pc .nm span{display:block;font-size:15px;font-weight:600;opacity:.85;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pc .rt{display:flex;align-items:center;gap:4px;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.pc .rt{display:flex;align-items:center;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;padding-right:.95em}
 .arr{width:.85em;height:.85em;flex:none}
+/* Trend on a clock (concept.md 3.2): the final digit is the clock's center and the arrow is its hand.
+   rotate() points the hand at the hour, then translateX() slides it out along that line, so the arrow
+   sits at the hour AND points at it: 12 strong up, 1:30 up, 3 flat, 4:30 down, 6 hard down. The padding
+   above keeps every number in the same place whichever way its hand points. */
+.pivot{position:relative;display:inline-block}
+.pivot .hand{position:absolute;left:50%;top:50%;width:.7em;height:.7em;transform:translate(-50%,-50%) rotate(var(--a)) translateX(.92em)}
 .empty{color:var(--dim);background:var(--panel);border:1px dashed var(--line);border-radius:14px;padding:18px;font-size:15px}
 
 /* display 2+: one project */
@@ -221,6 +227,10 @@ const hm = t => new Date(t*1000).toLocaleTimeString([], {hour:'numeric', minute:
 const pct = x => Math.round(Math.max(0, Math.min(1, x))*100);
 function dur(sec){ sec = Math.abs(Math.round(sec)); const h = Math.floor(sec/3600), m = Math.round((sec%3600)/60);
   return h ? h+'h '+String(m).padStart(2,'0')+'m' : Math.max(m,1)+'m'; }
+// The overview card's RTR with its trend as a clock hand around the final digit (concept.md 3.2).
+const clockRtr = (ratio, dir) => { const s = ratio.toFixed(2);
+  return s.slice(0, -1) + '<span class="pivot">' + s.slice(-1) + (dir === null ? '' :
+    '<svg class="hand" viewBox="0 0 24 24" style="--a:'+TREND[dir][1]+'deg" role="img" aria-label="'+TREND[dir][0]+'"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>') + '</span>'; };
 const arrow = dir => dir === null ? '' : '<svg class="arr" viewBox="0 0 24 24" style="transform:rotate('+TREND[dir][1]+'deg)" role="img" aria-label="'+TREND[dir][0]+'"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 let lastData = null, knownNeeds = null, soundOn = false, actx = null, lastOk = 0, scen = null;
@@ -296,7 +306,7 @@ function overview(fs){
   fs.forEach(f => {
     const notes = [f.needs.length ? f.needs[0] : f.level === 'green' ? '' : f.why, ...f.watch.map(l => l.count+' '+l.name.toLowerCase())].filter(Boolean);
     h += '<button class="pc '+f.level+'" data-go="'+esc(f.p.project)+'"><div class="nm"><b>'+esc(f.p.project)+'</b>'+(notes.length ? '<span>'+esc(notes.join(' · '))+'</span>' : '')+'</div>'
-      + (f.ratio !== null && !f.finished ? '<div class="rt">'+f.ratio.toFixed(2)+arrow(f.dir)+'</div>' : '')+'</button>';
+      + (f.ratio !== null && !f.finished ? '<div class="rt">'+clockRtr(f.ratio, f.dir)+'</div>' : '')+'</button>';
   });
   return h + '</div>';
 }
