@@ -45,6 +45,7 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 | `THIRD-PARTY-NOTICES.md` | Credits and licenses for everything not under swimcoach's MIT license |
 | `design/ui-mock/` | PNG renders of the mock, with an index README |
 | `reference/prototype/` | The prototype (reference only) |
+| `scripts/wrangler.ps1` | Runs Wrangler with the Cloudflare token and account ID read from files in `%USERPROFILE%\.secrets\swimcoach`. Every local Wrangler command MUST use it; Terry keeps these credentials out of environment variables |
 
 ## Working agreements
 

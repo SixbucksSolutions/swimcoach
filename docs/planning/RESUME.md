@@ -40,20 +40,35 @@ credentials need and MAY start at once.
      Scripts Edit maps to Editor.
    - Admin is required here because Cloudflare's docs say Editor "can read, update, deploy, and
      rename existing Workers" and cannot create one. The first deploy creates the swimcoach Worker.
+   - **Done 2026-11-13.** The token and the account ID are files in `%USERPROFILE%\.secrets\swimcoach`:
+     `cloudflare-api-token-local.txt` and `cloudflare-account-id.txt`. The folder grants Full Control
+     to Terry's account only, with inheritance removed. Cloudflare's `tokens/verify` reported the token
+     `active` with no expiry.
 3. **Create the CI token:** a second account API token with **Workers: Editor** instead of Admin and
    without the two Access permissions. CI only deploys the Worker the local token created. The docs do
    not say whether a Durable Object migration needs more than Editor; if a CI deploy with a migration
-   is refused, raise the CI token to Admin.
-   - **Done 2026-11-13.** The local token is in
-     `%USERPROFILE%\.secrets\swimcoach\cloudflare-api-token-local.txt`. The folder and file grant Full
-     Control to Terry's account only, with inheritance removed. An agent MUST NOT print, copy or commit
-     its contents.
-4. **Store them, never in chat:** user environment variables `CLOUDFLARE_API_TOKEN` (the local token)
-   and `CLOUDFLARE_ACCOUNT_ID`; then `gh secret set CLOUDFLARE_API_TOKEN --repo SixbucksSolutions/swimcoach`
-   with the CI token. The reboot makes new sessions see the variables.
-5. Check, after the reboot: `npx wrangler whoami` reports the account. It MAY show no user email, since
-   an account token has no user. `CLOUDFLARE_ACCOUNT_ID` MUST be set, or Wrangler's account lookup can
-   fail with code 9109. The old `wrangler login` on this machine expired on 2026-11-13.
+   is refused, raise the CI token to Admin. **Not done yet.**
+4. **Store the CI token as a GitHub secret.** Terry runs
+   `gh secret set CLOUDFLARE_API_TOKEN --repo SixbucksSolutions/swimcoach` and pastes the CI token at
+   its prompt. The workflow also needs `CLOUDFLARE_ACCOUNT_ID`; it is not a secret, and MAY be a
+   repository variable. **Not done yet.**
+
+### Local credentials: files, never environment variables
+
+Terry, 2026-11-13: he will not set `CLOUDFLARE_API_TOKEN` or `CLOUDFLARE_ACCOUNT_ID` as User or
+Machine environment variables. Storing the token on disk is fine, and an agent reads it when it needs
+it. So:
+
+- Every local Wrangler command MUST go through `scripts/wrangler.ps1`, for example
+  `pwsh -NoProfile -File scripts/wrangler.ps1 deploy`. The script reads both files, sets the two
+  variables at Process scope for one run, and clears them afterward.
+- An agent MUST NOT print, copy or commit the token file's contents, and MUST NOT write either value
+  to the User or Machine environment.
+- Proven 2026-11-13: `wrangler whoami` through the script reports "logged in with an Account API
+  Token" for account `Terry.ott@sixbuckssolutions.com's Account`. After the run, neither the calling
+  shell nor the User environment held the token, and Wrangler's logs contained no `cfat_` string.
+- Wrangler 4.162.0 reads an account token without trouble once `CLOUDFLARE_ACCOUNT_ID` is set. The old
+  `wrangler login` on this machine expired on 2026-11-13 and is not needed.
 
 Account changes stay Terry's to approve even with a token: the Access application, its policy, the
 service tokens, and the Worker's first `workers.dev` deploy. Prepare each step and ask before running it.
