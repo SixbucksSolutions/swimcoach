@@ -133,8 +133,13 @@ position (the first dot is square). Tapping a project card jumps to that project
   flat at 3, down at 4:30, hard down at 6. The arrow both sits at the hour and points at it. Every card
   reserves the same room on the right, so the numbers line up whichever way a hand points. Tested at
   402 px: the hand stays inside the card with at least 13 px to spare even with six cards on screen.
-  Terry: "that worked _way_ better than I hoped." The project display's large RTR still uses the plain
-  arrow beside the number.
+  Terry: "that worked _way_ better than I hoped."
+- **Why: position carries the trend before the eye reads the arrow.** Terry: beside the number, the
+  arrow "was visually blurring with the numerical value ... I had to 'work harder' to process the arrow
+  direction. By moving it I get faster data at a glance." Up arrows now sit above the number and down
+  arrows below it, so where the arrow is says up, flat or down without parsing its shape. **The arrow
+  MUST NOT move back beside the number** on the overview cards. The project display's large RTR still
+  uses the plain arrow beside the number; whether it should follow is open.
 
 Card states, first match wins:
 
