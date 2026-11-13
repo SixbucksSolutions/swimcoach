@@ -23,4 +23,6 @@ Names are `<scenario>-<NN>-<screen>.png`:
 
 Clock times in the images are when they were rendered. To regenerate after the mock changes:
 
-    python mocks/tools/render-mock.py
+    uv run --no-project --with playwright --with pillow python mocks/tools/render-mock.py
+
+See [AGENTS.md](../../AGENTS.md) for the one-time Chromium install.

@@ -55,7 +55,11 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
    markers.
 3. Click-test at 393 × 852: every card opens its project, "‹ All projects" returns, the dots and swipes
    move between displays, and the scenario switcher works.
-4. Run `python mocks/tools/render-mock.py` to refresh `design/ui-mock/` (needs Playwright and Pillow).
+4. Run `uv run --no-project --with playwright --with pillow python mocks/tools/render-mock.py` to refresh
+   `design/ui-mock/`. Terry's Python is uv-managed and marked externally managed (PEP 668), so
+   `pip install` into it fails; `uv run --with` gives the script a throwaway environment instead. The
+   first time on a machine, also run `uv run --no-project --with playwright python -m playwright install
+   chromium`.
 5. Commit, push, and pull into `C:\Projects\swimcoach`.
 
 ## Pushing from a sandbox without GitHub credentials

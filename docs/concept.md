@@ -107,7 +107,7 @@ position (the first dot is square). Tapping a project card jumps to that project
 
 | State | When | Look |
 |---|---|---|
-| LIVE | The page's last poll succeeded within 30 s and the newest agent report is under 25 min old | Bold white "LIVE" on dark green, breathing dot, age of newest report ("now", "7m") |
+| LIVE | The page's last poll succeeded within 30 s and the newest agent report is under 25 min old | Bold white "LIVE" on dark green, breathing dot, age of newest report once it is 1 min or older ("7m"); no age while fresher |
 | STALE | Polls work, but no agent has reported for over 25 min while some project is unfinished | Dark orange box, warning text, all displays grayed to 40% |
 | OFFLINE | Three polls in a row failed (30 s) | Dark red box, warning text, all displays grayed |
 | IDLE | Every project reported today is done | Neutral box |
@@ -480,3 +480,4 @@ confirmed by Terry yet; each is up for review in the mock.
 | Project names on overview cards wrap to two lines, then truncate | Names like "mobile-onboarding" were cut to "mobile-o…" |
 | Page dots are tappable | A second way to move between displays besides swiping |
 | Overview key changed from `'\u0000all'` to `'*all*'` | Fixes the broken "‹ All projects" link (section 11) |
+| LIVE box drops "now"; it shows an age only from 1 min ("7m") | Terry, 2026-11-13: "now" was noise next to LIVE. **Confirmed by Terry** |

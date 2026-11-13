@@ -424,7 +424,7 @@ function tick(){
   }
   if (el.className !== st) el.className = st;
   el.querySelector('b').textContent = label;
-  el.querySelector('span').textContent = age === null ? '' : age < 60 ? 'now' : dur(age);
+  el.querySelector('span').textContent = age === null || age < 60 ? '' : dur(age);
   phone.dataset.health = st; $('warn').textContent = msg;
 }
 function pulse(){ const i = $('health').querySelector('i'); i.style.animation = 'none'; void i.offsetWidth; i.style.animation = ''; }
