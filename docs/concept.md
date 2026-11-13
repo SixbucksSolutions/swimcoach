@@ -176,10 +176,15 @@ position (the first dot is square). Tapping a project card jumps to that project
   draws the cards, before the page paints, so it never flickers (section 3.4). Measured at 402 × 874
   with no GO TO KEYBOARD banner: up to 7 projects two-line, 8 compact without scrolling, 9 and more
   compact and scrolling.
-- **Open: the GO TO KEYBOARD banner grows with every ask.** It lists each waiting project's full ask, so
-  several long asks push the cards into compact mode early: with five projects all waiting on Terry,
-  the banner alone forced compact cards. Whether to cap the banner (for example the first ask plus "and
-  N more") is Terry's call. The project display's large RTR still
+- **Design for one to three projects; more is the edge case.** Terry, 2026-11-13: "When I juggle three
+  projects at once I basically never leave the PC, too much attention needed. Eight would require VERY
+  independent work." Polish SHOULD go to the 1–3 card screens. Compact mode is "a reasonable trade in
+  what feels like an unlikely case."
+- **Deferred: the GO TO KEYBOARD banner grows with every ask.** It lists each waiting project's full ask,
+  so several long asks push the cards into compact mode early: with five projects all waiting on Terry,
+  the banner alone forced compact cards. Deferred, not dropped: at one to three projects the banner holds
+  at most three asks. Revisit (for example the first ask plus "and N more") if Terry starts running more
+  projects at once. The project display's large RTR still
   uses the plain arrow beside the number; whether it should follow is open.
 
 Card states, first match wins:
