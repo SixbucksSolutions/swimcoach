@@ -25,16 +25,20 @@ credentials need and MAY start at once.
 
 1. **Pick the hostname:** a subdomain of one of Terry's Cloudflare domains, or a `*.workers.dev`
    address. Asked on 2026-11-13; not yet answered.
-2. **Create the local API token** (Cloudflare dashboard, My Profile, API Tokens, Create Token): start
-   from the "Edit Cloudflare Workers" template, limit it to Terry's account and the one zone, and add
-   Account: Access: Apps and Policies, Edit; Account: Access: Service Tokens, Edit; Zone: DNS, Edit. If a
-   later step is refused, add exactly the permission the error names.
-3. **Create the CI token:** the same template and zone, without the Access permissions.
+2. **Create the local token as an account API token, not a personal (user) token** (Cloudflare
+   dashboard, Manage Account, Account API Tokens). An account token belongs to the account, not to a
+   person, and Cloudflare recommends it for CI and integrations; its compatibility table marks Workers,
+   DNS and Access as supported. Give it Workers Scripts Edit, Account Settings Read (Wrangler's account
+   lookup), Access: Apps and Policies Edit, Access: Service Tokens Edit, and, on the one zone, Workers
+   Routes Edit and DNS Edit. If a later step is refused, add exactly the permission the error names.
+3. **Create the CI token:** a second account API token with the same permissions minus the two Access
+   ones.
 4. **Store them, never in chat:** user environment variables `CLOUDFLARE_API_TOKEN` (the local token)
    and `CLOUDFLARE_ACCOUNT_ID`; then `gh secret set CLOUDFLARE_API_TOKEN --repo SixbucksSolutions/swimcoach`
    with the CI token. The reboot makes new sessions see the variables.
-5. Check, after the reboot: `npx wrangler whoami` succeeds. The old `wrangler login` on this machine
-   expired on 2026-11-13.
+5. Check, after the reboot: `npx wrangler whoami` reports the account. It MAY show no user email, since
+   an account token has no user. `CLOUDFLARE_ACCOUNT_ID` MUST be set, or Wrangler's account lookup can
+   fail with code 9109. The old `wrangler login` on this machine expired on 2026-11-13.
 
 Account changes stay Terry's to approve even with a token: the Access application, its policy, the
 service tokens and the DNS record. Prepare each step and ask before running it.
