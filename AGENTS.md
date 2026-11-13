@@ -51,12 +51,10 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 - **Terry's viewer is Chrome on an iPhone 16 Pro.** Chrome on iOS runs on WebKit, so treat it like
   Safari: no vibration API, and audio needs a tap first. Design and test at 402 × 874 CSS px (1206 ×
   2622 at 3×). Earlier docs said iPhone 16 at 393 × 852; Terry corrected the model on 2026-11-13.
-- **The good-news fill is one green, `--ok-fill` `#166534`, with pure white text on it.** The LIVE box
-  and green cards both use it. White on it MUST clear WCAG AAA (7:1); it measures 7.13:1. Text on it
-  MUST stay at full opacity, because white at 85% drops to 5.66:1. A second fill green MUST NOT be
-  introduced. Terry's requirement, 2026-11-13; for now white on this green is the only pairing held to
-  AAA. `--ok` `#4ade80` stays as the green for text on the dark page. RFC 2119 keywords; the capitals
-  are load-bearing.
+- **Colors come from the palette tokens in `docs/brand.md` section 5, never a new hex.** RFC 2119
+  keywords; the capitals are load-bearing. The good-news fill is `--ok-fill` `#1B6445` with pure white
+  text: it MUST clear WCAG AAA (7:1) and measures 7.11:1. Text on it MUST stay at full opacity. A second
+  green MUST NOT be introduced. Terry's requirement, 2026-11-13.
 - **Text is set in the Inter typeface.** A third-party asset MUST NOT be added without its license beside
   it and an entry in `THIRD-PARTY-NOTICES.md`.
 - **Terry gives concepts, not designs.** He asks the agent to turn them into good UI, and to hold the

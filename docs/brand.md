@@ -49,32 +49,61 @@ tabular-nums` so they do not jitter.
 
 ## 5. Color
 
-### Brand colors (settled)
+The palette has three parts: **four core brand colors**, a **neutral ramp**, and **status colors**. Every
+color in the page MUST come from a token in `mocks/index.html` `:root`, and the token MUST be listed
+here. A new hex needs a reason written in this section first. Applied 2026-11-13, when the mock's 45
+one-off colors were folded into these tokens.
 
-The localswim bar colors, measured on the mark's `#1D2125` ground by localswim:
+### Core brand colors (settled)
 
-| Name | Hex | On `#1D2125` |
+Four colors, all from the mark, which is the usual 4 ± 1 for a brand. Measured on the mark's ground by
+localswim:
+
+| Token | Name | Hex | On `#1D2125` | Used for |
+|---|---|---|---|---|
+| `--lane-blue` | Lane blue | `#85B8FF` | 7.94:1 | "swim" in the wordmark, the bell when alerts are on, mock controls |
+| `--lane-amber` | Lane amber | `#E2A100` | 7.20:1 | "coach" in the wordmark |
+| `--lane-green` | Lane green | `#4BCE97` | 8.16:1 | Good news, through `--ok` (below) |
+| `--board` | Board slate | `#1D2125` | (ground) | The mark's board, raised surfaces, the done card, the desktop phone frame |
+
+### Neutral ramp (settled)
+
+One slate ramp, darkest to lightest. It includes the mark's back boards, so the page's grays and the
+logo's grays are the same grays.
+
+| Token | Hex | Used for |
 |---|---|---|
-| Lane blue | `#85B8FF` | 7.94:1 |
-| Lane amber | `#E2A100` | 7.20:1 |
-| Lane green | `#4BCE97` | 8.16:1 |
-| Board | `#1D2125` | (mark ground) |
-| Stack | `#3B4550`, `#5A6573` | (back boards) |
+| `--bg` | `#0b0f14` | Page |
+| `--panel` | `#131a22` | Tiles, the mock's scenario sheet |
+| `--panel2` | `= --board` | Health box when idle, bar tracks |
+| `--line` | `#243140` | Borders, dividers, parked lanes |
+| `--stack-1` | `#3B4550` | The "too early" gray card; the mark's middle board |
+| `--stack-2` | `#5A6573` | Lane shades; the mark's back board |
+| `--faint` | `#5f7082` | Axis labels, footers (3.78:1, deliberately quiet) |
+| `--dim` | `#93a3b3` | Secondary text; done (7.44:1 on `--bg`) |
+| `--text` | `#e8eef4` | Primary text (16.44:1) |
 
 ### Status colors (settled in part)
 
 Status colors carry meaning on the phone and MUST NOT be used for decoration.
 
-| Meaning | Fill | Text on it | Contrast |
-|---|---|---|---|
-| Good news: LIVE, on time | `#166534` (`--ok-fill`) | white, full opacity | 7.13:1, AAA |
-| Toss-up, running late, silent agent | `#facc15` | `#231a00` | 11.25:1 |
-| Needs Terry | `#dc2626` | white | 4.83:1, **not yet AAA** |
+| Token | Meaning | Fill | Text on it | Contrast |
+|---|---|---|---|---|
+| `--ok-fill`, `--ok` | Good news: LIVE, on time | `#1B6445` | white, full opacity | 7.11:1, AAA |
+| `--risk` | Toss-up, running late, silent agent | `#facc15` | `#231a00` | 11.25:1 |
+| `--bad-fill`, `--bad` | Needs Terry | `#dc2626` | white | 4.83:1, **not yet AAA** |
+| `--done` (`= --dim`) | Finished | `--board` card | `--dim` | 6.32:1 |
 
-- **Good news is one green.** A second fill green MUST NOT be introduced. `--ok` `#4ade80` is for green
-  *text* on the dark page only.
+- **Good news is lane green.** `--ok` is `--lane-green` itself, for green text on the page (9.68:1).
+  `--ok-fill` is the same hue darkened until pure white on it measures 7.11:1. Light and dark, they are
+  one green. A second green MUST NOT be introduced.
+- **Done is quiet slate, not a color.** It used to be sky blue `#7dd3fc`, a near-twin of lane blue with a
+  different meaning.
 - **Two near-identical colors MUST NOT sit side by side** when they mean different things. The eye reads
-  the pair as a mistake. This is why the LIVE box and the green cards now share one green.
+  the pair as a mistake. Three such pairs were removed on 2026-11-13: two greens (`#166534` beside
+  `#15803d`, then `#4ade80` against the mark's `#4BCE97`), and two blues (done sky against lane blue).
+- The STALE (`#9a3412`) and OFFLINE (`#991b1b`) boxes, and the tinted warning flags, are single-use
+  status shades and stay as literal values beside their rules.
 
 ### Contrast (settled)
 
