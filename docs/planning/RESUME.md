@@ -93,7 +93,7 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
      `localswim.pth` points at the removed `C:\Projects\localswim\src`.
    - **Superseded the same day by Terry's data path** (now in `mvp-stories.md` MVP-06): cards are not
      tied to time blocks, and there is **no relay**. Each running project's own agent, in Codex or
-     Claude, runs the swimcoach CLI client and pushes its milestone's time limits and progress
+     Claude, runs the swimcoach CLI client and pushes its milestone's wall-clock hours and card count per lane
      straight to the Worker's API. No swimcoach agent, no state file on disk. MVP-01 freezes the
      CLI's command line. The localswim notes above are background only; swimcoach does not read
      localswim.

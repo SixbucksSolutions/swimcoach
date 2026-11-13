@@ -36,7 +36,10 @@ they are part of MVP-01's contract.
   JSON Schema for the report and state bodies. It starts from `docs/concept.md` section 6.3 and adds the
   answers to D1-D3.
 - The swimcoach CLI's command line (MVP-06), which project agents call directly: project name, the
-  current milestone's time limits, and its work counts.
+  current milestone's wall-clock hours (used and allocated, the prototype's `hours`), and the card
+  count per lane for the milestone's cards only (the prototype's `lanes`), plus the optional
+  `needs_me` sentence. A total card count is not enough: RTR needs the finished count, a Needs Terry
+  card raises GO TO KEYBOARD, and the Swimlanes display draws one bar per lane.
 - Metric definitions as executable golden fixtures: input sample series and the expected RTR, trend
   bin, projection, chance and call, taken from the prototype's math (`reference/prototype/server.py`)
   for the eight mock scenarios plus edge cases (one-story turn, zero progress, block over time, midnight
@@ -102,7 +105,7 @@ authenticated", in the contract.
 **Goal:** each running project's own agent pushes its current milestone straight to swimcoach.
 
 The data path, as Terry set it on 2026-11-13: **no relay.** A project's agent (in Codex or Claude) runs
-the swimcoach CLI itself and pushes its milestone's time limits and progress. There is no swimcoach
+the swimcoach CLI itself and pushes its milestone's wall-clock hours and card count per lane. There is no swimcoach
 agent and no state file on disk. Cards are not tied to time blocks in localswim, so the project's agent
 is the one that knows what its milestone holds.
 
