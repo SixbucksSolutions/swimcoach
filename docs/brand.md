@@ -35,9 +35,15 @@ regeneration commands and rejected ideas: [`design/logo/README.md`](../design/lo
 - On the page ground `#0b0f14`: blue 9.42:1, amber 8.54:1. Both clear AAA.
 - **"swim" is localswim's wordmark blue**, so the word the two products share wears the same color in
   both.
-- The wordmark colors MUST come from the brand colors (section 5), never the status colors. Lane amber
-  `#E2A100` is not the toss-up yellow `#facc15`: it is darker and more orange, and it only appears in the
-  header, away from the cards.
+- The wordmark colors MUST come from the brand colors (section 5), never the status colors.
+- **"coach" amber and the attention yellow are deliberately "visually related but emotionally
+  distinct"** (Terry, 2026-11-13). In his words, coach "feels warm and inviting", while the yellow card
+  means "hey you should pay more attention here. It isn't _bad_ but it is slipping in a direction you
+  want to know about." The two MUST stay related and MUST NOT be merged. What keeps them apart is
+  measurable: lane amber `#E2A100` is darker and more orange (hue 43°, lightness 44%) and only ever
+  appears as small text in the header. The attention yellow `#facc15` is brighter (hue 48°, lightness
+  54%) and only ever appears as a large card fill. A change that moves either one toward the other, or
+  uses amber as a fill or yellow as text in the header, would erase the distinction.
 - The other candidates are in `design/logo/candidates-wordmark.png`. Green "coach" (W1, W4) was set aside
   because it sits beside the green LIVE box, two different greens touching.
 
@@ -90,7 +96,7 @@ Status colors carry meaning on the phone and MUST NOT be used for decoration.
 | Token | Meaning | Fill | Text on it | Contrast |
 |---|---|---|---|---|
 | `--ok-fill`, `--ok` | Good news: LIVE, on time | `#1B6445` | white, full opacity | 7.11:1, AAA |
-| `--risk` | Toss-up, running late, silent agent | `#facc15` | `#231a00` | 11.25:1 |
+| `--risk` | Needs attention: toss-up, running late, silent agent. Not bad, but slipping in a direction Terry wants to know about | `#facc15` | `#231a00` | 11.25:1 |
 | `--bad-fill`, `--bad` | Needs Terry | `#dc2626` | white | 4.83:1, **not yet AAA** |
 | `--done` (`= --dim`) | Finished | `--board` card | `--dim` | 6.32:1 |
 
