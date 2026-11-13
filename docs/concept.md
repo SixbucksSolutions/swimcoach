@@ -155,7 +155,11 @@ position (the first dot is square). Tapping a project card jumps to that project
   detail update." The status is 14 px, weight 500, two lines at most; the RTR block stays centered on
   the right. Measured at 402 px: the name's capitals start 18 px below the card edge, matching the 18 px
   to their left, and in the tightest card (102 px, six cards) a full two-line status ends 18 px above
-  the bottom edge. search-index's full ask, "Pick an index strategy: per-tenant or shared", now fits. The project display's large RTR still
+  the bottom edge. search-index's full ask, "Pick an index strategy: per-tenant or shared", now fits.
+- **No separator line between the name and the status.** Considered and declined, 2026-11-13. Size
+  (24 px against 14 px), weight (800 against 500) and a 5 px gap already make the two tiers. A rule
+  inside a colored card adds one more shape to scan at a glance, and it would compete with the clock
+  hand at 12 o'clock on the same card. Hierarchy comes from type, not lines. The project display's large RTR still
   uses the plain arrow beside the number; whether it should follow is open.
 
 Card states, first match wins:
