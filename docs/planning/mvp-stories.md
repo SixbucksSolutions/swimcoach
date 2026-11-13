@@ -37,7 +37,9 @@ they are part of MVP-01's contract.
   answers to D1-D3.
 - The swimcoach CLI's command line (MVP-06), which project agents call directly: project name, the
   current milestone's wall-clock hours (used and allocated, the prototype's `hours`), and the card
-  count per lane for the milestone's cards only (the prototype's `lanes`), plus the optional
+  count per lane for the milestone's cards only (the prototype's `lanes`). Terry, 2026-11-13: one
+  epic per milestone, several stories per epic, so the milestone's cards are its epic's stories.
+  Plus the optional
   `needs_me` sentence. A total card count is not enough: RTR needs the finished count, a Needs Terry
   card raises GO TO KEYBOARD, and the Swimlanes display draws one bar per lane.
 - Metric definitions as executable golden fixtures: input sample series and the expected RTR, trend
