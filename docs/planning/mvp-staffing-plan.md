@@ -5,9 +5,18 @@ keywords; the capitals are load-bearing. Stories are in [`mvp-stories.md`](mvp-s
 dependency diagram is [`mvp-execution-plan-legal-portrait-300ppi.png`](mvp-execution-plan-legal-portrait-300ppi.png)
 (print [`mvp-execution-plan-legal-portrait.pdf`](mvp-execution-plan-legal-portrait.pdf), US legal portrait).
 
-All workers are Claude Code subagents. **Opus / high** where correctness is subtle (contract, storage,
-metric math, authentication, qualification, and the review of anything V2 must pass); **Sonnet /
-medium** for ordinary build and presentation work.
+All workers are Claude Code subagents. Every role below names its model and its effort level, and
+the two names mean exactly these:
+
+| Short name | Model | Model ID | Effort |
+| --- | --- | --- | --- |
+| **Opus 5.5 / high** | Claude Opus 5.5 | `claude-opus-5-5` | `high` |
+| **Sonnet 5.5 / medium** | Claude Sonnet 5.5 | `claude-sonnet-5-5` | `medium` |
+
+Opus 5.5 / high goes where correctness is subtle: contract, storage, metric math, authentication,
+qualification, and the review of anything V2 must pass. Sonnet 5.5 / medium goes to ordinary build and
+presentation work. The Lead (the main session) is Claude Opus 5.5. A later model MUST NOT be swapped
+in silently; changing a row's model or effort is a staffing-plan edit.
 
 ## The goal: least total wall-clock time, T1 to T6
 
@@ -60,18 +69,18 @@ about three. These are estimates; T1 and T2 will show how good they are.
 
 | Story | Authors | Split | Why the split is clean |
 | --- | --- | --- | --- |
-| MVP-01 contract | **3** | A, Opus / high: HTTP contract and JSON Schemas. B, Opus / high: golden metric fixtures from the prototype's math. C, Sonnet / medium: UX ledger skeleton keyed to `design/ui-mock/` | Three separate artifacts. Fixtures are sample series in, metrics out, independent of the HTTP shape; the ledger is screen states. |
-| MVP-02 scaffold + deploy | **2** | A, Sonnet / medium: Worker project, TypeScript strict, Biome at pedantry with its proof-of-fire, mock served as assets. B, Sonnet / medium: GitHub Actions check-and-deploy workflow, `actionlint` clean | `wrangler.jsonc`, `src/`, `biome.json` versus `.github/workflows/`. The interface is the npm script names, fixed up front. |
-| MVP-03 Board Durable Object | **2** | A, Opus / high: SQLite schema, migrations, typed storage methods and the 14-day retention alarm. B, Opus / high: report ingest (validation, arrays, lane overrides, cards-to-lanes derivation) as a pure module | `board-store.ts` versus `ingest.ts`. B calls only A's frozen storage interface, never SQLite. |
-| MVP-04 metrics module | **2** | A, Opus / high: RTR, five-bin trend, projection, "too early" gates, D1 small-block rule. B, Opus / high: chance on time (negative binomial, Jeffreys prior) | Pure functions in separate files, both checked against MVP-01's fixtures. B's only input is A's frozen sample type. |
-| MVP-05 Access + service tokens | **2** | A, Opus / high: the Worker's `Cf-Access-Jwt-Assertion` verification, failing closed, with forged and expired token tests. B, Sonnet / medium: the exact steps for Terry's Access application, policy and service tokens, plus a check script he runs after | Code versus runbook. The interface is the Access audience tag and team domain, fixed up front. |
-| MVP-06 CLI client | **2** | A, Sonnet / medium: the swimcoach CLI client that validates a milestone report and posts it with a service token. B, Sonnet / medium: the instruction text project agents follow in Codex and Claude, and the Windows setup steps | Client versus instructions and runbook. The interface is the client's command line, frozen in MVP-01. |
-| MVP-07 state + report API | **2** | A, Sonnet / medium: `GET /api/state` assembler. B, Sonnet / medium: `POST /api/report` and `DELETE` routes | Separate route modules; both call the Board's typed methods and neither edits the Board. |
-| MVP-08 page on live data | **3** | A, Sonnet / medium: overview display (status line, slot grid, cards, GO TO KEYBOARD) with its CSS. B, Sonnet / medium: project display (hero, chart, tiles, bars, swimlanes) with its CSS. C, Opus / high: data, polling, health, breathing and no-flicker controller | Two renderers on one shared token stylesheet the Lead owns, each with its own DOM and CSS, both consuming C's frozen state projection. |
-| MVP-09 API acceptance suite | **2** | A, Sonnet / medium: harness (HTTP client, timed replay, controllable clock). B, Sonnet / medium: scenario cases turning MVP-01's fixtures into assertions | Runner versus cases; the interface is the case format. |
-| MVP-10 phone + home screen | **2** | A, Sonnet / medium: web manifest, touch icon, meta tags, safe-area CSS. B, Sonnet / medium: Access session settings for Terry and the device checklist he runs | Page assets versus account steps and checks. |
-| MVP-11 UI acceptance + UX ledger | **3** | A, Sonnet / medium: overview-display browser checks. B, Sonnet / medium: project-display browser checks. C, Sonnet / medium: completed UX ledger and matched renders | Checks cite ledger row IDs; each check author owns one display; the ledger author writes no checks. |
-| MVP-12 qualification | **3** | A, Opus / high: qualification author. B and C, Sonnet / medium: evidence workers (behavioral coverage audit; provenance and "suites import no MVP code" check) | localswim's T6 pattern: two bounded evidence packets feed one author. Not split further: one person signs the qualification. |
+| MVP-01 contract | **3** | A, Opus 5.5 / high: HTTP contract and JSON Schemas. B, Opus 5.5 / high: golden metric fixtures from the prototype's math. C, Sonnet 5.5 / medium: UX ledger skeleton keyed to `design/ui-mock/` | Three separate artifacts. Fixtures are sample series in, metrics out, independent of the HTTP shape; the ledger is screen states. |
+| MVP-02 scaffold + deploy | **2** | A, Sonnet 5.5 / medium: Worker project, TypeScript strict, Biome at pedantry with its proof-of-fire, mock served as assets. B, Sonnet 5.5 / medium: GitHub Actions check-and-deploy workflow, `actionlint` clean | `wrangler.jsonc`, `src/`, `biome.json` versus `.github/workflows/`. The interface is the npm script names, fixed up front. |
+| MVP-03 Board Durable Object | **2** | A, Opus 5.5 / high: SQLite schema, migrations, typed storage methods and the 14-day retention alarm. B, Opus 5.5 / high: report ingest (validation, arrays, lane overrides, cards-to-lanes derivation) as a pure module | `board-store.ts` versus `ingest.ts`. B calls only A's frozen storage interface, never SQLite. |
+| MVP-04 metrics module | **2** | A, Opus 5.5 / high: RTR, five-bin trend, projection, "too early" gates, D1 small-block rule. B, Opus 5.5 / high: chance on time (negative binomial, Jeffreys prior) | Pure functions in separate files, both checked against MVP-01's fixtures. B's only input is A's frozen sample type. |
+| MVP-05 Access + service tokens | **2** | A, Opus 5.5 / high: the Worker's `Cf-Access-Jwt-Assertion` verification, failing closed, with forged and expired token tests. B, Sonnet 5.5 / medium: the exact steps for Terry's Access application, policy and service tokens, plus a check script he runs after | Code versus runbook. The interface is the Access audience tag and team domain, fixed up front. |
+| MVP-06 CLI client | **2** | A, Sonnet 5.5 / medium: the swimcoach CLI client that validates a milestone report and posts it with a service token. B, Sonnet 5.5 / medium: the instruction text project agents follow in Codex and Claude, and the Windows setup steps | Client versus instructions and runbook. The interface is the client's command line, frozen in MVP-01. |
+| MVP-07 state + report API | **2** | A, Sonnet 5.5 / medium: `GET /api/state` assembler. B, Sonnet 5.5 / medium: `POST /api/report` and the stop-tracking route | Separate route modules; both call the Board's typed methods and neither edits the Board. |
+| MVP-08 page on live data | **3** | A, Sonnet 5.5 / medium: overview display (status line, slot grid, cards, GO TO KEYBOARD) with its CSS. B, Sonnet 5.5 / medium: project display (hero, chart, tiles, bars, swimlanes) with its CSS. C, Opus 5.5 / high: data, polling, health, breathing and no-flicker controller | Two renderers on one shared token stylesheet the Lead owns, each with its own DOM and CSS, both consuming C's frozen state projection. |
+| MVP-09 API acceptance suite | **2** | A, Sonnet 5.5 / medium: harness (HTTP client, timed replay, controllable clock). B, Sonnet 5.5 / medium: scenario cases turning MVP-01's fixtures into assertions | Runner versus cases; the interface is the case format. |
+| MVP-10 phone + home screen | **2** | A, Sonnet 5.5 / medium: web manifest, touch icon, meta tags, safe-area CSS. B, Sonnet 5.5 / medium: Access session settings for Terry and the device checklist he runs | Page assets versus account steps and checks. |
+| MVP-11 UI acceptance + UX ledger | **3** | A, Sonnet 5.5 / medium: overview-display browser checks. B, Sonnet 5.5 / medium: project-display browser checks. C, Sonnet 5.5 / medium: completed UX ledger and matched renders | Checks cite ledger row IDs; each check author owns one display; the ledger author writes no checks. |
+| MVP-12 qualification | **3** | A, Opus 5.5 / high: qualification author. B and C, Sonnet 5.5 / medium: evidence workers (behavioral coverage audit; provenance and "suites import no MVP code" check) | localswim's T6 pattern: two bounded evidence packets feed one author. Not split further: one person signs the qualification. |
 
 ## Reviewers per story
 
@@ -80,18 +89,18 @@ parts need different expertise and would otherwise queue behind one reviewer.
 
 | Story | Reviewers |
 | --- | --- |
-| MVP-01 | 2: Opus / high for contract and fixtures; Sonnet / medium for the ledger |
-| MVP-02 | 1: Sonnet / medium |
-| MVP-03 | 1: Opus / high |
-| MVP-04 | 2: Opus / high each, one per module; the chance model needs its own careful read |
-| MVP-05 | 1: Opus / high |
-| MVP-06 | 1: Sonnet / medium |
-| MVP-07 | 1: Sonnet / medium |
-| MVP-08 | 3: Sonnet / medium for the renderers, Opus / high for the controller, and the visual reviewer |
-| MVP-09 | 1: Opus / high; a gap here becomes a gap in V2 |
-| MVP-10 | 1: Sonnet / medium |
-| MVP-11 | 2: Sonnet / medium technical, and the visual reviewer |
-| MVP-12 | 2: Opus / high, and the visual reviewer |
+| MVP-01 | 2: Opus 5.5 / high for contract and fixtures; Sonnet 5.5 / medium for the ledger |
+| MVP-02 | 1: Sonnet 5.5 / medium |
+| MVP-03 | 1: Opus 5.5 / high |
+| MVP-04 | 2: Opus 5.5 / high each, one per module; the chance model needs its own careful read |
+| MVP-05 | 1: Opus 5.5 / high |
+| MVP-06 | 1: Sonnet 5.5 / medium |
+| MVP-07 | 1: Sonnet 5.5 / medium |
+| MVP-08 | 3: Sonnet 5.5 / medium for the renderers, Opus 5.5 / high for the controller, and the visual reviewer |
+| MVP-09 | 1: Opus 5.5 / high; a gap here becomes a gap in V2 |
+| MVP-10 | 1: Sonnet 5.5 / medium |
+| MVP-11 | 2: Sonnet 5.5 / medium technical, and the visual reviewer |
+| MVP-12 | 2: Opus 5.5 / high, and the visual reviewer |
 
 ## The relay, turn by turn
 
@@ -102,7 +111,7 @@ parts need different expertise and would otherwise queue behind one reviewer.
 | T3 | 06-A, 06-B, 07-A, 07-B | One reviewer each for MVP-06 and MVP-07. |
 | T4 | 08-A, 08-B, 08-C, 09-A, 09-B | MVP-08's three reviewers take its three freed slots; MVP-09's reviewer takes one of its two. Then **Terry's phone check of MVP-08** before T5 opens. |
 | T5 | 10-A, 10-B, 11-A, 11-B, 11-C | MVP-10's reviewer, then MVP-11's technical and visual reviewers. |
-| T6 | 12-A, 12-B, 12-C | The evidence workers hand to 12-A and exit; then the Opus reviewer and the visual reviewer check the result. **Terry's demo and acceptance** close the epic. |
+| T6 | 12-A, 12-B, 12-C | The evidence workers hand to 12-A and exit; then the Opus 5.5 / high reviewer and the visual reviewer check the result. **Terry's demo and acceptance** close the epic. |
 
 ### Relay rules
 

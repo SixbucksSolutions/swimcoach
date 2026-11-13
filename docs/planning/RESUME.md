@@ -132,6 +132,14 @@ dashboard (`concept.md`, 2026-11-13), and the report carries neither. The accoun
 `swimcoach.sixbuckssolutions.workers.dev`. The account already runs the `fga-api` and `fga-m28-stage`
 Workers.
 
+## Terry's go-aheads for T1 (2026-11-13)
+
+- **First deploy: pre-approved.** When MVP-02 passes review, the Lead runs the first deploy through
+  `scripts/wrangler.ps1` without stopping. It creates only the `swimcoach` Worker.
+- **Pacing: stop after T1.** Finish MVP-01 and MVP-02, demo them, and wait for Terry.
+- **Subagents: as planned** in `mvp-staffing-plan.md`, five T1 authors at once.
+- A reboot is no longer needed for credentials: nothing reads environment variables.
+
 ## Next action when unblocked
 
 Start **MVP T1** per `docs/planning/mvp-staffing-plan.md`: five authors (MVP-01 A, B, C; MVP-02 A, B),
