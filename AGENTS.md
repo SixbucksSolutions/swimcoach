@@ -10,11 +10,13 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 (displays, card rules, RTR math, localswim lane mapping, architecture, decisions, open questions) is in
 `docs/concept.md`.
 
-## Current phase: clickable mocks, not the app
+## Current phase: mocks done, MVP next
 
-- **Nothing is built for v1 yet, and nothing should be until Terry says so.** The current phase is HTML
-  clickable mocks, so Terry and the agent agree on look, feel and UX intent before any build.
-- The stack for v1 has not been chosen (concept.md section 8).
+- **The mock phase closed on 2026-11-13.** Terry: "an MVP is worth a lot more than a concept I never
+  pushed to prod." `mocks/index.html` is now the approved design, with every decision and its reason in
+  `docs/concept.md` sections 2 and 3 and `docs/brand.md`. The MVP MUST match it.
+- **Next: choose the v1 stack (concept.md section 8), then build the MVP.** Nothing is built yet. The
+  stack choice is Terry's call; propose one, do not pick it unasked.
 - `reference/prototype/` is the earlier "super prototype": a runnable reference and a spec, not code to
   extend. Its known defects are in concept.md section 11.
 
