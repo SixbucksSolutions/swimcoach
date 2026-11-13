@@ -80,12 +80,23 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
 
 ## Risks to finishing in six turns (checked 2026-11-13)
 
-1. **MVP-06 has no working data source on this machine.** `localswim` on `PATH` is
-   `~\.local\bin\localswim.exe`, a uv tool install whose `localswim.pth` points at
-   `C:\Projects\localswim\src`. That folder does not exist, so the command fails with
-   `ModuleNotFoundError: No module named 'localswim'`. Its entry point is `localswim.api_endpoint`, so it
-   may be a server rather than a query CLI. Terry MUST say where the live localswim boards run and how an
-   agent reads a time block from them before T3.
+1. **MVP-06's data source: located, format not yet chosen.** Terry, 2026-11-13: shared localswim is at
+   `C:\Projects\localswim`, and its data is under `C:\Projects`.
+   - `C:\Projects\localswim` is the Go V2 source (`github.com/localswim/localswim`), unbuilt, with no
+     service running on 2026-11-13.
+   - The board data is `C:\Projects\localswim-state-store` (`TerryOtt/localswim-state-store`): one
+     folder per project with V1 JSON boards, for example `localswim\localswim.json`. A `swimcoach`
+     folder already exists there.
+   - A built V2 CLI is `C:\Projects\localswim-v2\localswim.exe`. It reads the live service through
+     `LOCALSWIM_URL` and `LOCALSWIM_TOKEN` (credentials in Clixml files, per
+     `C:\Projects\localswim\docs\windows-operations.md`), or a saved snapshot with `--data DIRECTORY`.
+     `card list BOARD_ID`, `board get --view lanes` and `activity list --view monitor` look like the
+     reporter's inputs. Its help is multi-level: append `--help` to an object or action.
+   - `localswim` on `PATH` is stale: a uv tool install of the Python V1 whose `localswim.pth` points
+     at `C:\Projects\localswim\src`, a path the Go rewrite removed. It fails with
+     `ModuleNotFoundError: No module named 'localswim'`. MVP-06 MUST NOT use it.
+   - MVP-06 MUST decide between reading the V1 JSON files and querying the V2 service, and how a card
+     is tied to a time block. This does not block T1 or T2.
 2. **The Zero Trust organization is unconfirmed.** The local token lists Access applications (there are
    none) but gets 403 on `access/organizations`, because it lacks an Organizations Read permission.
    MVP-05 needs an organization with a team domain. Terry SHOULD check the Zero Trust dashboard before
