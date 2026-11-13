@@ -649,8 +649,10 @@ confirmed by Terry yet; each is up for review in the mock.
 
 Terry's plan, 2026-11-13. RFC 2119 keywords; the capitals are load-bearing.
 
-- **The MVP exists to get the UX right on the real phone, with real agents.** It ships fast and
-  changes until it "feels right". Vendor and language lock-in do not matter for it.
+- **The MVP exists to find out what Terry wants: it is requirements discovery.** It gets the UX right on
+  the real phone, with real agents, shipping fast and changing until it "feels right". Vendor and
+  language lock-in do not matter for it. The precedent, in Terry's words: `TerryOtt/localswim` "was
+  finding out what I wanted/requirements", and `localswim/localswim` "is the 0% reuse rewrite".
 - **V2 rebuilds exactly what the MVP does, from greenfield, with no code inherited.** Terry: "build
   _exactly what the MVP does right now_ from greenfield ... burn the tech debt to the ground", with
   "the _rare perfect requirements_: 'I want EXACTLY THE MVP FUNCTIONALITY no more no less.'" V2 MAY
