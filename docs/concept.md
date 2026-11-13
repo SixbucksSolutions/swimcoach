@@ -160,6 +160,27 @@ Top to bottom:
    dimmed with a dash for share.
 8. Footer: last ticket move, last report time, reporting agent.
 
+### 3.4 Loading: no render flicker
+
+Terry's design intent, 2026-11-13. It is more implementation than design, and it is recorded now so the
+build honors it. RFC 2119 keywords; the capitals are load-bearing.
+
+- **The page MUST appear once, finished.** No flash of fallback text, no restyle when the typeface
+  arrives, and no layout jump as content fills in.
+- **The typeface load MUST block text rendering.** Inter's `@font-face` uses `font-display:block`, so the
+  browser never draws text in a fallback font first.
+- **The page MUST stay hidden until the DOM is built, the font file is ready and the first render is
+  done.** The page then fades in as a whole, over **0.2 s, `ease-in`**.
+- **A stuck font MUST NOT leave a blank page.** If the font file is not ready within 3 s, the page reveals
+  anyway in the fallback font.
+- **The fade SHOULD be skipped under `prefers-reduced-motion: reduce`.** The page then simply appears.
+- **The fade happens once per page load.** The 10-second polls MUST NOT fade, blank or flash the page;
+  they change only the values that changed.
+
+The clickable mock follows the first five points; see `html.loading` and `reveal()` in
+`mocks/index.html`. The mock's poll rewrites each display's HTML, which shows no visible flash in testing
+but is not the "only what changed" update the real page needs.
+
 ## 4. Metrics: exact definitions
 
 All constants below are the Architecture chat's guesses unless marked as Terry's. None has been tuned
