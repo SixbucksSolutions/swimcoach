@@ -112,8 +112,14 @@ is the one that knows what its milestone holds.
 - The swimcoach CLI client: takes a project's milestone report as arguments or a JSON file, validates
   it against MVP-01's schema, and posts it to the Worker's API with an Access service token. It reads
   the token from a file, never an environment variable, the same way as `scripts/wrangler.ps1`.
-- The instruction text a project's agent follows: when to push (milestone start, each story's
-  progress, and at least every 10 minutes while working) and the exact commands. It replaces
+- The instruction text a project's agent follows: when to push and the exact commands. Terry,
+  2026-11-13: as the agent moves a card to Ready For Review, it informs swimcoach through the CLI.
+  So the agent pushes at milestone start, on every card move (Ready For Review and Needs Terry
+  above all, since a Needs Terry card raises GO TO KEYBOARD), and as a heartbeat at least every 10
+  minutes while working, because a silent project goes STALE.
+- Every push MUST carry the milestone's full state (hours and every lane's count), never a
+  "one more card done" increment. A missed push then costs only freshness, and a repeated one changes
+  nothing; increments would drift forever after one lost call. It replaces
   `reference/prototype/AGENT_PROMPT.md` and fixes its section 11 defects (no bash heredoc;
   Windows-safe).
 - Codex and Claude can both work one project, so a repeated report MUST NOT create a duplicate
