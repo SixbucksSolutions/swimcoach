@@ -138,7 +138,13 @@ position (the first dot is square). Tapping a project card jumps to that project
   arrow "was visually blurring with the numerical value ... I had to 'work harder' to process the arrow
   direction. By moving it I get faster data at a glance." Up arrows now sit above the number and down
   arrows below it, so where the arrow is says up, flat or down without parsing its shape. **The arrow
-  MUST NOT move back beside the number** on the overview cards. The project display's large RTR still
+  MUST NOT move back beside the number** on the overview cards.
+- **The RTR and its hand are the second tier, after card color, and take the card's spare height.**
+  Terry, 2026-11-13: they are "the _truly valuable_ second tier data beyond card color", and the size
+  MUST NOT crowd the card edges ("don't crowd the edges just use more dead space"). The number is weight
+  900 and scales with the card's height through a container query: the largest size that keeps the hand
+  16 px from the card edge, between 28 px and 52 px. Measured at 402 px: 44 px with three cards (hand 28
+  px from the edge), 28 px with six (15 px from the edge). A fixed 36 px had left 5 px. The project display's large RTR still
   uses the plain arrow beside the number; whether it should follow is open.
 
 Card states, first match wins:
