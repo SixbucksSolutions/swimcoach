@@ -163,7 +163,13 @@ position (the first dot is square). Tapping a project card jumps to that project
 - **The status is indented 12 px under the name instead**, half the name's 24 px em. Terry's idea,
   2026-11-13: "The lighter weight font and a modest indent will be gorgeous to my brain." It separates
   detail from title without adding a shape. The longest sample status still fits two lines, ending
-  18 px above the bottom of the tightest card. The project display's large RTR still
+  18 px above the bottom of the tightest card.
+- **Every card reserves room for two status lines.** Terry, 2026-11-13. A card's minimum height is
+  101.7 px, measured so a full two-line status ends the same 18 px above the bottom edge as the name's
+  capitals sit below the top (18.0 and 18.2 px; the 0.2 px is layout rounding, under one device pixel at
+  3×). With more projects than fit, the overview scrolls rather than squeezing a card; tested with eight
+  cards, each with a two-line status. The old minimum was 74 px. This closes the card layout round: name
+  top-left, indented two-line status, RTR and clock hand on the right, 18 px on every side. The project display's large RTR still
   uses the plain arrow beside the number; whether it should follow is open.
 
 Card states, first match wins:
