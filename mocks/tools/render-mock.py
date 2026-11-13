@@ -12,6 +12,7 @@ The mock's MOCK button is hidden, so the images show only the design.
 
 import argparse
 import re
+import time
 from pathlib import Path
 
 from PIL import Image
@@ -23,6 +24,27 @@ OVERVIEW_ONLY = {"stale", "offline"}
 # iPhone 16 Pro: 402 x 874 CSS px at 3x, so 1206 x 2622 px images. Keep in step with #phone in index.html.
 VIEWPORT = {"width": 402, "height": 874}
 SCALE = 3
+
+
+def stamp_dpi(f: Path, tries: int = 5) -> None:
+    """Rewrite a PNG with 300 DPI metadata, retrying if Windows briefly refuses the write.
+
+    On Windows a freshly written PNG is sometimes held for a moment by another process (antivirus or
+    the indexer scanning it), and reopening it for writing fails with OSError Errno 22. Measured
+    2026-11-13: the same render failed on one file and passed unchanged on the next run. The image is
+    loaded fully and closed first, then the save is retried with a short backoff.
+    """
+    with Image.open(f) as im:
+        im.load()
+        stamped = im.copy()
+    for attempt in range(tries):
+        try:
+            stamped.save(f, dpi=(300, 300))
+            return
+        except OSError:
+            if attempt == tries - 1:
+                raise
+            time.sleep(0.2 * (attempt + 1))
 
 
 def slug(name: str) -> str:
@@ -65,11 +87,7 @@ def render(out: Path, chrome: str | None) -> None:
         b.close()
 
     for f in sorted(out.glob("*.png")):
-        # Load fully and close before rewriting: Image.open is lazy and keeps the file open.
-        with Image.open(f) as im:
-            im.load()
-            stamped = im.copy()
-        stamped.save(f, dpi=(300, 300))
+        stamp_dpi(f)
     print(len(list(out.glob("*.png"))), "PNGs in", out)
 
 

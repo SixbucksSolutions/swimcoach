@@ -26,13 +26,20 @@ regeneration commands and rejected ideas: [`design/logo/README.md`](../design/lo
 - In the app header the mark is 26 × 26 px, 8 px from the wordmark.
 - The iPhone home-screen icon is `swimcoach-touch-180.png`: full bleed on `#0b0f14`.
 
-## 3. The wordmark (open)
+## 3. The wordmark (settled)
 
 - Always one lowercase word, **swimcoach**, set in Inter 700, with `letter-spacing:.02em` in the header.
-- **Two tones: "swim" and "coach" in different colors.** Terry, 2026-11-13: "I love offsetting colors of
-  swim vs coach." The two colors are not chosen yet; candidates are in
-  `design/logo/candidates-wordmark.png`.
-- Neither wordmark color SHOULD be a status color (section 5), or the name reads as a status.
+- **Two tones: "swim" in lane blue `#85B8FF`, "coach" in lane amber `#E2A100`.** Both are the mark's own
+  bar colors, so the word and the mark read as one identity. Terry chose this (W2) on 2026-11-13: it
+  "pops so well and looks very deliberate/intentional without being in your face about it."
+- On the page ground `#0b0f14`: blue 9.42:1, amber 8.54:1. Both clear AAA.
+- **"swim" is localswim's wordmark blue**, so the word the two products share wears the same color in
+  both.
+- The wordmark colors MUST come from the brand colors (section 5), never the status colors. Lane amber
+  `#E2A100` is not the toss-up yellow `#facc15`: it is darker and more orange, and it only appears in the
+  header, away from the cards.
+- The other candidates are in `design/logo/candidates-wordmark.png`. Green "coach" (W1, W4) was set aside
+  because it sits beside the green LIVE box, two different greens touching.
 
 ## 4. Typeface (settled)
 

@@ -33,6 +33,8 @@
      White on --ok-fill is 7.13:1 (WCAG AAA). Text on it MUST stay full opacity: white at 85% is 5.66:1.
      --ok is the lighter green for green text on the dark page. */
   --ok:#4ade80; --ok-fill:#166534; --risk:#facc15; --bad:#f87171; --done:#7dd3fc; --me:#f87171; --accent:#5eead4;
+  /* Wordmark (docs/brand.md section 3): "swim" in lane blue, "coach" in lane amber, the mark's own bar colors. */
+  --lane-blue:#85B8FF; --lane-amber:#E2A100;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--text);overflow:hidden;
@@ -48,7 +50,7 @@ body{transition:opacity .2s ease-in} html.loading body{opacity:0}
 header{display:flex;align-items:center;gap:8px;padding:10px 14px 8px;flex:none;min-width:0}
 header h1{display:flex;align-items:center;gap:8px;font-size:16px;margin:0;font-weight:700;letter-spacing:.02em;white-space:nowrap}
 #brand{flex:none;width:26px;height:26px;background:center/contain no-repeat var(--brand)}
-header h1 .word span{color:var(--accent)}
+header h1 .word{color:var(--lane-blue)} header h1 .word span{color:var(--lane-amber)}
 #clock{font-variant-numeric:tabular-nums;font-size:16px;font-weight:600;margin-left:auto;white-space:nowrap}
 #snd{flex:none;display:grid;place-items:center;width:34px;height:34px;padding:0;background:var(--panel);color:var(--dim);border:1px solid var(--line);border-radius:50%}
 #snd svg{width:18px;height:18px}
@@ -149,7 +151,7 @@ h4{margin:20px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08e
   #phone::before{content:"";position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#000}
   #mockbtn,#sheet{display:none!important}
   #side{display:block;width:340px;flex:none}
-  #side h2{margin:6px 0 2px;font-size:20px} #side h2 span{color:var(--accent)}
+  #side h2{margin:6px 0 2px;font-size:20px} #side h2 .word{color:var(--lane-blue)} #side h2 .word span{color:var(--lane-amber)}
   #side p{color:var(--dim);font-size:14px;margin:4px 0 14px;line-height:1.45}
   #side h3{margin:22px 0 4px;font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
   #side ul{margin:6px 0 0;padding-left:18px;color:var(--dim);font-size:13px;line-height:1.55}
@@ -177,7 +179,7 @@ h4{margin:20px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08e
 </div>
 
 <aside id="side">
-  <h2>swim<span>coach</span> · clickable mock</h2>
+  <h2><span class="word">swim<span>coach</span></span> · clickable mock</h2>
   <p>The phone is the design. Everything on this side is mock controls. On a real phone, the same controls are behind the dashed <b>MOCK</b> button.</p>
   <h3>Scenario</h3>
   <div class="scens"></div>
