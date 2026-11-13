@@ -451,6 +451,9 @@ In order, each replaced by the next:
 - **Header wraps in the OFFLINE state at iPhone width.** The longer "OFFLINE 4m" box pushes the clock
   and the Alerts button onto two lines (see `img/state-offline.png`). Found when rendering these
   screenshots.
+- **"‹ All projects" does nothing.** The overview's page key is `'\u0000all'`; HTML parsing turns the
+  NUL in the link's `data-go` attribute into U+FFFD, so the key never matches. Swiping back works.
+  Found while click-testing the mock, which uses `'*all*'` instead.
 - **Long project names truncate on the overview cards** ("demo: mobile-o…"). Fine for short real names,
   but worth deciding on.
 - **No tests.** Checks were manual: curl, JSON inspection and screenshots.

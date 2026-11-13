@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>swimcoach · clickable mock</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0f14'/%3E%3Cpath d='M4 12q4-4 8 0t8 0 8 0M4 20q4-4 8 0t8 0 8 0' fill='none' stroke='%235eead4' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<!--
+  swimcoach clickable mock (v2 concept). Self-contained: no server, no network.
+  Sample data is computed by the prototype's own math (mocks/tools/make-scenarios.py) and stored below
+  between the SCENARIOS markers; every timestamp is shifted on load so the data always looks current.
+  Everything outside the #phone element is mock chrome, not part of the design.
+-->
+<style>
+:root{
+  --bg:#0b0f14; --panel:#131a22; --panel2:#1b2530; --line:#243140;
+  --text:#e8eef4; --dim:#93a3b3; --faint:#5f7082;
+  --ok:#4ade80; --risk:#facc15; --bad:#f87171; --done:#7dd3fc; --me:#f87171; --accent:#5eead4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);overflow:hidden;
+  font:16px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent;cursor:pointer}
+
+/* ---------- the phone: this is the design ---------- */
+#phone{position:relative;display:flex;flex-direction:column;height:100dvh;width:100%;overflow:hidden;
+  padding-top:env(safe-area-inset-top);background:var(--bg)}
+header{display:flex;align-items:center;gap:8px;padding:10px 14px 8px;flex:none;min-width:0}
+header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+header h1 span{color:var(--accent)}
+#clock{font-variant-numeric:tabular-nums;font-size:16px;font-weight:600;margin-left:auto;white-space:nowrap}
+#snd{flex:none;display:grid;place-items:center;width:34px;height:34px;padding:0;background:var(--panel);color:var(--dim);border:1px solid var(--line);border-radius:50%}
+#snd svg{width:18px;height:18px}
+#snd.on{color:var(--accent);border-color:var(--accent)}
+#health{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:7px;font-size:13px;color:#fff;background:var(--panel2);font-variant-numeric:tabular-nums;white-space:nowrap}
+#health b{font-weight:800;letter-spacing:.07em} #health span{opacity:.85}
+#health span:empty{display:none}
+#health i{width:8px;height:8px;border-radius:50%;background:#fff;opacity:.3}
+#health.live{background:#166534} #health.live i{animation:breathe 2s ease-in-out 8}
+#health.stale{background:#9a3412} #health.off{background:#991b1b}
+@keyframes breathe{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+#warn{margin:2px 14px 8px;padding:11px 14px;border-radius:12px;background:#3b1408;border:1px solid #fb923c;color:#fed7aa;font-size:17px;font-weight:600;flex:none}
+#warn:empty{display:none}
+#phone[data-health=off] #pages, #phone[data-health=stale] #pages{opacity:.4;filter:grayscale(1)}
+
+#pages{flex:1;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+#pages::-webkit-scrollbar{display:none}
+.page{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;padding:4px 14px 14px;display:flex;flex-direction:column;scrollbar-width:none}
+.page::-webkit-scrollbar{display:none}
+.page>*{flex-shrink:0}
+#dots{flex:none;display:flex;justify-content:center;gap:4px;padding:2px 0 max(6px,env(safe-area-inset-bottom))}
+#dots button{border:0;background:none;padding:8px 4px}
+#dots i{display:block;width:8px;height:8px;border-radius:50%;background:var(--line)}
+#dots button.on i{background:var(--text)}
+#dots button:first-child i{border-radius:2px}
+
+/* display 1: all projects */
+.kbd{flex:none;display:block;width:100%;text-align:left;border:0;border-radius:16px;padding:14px 18px;margin-bottom:10px;background:#dc2626;color:#fff;animation:throb 1.6s ease-in-out infinite}
+.kbd b{display:block;font-size:26px;font-weight:900;letter-spacing:.04em;line-height:1.1}
+.kbd span{display:block;font-size:15px;font-weight:600;margin-top:4px}
+@keyframes throb{50%{filter:brightness(1.18)}}
+.cards{flex:1 0 auto;display:flex;flex-direction:column;gap:10px}
+.pc{flex:1 1 0;min-height:74px;max-height:170px;display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-radius:18px;padding:12px 18px;background:var(--b);color:var(--f)}
+.pc.green{--b:#15803d;--f:#fff} .pc.yellow{--b:#facc15;--f:#231a00} .pc.red{--b:#dc2626;--f:#fff}
+.pc.gray{--b:#334155;--f:#e2e8f0} .pc.done{--b:#1e293b;--f:#94a3b8}
+.pc .nm{flex:1;min-width:0}
+.pc .nm b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:24px;font-weight:800;line-height:1.12;overflow-wrap:anywhere}
+.pc .nm span{display:block;font-size:15px;font-weight:600;opacity:.85;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc .rt{display:flex;align-items:center;gap:4px;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.arr{width:.85em;height:.85em;flex:none}
+.empty{color:var(--dim);background:var(--panel);border:1px dashed var(--line);border-radius:14px;padding:18px;font-size:15px}
+
+/* display 2+: one project */
+.back{align-self:flex-start;background:none;border:0;padding:4px 0 8px;color:var(--dim);font-size:15px}
+.page h2{margin:0;font-size:26px;line-height:1.15;overflow-wrap:anywhere}
+.hero{display:flex;align-items:flex-end;gap:14px;margin:6px 0 4px}
+.hero .big{display:flex;align-items:center;gap:8px;font-size:64px;font-weight:800;line-height:1;color:var(--c);font-variant-numeric:tabular-nums}
+.hero .big .arr{color:var(--text);width:.6em;height:.6em}
+.hero .lab{padding-bottom:7px;font-size:13px;color:var(--dim)} .hero .lab b{display:block;font-size:20px;color:var(--c)}
+.flag{margin:10px 0 0;padding:9px 12px;border-radius:10px;font-size:15px}
+.flag.me{background:#2a1215;color:#fecaca;border:1px solid var(--me)}
+.flag.st{background:#231c10;color:#fde68a;border:1px solid #7c5e10}
+h4{margin:20px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:600}
+.chart{position:relative;height:150px;margin-right:38px;border-left:1px solid var(--line);border-bottom:1px solid var(--line)}
+.chart svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.chart span{position:absolute;left:100%;margin-left:6px;transform:translateY(-50%);font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums}
+.chart span.one{color:var(--dim);font-weight:700}
+.xax{display:flex;justify-content:space-between;margin:4px 38px 0 0;font-size:11px;color:var(--faint)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.tile small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+.tile b{display:block;font-size:22px;line-height:1.2;margin-top:2px;font-variant-numeric:tabular-nums}
+.tile span{display:block;font-size:12px;color:var(--dim);margin-top:1px}
+.meter{display:grid;grid-template-columns:44px 1fr;gap:4px 10px;align-items:center;margin-bottom:8px}
+.meter label{font-size:12px;color:var(--dim)}
+.meter .bar{height:12px;background:var(--panel2);border-radius:6px;overflow:hidden}
+.meter .bar i{display:block;height:100%;border-radius:6px;background:var(--c)} .meter .bar.t i{background:var(--dim)}
+.meter .cap{grid-column:2;font-size:13px;color:var(--dim);font-variant-numeric:tabular-nums} .meter .cap b{color:var(--text)}
+.stack{display:flex;height:18px;border-radius:6px;overflow:hidden;background:var(--panel2);gap:2px}
+.stack i{display:block;height:100%}
+.lanes{margin:8px 0 0;padding:0;list-style:none}
+.lanes li{display:grid;grid-template-columns:14px 1fr auto 48px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px}
+.lanes li i{width:12px;height:12px;border-radius:3px} .lanes li b{font-variant-numeric:tabular-nums}
+.lanes li.off{color:var(--faint)}
+.lanes li span{text-align:right;color:var(--dim);font-variant-numeric:tabular-nums}
+.foot{margin-top:16px;font-size:12px;color:var(--faint)}
+.tldr{margin:10px 0 0;font-size:15px}
+
+/* ---------- mock chrome: not part of the design ---------- */
+#mockbtn{position:absolute;right:10px;bottom:calc(max(6px,env(safe-area-inset-bottom)) + 2px);z-index:5;border:1px dashed #5eead4;background:rgba(11,15,20,.85);color:#5eead4;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:700;letter-spacing:.04em}
+#sheet{position:absolute;inset:0;z-index:10;display:none;background:rgba(0,0,0,.55)}
+#sheet.open{display:flex;align-items:flex-end}
+#sheet .in{width:100%;max-height:85%;overflow-y:auto;background:#0f1720;border-top:1px dashed #5eead4;border-radius:16px 16px 0 0;padding:14px 14px max(14px,env(safe-area-inset-bottom))}
+.mockhead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}
+.mockhead b{color:#5eead4;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.mockhead button{background:none;border:0;color:var(--dim);font-size:15px}
+.scen{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}
+.scen b{display:block;font-size:15px} .scen span{display:block;font-size:13px;color:var(--dim);margin-top:2px}
+.scen.on{border-color:#5eead4;background:#0f2a2a}
+.mocknote{font-size:12px;color:var(--faint);margin:12px 2px 0;line-height:1.45}
+
+#side{display:none}
+@media (min-width:760px){
+  html,body{overflow:auto}
+  body{display:flex;justify-content:center;align-items:flex-start;gap:36px;padding:28px 24px;min-height:100%;background:#05080b}
+  #phone{flex:none;width:393px;height:852px;border-radius:48px;border:10px solid #1f2933;box-shadow:0 0 0 2px #374151,0 30px 80px rgba(0,0,0,.6);padding-top:44px}
+  #phone::before{content:"";position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#000}
+  #mockbtn,#sheet{display:none!important}
+  #side{display:block;width:340px;flex:none}
+  #side h2{margin:6px 0 2px;font-size:20px} #side h2 span{color:var(--accent)}
+  #side p{color:var(--dim);font-size:14px;margin:4px 0 14px;line-height:1.45}
+  #side h3{margin:22px 0 4px;font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+  #side ul{margin:6px 0 0;padding-left:18px;color:var(--dim);font-size:13px;line-height:1.55}
+  #side kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<div id="phone">
+  <header>
+    <h1>swim<span>coach</span></h1>
+    <span id="health" class="wait"><i></i><b>…</b><span></span></span>
+    <span id="clock"></span>
+    <button id="snd" type="button" aria-label="Alerts off"></button>
+  </header>
+  <div id="warn"></div>
+  <main id="pages"></main>
+  <nav id="dots"></nav>
+  <button id="mockbtn" type="button">MOCK ▾</button>
+  <div id="sheet"><div class="in">
+    <div class="mockhead"><b>Mock scenarios</b><button type="button" data-close>Close</button></div>
+    <div class="scens"></div>
+    <p class="mocknote">This sheet and its button are mock controls, not part of the design. Sample data, computed by the prototype's math; times are shown relative to now.</p>
+  </div></div>
+</div>
+
+<aside id="side">
+  <h2>swim<span>coach</span> · clickable mock</h2>
+  <p>The phone is the design. Everything on this side is mock controls. On a real phone, the same controls are behind the dashed <b>MOCK</b> button.</p>
+  <h3>Scenario</h3>
+  <div class="scens"></div>
+  <h3>Things to try</h3>
+  <ul>
+    <li>Tap a card to open its project; tap <b>‹ All projects</b> to come back.</li>
+    <li>Swipe (or trackpad-scroll sideways, or <kbd>←</kbd> <kbd>→</kbd>) between displays; the dots are tappable.</li>
+    <li>Turn alerts on with the bell, then switch from <i>A typical afternoon</i> to <i>Go to keyboard</i> to hear the chime.</li>
+    <li>Watch the LIVE dot: it breathes for 16 s after each refresh, then stops on its own.</li>
+  </ul>
+  <h3>Changed from the prototype</h3>
+  <ul>
+    <li>Alerts is a bell icon, so the header no longer wraps in the OFFLINE state.</li>
+    <li>Long project names wrap to two lines instead of being cut off.</li>
+    <li>The page dots are tappable.</li>
+  </ul>
+</aside>
+
+<script id="scenarios" type="application/json">/*SCENARIOS:BEGIN*/{"afternoon":{"title":"A typical afternoon","blurb":"One of every card: red, green, two yellows, gray and done.","state":{"now":1794573043.1330886,"stale_minutes":25,"stall_minutes":45,"trend_minutes":60,"min_history_minutes":45,"min_block_used":0.15,"last_report_at":1794573043.0,"projects":[{"project":"auth-refresh","source":"codex","status":"on_track","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":0.33,"hours_alloc":4.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":4},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":1}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794573043.0,"updated_at":1794573043.0,"stale":false,"trend":null,"spark":[[1794572443,0.0],[1794573043,2.0202]]},{"project":"docs-site","source":"claude-code","status":"on_track","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":2.0,"hours_alloc":3.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":1},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":4}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794571243.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":-0.5,"minutes":60,"pace":0.4999999999999999,"proj":0.8333333333333333,"finish":1.3333333333333335,"recent_done":1,"to_go":2,"chance":0.3812815664617708},"spark":[[1794566443,0.0],[1794567043,1.5152],[1794567643,1.0],[1794568243,1.4925],[1794568843,1.2048],[1794569443,1.5],[1794570043,1.2821],[1794570643,1.1278],[1794571243,1.3333],[1794571843,1.1976],[1794572443,1.0929],[1794573043,1.0]]},{"project":"FGA T04","source":"claude-code","status":"on_track","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.83,"hours_alloc":4.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":2},{"name":"In progress","count":1},{"name":"Blocked","count":1},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":4}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794572443.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":0.5605560414961954,"minutes":60,"pace":1.7142857142857142,"proj":1.5014285714285713,"finish":0.7075,"recent_done":3,"to_go":3,"chance":0.8750602493238056},"spark":[[1794567043,0.0],[1794567643,0.0],[1794568243,1.1429],[1794568843,0.8529],[1794569443,0.6885],[1794570043,1.1429],[1794570643,0.9768],[1794571243,1.2889],[1794571843,1.1429],[1794572443,1.3687],[1794573043,1.249]]},{"project":"localswim v2","source":"claude-code","status":"done","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.33,"hours_alloc":2.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":0},{"name":"In progress","count":0},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":5}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794573043.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":0.29163818637502836,"minutes":60,"pace":1.6,"proj":1.536,"finish":0.665,"recent_done":4,"to_go":0,"chance":1.0},"spark":[[1794568843,0.0],[1794569443,1.2121],[1794570043,0.8],[1794570643,1.194],[1794571243,1.4458],[1794571843,1.2],[1794572443,1.3675],[1794573043,1.5038]]},{"project":"mobile-onboarding","source":"codex","status":"behind","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":2.17,"hours_alloc":3.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":5},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":3}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794571243.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":-0.1089710767130122,"minutes":60,"pace":0.3333333333333333,"proj":0.4255555555555556,"finish":2.7233333333333336,"recent_done":1,"to_go":6,"chance":0.01993830356344417},"spark":[[1794565843,0.0],[1794566443,0.0],[1794567043,0.0],[1794567643,0.4975],[1794568243,0.4016],[1794568843,0.3333],[1794569443,0.5698],[1794570043,0.5013],[1794570643,0.4444],[1794571243,0.5988],[1794571843,0.5464],[1794572443,0.5],[1794573043,0.4608]]},{"project":"search-index","source":"codex","status":"behind","tldr":"","needs_me":"Pick an index strategy: per-tenant or shared","block_start":null,"block_end":null,"hours_used":1.83,"hours_alloc":2.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":2},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":1},{"name":"Ready for review","count":1}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794571843.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":-0.263348475870696,"minutes":60,"pace":0.0,"proj":0.2,"finish":null,"recent_done":0,"to_go":4,"chance":0.00012967546406117414},"spark":[[1794567043,0.0],[1794567643,0.0],[1794568243,0.0],[1794568843,0.597],[1794569443,0.4819],[1794570043,0.4],[1794570643,0.3419],[1794571243,0.3008],[1794571843,0.2667],[1794572443,0.2395],[1794573043,0.2186]]}]}},"allgreen":{"title":"All green","blurb":"The goal: everything on time, nothing to do. Back to the game.","state":{"now":1794573043.3067398,"stale_minutes":25,"stall_minutes":45,"trend_minutes":60,"min_history_minutes":45,"min_block_used":0.15,"last_report_at":1794573043.0,"projects":[{"project":"docs-site","source":"claude-code","status":"on_track","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.67,"hours_alloc":3.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":0},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":5}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794573043.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":0.004468674591116439,"minutes":60,"pace":1.5000000000000004,"proj":1.4983333333333335,"finish":0.6677777777777777,"recent_done":3,"to_go":1,"chance":0.9482090024101327},"spark":[[1794567643,0.0],[1794568243,1.5152],[1794568843,1.0],[1794569443,1.4925],[1794570043,1.2048],[1794570643,1.5],[1794571243,1.2821],[1794571843,1.5038],[1794572443,1.3333],[1794573043,1.497]]},{"project":"FGA T04","source":"claude-code","status":"on_track","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.83,"hours_alloc":4.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":2},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":4}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794572443.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":0.5605560414961954,"minutes":60,"pace":1.7142857142857142,"proj":1.5014285714285713,"finish":0.7075,"recent_done":3,"to_go":3,"chance":0.8750602493238056},"spark":[[1794567043,0.0],[1794567643,0.0],[1794568243,1.1429],[1794568843,0.8529],[1794569443,0.6885],[1794570043,1.1429],[1794570643,0.9768],[1794571243,1.2889],[1794571843,1.1429],[1794572443,1.3687],[1794573043,1.249]]},{"project":"localswim v2","source":"codex","status":"on_track","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.5,"hours_alloc":2.5,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":0},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":5}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794573043.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":0.5555555555555558,"minutes":60,"pace":1.666666666666667,"proj":1.5000000000000002,"finish":0.7,"recent_done":4,"to_go":1,"chance":0.9558058261758408},"spark":[[1794568243,0.0],[1794568843,1.2626],[1794569443,0.8333],[1794570043,1.2438],[1794570643,1.004],[1794571243,1.25],[1794571843,1.4245],[1794572443,1.2531],[1794573043,1.3889]]}]}},"keyboard":{"title":"Go to keyboard","blurb":"Two projects are waiting on you: one with an agent's ask, one with just a ticket in Needs Terry.","state":{"now":1794573043.4759386,"stale_minutes":25,"stall_minutes":45,"trend_minutes":60,"min_history_minutes":45,"min_block_used":0.15,"last_report_at":1794573043.0,"projects":[{"project":"FGA T04","source":"claude-code","status":"on_track","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.83,"hours_alloc":4.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":2},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":4}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794572443.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":0.5605560414961954,"minutes":60,"pace":1.7142857142857142,"proj":1.5014285714285713,"finish":0.7075,"recent_done":3,"to_go":3,"chance":0.8750602493238056},"spark":[[1794567043,0.0],[1794567643,0.0],[1794568243,1.1429],[1794568843,0.8529],[1794569443,0.6885],[1794570043,1.1429],[1794570643,0.9768],[1794571243,1.2889],[1794571843,1.1429],[1794572443,1.3687],[1794573043,1.249]]},{"project":"localswim v2","source":"codex","status":"on_track","tldr":"","needs_me":"1 ticket in Needs Terry","block_start":null,"block_end":null,"hours_used":1.5,"hours_alloc":2.5,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":0},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":1},{"name":"Ready for review","count":4}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794573043.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":0.2777777777777779,"minutes":60,"pace":1.25,"proj":1.1666666666666665,"finish":0.8666666666666667,"recent_done":3,"to_go":2,"chance":0.7569320439671242},"spark":[[1794568243,0.0],[1794568843,1.2626],[1794569443,0.8333],[1794570043,1.2438],[1794570643,1.004],[1794571243,1.25],[1794571843,1.0684],[1794572443,0.9398],[1794573043,1.1111]]},{"project":"search-index","source":"codex","status":"behind","tldr":"","needs_me":"Pick an index strategy: per-tenant or shared","block_start":null,"block_end":null,"hours_used":1.83,"hours_alloc":2.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":2},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":1},{"name":"Ready for review","count":1}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794571843.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":-0.263348475870696,"minutes":60,"pace":0.0,"proj":0.2,"finish":null,"recent_done":0,"to_go":4,"chance":0.00012967546406117414},"spark":[[1794567043,0.0],[1794567643,0.0],[1794568243,0.0],[1794568843,0.597],[1794569443,0.4819],[1794570043,0.4],[1794570643,0.3419],[1794571243,0.3008],[1794571843,0.2667],[1794572443,0.2395],[1794573043,0.2186]]}]}},"silent":{"title":"One agent silent","blurb":"mobile-onboarding's monitoring agent stopped reporting 32 minutes ago. The rest are live.","state":{"now":1794573043.6434567,"stale_minutes":25,"stall_minutes":45,"trend_minutes":60,"min_history_minutes":45,"min_block_used":0.15,"last_report_at":1794573043.0,"projects":[{"project":"docs-site","source":"claude-code","status":"on_track","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.67,"hours_alloc":3.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":0},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":5}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794573043.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":0.004468674591116439,"minutes":60,"pace":1.5000000000000004,"proj":1.4983333333333335,"finish":0.6677777777777777,"recent_done":3,"to_go":1,"chance":0.9482090024101327},"spark":[[1794567643,0.0],[1794568243,1.5152],[1794568843,1.0],[1794569443,1.4925],[1794570043,1.2048],[1794570643,1.5],[1794571243,1.2821],[1794571843,1.5038],[1794572443,1.3333],[1794573043,1.497]]},{"project":"FGA T04","source":"claude-code","status":"on_track","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.83,"hours_alloc":4.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":2},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":4}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794572443.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":0.5605560414961954,"minutes":60,"pace":1.7142857142857142,"proj":1.5014285714285713,"finish":0.7075,"recent_done":3,"to_go":3,"chance":0.8750602493238056},"spark":[[1794567043,0.0],[1794567643,0.0],[1794568243,1.1429],[1794568843,0.8529],[1794569443,0.6885],[1794570043,1.1429],[1794570643,0.9768],[1794571243,1.2889],[1794571843,1.1429],[1794572443,1.3687],[1794573043,1.249]]},{"project":"mobile-onboarding","source":"codex","status":"at_risk","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.5,"hours_alloc":3.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":4},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":4}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794571123.0,"updated_at":1794571123.0,"stale":true,"trend":{"delta":0.2222222222222222,"minutes":60,"pace":0.9999999999999999,"proj":0.9444444444444444,"finish":1.0555555555555558,"recent_done":3,"to_go":5,"chance":0.5104677810241454},"spark":[[1794566323,0.0],[1794566923,0.0],[1794567523,0.6667],[1794568123,0.4975],[1794568723,0.8032],[1794569323,0.6667],[1794569923,0.8547],[1794570523,0.7519],[1794571123,0.8889]]}]}},"morning":{"title":"Early morning","blurb":"Blocks just started. Every card is too early to call, whatever RTR says.","state":{"now":1794573043.7686996,"stale_minutes":25,"stall_minutes":45,"trend_minutes":60,"min_history_minutes":45,"min_block_used":0.15,"last_report_at":1794573043.0,"projects":[{"project":"docs-site","source":"claude-code","status":"behind","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":0.33,"hours_alloc":3.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":5},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":0}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794572443.0,"updated_at":1794573043.0,"stale":false,"trend":null,"spark":[[1794572443,0.0],[1794573043,0.0]]},{"project":"FGA T05","source":"claude-code","status":"on_track","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":0.5,"hours_alloc":4.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":5},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":1}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794572443.0,"updated_at":1794573043.0,"stale":false,"trend":null,"spark":[[1794571843,0.0],[1794572443,1.7316],[1794573043,1.1429]]},{"project":"search-index","source":"codex","status":"at_risk","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":0.5,"hours_alloc":2.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":3},{"name":"In progress","count":1},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":1}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794573043.0,"updated_at":1794573043.0,"stale":false,"trend":null,"spark":[[1794571843,0.0],[1794572443,0.0],[1794573043,0.8]]}]}},"alldone":{"title":"All done","blurb":"Every block is finished. The header says IDLE instead of LIVE.","state":{"now":1794573043.9016745,"stale_minutes":25,"stall_minutes":45,"trend_minutes":60,"min_history_minutes":45,"min_block_used":0.15,"last_report_at":1794573043.0,"projects":[{"project":"docs-site","source":"claude-code","status":"done","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.17,"hours_alloc":3.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":0},{"name":"In progress","count":0},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":6}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794573043.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":2.5641025641025643,"minutes":60,"pace":3.000000000000001,"proj":2.830000000000001,"finish":0.38999999999999996,"recent_done":6,"to_go":0,"chance":1.0},"spark":[[1794569443,0.0],[1794570043,1.5152],[1794570643,2.0],[1794571243,2.2388],[1794571843,2.4096],[1794572443,2.5],[1794573043,2.5641]]},{"project":"FGA T04","source":"claude-code","status":"done","tldr":"","needs_me":"","block_start":null,"block_end":null,"hours_used":1.33,"hours_alloc":4.0,"lanes":[{"name":"Backlog","count":2},{"name":"Ready For Work","count":0},{"name":"In progress","count":0},{"name":"Blocked","count":0},{"name":"Needs Terry","count":0},{"name":"Ready for review","count":7}],"done_lanes":["Ready for review"],"attention_lanes":["Needs Terry"],"parked_lanes":["Backlog","Blocked"],"last_move_at":1794573043.0,"updated_at":1794573043.0,"stale":false,"trend":{"delta":1.2759170653907497,"minutes":60,"pace":3.428571428571429,"proj":3.2885714285714287,"finish":0.3325,"recent_done":6,"to_go":0,"chance":1.0},"spark":[[1794568843,0.0],[1794569443,1.7316],[1794570043,2.2857],[1794570643,2.5586],[1794571243,2.7539],[1794571843,2.8571],[1794572443,2.9304],[1794573043,3.0075]]}]}}}/*SCENARIOS:END*/</script>
+<script>
+const SCEN = JSON.parse(document.getElementById('scenarios').textContent.replace(/\/\*SCENARIOS:(BEGIN|END)\*\//g, '') || '{}');
+// Mock-only scenarios: the same afternoon, seen when something has gone wrong with the feed.
+if (SCEN.afternoon){
+  SCEN.stale = {title:'Feed went stale', blurb:'The same afternoon, but no agent has reported for 35 minutes. Everything grays out.', base:'afternoon', warp:35*60};
+  SCEN.offline = {title:'Board unreachable', blurb:'The same afternoon, but the phone has not reached the board for 4 minutes.', base:'afternoon', offline:4*60};
+}
+const ORDER = ['afternoon','allgreen','keyboard','silent','morning','stale','offline','alldone'].filter(k => SCEN[k]);
+
+const POLL_MS = 10000, ALL = '*all*';   // the prototype used '\u0000all', which HTML turns into U+FFFD, breaking "‹ All projects"
+const TONE = {green:'--ok', yellow:'--risk', red:'--bad', gray:'--dim', done:'--done'};
+const TREND = {'2':['Sharp up',-90], '1':['Up',-45], '0':['Flat',0], '-1':['Down',45], '-2':['Sharp down',90]};
+const BELL = on => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>'+(on ? '' : '<path d="M3 3l18 18"/>')+'</svg>';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hm = t => new Date(t*1000).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+const pct = x => Math.round(Math.max(0, Math.min(1, x))*100);
+function dur(sec){ sec = Math.abs(Math.round(sec)); const h = Math.floor(sec/3600), m = Math.round((sec%3600)/60);
+  return h ? h+'h '+String(m).padStart(2,'0')+'m' : Math.max(m,1)+'m'; }
+const arrow = dir => dir === null ? '' : '<svg class="arr" viewBox="0 0 24 24" style="transform:rotate('+TREND[dir][1]+'deg)" role="img" aria-label="'+TREND[dir][0]+'"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+let lastData = null, knownNeeds = null, soundOn = false, actx = null, lastOk = 0, scen = null;
+const pages = $('pages'), phone = $('phone');
+
+// ---------- mock data source (stands in for GET /api/state) ----------
+// Returns the scenario's state with every timestamp moved so the newest report is "just now"
+// (or `warp` seconds ago), the way a live board would look.
+function fetchState(){
+  const s = SCEN[scen], base = SCEN[s.base || scen].state;
+  if (s.offline) return null;                                   // the board is unreachable
+  const d = JSON.parse(JSON.stringify(base)), nowSec = Date.now()/1000;
+  const shift = nowSec - (s.warp || 0) - d.now, mv = t => t == null ? t : t + shift;
+  d.now = nowSec; d.last_report_at = mv(d.last_report_at);
+  d.projects.forEach(p => {
+    p.updated_at = mv(p.updated_at); p.last_move_at = mv(p.last_move_at);
+    p.block_start = mv(p.block_start); p.block_end = mv(p.block_end);
+    p.spark = (p.spark || []).map(([t, v]) => [mv(t), v]);
+    p.stale = p.status !== 'done' && (nowSec - p.updated_at) > d.stale_minutes*60;
+  });
+  return d;
+}
+
+function needKeys(p){ const k = []; if (p.needs_me) k.push(p.project+'|'+p.needs_me); return k; }
+function needText(p){ return p.needs_me ? [p.needs_me] : []; }
+
+// Everything both displays need, worked out once per project (same rules as the prototype).
+function facts(p, now, d){
+  const f = {p};
+  f.dl = p.done_lanes || [];
+  f.parked = p.parked_lanes || [];
+  f.total = p.lanes.filter(l => !f.parked.includes(l.name)).reduce((a,l) => a+l.count, 0);
+  f.watch = p.lanes.filter(l => f.parked.includes(l.name) && !/backlog/i.test(l.name) && l.count > 0);
+  f.done = p.lanes.filter(l => f.dl.includes(l.name)).reduce((a,l) => a+l.count, 0);
+  f.work = f.total ? f.done/f.total : null;
+  f.clock = p.hours_alloc ? (p.hours_used||0)/p.hours_alloc
+          : (p.block_start && p.block_end) ? (now-p.block_start)/(p.block_end-p.block_start) : null;
+  f.ratio = (f.work !== null && f.clock !== null && f.clock > 0) ? f.work/f.clock : null;
+  f.finished = p.status === 'done';
+  f.idle = now - (p.last_move_at || p.updated_at);
+  f.stalled = !f.finished && f.idle > d.stall_minutes*60;
+  f.needs = needText(p);
+  const t = f.t = f.finished ? null : p.trend;
+  f.dir = !t ? null : t.delta >= 0.2 ? 2 : t.delta >= 0.05 ? 1 : t.delta <= -0.2 ? -2 : t.delta <= -0.05 ? -1 : 0;
+  const blockSec = p.hours_alloc ? p.hours_alloc*3600 : (p.block_start && p.block_end) ? p.block_end-p.block_start : null;
+  f.proj = (t && t.proj != null) ? t.proj : null;
+  f.margin = (t && t.finish != null && blockSec) ? (1-t.finish)*blockSec : null;
+  f.chance = (t && t.chance != null) ? t.chance : null;
+  f.early = !f.finished && f.ratio !== null && !t;
+  f.call = f.finished ? null : f.early ? 'early' : f.chance === null ? null : f.chance >= 0.7 ? 'on' : f.chance <= 0.3 ? 'late' : 'toss';
+  const off = p.stale || p.status === 'blocked' || f.call === 'late' || f.stalled || f.call === 'toss'
+           || (f.call === null && (p.status === 'at_risk' || p.status === 'behind'));
+  f.level = f.finished ? 'done' : f.needs.length ? 'red' : off ? 'yellow' : f.early ? 'gray' : 'green';
+  f.why = f.finished ? 'Done'
+        : p.stale ? 'Agent silent for '+dur(now-p.updated_at)
+        : p.status === 'blocked' ? 'Blocked'
+        : f.call === 'late' ? 'Running late'
+        : f.stalled ? 'No ticket moved in '+dur(f.idle)
+        : f.call === 'toss' ? 'Toss-up'
+        : f.early ? 'Too early to call'
+        : f.call === 'on' ? 'On time' : 'Moving';
+  return f;
+}
+
+// ---------- display 1: all projects ----------
+function overview(fs){
+  const asking = fs.filter(f => f.needs.length);
+  let h = '';
+  if (asking.length) h += '<button class="kbd" data-go="'+esc(asking[0].p.project)+'"><b>GO TO KEYBOARD</b>'
+    + asking.map(f => '<span>'+esc(f.p.project)+': '+esc(f.needs.join('; '))+'</span>').join('')+'</button>';
+  if (!fs.length) return h + '<div class="empty">No reports yet today.</div>';
+  h += '<div class="cards">';
+  fs.forEach(f => {
+    const notes = [f.needs.length ? f.needs[0] : f.level === 'green' ? '' : f.why, ...f.watch.map(l => l.count+' '+l.name.toLowerCase())].filter(Boolean);
+    h += '<button class="pc '+f.level+'" data-go="'+esc(f.p.project)+'"><div class="nm"><b>'+esc(f.p.project)+'</b>'+(notes.length ? '<span>'+esc(notes.join(' · '))+'</span>' : '')+'</div>'
+      + (f.ratio !== null && !f.finished ? '<div class="rt">'+f.ratio.toFixed(2)+arrow(f.dir)+'</div>' : '')+'</button>';
+  });
+  return h + '</div>';
+}
+
+// ---------- display 2+: one project ----------
+function chart(p, tone){
+  const s = (p.spark || []).map(x => [x[0], Math.min(x[1], 3)]);
+  if (s.length < 2) return '<div class="empty">The RTR timeline appears after the second report.</div>';
+  const vals = s.map(x => x[1]), t0 = s[0][0], t1 = s[s.length-1][0];
+  let lo = Math.min(0.5, ...vals), hi = Math.max(1.5, ...vals); const pad = (hi-lo)*0.06; lo -= pad; hi += pad;
+  const X = t => (t-t0)/Math.max(t1-t0, 1)*100, Y = v => (1-(v-lo)/(hi-lo))*100;
+  const last = vals[vals.length-1];
+  return '<div class="chart"><svg viewBox="0 0 100 100" preserveAspectRatio="none">'
+    + '<line x1="0" x2="100" y1="'+Y(1)+'" y2="'+Y(1)+'" stroke="var(--dim)" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/>'
+    + '<polyline fill="none" stroke="var('+tone+')" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" points="'+s.map(x => X(x[0]).toFixed(2)+','+Y(x[1]).toFixed(2)).join(' ')+'"/></svg>'
+    + '<span class="one" style="top:'+Y(1)+'%">1.00</span>'
+    + (Math.abs(Y(last)-Y(1)) > 9 ? '<span style="top:'+Y(last)+'%;color:var('+tone+');font-weight:700">'+last.toFixed(2)+'</span>' : '')
+    + '</div><div class="xax"><span>'+hm(t0)+'</span><span>'+hm(t1)+'</span></div>';
+}
+
+function detail(f, now, d){
+  const p = f.p, t = f.t, tone = TONE[f.level];
+  let h = '<button class="back" data-go="'+ALL+'">‹ All projects</button><h2>'+esc(p.project)+'</h2>';
+  h += '<div class="hero" style="--c:var('+tone+')">'
+    + (f.ratio !== null ? '<div class="big">'+f.ratio.toFixed(2)+arrow(f.dir)+'</div>' : '')
+    + '<div class="lab">'+(f.ratio !== null ? 'RTR'+(f.dir !== null ? ' · '+TREND[f.dir][0].toLowerCase() : '') : '')+'<b>'+esc(f.why)+'</b></div></div>';
+  f.needs.forEach(n => h += '<div class="flag me"><b>Go to keyboard:</b> '+esc(n)+'</div>');
+  if (p.stale) h += '<div class="flag st">No report for '+dur(now-p.updated_at)+'. The monitoring agent may have stopped.</div>';
+  if (p.tldr) h += '<p class="tldr">'+esc(p.tldr)+'</p>';
+  h += '<h4>RTR today</h4>'+chart(p, tone);
+  h += '<h4>Projection</h4><div class="tiles">';
+  if (f.finished) h += '<div class="tile" style="grid-column:1/-1"><small>The call</small><b>Done</b><span>Every ticket in this block is finished.</span></div>';
+  else if (f.early) h += '<div class="tile" style="grid-column:1/-1"><small>The call</small><b>Too early to call</b><span>Needs '+d.min_history_minutes+'m of history and '+Math.round(d.min_block_used*100)+'% of the time block used.</span></div>';
+  else if (t){
+    const odds = f.chance === null ? '–' : Math.min(99, Math.max(1, Math.round(f.chance*100)))+'%';
+    const land = f.margin === null ? ['No progress', 'at the recent pace'] : f.margin >= 0 ? [dur(f.margin)+' early', 'projected landing'] : [dur(-f.margin)+' late', 'projected landing'];
+    h += '<div class="tile"><small>Chance on time</small><b>'+odds+'</b><span>'+t.recent_done+' landed in last '+t.minutes+'m, '+t.to_go+' to go</span></div>';
+    h += '<div class="tile"><small>Lands</small><b>'+land[0]+'</b><span>'+land[1]+'</span></div>';
+    h += '<div class="tile"><small>RTR at end of block</small><b>'+(f.proj !== null ? f.proj.toFixed(2) : '–')+'</b><span>if the recent pace holds</span></div>';
+    h += '<div class="tile"><small>RTR trend</small><b>'+(t.delta >= 0 ? '+' : '−')+Math.abs(t.delta).toFixed(2)+'</b><span>over the last '+t.minutes+'m</span></div>';
+  } else h += '<div class="tile" style="grid-column:1/-1"><small>The call</small><b>'+esc(f.why)+'</b></div>';
+  h += '</div>';
+  if (f.work !== null || f.clock !== null){
+    h += '<h4>Work against time</h4><div class="meter" style="--c:var('+tone+')">';
+    if (f.work !== null) h += '<label>Work</label><div class="bar"><i style="width:'+pct(f.work)+'%"></i></div><div class="cap"><b>'+f.done+' of '+f.total+'</b> tickets · '+Math.round(f.work*100)+'%</div>';
+    if (f.clock !== null){
+      const cap = p.hours_alloc ? '<b>'+Number((p.hours_used||0).toFixed(2))+' of '+p.hours_alloc.toFixed(1)+'</b> hrs · '+Math.round(f.clock*100)+'%'
+        : '<b>'+hm(p.block_start)+'–'+hm(p.block_end)+'</b> · '+Math.round(f.clock*100)+'%';
+      h += '<label>Time</label><div class="bar t"><i style="width:'+pct(f.clock)+'%"></i></div><div class="cap">'+cap+'</div>';
+    }
+    h += '</div>';
+  }
+  if (p.lanes.length){
+    const shades = ['#64748b','#94a3b8','#cbd5e1'], attn = p.attention_lanes || [];
+    let n = 0; const off = l => f.parked.includes(l.name);
+    const color = l => off(l) ? 'var(--line)' : f.dl.includes(l.name) ? 'var(--ok)' : attn.includes(l.name) ? 'var(--me)' : shades[n++ % shades.length];
+    const ls = p.lanes.map(l => ({l, c: color(l), off: off(l), share: f.total ? l.count/f.total : 0}));
+    h += '<h4>Swimlanes</h4><div class="stack">'+ls.filter(x => x.l.count && !x.off).map(x => '<i style="background:'+x.c+';flex:'+x.l.count+' 0 0"></i>').join('')+'</div><ul class="lanes">'
+      + ls.map(x => '<li'+(x.off ? ' class="off"' : '')+'><i style="background:'+x.c+'"></i>'+esc(x.l.name)+'<b>'+x.l.count+'</b><span>'+(x.off ? '–' : Math.round(x.share*100)+'%')+'</span></li>').join('')+'</ul>';
+    if (ls.some(x => x.off)) h += '<div class="foot" style="margin-top:8px">'+esc(ls.filter(x => x.off).map(x => x.l.name).join(' and '))+' are watched but not counted in RTR.</div>';
+  }
+  h += '<div class="foot">Last ticket move '+hm(p.last_move_at || p.updated_at)+' · reported '+hm(p.updated_at)+' by '+esc(p.source)+'</div>';
+  return h;
+}
+
+// ---------- paging ----------
+const keys = () => [...pages.children].map(el => el.dataset.key);
+const current = () => Math.round(pages.scrollLeft / Math.max(pages.clientWidth, 1));
+function go(key, smooth = true){
+  const i = keys().indexOf(key); if (i < 0) return;
+  pages.scrollTo({left: i*pages.clientWidth, behavior: smooth ? 'smooth' : 'auto'});
+}
+function dots(){ const i = current(); [...$('dots').children].forEach((el, j) => el.classList.toggle('on', j === i)); pages.dataset.cur = keys()[i] || ALL; }
+pages.addEventListener('scroll', dots, {passive:true});
+phone.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
+$('dots').addEventListener('click', e => { const b = e.target.closest('button'); if (b) go(keys()[[...$('dots').children].indexOf(b)]); });
+window.addEventListener('resize', () => { const k = pages.dataset.cur; if (k) go(k, false); });
+document.addEventListener('keydown', e => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  const i = current() + (e.key === 'ArrowRight' ? 1 : -1), k = keys();
+  if (i >= 0 && i < k.length) go(k[i]);
+});
+
+function render(d){
+  const now = d.now;
+  const fs = d.projects.map(p => facts(p, now, d)).sort((a,b) => a.p.project.localeCompare(b.p.project));
+  const want = [ALL, ...fs.map(f => f.p.project)], here = keys()[current()] || ALL;
+  const have = new Map([...pages.children].map(el => [el.dataset.key, el]));
+  want.forEach((k, i) => {
+    let el = have.get(k);
+    if (!el){ el = document.createElement('section'); el.className = 'page'; el.dataset.key = k; }
+    if (pages.children[i] !== el) pages.insertBefore(el, pages.children[i] || null);
+    el.innerHTML = k === ALL ? overview(fs) : detail(fs[i-1], now, d);
+    have.delete(k);
+  });
+  have.forEach(el => el.remove());
+  $('dots').innerHTML = want.map((k, i) => '<button type="button" aria-label="'+(i ? esc(k) : 'All projects')+'"><i></i></button>').join('');
+  if (keys()[current()] !== here) go(want.includes(here) ? here : ALL, false);
+  dots();
+  const asking = fs.filter(f => f.needs.length).length;
+  document.title = (asking ? '('+asking+') ' : '') + 'swimcoach · clickable mock';
+  const nk = new Set(d.projects.flatMap(needKeys));
+  if (knownNeeds && [...nk].some(k => !knownNeeds.has(k))){ alertMe(); go(ALL); }
+  knownNeeds = nk;
+}
+
+// ---------- alerts ----------
+function alertMe(){
+  if (!soundOn) return;
+  try { navigator.vibrate && navigator.vibrate([200,100,200]); } catch(e){}
+  try { [0,0.22].forEach(t => { const o = actx.createOscillator(), g = actx.createGain();
+    o.frequency.value = t ? 990 : 740; o.connect(g); g.connect(actx.destination);
+    g.gain.setValueAtTime(0.0001, actx.currentTime+t); g.gain.exponentialRampToValueAtTime(0.25, actx.currentTime+t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+t+0.2); o.start(actx.currentTime+t); o.stop(actx.currentTime+t+0.22); }); } catch(e){}
+}
+function paintBell(){ $('snd').innerHTML = BELL(soundOn); $('snd').classList.toggle('on', soundOn); $('snd').setAttribute('aria-label', soundOn ? 'Alerts on' : 'Alerts off'); }
+$('snd').addEventListener('click', () => {
+  soundOn = !soundOn;
+  if (soundOn){ actx = actx || new (window.AudioContext||window.webkitAudioContext)(); actx.resume(); }
+  paintBell(); if (soundOn) alertMe();
+});
+
+let touching = false;
+pages.addEventListener('touchstart', () => touching = true, {passive:true});
+pages.addEventListener('touchend', () => touching = false, {passive:true});
+pages.addEventListener('touchcancel', () => touching = false, {passive:true});
+
+// ---------- refresh loop (same cadence and health rules as the real page) ----------
+function poll(){
+  const d = fetchState();
+  if (d){ lastData = d; lastOk = Date.now(); pulse(); const paint = () => touching ? setTimeout(paint, 300) : render(lastData); paint(); }
+  tick();
+}
+function tick(){
+  $('clock').textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  const el = $('health'), nowMs = Date.now(); let st, label, age = null, msg = '';
+  if (!lastOk){ st = 'wait'; label = '…'; }
+  else if (nowMs-lastOk > POLL_MS*3){
+    st = 'off'; label = 'OFFLINE'; age = (nowMs-lastOk)/1000;
+    msg = 'Can\'t reach the board for '+dur(age)+'. Everything below is old.';
+  } else {
+    const d = lastData;
+    age = d.last_report_at ? (d.now-d.last_report_at) + (nowMs-lastOk)/1000 : null;
+    if (age === null || !d.projects.length){ st = 'idle'; label = 'NO DATA'; age = null; }
+    else if (!d.projects.some(p => p.status !== 'done')){ st = 'idle'; label = 'IDLE'; }
+    else if (age > d.stale_minutes*60){ st = 'stale'; label = 'STALE'; msg = 'No agent has reported for '+dur(age)+'. Everything below is old.'; }
+    else { st = 'live'; label = 'LIVE'; }
+  }
+  if (el.className !== st) el.className = st;
+  el.querySelector('b').textContent = label;
+  el.querySelector('span').textContent = age === null ? '' : age < 60 ? 'now' : dur(age);
+  phone.dataset.health = st; $('warn').textContent = msg;
+}
+function pulse(){ const i = $('health').querySelector('i'); i.style.animation = 'none'; void i.offsetWidth; i.style.animation = ''; }
+
+// ---------- mock controls ----------
+function scenList(){
+  document.querySelectorAll('.scens').forEach(box => box.innerHTML = ORDER.map(k =>
+    '<button type="button" class="scen'+(k === scen ? ' on' : '')+'" data-scen="'+k+'"><b>'+esc(SCEN[k].title)+'</b><span>'+esc(SCEN[k].blurb)+'</span></button>').join(''));
+}
+function setScenario(k){
+  if (!SCEN[k]) k = ORDER[0];
+  scen = k; history.replaceState(null, '', '#'+k); scenList();
+  const s = SCEN[k];
+  if (s.offline){                                  // the last good data, now `offline` seconds old
+    scen = s.base; poll(); scen = k;
+    lastOk = Date.now() - s.offline*1000; tick();
+  } else poll();
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-scen]'); if (b){ setScenario(b.dataset.scen); $('sheet').classList.remove('open'); return; }
+  if (e.target.closest('#mockbtn')) $('sheet').classList.add('open');
+  else if (e.target.closest('[data-close]') || e.target === $('sheet')) $('sheet').classList.remove('open');
+});
+window.addEventListener('hashchange', () => { const k = location.hash.slice(1); if (k !== scen) setScenario(k); });
+
+paintBell();
+setScenario(location.hash.slice(1));
+setInterval(poll, POLL_MS); setInterval(tick, 1000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
+</script>
+</body>
+</html>

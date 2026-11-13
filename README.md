@@ -16,6 +16,8 @@ glance whether everything is still moving and which project needs you.
 - **[docs/concept.md](docs/concept.md)**: the full concept, including the problem, displays, card
   rules, RTR math, the localswim lane mapping, the architecture, the decisions and their reasons, open
   questions, and what's out of scope.
+- **[mocks/index.html](mocks/index.html)**: the clickable mock. It's one self-contained file: open it in
+  a browser (phone or desktop) and switch scenarios to see each state. It needs no server.
 - **[docs/img/](docs/img/)**: screenshots of every display, rendered from the prototype on sample data
   at iPhone 16 size.
 - **[reference/prototype/](reference/prototype/)**: the prototype from the design conversation. It's
