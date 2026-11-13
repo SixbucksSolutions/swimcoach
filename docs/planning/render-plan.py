@@ -106,7 +106,7 @@ P.stories.forEach(s => s.deps.map(dep).forEach(({id: d, route}) => {
   if (route === 'vertical') { const x = Math.max(a.x, b.x) + (Math.min(a.x, b.x) + CW - Math.max(a.x, b.x)) / 2; return path('M' + x + ' ' + (a.y + CH) + ' V' + (b.y - 2)); }
   if (route === 'corner') return path('M' + (right ? a.x + CW - INSET : a.x + INSET) + ' ' + (a.y + CH) + ' L' + (right ? b.x + INSET : b.x + CW - INSET) + ' ' + (b.y - 2));
   if (route === 'elbow') { const x = a.x + CW / 2, y = b.y + CH / 2; return path('M' + x + ' ' + (a.y + CH) + ' V' + y + ' H' + (right ? b.x - 2 : b.x + CW + 2)); }
-  if (route === 'left') { const xl = Math.min(a.x, b.x) - 18, ya = a.y + CH / 2, yb = b.y + CH / 2; return path('M' + a.x + ' ' + ya + ' H' + xl + ' V' + yb + ' H' + (b.x - 2)); }
+  if (route === 'left') { const xl = Math.min(a.x, b.x) - 40, ya = a.y + CH / 2, yb = b.y + CH / 2; return path('M' + a.x + ' ' + ya + ' H' + xl + ' V' + yb + ' H' + (b.x - 2)); }
   const outs = outgoing[d].slice().sort((p, q) => pos[p].x - pos[q].x), ins = incoming[s.id].slice().sort((p, q) => pos[p].x - pos[q].x);
   // A routed vertical arrow owns the center of its card's edge, so an automatic arrow at the same edge
   // moves to the quarter point on its own side instead of stacking on it.
