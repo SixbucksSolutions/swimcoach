@@ -46,7 +46,7 @@ Every project display is in [`img/`](img/), top and bottom, one per card state i
 |---|---|
 | auth-refresh | Gray: too early to call |
 | docs-site | Yellow: toss-up, RTR 1.00 but slowing |
-| FGA T04 | Green: on time, with "1 blocked" |
+| FGA T04 | Green: on time, with "1 blocked" (the prototype showed this note; v1 no longer does) |
 | mobile-onboarding | Yellow: toss-up, RTR under 0.8 but climbing |
 | search-index | Red: a ticket in Needs Terry, with GO TO KEYBOARD |
 
@@ -247,7 +247,9 @@ Card states, first match wins:
 
 - **Red is reserved for "Terry must act".** Terry: "RFW -> In Progress -> RFR are green/yellow. Needs
   Terry is red."
-- A card with tickets in Blocked adds a small note such as "1 blocked" and keeps its color.
+- **Backlog and Blocked never appear on the dashboard.** Terry, 2026-11-13: "that is not data that can
+  be actioned so doesn't belong on dashboard." No "1 blocked" note on cards, and no Backlog or Blocked
+  rows on project displays. This supersedes the earlier "Blocked still visible" decision (section 7).
 
 ### 3.3 Displays 2 and on: one project each
 
@@ -388,16 +390,18 @@ review, Completed. Each has a description on the board; the relevant parts are q
 
 | Lane | Board description (short) | In RTR | Dashboard effect |
 |---|---|---|---|
-| Backlog | Work held back or not yet scoped | No (parked) | Listed on the project display only |
+| Backlog | Work held back or not yet scoped | No (parked) | Not shown (2026-11-13) |
 | Ready For Work | Scoped, authorized work | Yes, unfinished | |
 | In progress | Actively executing | Yes, unfinished | |
-| Blocked | "Neither Terry nor Bot can advance until an external condition changes" | No (parked) | "1 blocked" note on the card; never changes color |
+| Blocked | "Neither Terry nor Bot can advance until an external condition changes" | No (parked) | Not shown (2026-11-13; was a "1 blocked" note on the card) |
 | Needs Terry | "Needs a concrete input/action only Terry can supply" | Yes, unfinished | Red card and GO TO KEYBOARD |
 | Ready for review | "Only Terry review/approval remains" | Yes, finished | The RFR in RTR |
 | Completed | Terry reviewed and accepted | Yes, finished | Only if the agent includes this block's completed cards |
 
 - Terry on Blocked: "a non factor as neither Bot nor I can move them but still need to monitor (e.g.
-  has the replacement hardware arrived at my front door yet?)".
+  has the replacement hardware arrived at my front door yet?)". **Superseded 2026-11-13:** Terry
+  decided Blocked and Backlog are "not data that can be actioned so doesn't belong on dashboard"; the
+  monitoring happens on the localswim board itself.
 - Matching is by lane name with defaults in `server.py` (`DONE_RE`, `ATTN_RE`, `PARK_RE`). A report can
   override with `done_lanes`, `attention_lanes`, `parked_lanes`.
 - **Scope trap:** the board is cumulative. Terry's screenshot showed 35 cards in Ready for review and
@@ -508,7 +512,7 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
 | Swipeable displays, minimal overview, one detail display per project | Terry's own mental model, 06:23 message | One scrolling page with tap-to-expand rows (built, then replaced) |
 | Fixed alphabetical card order | A card "popping yellow" should happen in a spot he already knows | Worst-first sorting (used in earlier versions) |
 | Red only for Needs Terry | Terry's lane colors | Red for running late or a silent agent (built, then changed) |
-| Backlog and Blocked out of the math, Blocked still visible | Terry: Blocked is "a non factor" but must be monitored | Counting Blocked as unfinished work |
+| Backlog and Blocked out of the math, ~~Blocked still visible~~ and off the dashboard entirely | Terry: Blocked is "a non factor"; **superseded 2026-11-13**: not actionable, so not on the dashboard | Counting Blocked as unfinished work; showing a "1 blocked" note |
 | No activity log on the phone | Terry: "that's what I'd go back to PC for" | The timeline that earlier versions showed |
 | RTR timeline on the project display | Terry preferred it to a snapshot | A work-versus-time bar as the main graphic |
 
