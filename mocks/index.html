@@ -205,7 +205,7 @@ h4{margin:20px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08e
   <header>
     <h1><i id="brand" aria-hidden="true"></i><span class="word">swim<span>coach</span></span></h1>
     <span id="clock"></span>
-    <span id="health" class="wait"><i></i><b>...</b><span></span></span>
+    <span id="health" class="wait"><i></i><b>&hellip;</b><span></span></span>
     <button id="snd" type="button" aria-label="Alerts off"></button>
   </header>
   <div id="warn"></div>
@@ -503,7 +503,7 @@ function poll(){
 function tick(){
   $('clock').textContent = fmtTime(new Date());
   const el = $('health'), nowMs = Date.now(); let st, label, age = null, msg = '';
-  if (!lastOk){ st = 'wait'; label = '...'; }
+  if (!lastOk){ st = 'wait'; label = '…'; }   // the ellipsis glyph, drawn in Inter (docs/brand.md section 7)
   else if (nowMs-lastOk > POLL_MS*3){
     st = 'off'; label = 'OFFLINE'; age = (nowMs-lastOk)/1000;
     msg = 'Can\'t reach the board for '+dur(age)+'. Everything below is old.';

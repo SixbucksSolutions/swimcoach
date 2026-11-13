@@ -156,9 +156,13 @@ on. A color that asks for no action, or for an action he cannot take, wears out 
 - The phone is "simple, at a glance". A label SHOULD be one or two words.
 - US English. Sentence case for messages; capitals only for the two alarm words, **LIVE** and
   **GO TO KEYBOARD**, and the other health states.
-- **Ellipses: three periods in text we write; the typeface's glyph for truncation.** Any "..." that
-  is part of a label or message MUST be three periods, per Terry's standing rule. **The one exception
-  is truncation**: when CSS cuts a name or detail blurb short (`text-overflow`, `line-clamp`), the
-  browser draws Inter's own ellipsis glyph, and that MUST stay. Terry, 2026-11-13: "No glyph is best
-  let's use Inter or browser version for that it'll look cleaner." The glyph is in the vendored Latin
-  subset (U+2026, General Punctuation), so it renders in Inter, not a fallback font.
+- **On the swimcoach page, an ellipsis is the Unicode glyph U+2026, drawn in Inter.** Terry,
+  2026-11-13: "No glyph is best let's use Inter or browser version for that it'll look cleaner", and
+  "intent of '...' when talking swimcoach is that Unicode glyph". This covers CSS truncation
+  (`text-overflow`, `line-clamp`) and any ellipsis in a label, such as the health box's brief waiting
+  state. The glyph is in the vendored Latin subset (General Punctuation), so it renders in Inter, not a
+  fallback font.
+- **This is a swimcoach exception to Terry's global three-periods rule, and it is narrow.** It covers
+  only what the page draws. Source code MUST still not contain the literal character: write `&hellip;`
+  in markup and `'…'` in JavaScript. Docs, commit messages and conversation keep three periods.
+  When Terry writes "..." about the swimcoach UI, he means the glyph.
