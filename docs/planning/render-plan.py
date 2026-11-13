@@ -6,7 +6,8 @@
 Writes, next to the JSON, <stem>-execution-plan-legal-landscape-300ppi.png and
 <stem>-execution-plan-legal-landscape.pdf, where <stem> is the JSON name without "-plan". US legal
 landscape is 14 x 8.5 in: 4200 x 2550 px at 300 ppi. The layout follows localswim's execution-plan
-diagrams: one row per dependency turn, one column per work area, arrows from each story to the work
+diagrams: one row per dependency turn, columns as plain position slots (any story in any slot, placed so
+arrows run short; color shows the work area, named in a legend), arrows from each story to the work
 that depends on it, solid for the next turn and dashed when an arrow skips turns.
 """
 
@@ -28,7 +29,8 @@ h1{position:absolute;left:44px;top:26px;margin:0;font-size:34px;font-weight:800;
 .sub{position:absolute;left:46px;top:72px;font-size:15px;color:#5A6573}
 .note{position:absolute;right:44px;top:34px;text-align:right;font-size:13px;color:#5A6573;line-height:1.7}
 .note b{color:#1D2125}
-.col{position:absolute;top:112px;font-size:12.5px;font-weight:700;text-align:center}
+.legend{position:absolute;left:46px;top:100px;font-size:11.5px;color:#5A6573}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 5px -1px 14px}
 .row{position:absolute;left:36px;right:36px;border-radius:10px;z-index:0}
 .row.odd{background:#F1F4F7} .row.even{background:#F7F9FB}
 .tl{position:absolute;left:52px;width:120px;font-size:19px;font-weight:800;z-index:2}
@@ -44,13 +46,15 @@ svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-ev
 <script>
 const P = __PLAN__;
 const W = 1344, LEFT = 176, RIGHT = 40, TOP = 134, ROWH = 98, GAP = 9, CW = 132, CH = 60;
-const cols = P.columns, nc = cols.length, colW = (W - LEFT - RIGHT) / nc;
+// Columns are plain position slots: any story can sit in any slot, so placement can follow the arrows.
+// Color comes from the story's work area, named once in the legend.
+const areas = P.areas, colW = (W - LEFT - RIGHT) / P.slots, area = s => areas.find(a => a.key === s.area);
 const root = document.getElementById('root');
 const add = h => root.insertAdjacentHTML('beforeend', h);
 add('<h1>' + P.title + '</h1><div class="sub">Epic ' + P.epic + '  /  ' + P.stories.length + ' stories  /  '
   + P.turns.length + ' dependency turns  /  ' + P.subtitle + '</div>');
 add('<div class="note">' + P.spec_note + '<br><b>' + P.spec_note_bold + '</b></div>');
-cols.forEach((c, i) => add('<div class="col" style="left:' + (LEFT + i * colW) + 'px;width:' + colW + 'px;color:' + c.color + '">' + c.label + '</div>'));
+add('<div class="legend">Color = work area' + areas.map(a => '<b style="background:' + a.color + '"></b>' + a.label).join('') + '</div>');
 const rowY = t => TOP + (t - 1) * (ROWH + GAP);
 P.turns.forEach((t, i) => {
   const n = P.stories.filter(s => s.turn === i + 1).length, gate = (P.gates || []).find(g => g.before_turn === i + 1);
@@ -58,21 +62,18 @@ P.turns.forEach((t, i) => {
   add('<div class="tl" style="top:' + (rowY(i + 1) + (gate ? 14 : 28)) + 'px">' + t + '<span>' + n + (n === 1 ? ' story' : ' stories') + '</span>'
     + (gate ? '<em>Gate: ' + gate.text + '</em>' : '') + '</div>');
 });
-// Stories sharing a turn and column stack horizontally inside the column.
 const pos = {};
 P.stories.forEach(s => {
-  const ci = cols.findIndex(c => c.key === s.column), mates = P.stories.filter(o => o.turn === s.turn && o.column === s.column);
-  const k = mates.indexOf(s), x = LEFT + ci * colW + (colW - CW) / 2 + (k - (mates.length - 1) / 2) * (CW + 8);
-  const y = rowY(s.turn) + (ROWH - CH) / 2;
+  const x = LEFT + s.slot * colW + (colW - CW) / 2, y = rowY(s.turn) + (ROWH - CH) / 2;
   pos[s.id] = {x, y};
-  const color = cols[ci].color;
+  const color = area(s).color;
   add('<div class="card" style="--c:' + color + ';left:' + x + 'px;top:' + y + 'px;width:' + CW + 'px;height:' + CH + 'px">'
     + '<b>' + s.id + '</b><i>' + s.hours + 'h</i><span>' + s.title + '</span></div>');
 });
 add('<div class="foot" style="left:46px">' + P.footer_left + '</div><div class="foot" style="right:46px">' + P.footer_right + '</div>');
 const svg = document.getElementById('arrows');
 let defs = '<defs>';
-cols.forEach(c => defs += '<marker id="m' + c.key + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="' + c.color + '"/></marker>');
+areas.forEach(c => defs += '<marker id="m' + c.key + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="' + c.color + '"/></marker>');
 let body = defs + '</defs>';
 // Each arrow leaves the bottom of its source and lands on its own point along the top of the target, so
 // several arrows into one story stay distinguishable. Adjacent turns: a straight line. Skipped turns: a
@@ -81,12 +82,23 @@ const outgoing = {}, incoming = {};
 P.stories.forEach(s => s.deps.forEach(d => { (outgoing[d] = outgoing[d] || []).push(s.id); (incoming[s.id] = incoming[s.id] || []).push(d); }));
 const spread = (list, id, x0) => { const n = list.length, k = list.indexOf(id); return x0 + CW * (k + 1) / (n + 1); };
 P.stories.forEach(s => s.deps.forEach(d => {
-  const a = pos[d], b = pos[s.id], src = P.stories.find(o => o.id === d), c = cols.find(o => o.key === src.column);
+  const a = pos[d], b = pos[s.id], src = P.stories.find(o => o.id === d), c = area(src);
   const outs = outgoing[d].slice().sort((p, q) => pos[p].x - pos[q].x), ins = incoming[s.id].slice().sort((p, q) => pos[p].x - pos[q].x);
   const x1 = spread(outs, s.id, a.x), y1 = a.y + CH, x2 = spread(ins, d, b.x), y2 = b.y - 2, skip = s.turn - src.turn > 1;
   const style = '" fill="none" stroke="' + c.color + '" stroke-width="1.6"' + (skip ? ' stroke-dasharray="5 4"' : '') + ' marker-end="url(#m' + c.key + ')"/>';
   if (!skip) body += '<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 + style;
-  else { const runY = rowY(s.turn) - GAP / 2; body += '<path d="M' + x1 + ' ' + y1 + ' V' + runY + ' H' + x2 + ' V' + y2 + style; }
+  else {
+    // Drop straight down when no card sits below the source in the skipped turns. Otherwise step into
+    // the gutter on the target's side first, so the line never passes behind a card. Then run across
+    // just above the target row.
+    const runY = rowY(s.turn) - GAP / 2;
+    const blocked = P.stories.some(o => o.slot === src.slot && o.turn > src.turn && o.turn < s.turn);
+    if (!blocked) body += '<path d="M' + x1 + ' ' + y1 + ' V' + runY + ' H' + x2 + ' V' + y2 + style;
+    else {
+      const stepY = y1 + 10, gutX = x2 > x1 ? a.x + CW + (colW - CW) / 2 : a.x - (colW - CW) / 2;
+      body += '<path d="M' + x1 + ' ' + y1 + ' V' + stepY + ' H' + gutX + ' V' + runY + ' H' + x2 + ' V' + y2 + style;
+    }
+  }
 }));
 svg.innerHTML = body;
 </script></body></html>"""
