@@ -1,5 +1,8 @@
 # AGENTS.md
 
+**Resuming work? Read [`docs/planning/RESUME.md`](docs/planning/RESUME.md) first:** where things
+stand, what is blocked on Terry, and the next action.
+
 Guidance for any agent (Claude, Codex, ...) working in this repo. Read this first, then
 [docs/concept.md](docs/concept.md).
 
