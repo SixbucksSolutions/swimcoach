@@ -481,3 +481,4 @@ confirmed by Terry yet; each is up for review in the mock.
 | Page dots are tappable | A second way to move between displays besides swiping |
 | Overview key changed from `'\u0000all'` to `'*all*'` | Fixes the broken "‹ All projects" link (section 11) |
 | LIVE box drops "now"; it shows an age only from 1 min ("7m") | Terry, 2026-11-13: "now" was noise next to LIVE. **Confirmed by Terry** |
+| One good-news fill: the LIVE box and green cards both use `--ok-fill` `#166534` with pure white text; green-card subtitles lose their 85% opacity | Terry, 2026-11-13: the LIVE box (`#166534`) and the cards (`#15803d`) were two near-identical greens. He asked for one green, kept white on green, and set WCAG AAA for that pairing. White on `#15803d` measured 5.02:1, and the 85% white subtitles 4.09:1, which fails even AA. White on `#166534` measures 7.13:1. **Confirmed by Terry** |

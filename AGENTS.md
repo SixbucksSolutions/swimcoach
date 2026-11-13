@@ -44,6 +44,12 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 - **Terry's viewer is Chrome on an iPhone 16 Pro.** Chrome on iOS runs on WebKit, so treat it like
   Safari: no vibration API, and audio needs a tap first. Design and test at 402 × 874 CSS px (1206 ×
   2622 at 3×). Earlier docs said iPhone 16 at 393 × 852; Terry corrected the model on 2026-11-13.
+- **The good-news fill is one green, `--ok-fill` `#166534`, with pure white text on it.** The LIVE box
+  and green cards both use it. White on it MUST clear WCAG AAA (7:1); it measures 7.13:1. Text on it
+  MUST stay at full opacity, because white at 85% drops to 5.66:1. A second fill green MUST NOT be
+  introduced. Terry's requirement, 2026-11-13; for now white on this green is the only pairing held to
+  AAA. `--ok` `#4ade80` stays as the green for text on the dark page. RFC 2119 keywords; the capitals
+  are load-bearing.
 - **Terry gives concepts, not designs.** He asks the agent to turn them into good UI, and to hold the
   phone view to "simple, at a glance" even when he is tempted by more detail.
 - Agent-made commits end with a `Co-Authored-By:` trailer for the agent.
