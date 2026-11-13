@@ -76,7 +76,7 @@ FGA T04
 [Project 2+]
 ```
 
-- **What he wants:** a page on his iPhone 16 (sometimes a tablet), propped up while he plays video
+- **What he wants:** a page on his iPhone 16 Pro, 402 × 874 CSS px (sometimes a tablet), propped up while he plays video
   games on the couch, that answers at a glance "is everything still moving, and who is on the
   strugglebus". His words for the two reactions he wants: "awesome all are green, back to video game!"
   and "FGA project just popped yellow, needs investigation, why is it struggling?"

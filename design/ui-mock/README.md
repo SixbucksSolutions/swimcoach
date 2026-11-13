@@ -1,7 +1,7 @@
 # UI mock renders
 
-Every screen of [`mocks/index.html`](../../mocks/index.html), rendered at iPhone 16 size (393 × 852 CSS
-px at 3×, so 1179 × 2556 px) and stamped at 300 DPI. The mock's MOCK button is hidden, so the images show
+Every screen of [`mocks/index.html`](../../mocks/index.html), rendered at iPhone 16 Pro size (402 × 874
+CSS px at 3×, so 1206 × 2622 px) and stamped at 300 DPI. The mock's MOCK button is hidden, so the images show
 only the design.
 
 Names are `<scenario>-<NN>-<screen>.png`:

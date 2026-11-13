@@ -41,8 +41,9 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 - **US English spelling.**
 - **Windows commands are for cmd, not PowerShell.** Use `cd /d`, and `python` or `py` rather than
   `python3`.
-- **Terry's viewer is Chrome on an iPhone 16.** Chrome on iOS runs on WebKit, so treat it like Safari:
-  no vibration API, and audio needs a tap first. Design and test at 393 × 852 CSS px.
+- **Terry's viewer is Chrome on an iPhone 16 Pro.** Chrome on iOS runs on WebKit, so treat it like
+  Safari: no vibration API, and audio needs a tap first. Design and test at 402 × 874 CSS px (1206 ×
+  2622 at 3×). Earlier docs said iPhone 16 at 393 × 852; Terry corrected the model on 2026-11-13.
 - **Terry gives concepts, not designs.** He asks the agent to turn them into good UI, and to hold the
   phone view to "simple, at a glance" even when he is tempted by more detail.
 - Agent-made commits end with a `Co-Authored-By:` trailer for the agent.
@@ -53,7 +54,7 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 2. If the sample data changes, edit the scenarios in `mocks/tools/make-scenarios.py` and run it. It
    starts the prototype server on a throwaway database and writes the data between the `SCENARIOS`
    markers.
-3. Click-test at 393 × 852: every card opens its project, "‹ All projects" returns, the dots and swipes
+3. Click-test at 402 × 874: every card opens its project, "‹ All projects" returns, the dots and swipes
    move between displays, and the scenario switcher works.
 4. Run `uv run --no-project --with playwright --with pillow python mocks/tools/render-mock.py` to refresh
    `design/ui-mock/`. Terry's Python is uv-managed and marked externally managed (PEP 668), so
