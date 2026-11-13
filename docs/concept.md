@@ -468,3 +468,15 @@ In order, each replaced by the next:
 - "Run it" says `python3 server.py`; on Terry's Windows machines that is `python server.py` or
   `py server.py`.
 - It does not mention the `at` field, the `events` field, or the gaps in section 11.
+
+## 13. Changes made in the v2 mocks
+
+Design changes in [`mocks/index.html`](../mocks/index.html) relative to the prototype. None is
+confirmed by Terry yet; each is up for review in the mock.
+
+| Change | Why |
+|---|---|
+| "Alerts off/on" text button replaced by a bell icon (slashed when off) | The text button made the header wrap to two lines in the OFFLINE state at iPhone width |
+| Project names on overview cards wrap to two lines, then truncate | Names like "mobile-onboarding" were cut to "mobile-o…" |
+| Page dots are tappable | A second way to move between displays besides swiping |
+| Overview key changed from `'\u0000all'` to `'*all*'` | Fixes the broken "‹ All projects" link (section 11) |

@@ -13,6 +13,7 @@ glance whether everything is still moving and which project needs you.
 
 ## Start here
 
+- **[AGENTS.md](AGENTS.md)**: working agreements and the mock workflow, for any agent working here.
 - **[docs/concept.md](docs/concept.md)**: the full concept, including the problem, displays, card
   rules, RTR math, the localswim lane mapping, the architecture, the decisions and their reasons, open
   questions, and what's out of scope.
