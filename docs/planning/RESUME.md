@@ -44,6 +44,10 @@ credentials need and MAY start at once.
    without the two Access permissions. CI only deploys the Worker the local token created. The docs do
    not say whether a Durable Object migration needs more than Editor; if a CI deploy with a migration
    is refused, raise the CI token to Admin.
+   - **Done 2026-11-13.** The local token is in
+     `%USERPROFILE%\.secrets\swimcoach\cloudflare-api-token-local.txt`. The folder and file grant Full
+     Control to Terry's account only, with inheritance removed. An agent MUST NOT print, copy or commit
+     its contents.
 4. **Store them, never in chat:** user environment variables `CLOUDFLARE_API_TOKEN` (the local token)
    and `CLOUDFLARE_ACCOUNT_ID`; then `gh secret set CLOUDFLARE_API_TOKEN --repo SixbucksSolutions/swimcoach`
    with the CI token. The reboot makes new sessions see the variables.
