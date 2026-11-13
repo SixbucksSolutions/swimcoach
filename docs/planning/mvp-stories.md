@@ -35,13 +35,23 @@ they are part of MVP-01's contract.
 - An HTTP contract for `POST /api/report`, `GET /api/state` and `DELETE /api/projects/<name>`, with
   JSON Schema for the report and state bodies. It starts from `docs/concept.md` section 6.3 and adds the
   answers to D1-D3.
-- The swimcoach CLI's command line (MVP-06), which project agents call directly: project name, the
-  current milestone's wall-clock hours (used and allocated, the prototype's `hours`), and the card
-  count per lane for the milestone's cards only (the prototype's `lanes`). Terry, 2026-11-13: one
-  epic per milestone, several stories per epic, so the milestone's cards are its epic's stories.
-  Plus the optional
-  `needs_me` sentence. A total card count is not enough: RTR needs the finished count, a Needs Terry
-  card raises GO TO KEYBOARD, and the Swimlanes display draws one bar per lane.
+- The swimcoach CLI's command line (MVP-06), which project agents call directly. **Terry,
+  2026-11-13: every CLI status update MUST be complete, never incremental.** The CLI MUST refuse an
+  update that lacks any of these fields:
+
+  | Field | Meaning | Example |
+  |---|---|---|
+  | Agent framework | Which agent system sent it | `codex` or `claude` |
+  | Project | The project's stable name | `localswim V2`, `FGA` |
+  | Milestone | The milestone or increment being worked | `T06`, `M12` |
+  | Active time | Total active time spent on the milestone so far | 1.85 h |
+  | Time cap | The milestone's maximum time | 4 h |
+  | Story cards per lane | The milestone's story cards in Ready For Work, In Progress, Needs Terry and Ready For Review | 2, 1, 0, 4 |
+
+  One epic per milestone, several stories per epic (Terry, 2026-11-13), so the cards counted are that
+  epic's stories. A total card count is not enough: RTR needs the finished count, a Needs Terry card
+  raises GO TO KEYBOARD, and the Swimlanes display draws one bar per lane. The optional `needs_me`
+  sentence stays optional.
 - Metric definitions as executable golden fixtures: input sample series and the expected RTR, trend
   bin, projection, chance and call, taken from the prototype's math (`reference/prototype/server.py`)
   for the eight mock scenarios plus edge cases (one-story turn, zero progress, block over time, midnight
