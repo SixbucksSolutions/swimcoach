@@ -21,7 +21,7 @@ they are part of MVP-01's contract.
 
 | ID | Question | Decision |
 |---|---|---|
-| D1 | What does a card show for a 1-2 story turn, where RTR is binary? | **Count and time.** A turn with fewer than 3 stories shows no RTR and no clock hand. The card shows "1 of 2 done" and hours used of allocated. It is green while time is under budget, yellow once it runs over, and red only for Needs Terry. |
+| D1 | What does a card show for a 1-2 story time block, where RTR is binary? (Rare: Terry's 4-hour blocks usually hold 5-10 stories.) | **Count and time.** A block with fewer than 3 stories shows no RTR and no clock hand. The card shows "1 of 2 done" and hours used of allocated. It is green while time is under budget, yellow once it runs over, and red only for Needs Terry. |
 | D2 | Should RTR weight finished work by story estimate instead of counting tickets? | **Count tickets now; allow estimates.** RTR counts tickets, as the mock does. The report contract accepts an optional per-ticket `estimate_hours`, so switching later needs no agent change; real data decides whether weighting matters. |
 | D3 | Do agents report a pending gate as a Needs Terry item? | **Only Terry's gates.** A gate waiting on Terry (visual confirmation, Completed, cutover) is a Needs Terry item: red, GO TO KEYBOARD, with the ask. Agent-owned gates (Architect release) change nothing. A ticket sitting in Ready for Review is not by itself a request. |
 

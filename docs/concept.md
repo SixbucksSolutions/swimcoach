@@ -547,13 +547,15 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
    same play swimcoach is now running. An earlier edit of this item wrongly said localswim is only
    Python.
 9. **Whether the `at` field should exist in production.** It lets any caller backdate a report.
-10. **What a time block really is, from localswim's own planning (read 2026-11-13).** A time block is a
-    dependency **turn** (T1, T2, ...) inside an epic; "FGA T04" and "localswim V2 T14" are turns.
-    Turns hold **1 to 11 stories** (epic #0514: T1 has 1, T5 has 11, T9 has 1), not the 5 to 9 this
-    document assumed. A one-story turn makes RTR binary (0, then a jump), and the trend, chance and
-    "too early to call" math cannot say anything useful. **Decided 2026-11-13 (D1):** a turn with fewer
-    than 3 stories shows no RTR or clock hand; its card shows "1 of 2 done" and hours used of
-    allocated, green under budget, yellow once over, red only for Needs Terry.
+10. **What a time block is.** Terry, 2026-11-13: he runs **two four-hour milestones a day**, and four
+    hours of work "USUALLY turns into 5-10 stories"; 2-3 stories is possible but "real unusual". So a
+    time block is a 4-hour milestone of about 5 to 10 stories, close to this document's original 5 to 9
+    assumption. **Correction:** an earlier version of this item equated a time block with a localswim
+    dependency turn (1 to 11 stories, read from `localswim/localswim` epic #0514's plan). Those turns are
+    an epic's planning layers, not Terry's time blocks. A small block still makes RTR nearly binary, so
+    **D1 (decided 2026-11-13) stays as the rule for that rare case:** a block with fewer than 3 stories
+    shows no RTR or clock hand; its card shows "1 of 2 done" and hours used of allocated, green under
+    budget, yellow once over, red only for Needs Terry.
 11. **Stories carry hour estimates** (1.5 to 2.5 h each in epic #0514's plan), and the old Codex watcher
     already reported each In Progress ticket's wall-clock time against its estimate. **Decided
     2026-11-13 (D2):** RTR keeps counting tickets in the MVP; the report contract accepts an optional
