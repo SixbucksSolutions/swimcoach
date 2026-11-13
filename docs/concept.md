@@ -118,6 +118,12 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 - **Layout, left to right:** mark and wordmark alone on the left; then, locked together on the right,
   the clock, the **health box** and the alerts bell, each 8 px from the next. Terry, 2026-11-13: the
   health box groups with time, not with the name. Read right to left, it is bell, freshness, time.
+- **Why the clock MUST stay to the left of the health box.** Terry, 2026-11-13: the old order, "LIVE
+  2:25 PM", read as a caption, live as of 2:25, so the clock looked like a data timestamp: "wait shit
+  is 2:25 still live? is that stale?" With the clock first, "2:25pm LIVE" reads as two facts: "it's
+  2:25pm and yes that *is* what time it is and yes that is LIVE data." The order MUST NOT be swapped
+  back. Data age, when it matters, lives in the health box ("LIVE 7m") and the warning line, never in a
+  clock beside the word LIVE.
 - **Clock and every other time on the page: `H:mm` with lowercase am/pm and no space**, 12-hour, for
   example "1:32am" and "12:47pm". One formatter, `fmtTime()`, serves the clock and the footers so they
   cannot disagree.
