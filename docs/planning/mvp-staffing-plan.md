@@ -137,6 +137,9 @@ every re-reviewer after a correction. Author roles keep the model and effort the
      pull request.
    - Authors MUST NOT merge their own pull requests. Nobody pushes straight to `mvp/integration`.
    - `mvp/integration` does not deploy; only `main` does, through CI.
+   - **The Lead merges `mvp/integration` into `main` at each turn's close** (Terry, 2026-11-13), once
+     every story in the turn is reviewed and squash-merged. That push deploys. Afterward the Lead
+     fast-forwards `mvp/integration` to `main` for the next turn.
    - T1 exception: T1's authors were dispatched into the shared checkout before this rule existed. The
      Lead turns each T1 author's files into that author's branch and pull request; from T2 on, authors
      do it themselves.
