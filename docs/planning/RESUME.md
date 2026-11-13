@@ -78,6 +78,29 @@ it. So:
 Account changes stay Terry's to approve even with a token: the Access application, its policy, the
 service tokens, and the Worker's first `workers.dev` deploy. Prepare each step and ask before running it.
 
+## Risks to finishing in six turns (checked 2026-11-13)
+
+1. **MVP-06 has no working data source on this machine.** `localswim` on `PATH` is
+   `~\.local\bin\localswim.exe`, a uv tool install whose `localswim.pth` points at
+   `C:\Projects\localswim\src`. That folder does not exist, so the command fails with
+   `ModuleNotFoundError: No module named 'localswim'`. Its entry point is `localswim.api_endpoint`, so it
+   may be a server rather than a query CLI. Terry MUST say where the live localswim boards run and how an
+   agent reads a time block from them before T3.
+2. **The Zero Trust organization is unconfirmed.** The local token lists Access applications (there are
+   none) but gets 403 on `access/organizations`, because it lacks an Organizations Read permission.
+   MVP-05 needs an organization with a team domain. Terry SHOULD check the Zero Trust dashboard before
+   T2.
+3. **MVP-09 needs time control that production cannot give.** The suite replays timed reports, and the
+   server computes RTR, staleness and health from its own clock. MVP-01's contract MUST make time an
+   input (report timestamps) or MVP-09 MUST run against a separate test Worker with a clock override. A
+   second Worker needs the local token: the CI token's Workers Editor cannot create one.
+4. **Terry's gates set the pace:** MVP-02's first deploy, the MVP-05 Access steps, the MVP-08 phone
+   check, MVP-10 on the phone, and MVP-12 acceptance.
+
+Checked and fine: the account's `workers.dev` subdomain is `sixbuckssolutions`, so the URL will be
+`swimcoach.sixbuckssolutions.workers.dev`. The account already runs the `fga-api` and `fga-m28-stage`
+Workers.
+
 ## Next action when unblocked
 
 Start **MVP T1** per `docs/planning/mvp-staffing-plan.md`: five authors (MVP-01 A, B, C; MVP-02 A, B),
