@@ -18,8 +18,9 @@ Monitoring agents report each in-flight project; Terry watches a page on his pho
 - **Next: build the MVP, then a greenfield V2 (concept.md section 14).** The MVP exists to get the UX
   right and MAY be locked to any vendor or language. V2 rebuilds exactly its behavior with no code
   inherited, so the MVP's API contract, schemas and black-box acceptance suite are what MUST survive;
-  its code does not. Proposed MVP stack: a Cloudflare Worker, one SQLite-backed Durable Object,
-  TypeScript, Cloudflare Access. Nothing is built yet.
+  its code does not. MVP stack, decided: a Cloudflare Worker, one SQLite-backed Durable Object,
+  TypeScript, Cloudflare Access. Leading V2 candidate: Terry's static Go plus SQLite container. Nothing
+  is built yet.
 - `reference/prototype/` is the earlier "super prototype": a runnable reference and a spec, not code to
   extend. Its known defects are in concept.md section 11.
 

@@ -644,7 +644,8 @@ Terry's plan, 2026-11-13. RFC 2119 keywords; the capitals are load-bearing.
   black-box acceptance suite that drives the running MVP through its API and pages. The suite SHOULD
   NOT import MVP code, so V2 can run the same suite unchanged and pass it. Code, tests of internals
   and build tooling are throwaway.
-- **MVP stack, proposed 2026-11-13; Terry accepted that lock-in does not matter for the MVP:**
+- **MVP stack, decided 2026-11-13.** Terry delegated the call after making his case (below); lock-in
+  does not matter for the MVP:
   - One Cloudflare Worker (Terry already has Workers Paid) serving the page as static assets plus
     `/api/state` and `/api/report`.
   - One SQLite-backed Durable Object holding the board: the prototype's `projects`, `samples` and
@@ -653,5 +654,15 @@ Terry's plan, 2026-11-13. RFC 2119 keywords; the capitals are load-bearing.
     Access service token for each monitoring agent.
   - Why not a home server: the laptop that runs the agents travels, so the server has to be reachable
     from anywhere anyway, and a home box going down would show OFFLINE for a hardware reason, the
-    exact false alarm the health box exists to avoid. Runner-up: the prototype `server.py` on the QNAP
-    behind a Cloudflare Tunnel.
+    exact false alarm the health box exists to avoid.
+  - **Why it beat Terry's counter for the MVP.** His counter: a CGO-disabled, statically linked Go
+    server in a `scratch` container, with SQLite (in the container or its own), on QNAP Container
+    Station or AWS ECS/Fargate. The deciding point: to reach a home box from cellular and from the
+    traveling laptop, the QNAP route still needs a Cloudflare Tunnel and Cloudflare Access, so it is
+    Cloudflare plus two home containers rather than Cloudflare alone, and a NAS outage shows OFFLINE
+    for a hardware reason. A purely in-memory variant was set aside separately: agents push only the
+    present, so a restart loses the history that trend, projection, chance, the "too early to call"
+    gate and the RTR timeline need (at least 45 minutes of samples).
+- **Leading V2 candidate: Terry's design.** A statically linked Go binary in `scratch` with SQLite,
+  hosted anywhere (QNAP, Fargate). Open requirement if it ever drops persistence: agents backfill
+  today's samples from localswim's persisted lane history after a server restart.
