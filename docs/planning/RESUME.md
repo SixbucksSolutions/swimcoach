@@ -47,11 +47,15 @@ credentials need and MAY start at once.
 3. **Create the CI token:** a second account API token with **Workers: Editor** instead of Admin and
    without the two Access permissions. CI only deploys the Worker the local token created. The docs do
    not say whether a Durable Object migration needs more than Editor; if a CI deploy with a migration
-   is refused, raise the CI token to Admin. **Not done yet.**
-4. **Store the CI token as a GitHub secret.** Terry runs
-   `gh secret set CLOUDFLARE_API_TOKEN --repo SixbucksSolutions/swimcoach` and pastes the CI token at
-   its prompt. The workflow also needs `CLOUDFLARE_ACCOUNT_ID`; it is not a secret, and MAY be a
-   repository variable. **Not done yet.**
+   is refused, raise the CI token to Admin. **Done 2026-11-13:** "swimcoach CI Deploy", Workers Editor
+   and Account Settings Read on the entire account, no expiry, all IP addresses (GitHub's runner
+   ranges are too wide and too changeable to allow-list). No copy is kept on this machine.
+4. **Store the CI token as a GitHub secret. Done 2026-11-13:** Terry ran
+   `gh secret set CLOUDFLARE_API_TOKEN --repo SixbucksSolutions/swimcoach`, and `gh secret list` shows
+   it, set at 2026-11-13T22:49:41Z.
+5. **Give CI the account ID. Not done yet.** The workflow needs `CLOUDFLARE_ACCOUNT_ID`. It is not a
+   secret by Cloudflare's account, but a GitHub secret masks it in this public repo's workflow logs,
+   so it SHOULD be a secret. The value is in `%USERPROFILE%\.secrets\swimcoach\cloudflare-account-id.txt`.
 
 ### Local credentials: files, never environment variables
 
