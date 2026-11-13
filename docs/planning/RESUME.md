@@ -53,8 +53,8 @@ credentials need and MAY start at once.
 4. **Store the CI token as a GitHub secret. Done 2026-11-13:** Terry ran
    `gh secret set CLOUDFLARE_API_TOKEN --repo SixbucksSolutions/swimcoach`, and `gh secret list` shows
    it, set at 2026-11-13T22:49:41Z.
-5. **Give CI the account ID. Not done yet.** The workflow needs `CLOUDFLARE_ACCOUNT_ID`. It is not a
-   secret by Cloudflare's account, but a GitHub secret masks it in this public repo's workflow logs,
+5. **Give CI the account ID. Not done yet.** The workflow needs `CLOUDFLARE_ACCOUNT_ID`. Cloudflare
+   does not treat it as a secret, but a GitHub secret masks it in this public repo's workflow logs,
    so it SHOULD be a secret. The value is in `%USERPROFILE%\.secrets\swimcoach\cloudflare-account-id.txt`.
 
 ### Local credentials: files, never environment variables
