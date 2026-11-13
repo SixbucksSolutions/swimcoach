@@ -23,12 +23,14 @@ regeneration commands and rejected ideas: [`design/logo/README.md`](../design/lo
 - `design/logo/swimcoach.svg` is the **one definition**. Every other copy MUST be generated from it.
 - The mark MUST NOT be recolored, redrawn, outlined or placed on a busy background.
 - Minimum size: 16 px, the browser tab. It was tested there on dark and light tab bars.
-- In the app header the mark is 26 × 26 px, 8 px from the wordmark.
+- In the status line the mark is 26 × 26 px, 8 px from the wordmark. (Screen-part names, such as
+  status line, card display area, title line and detail blurb, are defined in `docs/concept.md`
+  section 2.)
 - The iPhone home-screen icon is `swimcoach-touch-180.png`: full bleed on `#0b0f14`.
 
 ## 3. The wordmark (settled)
 
-- Always one lowercase word, **swimcoach**, set in Inter 700, with `letter-spacing:.02em` in the header.
+- Always one lowercase word, **swimcoach**, set in Inter 700, with `letter-spacing:.02em` in the status line.
 - **Two tones: "swim" in lane blue `#85B8FF`, "coach" in lane amber `#E2A100`.** Both are the mark's own
   bar colors, so the word and the mark read as one identity. Terry chose this (W2) on 2026-11-13: it
   "pops so well and looks very deliberate/intentional without being in your face about it."
@@ -41,9 +43,9 @@ regeneration commands and rejected ideas: [`design/logo/README.md`](../design/lo
   means "hey you should pay more attention here. It isn't _bad_ but it is slipping in a direction you
   want to know about." The two MUST stay related and MUST NOT be merged. What keeps them apart is
   measurable: lane amber `#E2A100` is darker and more orange (hue 43°, lightness 44%) and only ever
-  appears as small text in the header. The attention yellow `#facc15` is brighter (hue 48°, lightness
-  54%) and only ever appears as a large card fill. A change that moves either one toward the other, or
-  uses amber as a fill or yellow as text in the header, would erase the distinction.
+  appears as small text in the status line. The attention yellow `#facc15` is brighter (hue 48°,
+  lightness 54%) and only ever appears as a large card fill. A change that moves either one toward the
+  other, or uses amber as a fill or yellow as text in the status line, would erase the distinction.
 - The other candidates are in `design/logo/candidates-wordmark.png`. Green "coach" (W1, W4) was set aside
   because it sits beside the green LIVE box, two different greens touching.
 
@@ -102,7 +104,7 @@ not just describe a state. Status colors MUST NOT be used for decoration.
 | Red (GO TO KEYBOARD) | **Get up.** Only Terry can move this |
 | Gray (too early to call) | **Nothing yet.** There is not enough history to judge, so do not try |
 | Slate (done) | **Nothing.** It is finished |
-| Orange / red header (STALE, OFFLINE) | **Distrust the page.** Everything below is old |
+| Orange / red health box (STALE, OFFLINE) | **Distrust the page.** Everything below is old |
 
 This is the same rule as the build-chain banner in Terry's global setup: loudness tracks what he can act
 on. A color that asks for no action, or for an action he cannot take, wears out the reflex.

@@ -72,7 +72,7 @@ header h1 .word{color:var(--lane-blue)} header h1 .word span{color:var(--lane-am
 
 #pages{flex:1;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
 #pages::-webkit-scrollbar{display:none}
-.page{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;padding:4px 14px 14px;display:flex;flex-direction:column;scrollbar-width:none}
+.page{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;padding:13px 14px 14px;display:flex;flex-direction:column;scrollbar-width:none}
 .page::-webkit-scrollbar{display:none}
 .page>*{flex-shrink:0}
 #dots{flex:none;display:flex;justify-content:center;gap:4px;padding:2px 0 max(6px,env(safe-area-inset-bottom))}
@@ -108,9 +108,9 @@ header h1 .word{color:var(--lane-blue)} header h1 .word span{color:var(--lane-am
 .pc .nm span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;font-size:14px;font-weight:500;line-height:1.3;opacity:.85;margin-top:5px;padding-left:12px}
 /* The status is indented half the name's em (12px of 24px): with the lighter weight, the indent
    separates detail from title without drawing a line (Terry, 2026-11-13).
-   Content minimums, used by fitCards(): a 4-slot card holds the name and two status lines with 22px
-   below them (105.7px; 4px more than the 18px above the name, at Terry's request). An 8-slot card holds
-   a 20px name and one status line ending in "..." with the same 22px below (87.5px). */
+   Content minimums, used by fitCards(): a 4-slot card holds the name and two detail lines with 18px
+   below them, the same 18px as above the name (101.7px). An 8-slot card holds a 20px name and one detail
+   line ending in "..." with the same 18px below (83.5px). */
 .cards.half .pc .nm{padding-top:4.1px}
 .cards.half .pc .nm b{font-size:20px}
 .cards.half .pc .nm span{-webkit-line-clamp:1}
@@ -414,10 +414,10 @@ pages.addEventListener('scroll', dots, {passive:true});
 phone.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
 $('dots').addEventListener('click', e => { const b = e.target.closest('button'); if (b) go(keys()[[...$('dots').children].indexOf(b)]); });
 window.addEventListener('resize', () => { fitCards(); const k = pages.dataset.cur; if (k) go(k, false); });
-// The 4/8 slot grid (concept.md 3.2). 1-4 slots: four equal slots, two status lines. 5 or more: eight
-// half-height slots, one status line. Slot height comes from the screen, but never below the content
+// The 4/8 slot grid (concept.md 3.2). 1-4 slots: four equal slots, two detail-blurb lines. 5 or more:
+// eight half-height slots, one blurb line. Slot height comes from the screen, but never below the content
 // minimum, so more than 8 slots scroll. Runs synchronously after render, so nothing paints twice.
-const SLOT_GAP = 10, SLOT_MIN = {4: 105.7, 8: 87.5};
+const SLOT_GAP = 10, SLOT_MIN = {4: 101.7, 8: 83.5};
 function fitCards(){
   const page = pages.children[0], cards = page && page.querySelector('.cards');
   if (!cards) return;

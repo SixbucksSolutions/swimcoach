@@ -94,12 +94,26 @@ FGA T04
 - **The call:** the dashboard's verdict on whether the work lands at or before the end of the block.
 - **Strugglebus:** Terry's word for a project in trouble.
 
+**Screen parts** (agreed 2026-11-13, after one word meant two places and a padding request landed in the
+wrong one). Use these names in docs, code comments and conversation:
+
+| Name | What it is |
+|---|---|
+| **Status line** | The bar at the top of every display: mark, wordmark, the health box, clock, bell |
+| **Health box** | The LIVE / STALE / OFFLINE / IDLE / NO DATA box inside the status line |
+| **Card display area** | Everything below the status line on the overview: the slot grid |
+| **Card** | One project in the card display area, or the GO TO KEYBOARD slot |
+| **Title line** | A card's first line: the project name, or GO TO KEYBOARD |
+| **Detail blurb** | The one or two smaller, indented lines under the title line: the card's reason or ask |
+
 ## 3. The concept: displays
 
 The site is a horizontal row of full-screen displays. Swipe left and right; dots at the bottom show
 position (the first dot is square). Tapping a project card jumps to that project's display.
 
-### 3.1 Header (on every display)
+### 3.1 Status line (on every display)
+
+Called the "header" in earlier text and in the prototype; section 2 has the agreed name.
 
 - Wordmark, **health box**, clock, "Alerts off/on" button.
 - **Health box.** This was a firm requirement: "nothing sucks worse than a dashboard that says all good
@@ -135,8 +149,8 @@ position (the first dot is square). Tapping a project card jumps to that project
   reserved for it:** with nothing red, row one is the first green or yellow card. The breathing red is
   confirmed: Terry, "chefs kiss to draw my eye." Each red project's own display still shows its full ask.
 - **GO TO KEYBOARD breathes in step with the LIVE dot.** Terry, 2026-11-13. Same 2 s `ease-in-out` cycle
-  peaking together, same 8 cycles, restarted by the same successful poll, and only while the header
-  says LIVE. So a frozen or stale page stops both at once rather than leaving the red slot looking alive
+  peaking together, same 8 cycles, restarted by the same successful poll, and only while the health
+  box says LIVE. So a frozen or stale page stops both at once rather than leaving the red slot looking alive
   (the dead-page tell in section 3.1). Measured: both animations read the same time to the millisecond
   after load, between polls and after a poll, both stop when OFFLINE and both restart together.
 - **One card per non-red project.** Solid background color, project name, RTR, trend arrow. Fixed
@@ -180,15 +194,20 @@ position (the first dot is square). Tapping a project card jumps to that project
 - **The status is indented 12 px under the name instead**, half the name's 24 px em. Terry's idea,
   2026-11-13: "The lighter weight font and a modest indent will be gorgeous to my brain." It separates
   detail from title without adding a shape.
-- **Full slots: two status lines. Half slots: one status line, ending in "...".** Every card on a screen
-  has the same height and the same number of status lines (Terry: "cards are all one line or all or
+- **Full slots: a two-line detail blurb. Half slots: one line, ending in "...".** Every card on a screen
+  has the same height and the same number of detail-blurb lines (Terry: "cards are all one line or all or
   two -- identical card height"). The slot mode is chosen in the same step that draws the cards, before
   the page paints, so it never flickers (section 3.4).
-- **A little more room below the status than above the name, paid from the slot budget.** Terry,
-  2026-11-13. The content minimum keeps 22 px below the last status line, 4 px more than the 18 px above
-  the name: 105.7 px for a full card with two lines, 87.5 px for a half card with one. A half slot at
-  402 × 874 is 87.8 px, so the minimum fits with 0.3 px to spare; on a shorter screen the grid scrolls
-  rather than cutting into it. Measured: the status ends 26.1 px above the edge in a half slot.
+- **More room below the status line, paid from the slot budget.** Terry, 2026-11-13. The health box
+  sits 13 px below the top of the screen; the card display area now starts 24 px below it (it was
+  15 px, close enough to read as crowded). The 9 px comes out of the slots: at 402 × 874, full slots are
+  183.3 px and half slots 86.6 px.
+- **Inside a card, 18 px above the title line and 18 px below the last detail-blurb line** at the
+  content minimum: 101.7 px for a full card with two blurb lines, 83.5 px for a half card with one. A half
+  slot fits that with 3.1 px to spare; a shorter screen scrolls rather than cutting into it.
+  **Correction:** this request was first misread as "more room below the detail blurb" and built as
+  22 px inside every card. It was reverted the same day, and the screen-part names in section 2 were
+  agreed so it does not happen again.
 - **Design for one to three projects; more is the edge case.** Terry, 2026-11-13: "When I juggle three
   projects at once I basically never leave the PC, too much attention needed. Eight would require VERY
   independent work." Polish SHOULD go to the 1–3 card screens. Compact mode is "a reasonable trade in
@@ -339,7 +358,7 @@ shows RTR 1.90, which means nothing.
 
 - **Stalled:** no change in any lane count for 45 minutes (`SWIMCOACH_STALL_MINUTES`). Yellow.
 - **Agent silent:** a project with no report for 25 minutes (`SWIMCOACH_STALE_MINUTES`). Yellow, plus a
-  warning on its display. The same 25 minutes drives the header's STALE state.
+  warning on its display. The same 25 minutes drives the health box's STALE state.
 
 ## 5. How the localswim lanes map in
 
