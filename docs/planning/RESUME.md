@@ -23,15 +23,18 @@ MVP T1 is underway, so it never goes stale.
 The next session MUST NOT start MVP-02's deploy until these are done. MVP-01 (the contract) has no
 credentials need and MAY start at once.
 
-1. **Pick the hostname:** a subdomain of one of Terry's Cloudflare domains, or a `*.workers.dev`
-   address. Asked on 2026-11-13; not yet answered.
+1. **Hostname: decided.** Terry, 2026-11-13: the MVP runs on `*.workers.dev` for now. So no zone, no
+   DNS record and no zone-scoped token permissions are needed. A custom hostname MAY come later and
+   would add Workers Routes Edit and DNS Edit on that zone.
 2. **Create the local token as an account API token, not a personal (user) token** (Cloudflare
    dashboard, Manage Account, Account API Tokens). An account token belongs to the account, not to a
    person, and Cloudflare recommends it for CI and integrations; its compatibility table marks Workers,
    DNS and Access as supported. Give it the **Workers: Admin** role at Entire Account scope, Account
-   Settings Read (Wrangler's account lookup), Access: Apps and Policies Edit, Access: Service Tokens
-   Edit, and, on the one zone, Workers Routes Edit and DNS Edit. If a later step is refused, add exactly
-   the permission the error names.
+   Settings Read (Wrangler's account lookup), Access: Apps Write, Access: Policies Write and Access:
+   Service Tokens Write. All of them sit in ONE policy scoped to **Entire Account**. If a later step is
+   refused, add exactly the permission the error names.
+   - The policy scope MUST be Entire Account. On 2026-11-13 the scope read "Specified Domains" with no
+     domain chosen, and the dashboard kept **Review token** disabled with no message saying why.
    - The dashboard now offers Workers roles (Metadata Read-only, Content Read-only, Editor, Admin) and
      marks the old "Workers Scripts" permission **Legacy**; it MUST NOT be used. Legacy Workers
      Scripts Edit maps to Editor.
@@ -49,7 +52,7 @@ credentials need and MAY start at once.
    fail with code 9109. The old `wrangler login` on this machine expired on 2026-11-13.
 
 Account changes stay Terry's to approve even with a token: the Access application, its policy, the
-service tokens and the DNS record. Prepare each step and ask before running it.
+service tokens, and the Worker's first `workers.dev` deploy. Prepare each step and ask before running it.
 
 ## Next action when unblocked
 
