@@ -550,7 +550,9 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
 10. **What a time block is.** Terry, 2026-11-13: he runs **two four-hour milestones a day**, and four
     hours of work "USUALLY turns into 5-10 stories"; 2-3 stories is possible but "real unusual". So a
     time block is a 4-hour milestone of about 5 to 10 stories, close to this document's original 5 to 9
-    assumption. **Correction:** an earlier version of this item equated a time block with a localswim
+    assumption. Each block ends in a demo: Terry, "we've had a good day with two demos a day per
+    project". A demo waiting on Terry is one of his own gates, so under D3 it is a Needs Terry item.
+    **Correction:** an earlier version of this item equated a time block with a localswim
     dependency turn (1 to 11 stories, read from `localswim/localswim` epic #0514's plan). Those turns are
     an epic's planning layers, not Terry's time blocks. A small block still makes RTR nearly binary, so
     **D1 (decided 2026-11-13) stays as the rule for that rare case:** a block with fewer than 3 stories
