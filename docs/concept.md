@@ -159,7 +159,11 @@ position (the first dot is square). Tapping a project card jumps to that project
 - **No separator line between the name and the status.** Considered and declined, 2026-11-13. Size
   (24 px against 14 px), weight (800 against 500) and a 5 px gap already make the two tiers. A rule
   inside a colored card adds one more shape to scan at a glance, and it would compete with the clock
-  hand at 12 o'clock on the same card. Hierarchy comes from type, not lines. The project display's large RTR still
+  hand at 12 o'clock on the same card. Hierarchy comes from type, not lines.
+- **The status is indented 12 px under the name instead**, half the name's 24 px em. Terry's idea,
+  2026-11-13: "The lighter weight font and a modest indent will be gorgeous to my brain." It separates
+  detail from title without adding a shape. The longest sample status still fits two lines, ending
+  18 px above the bottom of the tightest card. The project display's large RTR still
   uses the plain arrow beside the number; whether it should follow is open.
 
 Card states, first match wins:
