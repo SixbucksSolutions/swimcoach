@@ -6,62 +6,21 @@ import { expectClose } from "../compare.ts";
 import { loadFixture } from "../fixtures.ts";
 import { createHarness } from "../harness.ts";
 import { formatAt } from "../transport.ts";
-import type { Stub } from "./stub.ts";
 import { startStub } from "./stub.ts";
-
-const ID = "selftest-id.access";
-const SECRET = "selftest-secret-value-0123456789";
-const LANES = {
-  ready_for_work: 1,
-  in_progress: 0,
-  needs_terry: 0,
-  ready_for_review: 0,
-  completed: 0,
-};
-
-function reportBody(project: string, extra: Record<string, unknown> = {}): Record<string, unknown> {
-  return {
-    agent: "claude",
-    project,
-    milestone: "M1",
-    active_hours: 1,
-    cap_hours: 2,
-    lanes: LANES,
-    ...extra,
-  };
-}
-
-async function withStub(
-  testClock: boolean,
-  suite: "clock-free" | "full",
-  body: (stub: Stub, h: ReturnType<typeof createHarness>) => Promise<void>,
-  seeded: readonly (readonly [string, string])[] = [],
-): Promise<void> {
-  const stub = await startStub({ id: ID, secret: SECRET, testClock, seeded });
-  try {
-    const h = createHarness({
-      config: { url: stub.url, accessClientId: ID, accessClientSecret: SECRET },
-      suite,
-      runId: "abc123",
-    });
-    await body(stub, h);
-  } finally {
-    await stub.close();
-  }
-}
+import { ID, RECENT, reportBody, SECRET, THREE_DAYS_AGO, withStub } from "./support.ts";
 
 describe("request", () => {
   it("stamps the service token, the content type and the test clock", async () => {
     await withStub(true, "full", async (stub, h) => {
       await h.request("POST", "/api/2026-11-13/report", {
         body: reportBody(h.project()),
-        at: 1_794_573_043.25,
+        at: RECENT + 0.25,
       });
       const [seen] = stub.requests;
       assert.equal(seen?.headers["cf-access-client-id"], ID);
       assert.equal(seen?.headers["cf-access-client-secret"], SECRET);
       assert.equal(seen?.headers["content-type"], "application/json");
-      assert.equal(seen?.headers["swimcoach-test-now"], "1794573043.25");
+      assert.equal(seen?.headers["swimcoach-test-now"], `${RECENT}.25`);
     });
   });
 
@@ -130,79 +89,38 @@ describe("request", () => {
 
   it("fails, not skips, when a timed request meets test_clock_disabled", async () => {
     await withStub(false, "full", async (_stub, h) => {
-      await assert.rejects(
-        h.report(reportBody(h.project()), 1_794_573_043),
-        /test_clock_disabled/u,
-      );
+      await assert.rejects(h.report(reportBody(h.project()), RECENT), /test_clock_disabled/u);
       await assert.rejects(h.reset(), /test_clock_disabled/u);
     });
   });
-});
 
-describe("production safety on the clock-free suite", () => {
-  it("refuses a test time, a foreign project, needs_me and a Needs Terry card", async () => {
-    await withStub(false, "clock-free", async (stub, h) => {
-      await assert.rejects(h.report(reportBody(h.project()), 1_794_573_043), /Swimcoach-Test-Now/u);
-      await assert.rejects(h.report(reportBody("FGA")), /MUST start with/u);
-      await assert.rejects(h.stop("FGA", "M1"), /MUST start with/u);
-      await assert.rejects(h.report(reportBody(h.project(), { needs_me: "Look" })), /needs_me/u);
+  it("refuses a test time older than 7 days or later than real time, sending nothing", async () => {
+    await withStub(true, "full", async (stub, h) => {
+      const now = Math.floor(Date.now() / 1000);
       await assert.rejects(
-        h.report(reportBody(h.project(), { lanes: { ...LANES, needs_terry: 1 } })),
-        /needs_terry/u,
+        h.report(reportBody(h.project()), now - 8 * 86_400),
+        /outside the allowed/u,
       );
-      await assert.rejects(
-        h.request("POST", "/api/2026-11-13/report", { raw: JSON.stringify(reportBody("FGA")) }),
-        /MUST start with/u,
-      );
+      await assert.rejects(h.report(reportBody(h.project()), now + 3600), /outside the allowed/u);
       assert.equal(stub.requests.length, 0);
+      assert.equal((await h.report(reportBody(h.project()), now - 6 * 86_400)).status, 200);
     });
   });
 
-  it("lets a zz acceptance project through, whatever its case", async () => {
-    await withStub(false, "clock-free", async (_stub, h) => {
-      assert.equal((await h.report(reportBody(h.project()))).status, 200);
-      assert.equal((await h.report(reportBody("ZZ ACCEPTANCE other"))).status, 200);
+  it("carries no raw error or header value when the secret is not a valid header value", async () => {
+    const h = createHarness({
+      config: {
+        url: "http://127.0.0.1:1",
+        accessClientId: ID,
+        accessClientSecret: "bad\u0000secret",
+      },
+      suite: "full",
     });
-  });
-
-  it("never runs the opening reset, and cleanup stops only its own projects", async () => {
-    const seeded = [
-      ["FGA", "T04"],
-      ["zz acceptance old", "S1"],
-    ] as const;
-    await withStub(
-      false,
-      "clock-free",
-      async (stub, h) => {
-        await assert.rejects(h.reset(), /MUST NOT run/u);
-        await h.cleanup();
-        assert.deepEqual(
-          [...stub.tracked.values()].map((entry) => entry.project),
-          ["FGA"],
-        );
-      },
-      seeded,
-    );
-  });
-});
-
-describe("the full suite's reset", () => {
-  it("stops every listed milestone, then cleanup finds nothing left", async () => {
-    await withStub(
-      true,
-      "full",
-      async (stub, h) => {
-        await h.reset();
-        assert.equal(stub.tracked.size, 0);
-        await h.report(reportBody(h.project()));
-        await h.cleanup();
-        assert.equal(stub.tracked.size, 0);
-      },
-      [
-        ["FGA", "T04"],
-        ["localswim V2", "T06"],
-      ],
-    );
+    await assert.rejects(h.request("GET", "/healthz"), (error: Error) => {
+      assert.equal(error.cause, undefined);
+      assert.ok(!error.message.includes("bad"));
+      return true;
+    });
   });
 });
 
@@ -210,7 +128,7 @@ describe("replay", () => {
   it("sends one report per sample, stamped startAt plus its offset, and returns the last", async () => {
     await withStub(true, "full", async (stub, h) => {
       const fixture = loadFixture("afternoon");
-      const startAt = 1_794_000_000;
+      const startAt = THREE_DAYS_AGO;
       const last = await h.replay(fixture, h.project(), "R1", startAt);
       const sent = stub.requests.filter((entry) => entry.path.endsWith("/report"));
       assert.equal(sent.length, fixture.samples.length);

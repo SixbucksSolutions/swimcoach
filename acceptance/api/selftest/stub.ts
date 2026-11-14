@@ -24,6 +24,8 @@ interface StubOptions {
   readonly seeded?: readonly (readonly [string, string])[];
   /** Whether /api replies carry Cache-Control: no-store (the default). */
   readonly noStore?: boolean;
+  /** A project whose stop requests answer 500, to prove cleanup attempts every stop. */
+  readonly failStopFor?: string;
 }
 
 interface Tracked {
@@ -121,6 +123,10 @@ function readEntry(body: unknown): Tracked | undefined {
 }
 
 function applyStop(world: World, res: ServerResponse, entry: Tracked): void {
+  if (entry.project === world.options.failStopFor) {
+    refuse(world, res, 500, "internal");
+    return;
+  }
   const key = keyOf(entry.project, entry.milestone);
   const found = world.tracked.get(key);
   if (found === undefined) {

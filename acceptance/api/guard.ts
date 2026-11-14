@@ -7,6 +7,7 @@ import type { Send } from "./types.ts";
 
 /** Every project the suite creates starts with this, so nothing real shares a card with it. */
 const PROJECT_PREFIX = "zz acceptance";
+const TEST_CLOCK_HEADER = "swimcoach-test-now";
 const UPPER_ASCII = /[A-Z]/gu;
 const ASCII_CASE_OFFSET = 32;
 
@@ -61,9 +62,18 @@ function checkWriteBody(value: unknown): void {
   }
 }
 
-/** The clock-free tier's pre-flight on one write; call it only for the report and stop paths. */
+/**
+ * The clock-free tier's pre-flight on ANY request that carries a body. It keys on neither the
+ * method nor the path: fetch upper-cases a method and the Worker ignores query strings, so
+ * neither is a safe thing to hang a guard on.
+ */
 function checkClockFreeWrite(send: Send): void {
   checkWriteBody(sentJson(send));
 }
 
-export { checkClockFreeWrite, hasPrefix, PROJECT_PREFIX };
+/** Whether a request carries the test clock header by hand; header names compare ignoring case. */
+function hasTestClockHeader(send: Send): boolean {
+  return Object.keys(send.headers ?? {}).some((name) => name.toLowerCase() === TEST_CLOCK_HEADER);
+}
+
+export { checkClockFreeWrite, hasPrefix, hasTestClockHeader, PROJECT_PREFIX };

@@ -105,6 +105,45 @@ describe("run.ts", () => {
     }
   });
 
+  it("refuses a secret with a NUL byte, naming the key and printing no secret", async () => {
+    const secret = `${SECRET}\u0000tail`;
+    await withConfig(
+      { url: "https://example.invalid", access_client_id: ID, access_client_secret: secret },
+      async (path) => {
+        const outcome = await run(["--config", path, "--suite", "full", "--cases", SAMPLE_CASES]);
+        assert.equal(outcome.code, 2);
+        assert.match(outcome.out, /access_client_secret/u);
+        assert.ok(!outcome.out.includes(SECRET));
+        assert.ok(!outcome.out.includes("tail"));
+      },
+    );
+  });
+
+  it("a full run against a deployment without the test clock sends no stop at all", async () => {
+    const stub = await startStub({
+      id: ID,
+      secret: SECRET,
+      testClock: false,
+      seeded: [["FGA", "T04"]],
+    });
+    try {
+      await withConfig(
+        { url: stub.url, access_client_id: ID, access_client_secret: SECRET },
+        async (path) => {
+          const outcome = await run(["--config", path, "--suite", "full", "--cases", SAMPLE_CASES]);
+          assert.notEqual(outcome.code, 0);
+          assert.equal(stub.requests.filter((entry) => entry.path.endsWith("/stop")).length, 0);
+          assert.deepEqual(
+            [...stub.tracked.values()].map((entry) => entry.project),
+            ["FGA"],
+          );
+        },
+      );
+    } finally {
+      await stub.close();
+    }
+  });
+
   it("clock-free registers only clock-free cases, passes, and prints no secret", async () => {
     const stub = await startStub({
       id: ID,

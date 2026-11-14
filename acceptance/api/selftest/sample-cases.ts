@@ -5,8 +5,10 @@ import assert from "node:assert/strict";
 import { loadFixture } from "../fixtures.ts";
 import type { Case } from "../types.ts";
 
-const STARTED_AT = 1_794_000_000;
 const SECONDS_PER_HOUR = 3600;
+const SECONDS_PER_DAY = 86_400;
+// Within the 7-day window the harness enforces, and early enough that the fixture ends before now.
+const STARTED_AT = Math.floor(Date.now() / 1000) - 3 * SECONDS_PER_DAY;
 
 const cases: Case[] = [
   {

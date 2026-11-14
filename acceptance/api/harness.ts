@@ -101,23 +101,40 @@ async function replayFixture(
   return last;
 }
 
-/** Stops, one at a time, every milestone the board lists whose project `wanted` accepts. */
+/** One stop; returns a failure sentence, or undefined when the milestone is gone. */
+async function tryStop(api: Pick<Harness, "stop">, entry: Listed): Promise<string | undefined> {
+  try {
+    const reply = await api.stop(entry.project, entry.milestone);
+    if (reply.status === 200 || errorCode(reply) === "not_tracked") {
+      return undefined;
+    }
+    return `"${entry.project}" "${entry.milestone}": ${describeFailure(reply)}`;
+  } catch (error) {
+    // A transport error carries no header value (transport.ts), so its message is safe to report.
+    return `"${entry.project}" "${entry.milestone}": ${String((error as Error).message)}`;
+  }
+}
+
+/**
+ * Stops, one at a time, every milestone the board lists whose project `wanted` accepts. It
+ * attempts EVERY stop even when one fails, then reports all the failures together.
+ */
 async function stopMatching(
   api: Pick<Harness, "state" | "stop">,
   wanted: (project: string) => boolean,
 ): Promise<void> {
   const listed = milestonesOf(await api.state());
+  const failures: string[] = [];
   for (const entry of listed) {
     if (wanted(entry.project)) {
       // biome-ignore lint/performance/noAwaitInLoops: one stop at a time keeps the log readable
-      const reply = await api.stop(entry.project, entry.milestone);
-      const gone = reply.status === 200 || errorCode(reply) === "not_tracked";
-      assert.ok(
-        gone,
-        `Stopping "${entry.project}" "${entry.milestone}": ${describeFailure(reply)}`,
-      );
+      const failure = await tryStop(api, entry);
+      if (failure !== undefined) {
+        failures.push(failure);
+      }
     }
   }
+  assert.equal(failures.length, 0, `Stopping failed for: ${failures.join("; ")}`);
 }
 
 function createHarness(options: HarnessOptions): AcceptanceHarness {

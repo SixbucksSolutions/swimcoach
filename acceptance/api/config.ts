@@ -18,6 +18,9 @@ type ConfigResult =
 
 const KEYS = ["url", "access_client_id", "access_client_secret"] as const;
 
+/** A header value MUST be visible ASCII here: anything else makes `Headers` quote the value. */
+const VISIBLE_ASCII = /^[!-~]+$/u;
+
 function isHttpUrl(text: string): boolean {
   try {
     const { protocol } = new URL(text);
@@ -52,6 +55,15 @@ async function loadConfig(path: string): Promise<ConfigResult> {
     return {
       ok: false,
       message: `The config file ${path} lacks a non-empty string for: ${bad.join(", ")}.`,
+    };
+  }
+  const unusable = (["access_client_id", "access_client_secret"] as const).filter(
+    (key) => !VISIBLE_ASCII.test(parsed[key] as string),
+  );
+  if (unusable.length > 0) {
+    return {
+      ok: false,
+      message: `The config file ${path} holds a value that is not visible ASCII (0x21 to 0x7E) for: ${unusable.join(", ")}.`,
     };
   }
   if (!isHttpUrl(url)) {
