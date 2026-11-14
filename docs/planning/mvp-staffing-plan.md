@@ -136,6 +136,11 @@ every re-reviewer after a correction. Author roles keep the model and effort the
      `mvp/integration`. A finding goes back as a review comment, and the correction lands on the same
      pull request.
    - Authors MUST NOT merge their own pull requests. Nobody pushes straight to `mvp/integration`.
+   - **Dev branches MUST NOT outlive their merge** (Terry, 2026-11-13). Every squash merge uses
+     `gh pr merge --squash --delete-branch`, which deletes the remote branch. At each turn's close the
+     Lead deletes every local branch whose pull request has merged, after confirming the merge with
+     `gh pr list --state merged --head <branch>`, and runs `git fetch --prune`. The only long-lived
+     branches are `main` and `mvp/integration`.
    - `mvp/integration` does not deploy; only `main` does, through CI.
    - **The Lead merges `mvp/integration` into `main` at each turn's close** (Terry, 2026-11-13), once
      every story in the turn is reviewed and squash-merged. That push deploys. Afterward the Lead
