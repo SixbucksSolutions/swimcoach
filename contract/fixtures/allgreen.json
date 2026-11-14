@@ -1,0 +1,35 @@
+{
+  "name": "allgreen",
+  "description": "Mock 'All green', project FGA T04: 7 stories, 4 done after 1h50m of a 4h cap.",
+  "cap_hours": 4.0,
+  "samples": [
+    {"at_hours": 0.0, "active_hours": 0.17, "lanes": {"ready_for_work": 6, "in_progress": 1, "needs_terry": 0, "ready_for_review": 0, "completed": 0}},
+    {"at_hours": 0.1667, "active_hours": 0.33, "lanes": {"ready_for_work": 6, "in_progress": 1, "needs_terry": 0, "ready_for_review": 0, "completed": 0}},
+    {"at_hours": 0.3333, "active_hours": 0.5, "lanes": {"ready_for_work": 5, "in_progress": 1, "needs_terry": 0, "ready_for_review": 1, "completed": 0}},
+    {"at_hours": 0.5, "active_hours": 0.67, "lanes": {"ready_for_work": 5, "in_progress": 1, "needs_terry": 0, "ready_for_review": 1, "completed": 0}},
+    {"at_hours": 0.6667, "active_hours": 0.83, "lanes": {"ready_for_work": 5, "in_progress": 1, "needs_terry": 0, "ready_for_review": 1, "completed": 0}},
+    {"at_hours": 0.8333, "active_hours": 1.0, "lanes": {"ready_for_work": 4, "in_progress": 1, "needs_terry": 0, "ready_for_review": 2, "completed": 0}},
+    {"at_hours": 1.0, "active_hours": 1.17, "lanes": {"ready_for_work": 4, "in_progress": 1, "needs_terry": 0, "ready_for_review": 2, "completed": 0}},
+    {"at_hours": 1.1667, "active_hours": 1.33, "lanes": {"ready_for_work": 3, "in_progress": 1, "needs_terry": 0, "ready_for_review": 3, "completed": 0}},
+    {"at_hours": 1.3333, "active_hours": 1.5, "lanes": {"ready_for_work": 3, "in_progress": 1, "needs_terry": 0, "ready_for_review": 3, "completed": 0}},
+    {"at_hours": 1.5, "active_hours": 1.67, "lanes": {"ready_for_work": 2, "in_progress": 1, "needs_terry": 0, "ready_for_review": 4, "completed": 0}},
+    {"at_hours": 1.6667, "active_hours": 1.83, "lanes": {"ready_for_work": 2, "in_progress": 1, "needs_terry": 0, "ready_for_review": 4, "completed": 0}}
+  ],
+  "expected": {
+    "rtr": 1.2490241998438718,
+    "trend_bin": "sharp_up",
+    "projection_hours": 2.83,
+    "chance_on_time": 0.8750602493238056,
+    "call": "on_time",
+    "too_early": false,
+    "work": 0.5714285714285714,
+    "clock": 0.4575,
+    "finished": 4,
+    "total": 7,
+    "trend": {"delta": 0.5605560414961954, "minutes": 60, "pace": 1.7142857142857142, "proj": 1.5014285714285713, "finish": 0.7075, "recent_done": 3, "to_go": 3},
+    "stalled": false,
+    "mode": "ratio",
+    "color": "green",
+    "reason": "on_time"
+  }
+}
