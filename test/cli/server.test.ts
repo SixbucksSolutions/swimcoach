@@ -50,7 +50,7 @@ function stop(extra: readonly string[] = []): Promise<Result> {
 }
 
 describe("exit 0, a report", () => {
-  it("sends one POST /api/report with the contract's headers and body", async () => {
+  it("sends one POST /api/2026-11-13/report with the contract's headers and body", async () => {
     const m = await serve(200, REPORT_OK);
     const result = await report();
     expect(result.code).toBe(0);
@@ -58,7 +58,7 @@ describe("exit 0, a report", () => {
     expect(m.seen).toHaveLength(1);
     const [request] = m.seen;
     expect(request?.method).toBe("POST");
-    expect(request?.url).toBe("/api/report");
+    expect(request?.url).toBe("/api/2026-11-13/report");
     expect(request?.headers["content-type"]).toBe("application/json");
     expect(request?.headers["cf-access-client-id"]).toBe(CLIENT_ID);
     expect(request?.headers["cf-access-client-secret"]).toBe(SECRET);
@@ -91,7 +91,7 @@ describe("exit 0, a stop and the other input paths", () => {
     const result = await stop();
     expect(result.code).toBe(0);
     expect(result.stdout).toBe("Stopped tracking FGA M12.\n");
-    expect(m.seen[0]?.url).toBe("/api/stop");
+    expect(m.seen[0]?.url).toBe("/api/2026-11-13/stop");
     expect(JSON.parse(m.seen[0]?.body ?? "")).toEqual({ project: "FGA", milestone: "M12" });
   });
 

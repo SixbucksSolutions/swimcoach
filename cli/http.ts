@@ -1,7 +1,15 @@
 // The one HTTP request (contract/cli.md section 6): a single POST, one attempt, redirects never
 // followed, a fixed timeout. It returns the status and the body text, or a short reason for a
 // network failure; it never throws and never puts a header value in a message.
+import { API_VERSION } from "../src/contract.ts";
 import type { Config } from "./config.ts";
+
+// The dated write paths (contract/api.md, "Versioning"; contract/cli.md section 6). The
+// unversioned /api/... paths answer 404.
+const REPORT_PATH = `/api/${API_VERSION}/report` as const;
+const STOP_PATH = `/api/${API_VERSION}/stop` as const;
+
+type ApiPath = typeof REPORT_PATH | typeof STOP_PATH;
 
 type Sent =
   | { readonly kind: "response"; readonly status: number; readonly text: string }
@@ -9,7 +17,7 @@ type Sent =
 
 interface PostOptions {
   readonly config: Config;
-  readonly path: "/api/report" | "/api/stop";
+  readonly path: ApiPath;
   readonly body: unknown;
   readonly timeoutMs: number;
 }
@@ -50,5 +58,5 @@ async function post(options: PostOptions): Promise<Sent> {
   }
 }
 
-export type { Sent };
-export { post };
+export type { ApiPath, Sent };
+export { post, REPORT_PATH, STOP_PATH };

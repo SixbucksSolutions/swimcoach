@@ -54,17 +54,30 @@ that math and what the server returns; it does not restate the formulas.
 
 | Method | Path | Purpose | Section |
 | --- | --- | --- | --- |
-| `POST` | `/api/report` | Store one complete status report; the first one for a (project, milestone) adds it | 4 |
-| `POST` | `/api/stop` | Stop tracking one (project, milestone) and delete its history | 5 |
-| `GET` | `/api/state` | Everything the page renders | 6 |
+| `POST` | `/api/2026-11-13/report` | Store one complete status report; the first one for a (project, milestone) adds it | 4 |
+| `POST` | `/api/2026-11-13/stop` | Stop tracking one (project, milestone) and delete its history | 5 |
+| `GET` | `/api/2026-11-13/state` | Everything the page renders | 6 |
 | `GET` | `/healthz` | Liveness: `200 {"ok": true}` | 7 |
 | `GET` | `/` | The page (MVP-08) | 7 |
 
-There is **no create route.** The first report adds a (project, milestone); `POST /api/stop` removes it.
+There is **no create route.** The first report adds a (project, milestone); `POST /api/2026-11-13/stop` removes it.
 Any other method on these paths MUST get `405 method_not_allowed` with an `Allow` header; any other path
 MUST get `404 not_found`.
 
-## 4. `POST /api/report`
+### Versioning
+
+Every API path carries the date of the API version it belongs to: `/api/2026-11-13/...`. Terry's rule,
+2026-11-13, in his words: "non-API-breaking changes to fix defects behind endpoints do not require a
+version rev. We do rev the date if we add, change behavior, or remove methods/endpoints."
+
+- Adding, removing or changing the behavior of any method or endpoint MUST get a new date path. Only a
+  defect fix that leaves the API unchanged MAY keep the current date.
+- `/healthz` is unversioned: it reports liveness and is not part of the API.
+- **Unversioned `/api/...` paths are not aliases.** `/api/report`, `/api/stop` and `/api/state`, and any
+  date the server does not serve, MUST get `404 not_found`.
+- V2 MUST serve the same dated paths.
+
+## 4. `POST /api/2026-11-13/report`
 
 ### 4.1 Body
 
@@ -128,7 +141,7 @@ parse (`400 invalid_json`), then the schema (`400 invalid_report`).
   implementation agrees. `FGA`/`M12` and `fga`/`m12` are one milestone.
 - **The newest report's spelling is the display spelling.**
 - A mistyped name makes a separate, stray milestone. That consequence is accepted (Terry, 2026-11-13);
-  `POST /api/stop` removes it.
+  `POST /api/2026-11-13/stop` removes it.
 
 ### 4.4 What a report does
 
@@ -169,7 +182,7 @@ These bind the agent that fills the report in, not the server; [`cli.md`](cli.md
   release) changes nothing, and a card sitting in Ready for review is not by itself a request.
 - **Decision D2** is partly open: see [`README.md`](README.md), "Open for Terry".
 
-## 5. `POST /api/stop`
+## 5. `POST /api/2026-11-13/stop`
 
 The last step of a milestone's lifecycle (Terry, 2026-11-13): Terry approves the milestone, every card goes
 to Completed, he tells the project's agent it is complete, and the agent stops tracking it.
@@ -178,7 +191,7 @@ to Completed, he tells the project's agent it is complete, and the agent stops t
   same name rules and the same ASCII case-insensitive matching as a report. Example:
   [`stop.request.json`](schemas/examples/stop.request.json). A malformed body gets `400 invalid_stop`.
 - **Effect:** the server MUST delete the milestone, its samples and its events in one atomic step. It
-  disappears from `GET /api/state` at once.
+  disappears from `GET /api/2026-11-13/state` at once.
 - **Response:** `200` [`stopResponse`](schemas/report.schema.json), echoing the stored spelling.
 - **Not tracked:** `404 not_tracked`, and nothing changes. The CLI reports this distinctly, so a mistyped
   stop does not look like success while the real card stays on the phone.
@@ -188,7 +201,7 @@ to Completed, he tells the project's agent it is complete, and the agent stops t
   spaces and MAY contain `/`, and a body avoids every percent-encoding question across shells, proxies
   and languages.
 
-## 6. `GET /api/state`
+## 6. `GET /api/2026-11-13/state`
 
 `200` with [`state.schema.json`](schemas/state.schema.json). Every value is computed at the request's
 `now` (section 9). Examples: one per mock scenario, `state.<scenario>.json` in
@@ -377,7 +390,7 @@ never on `message`.
 | 400 | `invalid_test_clock` | The `Swimcoach-Test-Now` value is malformed |
 | 401 | `unauthenticated` | No valid `Cf-Access-Jwt-Assertion` |
 | 404 | `not_found` | Unknown path |
-| 404 | `not_tracked` | `POST /api/stop` for a milestone that is not tracked |
+| 404 | `not_tracked` | `POST /api/2026-11-13/stop` for a milestone that is not tracked |
 | 405 | `method_not_allowed` | Known path, wrong method; an `Allow` header lists the right one |
 | 409 | `clock_went_backward` | A report's time is earlier than the milestone's `updated_at` (section 9) |
 | 413 | `body_too_large` | Body over 16 KiB |
@@ -393,7 +406,7 @@ switched on.**
   example `Swimcoach-Test-Now: 1794573043.25`.
 - **On a test deployment,** the header's value replaces the server clock for that one request and for
   nothing else: it becomes `T` for a report (`received_at`, `updated_at`, the sample time) and `now` for
-  `GET /api/state` (`stale`, `stalled`, `feed`, retention). A request without the header uses the real
+  `GET /api/2026-11-13/state` (`stale`, `stalled`, `feed`, retention). A request without the header uses the real
   clock.
 - **On a production deployment,** any request carrying the header MUST get `400 test_clock_disabled`
   and MUST change nothing. A suite pointed at production by mistake then fails at its first request
@@ -436,11 +449,11 @@ setting differs. And V2 implements one header, so the black-box suite runs again
   lifecycle and the response shapes. Those still create milestones Terry's phone can see for a moment,
   so they MUST use an unmistakable project name and stop it at the end. The stories' "passes against
   production" means that subset; see [`README.md`](README.md), "For the Lead".
-- A suite run MUST start by stopping every milestone the test deployment lists, through `POST /api/stop`.
+- A suite run MUST start by stopping every milestone the test deployment lists, through `POST /api/2026-11-13/stop`.
   That is the only reset, and it needs no special route.
 
 ## 10. Retention
 
 - Samples and events older than 14 days, measured on the same clock as section 9, MAY be deleted. Trend
   and `spark` then use what remains.
-- **A tracked milestone is never removed automatically.** Only `POST /api/stop` removes it.
+- **A tracked milestone is never removed automatically.** Only `POST /api/2026-11-13/stop` removes it.

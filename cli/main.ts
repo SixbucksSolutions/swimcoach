@@ -7,7 +7,7 @@ import { FIELD_FLAGS, parseFlags } from "./args.ts";
 import { type Built, buildFromFile, buildFromFlags } from "./build.ts";
 import { loadConfig } from "./config.ts";
 import { helpText } from "./help.ts";
-import { post } from "./http.ts";
+import { type ApiPath, post, REPORT_PATH, STOP_PATH } from "./http.ts";
 import { classify } from "./response.ts";
 
 interface Io {
@@ -115,9 +115,9 @@ async function runRequest(
     return o.fail(CONFIG_ERROR, [loaded.message]);
   }
   o.hide(loaded.config.accessClientSecret);
-  let path: "/api/report" | "/api/stop" = "/api/stop";
+  let path: ApiPath = STOP_PATH;
   if (command === "report") {
-    path = "/api/report";
+    path = REPORT_PATH;
   }
   const sent = await post({
     config: loaded.config,

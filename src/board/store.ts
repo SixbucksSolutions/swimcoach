@@ -3,7 +3,8 @@
 // so a caller that does not await between a read and a write sees no other request in between.
 //
 // No events table. api.md section 5 says a stop deletes "its events", and section 10 lets events
-// age out, but nothing in GET /api/state reads an event (api.md section 6), so the MVP stores none.
+// age out, but nothing in GET /api/2026-11-13/state reads an event (api.md section 6), so the MVP
+// stores none.
 // A stop that deletes the milestone and its samples therefore deletes everything the board holds
 // about it. Add the table when a route first needs to read one.
 

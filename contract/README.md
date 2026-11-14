@@ -11,7 +11,7 @@ code is throwaway; this folder is not.
 | [`api.md`](api.md) | The HTTP contract: routes, auth, validation, the lifecycle, every state field and how it is computed, errors, time control for tests | MVP-01 A |
 | [`cli.md`](cli.md) | The `swimcoach` command line agents run: `report`, `stop`, output, exit codes, the token file | MVP-01 A |
 | [`schemas/report.schema.json`](schemas/report.schema.json) | The report body, plus in `$defs` the stop body, both write responses and the error body | MVP-01 A |
-| [`schemas/state.schema.json`](schemas/state.schema.json) | The `GET /api/state` body | MVP-01 A |
+| [`schemas/state.schema.json`](schemas/state.schema.json) | The `GET /api/2026-11-13/state` body | MVP-01 A |
 | [`schemas/examples/`](schemas/examples/) | Example bodies; every one MUST validate | MVP-01 A |
 | `fixtures/` | Golden metric fixtures | MVP-01 B |
 | `ux-ledger.md` | Every screen state and transition | MVP-01 C |
@@ -101,7 +101,7 @@ Each of these was a judgment call the stories left open. The reasons are in the 
 | Decision | Where | Short reason |
 | --- | --- | --- |
 | Tests control time with a per-request `Swimcoach-Test-Now` header, honored only by a test deployment; production refuses it. The switch fails closed, and production does not define it | `api.md` 9 | Keeps the report timestamp-free; stateless; same build in both places; V2 implements one header |
-| The server returns every metric and verdict (`metrics`, `mode`, `color`, `reason`, `feed`) in `GET /api/state` | `api.md` 6 | One definition in one place, and the black-box suite can check the math through HTTP alone |
+| The server returns every metric and verdict (`metrics`, `mode`, `color`, `reason`, `feed`) in `GET /api/2026-11-13/state` | `api.md` 6 | One definition in one place, and the black-box suite can check the math through HTTP alone |
 | `metrics` is pure math and ignores D1; D1 lives in `mode`, `color` and `reason` | `api.md` 6.3, 6.5 | The golden fixtures check one formula everywhere |
 | D1 cards turn yellow for `silent` and `over_budget` only, not for stalled | `api.md` 6.6 | D1's own words, plus the silent-feed rule; a one-story milestone has nothing to move for hours |
 | A done milestone is `total > 0` and every card finished | `api.md` 6.2 | The report has no `status` field any more |
@@ -110,7 +110,7 @@ Each of these was a judgment call the stories left open. The reasons are in the 
 | Unknown fields are refused | `api.md` 4.1 | A misspelled optional field fails loudly instead of vanishing |
 | One report per request; arrays refused | `api.md` 4.1 | The CLI sends one; no partial-failure rule needed |
 | A duplicate is the same sample within 60 s, and it stores nothing | `api.md` 4.4 | Codex and Claude on one project must not double the evidence; a 10-minute heartbeat still stores |
-| Stop is `POST /api/stop` with a JSON body | `api.md` 5 | Names have spaces and MAY have `/`; a body avoids percent-encoding across shells |
+| Stop is `POST /api/2026-11-13/stop` with a JSON body | `api.md` 5 | Names have spaces and MAY have `/`; a body avoids percent-encoding across shells |
 | Stopping an untracked milestone is `404 not_tracked`, CLI exit 3 | `api.md` 5, `cli.md` 3 | A mistyped stop must not pass for success |
 | No day boundary: a milestone shows from first report to stop, and its trend uses all its samples | `api.md` 6.9 | The lifecycle says only stop removes a card; it also fixes the midnight rollover defect |
 | `tldr`, `cards`, `block`, `events` and lane overrides are gone | `api.md` 6.10 | The frozen report carries none of them, and the page showed no events |
