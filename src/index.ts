@@ -2,8 +2,7 @@
 // The Lead owns this router (mvp-staffing-plan.md, "Integration ownership").
 
 // biome-ignore lint/performance/noBarrelFile: workerd finds a Durable Object class only as an export of the main module.
-// biome-ignore lint/correctness/useImportExtensions: tsc refuses a .ts value import (TS5097) without allowImportingTsExtensions.
-export { Board } from "./board/board";
+export { Board } from "./board/board.ts";
 
 export default {
   fetch(request: Request): Response {

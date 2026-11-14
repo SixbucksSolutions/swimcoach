@@ -2,8 +2,7 @@
 import { evictDurableObject, runDurableObjectAlarm, runInDurableObject } from "cloudflare:test";
 import { env } from "cloudflare:workers";
 import { describe, expect, it } from "vitest";
-// biome-ignore lint/correctness/useImportExtensions: tsc refuses a .ts value import (TS5097) without allowImportingTsExtensions.
-import { milestoneKey } from "../../src/board/store";
+import { milestoneKey } from "../../src/board/store.ts";
 import type { Report } from "../../src/contract.ts";
 
 const T0 = 1_794_573_043;

@@ -11,10 +11,8 @@ import type {
   StopRequest,
   StoredMilestone,
 } from "../contract.ts";
-// biome-ignore lint/correctness/useImportExtensions: tsc refuses a .ts value import (TS5097) without allowImportingTsExtensions.
-import { planReport } from "../ingest/plan";
-// biome-ignore lint/correctness/useImportExtensions: tsc refuses a .ts value import (TS5097) without allowImportingTsExtensions.
-import { SqlBoardStore } from "./store";
+import { planReport } from "../ingest/plan.ts";
+import { SqlBoardStore } from "./store.ts";
 
 const SECONDS_PER_DAY = 86_400;
 const MS_PER_DAY = SECONDS_PER_DAY * 1000;
