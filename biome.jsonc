@@ -201,9 +201,23 @@
     {
       // The black-box API suite (MVP-09) is a Node program that V2 runs unchanged, so it MUST NOT
       // import the MVP's code (t4-interfaces.md, MVP-09 "Decisions"). It MAY read contract/ as data.
+      // Measured 2026-11-14 (MVP-09 A), Biome 2.6.7, preset all over acceptance/ after the code
+      // findings were fixed. What stays off, and why:
+      // - suspicious/noMisplacedAssertion (21), noConditionalExpect (2), useExpect (1): Biome only
+      //   counts assertions written inside an it()/test() callback. The suite's assertions live in
+      //   helpers (harness.ts, compare.ts) and in each Case.run, which runner.ts wraps in one it()
+      //   per case, so every finding is the frozen case format working as designed. Not defects.
+      // - performance/useTopLevelRegex (26): a regex literal inside an assertion call, run once per
+      //   test. Hoisting 26 one-use patterns into constants buys nothing; taste, not a defect.
       "includes": ["acceptance/**"],
       "linter": {
         "rules": {
+          "suspicious": {
+            "noMisplacedAssertion": "off",
+            "noConditionalExpect": "off",
+            "useExpect": "off"
+          },
+          "performance": { "useTopLevelRegex": "off" },
           "correctness": { "noNodejsModules": "off" },
           "style": {
             "noRestrictedImports": {
@@ -220,6 +234,12 @@
           }
         }
       }
+    },
+    {
+      // 2 findings (noExcessiveLinesPerFunction), both describe() callbacks in the suite's own
+      // tests: a describe's length is the number of tests it lists, not complexity.
+      "includes": ["acceptance/**/*.test.ts"],
+      "linter": { "rules": { "complexity": { "noExcessiveLinesPerFunction": "off" } } }
     }
   ]
 }
