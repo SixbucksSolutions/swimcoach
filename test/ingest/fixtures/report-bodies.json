@@ -1,0 +1,6854 @@
+{
+  "provenance": "Verdicts from Python jsonschema 4.26.0 (Draft202012Validator) on contract/schemas/report.schema.json, Python 3.15.2, 2026-11-13, by MVP-03 B. Regenerate with the oracle script described in the PR that added this file.",
+  "cases": [
+    {
+      "name": "example error.invalid-report.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "ok": false,
+        "error": "invalid_report",
+        "message": "The report is incomplete or malformed; nothing was stored.",
+        "problems": [
+          {
+            "path": "/lanes",
+            "message": "Required lane \"completed\" is missing; every update carries all five lanes."
+          },
+          {
+            "path": "/lanes/backlog",
+            "message": "Unknown lane \"backlog\"; Backlog and Blocked are never reported."
+          }
+        ]
+      }
+    },
+    {
+      "name": "example error.invalid-report.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "ok": false,
+        "error": "invalid_report",
+        "message": "The report is incomplete or malformed; nothing was stored.",
+        "problems": [
+          {
+            "path": "/lanes",
+            "message": "Required lane \"completed\" is missing; every update carries all five lanes."
+          },
+          {
+            "path": "/lanes/backlog",
+            "message": "Unknown lane \"backlog\"; Backlog and Blocked are never reported."
+          }
+        ]
+      }
+    },
+    {
+      "name": "example error.not-tracked.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "ok": false,
+        "error": "not_tracked",
+        "message": "No tracked milestone matches project \"FGA\" and milestone \"M13\"."
+      }
+    },
+    {
+      "name": "example error.not-tracked.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "ok": false,
+        "error": "not_tracked",
+        "message": "No tracked milestone matches project \"FGA\" and milestone \"M13\"."
+      }
+    },
+    {
+      "name": "example report.all-completed.json as a report",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "M12",
+        "active_hours": 3.75,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 0,
+          "in_progress": 0,
+          "needs_terry": 0,
+          "ready_for_review": 0,
+          "completed": 7
+        }
+      }
+    },
+    {
+      "name": "example report.all-completed.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "M12",
+        "active_hours": 3.75,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 0,
+          "in_progress": 0,
+          "needs_terry": 0,
+          "ready_for_review": 0,
+          "completed": 7
+        }
+      }
+    },
+    {
+      "name": "example report.fga.json as a report",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "example report.fga.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "example report.needs-me.json as a report",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "claude",
+        "project": "localswim V2",
+        "milestone": "T06",
+        "active_hours": 3.1,
+        "cap_hours": 4,
+        "lanes": {
+          "ready_for_work": 0,
+          "in_progress": 1,
+          "needs_terry": 1,
+          "ready_for_review": 4,
+          "completed": 0
+        },
+        "needs_me": "Confirm the T06 demo build on your phone before cutover."
+      }
+    },
+    {
+      "name": "example report.needs-me.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "agent": "claude",
+        "project": "localswim V2",
+        "milestone": "T06",
+        "active_hours": 3.1,
+        "cap_hours": 4,
+        "lanes": {
+          "ready_for_work": 0,
+          "in_progress": 1,
+          "needs_terry": 1,
+          "ready_for_review": 4,
+          "completed": 0
+        },
+        "needs_me": "Confirm the T06 demo build on your phone before cutover."
+      }
+    },
+    {
+      "name": "example report.response.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "ok": true,
+        "project": "FGA",
+        "milestone": "T04",
+        "received_at": 1794573043.512,
+        "added": false,
+        "sample": "stored"
+      }
+    },
+    {
+      "name": "example report.response.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "ok": true,
+        "project": "FGA",
+        "milestone": "T04",
+        "received_at": 1794573043.512,
+        "added": false,
+        "sample": "stored"
+      }
+    },
+    {
+      "name": "example state.afternoon.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "now": 1794573043.1330886,
+        "last_report_at": 1794573043.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "auth-refresh",
+            "milestone": "M3",
+            "agent": "codex",
+            "active_hours": 0.33,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 4,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794572443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 1,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "gray",
+            "reason": "too_early",
+            "metrics": {
+              "work": 0.16666666666666666,
+              "clock": 0.0825,
+              "rtr": 2.02020202020202,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794572443, 0.0], [1794573043, 2.0202]]
+          },
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 2.0,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 1,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794566443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571243.0,
+            "finished": 4,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "toss_up",
+            "metrics": {
+              "work": 0.6666666666666666,
+              "clock": 0.6666666666666666,
+              "rtr": 1.0,
+              "too_early": false,
+              "trend": {
+                "delta": -0.5,
+                "minutes": 60,
+                "pace": 0.4999999999999999,
+                "proj": 0.8333333333333333,
+                "finish": 1.3333333333333335,
+                "recent_done": 1,
+                "to_go": 2
+              },
+              "trend_bin": "sharp_down",
+              "projection_hours": 4.0,
+              "chance_on_time": 0.3812815664617708,
+              "call": "toss_up"
+            },
+            "spark": [
+              [1794566443, 0.0],
+              [1794567043, 1.5152],
+              [1794567643, 1.0],
+              [1794568243, 1.4925],
+              [1794568843, 1.2048],
+              [1794569443, 1.5],
+              [1794570043, 1.2821],
+              [1794570643, 1.1278],
+              [1794571243, 1.3333],
+              [1794571843, 1.1976],
+              [1794572443, 1.0929],
+              [1794573043, 1.0]
+            ]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.83,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 4,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.5714285714285714,
+              "clock": 0.4575,
+              "rtr": 1.2490241998438718,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5605560414961954,
+                "minutes": 60,
+                "pace": 1.7142857142857142,
+                "proj": 1.5014285714285713,
+                "finish": 0.7075,
+                "recent_done": 3,
+                "to_go": 3
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.83,
+              "chance_on_time": 0.8750602493238056,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 1.1429],
+              [1794568843, 0.8529],
+              [1794569443, 0.6885],
+              [1794570043, 1.1429],
+              [1794570643, 0.9768],
+              [1794571243, 1.2889],
+              [1794571843, 1.1429],
+              [1794572443, 1.3687],
+              [1794573043, 1.249]
+            ]
+          },
+          {
+            "project": "localswim V2",
+            "milestone": "T06",
+            "agent": "claude",
+            "active_hours": 1.33,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 0,
+              "needs_terry": 0,
+              "ready_for_review": 5,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794568843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 5,
+            "total": 5,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "done",
+            "reason": "done",
+            "metrics": {
+              "work": 1.0,
+              "clock": 0.665,
+              "rtr": 1.5037593984962405,
+              "too_early": false,
+              "trend": {
+                "delta": 0.29163818637502836,
+                "minutes": 60,
+                "pace": 1.6,
+                "proj": 1.536,
+                "finish": 0.665,
+                "recent_done": 4,
+                "to_go": 0
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 1.33,
+              "chance_on_time": 1.0,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794568843, 0.0],
+              [1794569443, 1.2121],
+              [1794570043, 0.8],
+              [1794570643, 1.194],
+              [1794571243, 1.4458],
+              [1794571843, 1.2],
+              [1794572443, 1.3675],
+              [1794573043, 1.5038]
+            ]
+          },
+          {
+            "project": "mobile-onboarding",
+            "milestone": "M12",
+            "agent": "codex",
+            "active_hours": 2.17,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 5,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 3,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794565843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571243.0,
+            "finished": 3,
+            "total": 9,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "running_late",
+            "metrics": {
+              "work": 0.3333333333333333,
+              "clock": 0.7233333333333333,
+              "rtr": 0.4608294930875576,
+              "too_early": false,
+              "trend": {
+                "delta": -0.1089710767130122,
+                "minutes": 60,
+                "pace": 0.3333333333333333,
+                "proj": 0.4255555555555556,
+                "finish": 2.7233333333333336,
+                "recent_done": 1,
+                "to_go": 6
+              },
+              "trend_bin": "down",
+              "projection_hours": 8.170000000000002,
+              "chance_on_time": 0.01993830356344417,
+              "call": "running_late"
+            },
+            "spark": [
+              [1794565843, 0.0],
+              [1794566443, 0.0],
+              [1794567043, 0.0],
+              [1794567643, 0.4975],
+              [1794568243, 0.4016],
+              [1794568843, 0.3333],
+              [1794569443, 0.5698],
+              [1794570043, 0.5013],
+              [1794570643, 0.4444],
+              [1794571243, 0.5988],
+              [1794571843, 0.5464],
+              [1794572443, 0.5],
+              [1794573043, 0.4608]
+            ]
+          },
+          {
+            "project": "search-index",
+            "milestone": "T03",
+            "agent": "codex",
+            "active_hours": 1.83,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 1,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": "Pick an index strategy: per-tenant or shared",
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571843.0,
+            "finished": 1,
+            "total": 5,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "red",
+            "reason": "needs_terry",
+            "metrics": {
+              "work": 0.2,
+              "clock": 0.915,
+              "rtr": 0.2185792349726776,
+              "too_early": false,
+              "trend": {
+                "delta": -0.263348475870696,
+                "minutes": 60,
+                "pace": 0.0,
+                "proj": 0.2,
+                "finish": null,
+                "recent_done": 0,
+                "to_go": 4
+              },
+              "trend_bin": "sharp_down",
+              "projection_hours": null,
+              "chance_on_time": 0.00012967546406117414,
+              "call": "running_late"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 0.0],
+              [1794568843, 0.597],
+              [1794569443, 0.4819],
+              [1794570043, 0.4],
+              [1794570643, 0.3419],
+              [1794571243, 0.3008],
+              [1794571843, 0.2667],
+              [1794572443, 0.2395],
+              [1794573043, 0.2186]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.afternoon.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "now": 1794573043.1330886,
+        "last_report_at": 1794573043.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "auth-refresh",
+            "milestone": "M3",
+            "agent": "codex",
+            "active_hours": 0.33,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 4,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794572443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 1,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "gray",
+            "reason": "too_early",
+            "metrics": {
+              "work": 0.16666666666666666,
+              "clock": 0.0825,
+              "rtr": 2.02020202020202,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794572443, 0.0], [1794573043, 2.0202]]
+          },
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 2.0,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 1,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794566443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571243.0,
+            "finished": 4,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "toss_up",
+            "metrics": {
+              "work": 0.6666666666666666,
+              "clock": 0.6666666666666666,
+              "rtr": 1.0,
+              "too_early": false,
+              "trend": {
+                "delta": -0.5,
+                "minutes": 60,
+                "pace": 0.4999999999999999,
+                "proj": 0.8333333333333333,
+                "finish": 1.3333333333333335,
+                "recent_done": 1,
+                "to_go": 2
+              },
+              "trend_bin": "sharp_down",
+              "projection_hours": 4.0,
+              "chance_on_time": 0.3812815664617708,
+              "call": "toss_up"
+            },
+            "spark": [
+              [1794566443, 0.0],
+              [1794567043, 1.5152],
+              [1794567643, 1.0],
+              [1794568243, 1.4925],
+              [1794568843, 1.2048],
+              [1794569443, 1.5],
+              [1794570043, 1.2821],
+              [1794570643, 1.1278],
+              [1794571243, 1.3333],
+              [1794571843, 1.1976],
+              [1794572443, 1.0929],
+              [1794573043, 1.0]
+            ]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.83,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 4,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.5714285714285714,
+              "clock": 0.4575,
+              "rtr": 1.2490241998438718,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5605560414961954,
+                "minutes": 60,
+                "pace": 1.7142857142857142,
+                "proj": 1.5014285714285713,
+                "finish": 0.7075,
+                "recent_done": 3,
+                "to_go": 3
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.83,
+              "chance_on_time": 0.8750602493238056,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 1.1429],
+              [1794568843, 0.8529],
+              [1794569443, 0.6885],
+              [1794570043, 1.1429],
+              [1794570643, 0.9768],
+              [1794571243, 1.2889],
+              [1794571843, 1.1429],
+              [1794572443, 1.3687],
+              [1794573043, 1.249]
+            ]
+          },
+          {
+            "project": "localswim V2",
+            "milestone": "T06",
+            "agent": "claude",
+            "active_hours": 1.33,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 0,
+              "needs_terry": 0,
+              "ready_for_review": 5,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794568843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 5,
+            "total": 5,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "done",
+            "reason": "done",
+            "metrics": {
+              "work": 1.0,
+              "clock": 0.665,
+              "rtr": 1.5037593984962405,
+              "too_early": false,
+              "trend": {
+                "delta": 0.29163818637502836,
+                "minutes": 60,
+                "pace": 1.6,
+                "proj": 1.536,
+                "finish": 0.665,
+                "recent_done": 4,
+                "to_go": 0
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 1.33,
+              "chance_on_time": 1.0,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794568843, 0.0],
+              [1794569443, 1.2121],
+              [1794570043, 0.8],
+              [1794570643, 1.194],
+              [1794571243, 1.4458],
+              [1794571843, 1.2],
+              [1794572443, 1.3675],
+              [1794573043, 1.5038]
+            ]
+          },
+          {
+            "project": "mobile-onboarding",
+            "milestone": "M12",
+            "agent": "codex",
+            "active_hours": 2.17,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 5,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 3,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794565843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571243.0,
+            "finished": 3,
+            "total": 9,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "running_late",
+            "metrics": {
+              "work": 0.3333333333333333,
+              "clock": 0.7233333333333333,
+              "rtr": 0.4608294930875576,
+              "too_early": false,
+              "trend": {
+                "delta": -0.1089710767130122,
+                "minutes": 60,
+                "pace": 0.3333333333333333,
+                "proj": 0.4255555555555556,
+                "finish": 2.7233333333333336,
+                "recent_done": 1,
+                "to_go": 6
+              },
+              "trend_bin": "down",
+              "projection_hours": 8.170000000000002,
+              "chance_on_time": 0.01993830356344417,
+              "call": "running_late"
+            },
+            "spark": [
+              [1794565843, 0.0],
+              [1794566443, 0.0],
+              [1794567043, 0.0],
+              [1794567643, 0.4975],
+              [1794568243, 0.4016],
+              [1794568843, 0.3333],
+              [1794569443, 0.5698],
+              [1794570043, 0.5013],
+              [1794570643, 0.4444],
+              [1794571243, 0.5988],
+              [1794571843, 0.5464],
+              [1794572443, 0.5],
+              [1794573043, 0.4608]
+            ]
+          },
+          {
+            "project": "search-index",
+            "milestone": "T03",
+            "agent": "codex",
+            "active_hours": 1.83,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 1,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": "Pick an index strategy: per-tenant or shared",
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571843.0,
+            "finished": 1,
+            "total": 5,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "red",
+            "reason": "needs_terry",
+            "metrics": {
+              "work": 0.2,
+              "clock": 0.915,
+              "rtr": 0.2185792349726776,
+              "too_early": false,
+              "trend": {
+                "delta": -0.263348475870696,
+                "minutes": 60,
+                "pace": 0.0,
+                "proj": 0.2,
+                "finish": null,
+                "recent_done": 0,
+                "to_go": 4
+              },
+              "trend_bin": "sharp_down",
+              "projection_hours": null,
+              "chance_on_time": 0.00012967546406117414,
+              "call": "running_late"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 0.0],
+              [1794568843, 0.597],
+              [1794569443, 0.4819],
+              [1794570043, 0.4],
+              [1794570643, 0.3419],
+              [1794571243, 0.3008],
+              [1794571843, 0.2667],
+              [1794572443, 0.2395],
+              [1794573043, 0.2186]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.alldone.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "now": 1794573043.9016745,
+        "last_report_at": 1794573043.0,
+        "feed": "idle",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 1.17,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 0,
+              "needs_terry": 0,
+              "ready_for_review": 6,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794569443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 6,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "done",
+            "reason": "done",
+            "metrics": {
+              "work": 1.0,
+              "clock": 0.38999999999999996,
+              "rtr": 2.5641025641025643,
+              "too_early": false,
+              "trend": {
+                "delta": 2.5641025641025643,
+                "minutes": 60,
+                "pace": 3.000000000000001,
+                "proj": 2.830000000000001,
+                "finish": 0.38999999999999996,
+                "recent_done": 6,
+                "to_go": 0
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 1.17,
+              "chance_on_time": 1.0,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794569443, 0.0],
+              [1794570043, 1.5152],
+              [1794570643, 2.0],
+              [1794571243, 2.2388],
+              [1794571843, 2.4096],
+              [1794572443, 2.5],
+              [1794573043, 2.5641]
+            ]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.33,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 0,
+              "needs_terry": 0,
+              "ready_for_review": 7,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794568843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 7,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "done",
+            "reason": "done",
+            "metrics": {
+              "work": 1.0,
+              "clock": 0.3325,
+              "rtr": 3.007518796992481,
+              "too_early": false,
+              "trend": {
+                "delta": 1.2759170653907497,
+                "minutes": 60,
+                "pace": 3.428571428571429,
+                "proj": 3.2885714285714287,
+                "finish": 0.3325,
+                "recent_done": 6,
+                "to_go": 0
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 1.33,
+              "chance_on_time": 1.0,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794568843, 0.0],
+              [1794569443, 1.7316],
+              [1794570043, 2.2857],
+              [1794570643, 2.5586],
+              [1794571243, 2.7539],
+              [1794571843, 2.8571],
+              [1794572443, 2.9304],
+              [1794573043, 3.0075]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.alldone.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "now": 1794573043.9016745,
+        "last_report_at": 1794573043.0,
+        "feed": "idle",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 1.17,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 0,
+              "needs_terry": 0,
+              "ready_for_review": 6,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794569443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 6,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "done",
+            "reason": "done",
+            "metrics": {
+              "work": 1.0,
+              "clock": 0.38999999999999996,
+              "rtr": 2.5641025641025643,
+              "too_early": false,
+              "trend": {
+                "delta": 2.5641025641025643,
+                "minutes": 60,
+                "pace": 3.000000000000001,
+                "proj": 2.830000000000001,
+                "finish": 0.38999999999999996,
+                "recent_done": 6,
+                "to_go": 0
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 1.17,
+              "chance_on_time": 1.0,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794569443, 0.0],
+              [1794570043, 1.5152],
+              [1794570643, 2.0],
+              [1794571243, 2.2388],
+              [1794571843, 2.4096],
+              [1794572443, 2.5],
+              [1794573043, 2.5641]
+            ]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.33,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 0,
+              "needs_terry": 0,
+              "ready_for_review": 7,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794568843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 7,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "done",
+            "reason": "done",
+            "metrics": {
+              "work": 1.0,
+              "clock": 0.3325,
+              "rtr": 3.007518796992481,
+              "too_early": false,
+              "trend": {
+                "delta": 1.2759170653907497,
+                "minutes": 60,
+                "pace": 3.428571428571429,
+                "proj": 3.2885714285714287,
+                "finish": 0.3325,
+                "recent_done": 6,
+                "to_go": 0
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 1.33,
+              "chance_on_time": 1.0,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794568843, 0.0],
+              [1794569443, 1.7316],
+              [1794570043, 2.2857],
+              [1794570643, 2.5586],
+              [1794571243, 2.7539],
+              [1794571843, 2.8571],
+              [1794572443, 2.9304],
+              [1794573043, 3.0075]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.allgreen.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "now": 1794573043.3067398,
+        "last_report_at": 1794573043.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 1.67,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 5,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567643,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 5,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.8333333333333334,
+              "clock": 0.5566666666666666,
+              "rtr": 1.4970059880239521,
+              "too_early": false,
+              "trend": {
+                "delta": 0.004468674591116439,
+                "minutes": 60,
+                "pace": 1.5000000000000004,
+                "proj": 1.4983333333333335,
+                "finish": 0.6677777777777777,
+                "recent_done": 3,
+                "to_go": 1
+              },
+              "trend_bin": "flat",
+              "projection_hours": 2.003333333333333,
+              "chance_on_time": 0.9482090024101327,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567643, 0.0],
+              [1794568243, 1.5152],
+              [1794568843, 1.0],
+              [1794569443, 1.4925],
+              [1794570043, 1.2048],
+              [1794570643, 1.5],
+              [1794571243, 1.2821],
+              [1794571843, 1.5038],
+              [1794572443, 1.3333],
+              [1794573043, 1.497]
+            ]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.83,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 4,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.5714285714285714,
+              "clock": 0.4575,
+              "rtr": 1.2490241998438718,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5605560414961954,
+                "minutes": 60,
+                "pace": 1.7142857142857142,
+                "proj": 1.5014285714285713,
+                "finish": 0.7075,
+                "recent_done": 3,
+                "to_go": 3
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.83,
+              "chance_on_time": 0.8750602493238056,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 1.1429],
+              [1794568843, 0.8529],
+              [1794569443, 0.6885],
+              [1794570043, 1.1429],
+              [1794570643, 0.9768],
+              [1794571243, 1.2889],
+              [1794571843, 1.1429],
+              [1794572443, 1.3687],
+              [1794573043, 1.249]
+            ]
+          },
+          {
+            "project": "localswim V2",
+            "milestone": "T06",
+            "agent": "codex",
+            "active_hours": 1.5,
+            "cap_hours": 2.5,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 5,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794568243,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 5,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.8333333333333334,
+              "clock": 0.6,
+              "rtr": 1.388888888888889,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5555555555555558,
+                "minutes": 60,
+                "pace": 1.666666666666667,
+                "proj": 1.5000000000000002,
+                "finish": 0.7,
+                "recent_done": 4,
+                "to_go": 1
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 1.75,
+              "chance_on_time": 0.9558058261758408,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794568243, 0.0],
+              [1794568843, 1.2626],
+              [1794569443, 0.8333],
+              [1794570043, 1.2438],
+              [1794570643, 1.004],
+              [1794571243, 1.25],
+              [1794571843, 1.4245],
+              [1794572443, 1.2531],
+              [1794573043, 1.3889]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.allgreen.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "now": 1794573043.3067398,
+        "last_report_at": 1794573043.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 1.67,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 5,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567643,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 5,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.8333333333333334,
+              "clock": 0.5566666666666666,
+              "rtr": 1.4970059880239521,
+              "too_early": false,
+              "trend": {
+                "delta": 0.004468674591116439,
+                "minutes": 60,
+                "pace": 1.5000000000000004,
+                "proj": 1.4983333333333335,
+                "finish": 0.6677777777777777,
+                "recent_done": 3,
+                "to_go": 1
+              },
+              "trend_bin": "flat",
+              "projection_hours": 2.003333333333333,
+              "chance_on_time": 0.9482090024101327,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567643, 0.0],
+              [1794568243, 1.5152],
+              [1794568843, 1.0],
+              [1794569443, 1.4925],
+              [1794570043, 1.2048],
+              [1794570643, 1.5],
+              [1794571243, 1.2821],
+              [1794571843, 1.5038],
+              [1794572443, 1.3333],
+              [1794573043, 1.497]
+            ]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.83,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 4,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.5714285714285714,
+              "clock": 0.4575,
+              "rtr": 1.2490241998438718,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5605560414961954,
+                "minutes": 60,
+                "pace": 1.7142857142857142,
+                "proj": 1.5014285714285713,
+                "finish": 0.7075,
+                "recent_done": 3,
+                "to_go": 3
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.83,
+              "chance_on_time": 0.8750602493238056,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 1.1429],
+              [1794568843, 0.8529],
+              [1794569443, 0.6885],
+              [1794570043, 1.1429],
+              [1794570643, 0.9768],
+              [1794571243, 1.2889],
+              [1794571843, 1.1429],
+              [1794572443, 1.3687],
+              [1794573043, 1.249]
+            ]
+          },
+          {
+            "project": "localswim V2",
+            "milestone": "T06",
+            "agent": "codex",
+            "active_hours": 1.5,
+            "cap_hours": 2.5,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 5,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794568243,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 5,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.8333333333333334,
+              "clock": 0.6,
+              "rtr": 1.388888888888889,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5555555555555558,
+                "minutes": 60,
+                "pace": 1.666666666666667,
+                "proj": 1.5000000000000002,
+                "finish": 0.7,
+                "recent_done": 4,
+                "to_go": 1
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 1.75,
+              "chance_on_time": 0.9558058261758408,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794568243, 0.0],
+              [1794568843, 1.2626],
+              [1794569443, 0.8333],
+              [1794570043, 1.2438],
+              [1794570643, 1.004],
+              [1794571243, 1.25],
+              [1794571843, 1.4245],
+              [1794572443, 1.2531],
+              [1794573043, 1.3889]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.empty.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "now": 1794573043.0,
+        "last_report_at": null,
+        "feed": "no_data",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": []
+      }
+    },
+    {
+      "name": "example state.empty.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "now": 1794573043.0,
+        "last_report_at": null,
+        "feed": "no_data",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": []
+      }
+    },
+    {
+      "name": "example state.keyboard.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "now": 1794573043.4759386,
+        "last_report_at": 1794573043.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.83,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 4,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.5714285714285714,
+              "clock": 0.4575,
+              "rtr": 1.2490241998438718,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5605560414961954,
+                "minutes": 60,
+                "pace": 1.7142857142857142,
+                "proj": 1.5014285714285713,
+                "finish": 0.7075,
+                "recent_done": 3,
+                "to_go": 3
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.83,
+              "chance_on_time": 0.8750602493238056,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 1.1429],
+              [1794568843, 0.8529],
+              [1794569443, 0.6885],
+              [1794570043, 1.1429],
+              [1794570643, 0.9768],
+              [1794571243, 1.2889],
+              [1794571843, 1.1429],
+              [1794572443, 1.3687],
+              [1794573043, 1.249]
+            ]
+          },
+          {
+            "project": "localswim V2",
+            "milestone": "T06",
+            "agent": "codex",
+            "active_hours": 1.5,
+            "cap_hours": 2.5,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 1,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": "1 ticket in Needs Terry",
+            "first_report_at": 1794568243,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 4,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "red",
+            "reason": "needs_terry",
+            "metrics": {
+              "work": 0.6666666666666666,
+              "clock": 0.6,
+              "rtr": 1.1111111111111112,
+              "too_early": false,
+              "trend": {
+                "delta": 0.2777777777777779,
+                "minutes": 60,
+                "pace": 1.25,
+                "proj": 1.1666666666666665,
+                "finish": 0.8666666666666667,
+                "recent_done": 3,
+                "to_go": 2
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.166666666666667,
+              "chance_on_time": 0.7569320439671242,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794568243, 0.0],
+              [1794568843, 1.2626],
+              [1794569443, 0.8333],
+              [1794570043, 1.2438],
+              [1794570643, 1.004],
+              [1794571243, 1.25],
+              [1794571843, 1.0684],
+              [1794572443, 0.9398],
+              [1794573043, 1.1111]
+            ]
+          },
+          {
+            "project": "search-index",
+            "milestone": "T03",
+            "agent": "codex",
+            "active_hours": 1.83,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 1,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": "Pick an index strategy: per-tenant or shared",
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571843.0,
+            "finished": 1,
+            "total": 5,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "red",
+            "reason": "needs_terry",
+            "metrics": {
+              "work": 0.2,
+              "clock": 0.915,
+              "rtr": 0.2185792349726776,
+              "too_early": false,
+              "trend": {
+                "delta": -0.263348475870696,
+                "minutes": 60,
+                "pace": 0.0,
+                "proj": 0.2,
+                "finish": null,
+                "recent_done": 0,
+                "to_go": 4
+              },
+              "trend_bin": "sharp_down",
+              "projection_hours": null,
+              "chance_on_time": 0.00012967546406117414,
+              "call": "running_late"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 0.0],
+              [1794568843, 0.597],
+              [1794569443, 0.4819],
+              [1794570043, 0.4],
+              [1794570643, 0.3419],
+              [1794571243, 0.3008],
+              [1794571843, 0.2667],
+              [1794572443, 0.2395],
+              [1794573043, 0.2186]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.keyboard.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "now": 1794573043.4759386,
+        "last_report_at": 1794573043.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.83,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 4,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.5714285714285714,
+              "clock": 0.4575,
+              "rtr": 1.2490241998438718,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5605560414961954,
+                "minutes": 60,
+                "pace": 1.7142857142857142,
+                "proj": 1.5014285714285713,
+                "finish": 0.7075,
+                "recent_done": 3,
+                "to_go": 3
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.83,
+              "chance_on_time": 0.8750602493238056,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 1.1429],
+              [1794568843, 0.8529],
+              [1794569443, 0.6885],
+              [1794570043, 1.1429],
+              [1794570643, 0.9768],
+              [1794571243, 1.2889],
+              [1794571843, 1.1429],
+              [1794572443, 1.3687],
+              [1794573043, 1.249]
+            ]
+          },
+          {
+            "project": "localswim V2",
+            "milestone": "T06",
+            "agent": "codex",
+            "active_hours": 1.5,
+            "cap_hours": 2.5,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 1,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": "1 ticket in Needs Terry",
+            "first_report_at": 1794568243,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 4,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "red",
+            "reason": "needs_terry",
+            "metrics": {
+              "work": 0.6666666666666666,
+              "clock": 0.6,
+              "rtr": 1.1111111111111112,
+              "too_early": false,
+              "trend": {
+                "delta": 0.2777777777777779,
+                "minutes": 60,
+                "pace": 1.25,
+                "proj": 1.1666666666666665,
+                "finish": 0.8666666666666667,
+                "recent_done": 3,
+                "to_go": 2
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.166666666666667,
+              "chance_on_time": 0.7569320439671242,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794568243, 0.0],
+              [1794568843, 1.2626],
+              [1794569443, 0.8333],
+              [1794570043, 1.2438],
+              [1794570643, 1.004],
+              [1794571243, 1.25],
+              [1794571843, 1.0684],
+              [1794572443, 0.9398],
+              [1794573043, 1.1111]
+            ]
+          },
+          {
+            "project": "search-index",
+            "milestone": "T03",
+            "agent": "codex",
+            "active_hours": 1.83,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 1,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": "Pick an index strategy: per-tenant or shared",
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571843.0,
+            "finished": 1,
+            "total": 5,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "red",
+            "reason": "needs_terry",
+            "metrics": {
+              "work": 0.2,
+              "clock": 0.915,
+              "rtr": 0.2185792349726776,
+              "too_early": false,
+              "trend": {
+                "delta": -0.263348475870696,
+                "minutes": 60,
+                "pace": 0.0,
+                "proj": 0.2,
+                "finish": null,
+                "recent_done": 0,
+                "to_go": 4
+              },
+              "trend_bin": "sharp_down",
+              "projection_hours": null,
+              "chance_on_time": 0.00012967546406117414,
+              "call": "running_late"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 0.0],
+              [1794568843, 0.597],
+              [1794569443, 0.4819],
+              [1794570043, 0.4],
+              [1794570643, 0.3419],
+              [1794571243, 0.3008],
+              [1794571843, 0.2667],
+              [1794572443, 0.2395],
+              [1794573043, 0.2186]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.morning.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "now": 1794573043.7686996,
+        "last_report_at": 1794573043.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 0.33,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 5,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 0,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794572443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 0,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "gray",
+            "reason": "too_early",
+            "metrics": {
+              "work": 0.0,
+              "clock": 0.11,
+              "rtr": 0.0,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794572443, 0.0], [1794573043, 0.0]]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T05",
+            "agent": "claude",
+            "active_hours": 0.5,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 5,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794571843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 1,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "gray",
+            "reason": "too_early",
+            "metrics": {
+              "work": 0.14285714285714285,
+              "clock": 0.125,
+              "rtr": 1.1428571428571428,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794571843, 0.0], [1794572443, 1.7316], [1794573043, 1.1429]]
+          },
+          {
+            "project": "search-index",
+            "milestone": "T03",
+            "agent": "codex",
+            "active_hours": 0.5,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 3,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794571843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 1,
+            "total": 5,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "gray",
+            "reason": "too_early",
+            "metrics": {
+              "work": 0.2,
+              "clock": 0.25,
+              "rtr": 0.8,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794571843, 0.0], [1794572443, 0.0], [1794573043, 0.8]]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.morning.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "now": 1794573043.7686996,
+        "last_report_at": 1794573043.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 0.33,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 5,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 0,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794572443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 0,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "gray",
+            "reason": "too_early",
+            "metrics": {
+              "work": 0.0,
+              "clock": 0.11,
+              "rtr": 0.0,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794572443, 0.0], [1794573043, 0.0]]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T05",
+            "agent": "claude",
+            "active_hours": 0.5,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 5,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794571843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 1,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "gray",
+            "reason": "too_early",
+            "metrics": {
+              "work": 0.14285714285714285,
+              "clock": 0.125,
+              "rtr": 1.1428571428571428,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794571843, 0.0], [1794572443, 1.7316], [1794573043, 1.1429]]
+          },
+          {
+            "project": "search-index",
+            "milestone": "T03",
+            "agent": "codex",
+            "active_hours": 0.5,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 3,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794571843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 1,
+            "total": 5,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "gray",
+            "reason": "too_early",
+            "metrics": {
+              "work": 0.2,
+              "clock": 0.25,
+              "rtr": 0.8,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794571843, 0.0], [1794572443, 0.0], [1794573043, 0.8]]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.silent.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "now": 1794573043.6434567,
+        "last_report_at": 1794573043.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 1.67,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 5,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567643,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 5,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.8333333333333334,
+              "clock": 0.5566666666666666,
+              "rtr": 1.4970059880239521,
+              "too_early": false,
+              "trend": {
+                "delta": 0.004468674591116439,
+                "minutes": 60,
+                "pace": 1.5000000000000004,
+                "proj": 1.4983333333333335,
+                "finish": 0.6677777777777777,
+                "recent_done": 3,
+                "to_go": 1
+              },
+              "trend_bin": "flat",
+              "projection_hours": 2.003333333333333,
+              "chance_on_time": 0.9482090024101327,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567643, 0.0],
+              [1794568243, 1.5152],
+              [1794568843, 1.0],
+              [1794569443, 1.4925],
+              [1794570043, 1.2048],
+              [1794570643, 1.5],
+              [1794571243, 1.2821],
+              [1794571843, 1.5038],
+              [1794572443, 1.3333],
+              [1794573043, 1.497]
+            ]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.83,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 4,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.5714285714285714,
+              "clock": 0.4575,
+              "rtr": 1.2490241998438718,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5605560414961954,
+                "minutes": 60,
+                "pace": 1.7142857142857142,
+                "proj": 1.5014285714285713,
+                "finish": 0.7075,
+                "recent_done": 3,
+                "to_go": 3
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.83,
+              "chance_on_time": 0.8750602493238056,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 1.1429],
+              [1794568843, 0.8529],
+              [1794569443, 0.6885],
+              [1794570043, 1.1429],
+              [1794570643, 0.9768],
+              [1794571243, 1.2889],
+              [1794571843, 1.1429],
+              [1794572443, 1.3687],
+              [1794573043, 1.249]
+            ]
+          },
+          {
+            "project": "mobile-onboarding",
+            "milestone": "M12",
+            "agent": "codex",
+            "active_hours": 1.5,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 4,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794566323,
+            "updated_at": 1794571123.0,
+            "last_move_at": 1794571123.0,
+            "finished": 4,
+            "total": 9,
+            "stale": true,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "silent",
+            "metrics": {
+              "work": 0.4444444444444444,
+              "clock": 0.5,
+              "rtr": 0.8888888888888888,
+              "too_early": false,
+              "trend": {
+                "delta": 0.2222222222222222,
+                "minutes": 60,
+                "pace": 0.9999999999999999,
+                "proj": 0.9444444444444444,
+                "finish": 1.0555555555555558,
+                "recent_done": 3,
+                "to_go": 5
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 3.1666666666666674,
+              "chance_on_time": 0.5104677810241454,
+              "call": "toss_up"
+            },
+            "spark": [
+              [1794566323, 0.0],
+              [1794566923, 0.0],
+              [1794567523, 0.6667],
+              [1794568123, 0.4975],
+              [1794568723, 0.8032],
+              [1794569323, 0.6667],
+              [1794569923, 0.8547],
+              [1794570523, 0.7519],
+              [1794571123, 0.8889]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.silent.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "now": 1794573043.6434567,
+        "last_report_at": 1794573043.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 1.67,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 5,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567643,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 5,
+            "total": 6,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.8333333333333334,
+              "clock": 0.5566666666666666,
+              "rtr": 1.4970059880239521,
+              "too_early": false,
+              "trend": {
+                "delta": 0.004468674591116439,
+                "minutes": 60,
+                "pace": 1.5000000000000004,
+                "proj": 1.4983333333333335,
+                "finish": 0.6677777777777777,
+                "recent_done": 3,
+                "to_go": 1
+              },
+              "trend_bin": "flat",
+              "projection_hours": 2.003333333333333,
+              "chance_on_time": 0.9482090024101327,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567643, 0.0],
+              [1794568243, 1.5152],
+              [1794568843, 1.0],
+              [1794569443, 1.4925],
+              [1794570043, 1.2048],
+              [1794570643, 1.5],
+              [1794571243, 1.2821],
+              [1794571843, 1.5038],
+              [1794572443, 1.3333],
+              [1794573043, 1.497]
+            ]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.83,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 4,
+            "total": 7,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "green",
+            "reason": "on_time",
+            "metrics": {
+              "work": 0.5714285714285714,
+              "clock": 0.4575,
+              "rtr": 1.2490241998438718,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5605560414961954,
+                "minutes": 60,
+                "pace": 1.7142857142857142,
+                "proj": 1.5014285714285713,
+                "finish": 0.7075,
+                "recent_done": 3,
+                "to_go": 3
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.83,
+              "chance_on_time": 0.8750602493238056,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 1.1429],
+              [1794568843, 0.8529],
+              [1794569443, 0.6885],
+              [1794570043, 1.1429],
+              [1794570643, 0.9768],
+              [1794571243, 1.2889],
+              [1794571843, 1.1429],
+              [1794572443, 1.3687],
+              [1794573043, 1.249]
+            ]
+          },
+          {
+            "project": "mobile-onboarding",
+            "milestone": "M12",
+            "agent": "codex",
+            "active_hours": 1.5,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 4,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794566323,
+            "updated_at": 1794571123.0,
+            "last_move_at": 1794571123.0,
+            "finished": 4,
+            "total": 9,
+            "stale": true,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "silent",
+            "metrics": {
+              "work": 0.4444444444444444,
+              "clock": 0.5,
+              "rtr": 0.8888888888888888,
+              "too_early": false,
+              "trend": {
+                "delta": 0.2222222222222222,
+                "minutes": 60,
+                "pace": 0.9999999999999999,
+                "proj": 0.9444444444444444,
+                "finish": 1.0555555555555558,
+                "recent_done": 3,
+                "to_go": 5
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 3.1666666666666674,
+              "chance_on_time": 0.5104677810241454,
+              "call": "toss_up"
+            },
+            "spark": [
+              [1794566323, 0.0],
+              [1794566923, 0.0],
+              [1794567523, 0.6667],
+              [1794568123, 0.4975],
+              [1794568723, 0.8032],
+              [1794569323, 0.6667],
+              [1794569923, 0.8547],
+              [1794570523, 0.7519],
+              [1794571123, 0.8889]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.small-blocks.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "now": 1794573043.0,
+        "last_report_at": 1794572923.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "dotfiles",
+            "milestone": "M1",
+            "agent": "claude",
+            "active_hours": 0.75,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 0,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794570343.0,
+            "updated_at": 1794572923.0,
+            "last_move_at": 1794570343.0,
+            "finished": 0,
+            "total": 1,
+            "stale": false,
+            "stalled": false,
+            "mode": "count_and_time",
+            "color": "green",
+            "reason": "under_budget",
+            "metrics": {
+              "work": 0.0,
+              "clock": 0.375,
+              "rtr": 0.0,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794570343, 0.0], [1794571543, 0.0], [1794572923, 0.0]]
+          },
+          {
+            "project": "flickr-sync",
+            "milestone": "T01",
+            "agent": "codex",
+            "active_hours": 2.6,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794565843.0,
+            "updated_at": 1794572743.0,
+            "last_move_at": 1794569443.0,
+            "finished": 1,
+            "total": 2,
+            "stale": false,
+            "stalled": true,
+            "mode": "count_and_time",
+            "color": "yellow",
+            "reason": "over_budget",
+            "metrics": {
+              "work": 0.5,
+              "clock": 1.3,
+              "rtr": 0.3846153846153846,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [
+              [1794565843, 0.0],
+              [1794567043, 0.0],
+              [1794568243, 0.0],
+              [1794569443, 0.5882],
+              [1794570643, 0.4762],
+              [1794572743, 0.3846]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.small-blocks.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "now": 1794573043.0,
+        "last_report_at": 1794572923.0,
+        "feed": "live",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "dotfiles",
+            "milestone": "M1",
+            "agent": "claude",
+            "active_hours": 0.75,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 0,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794570343.0,
+            "updated_at": 1794572923.0,
+            "last_move_at": 1794570343.0,
+            "finished": 0,
+            "total": 1,
+            "stale": false,
+            "stalled": false,
+            "mode": "count_and_time",
+            "color": "green",
+            "reason": "under_budget",
+            "metrics": {
+              "work": 0.0,
+              "clock": 0.375,
+              "rtr": 0.0,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794570343, 0.0], [1794571543, 0.0], [1794572923, 0.0]]
+          },
+          {
+            "project": "flickr-sync",
+            "milestone": "T01",
+            "agent": "codex",
+            "active_hours": 2.6,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794565843.0,
+            "updated_at": 1794572743.0,
+            "last_move_at": 1794569443.0,
+            "finished": 1,
+            "total": 2,
+            "stale": false,
+            "stalled": true,
+            "mode": "count_and_time",
+            "color": "yellow",
+            "reason": "over_budget",
+            "metrics": {
+              "work": 0.5,
+              "clock": 1.3,
+              "rtr": 0.3846153846153846,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [
+              [1794565843, 0.0],
+              [1794567043, 0.0],
+              [1794568243, 0.0],
+              [1794569443, 0.5882],
+              [1794570643, 0.4762],
+              [1794572743, 0.3846]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.stale.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "now": 1794575143.1330886,
+        "last_report_at": 1794573043.0,
+        "feed": "stale",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "auth-refresh",
+            "milestone": "M3",
+            "agent": "codex",
+            "active_hours": 0.33,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 4,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794572443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 1,
+            "total": 6,
+            "stale": true,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "silent",
+            "metrics": {
+              "work": 0.16666666666666666,
+              "clock": 0.0825,
+              "rtr": 2.02020202020202,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794572443, 0.0], [1794573043, 2.0202]]
+          },
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 2.0,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 1,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794566443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571243.0,
+            "finished": 4,
+            "total": 6,
+            "stale": true,
+            "stalled": true,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "silent",
+            "metrics": {
+              "work": 0.6666666666666666,
+              "clock": 0.6666666666666666,
+              "rtr": 1.0,
+              "too_early": false,
+              "trend": {
+                "delta": -0.5,
+                "minutes": 60,
+                "pace": 0.4999999999999999,
+                "proj": 0.8333333333333333,
+                "finish": 1.3333333333333335,
+                "recent_done": 1,
+                "to_go": 2
+              },
+              "trend_bin": "sharp_down",
+              "projection_hours": 4.0,
+              "chance_on_time": 0.3812815664617708,
+              "call": "toss_up"
+            },
+            "spark": [
+              [1794566443, 0.0],
+              [1794567043, 1.5152],
+              [1794567643, 1.0],
+              [1794568243, 1.4925],
+              [1794568843, 1.2048],
+              [1794569443, 1.5],
+              [1794570043, 1.2821],
+              [1794570643, 1.1278],
+              [1794571243, 1.3333],
+              [1794571843, 1.1976],
+              [1794572443, 1.0929],
+              [1794573043, 1.0]
+            ]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.83,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 4,
+            "total": 7,
+            "stale": true,
+            "stalled": true,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "silent",
+            "metrics": {
+              "work": 0.5714285714285714,
+              "clock": 0.4575,
+              "rtr": 1.2490241998438718,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5605560414961954,
+                "minutes": 60,
+                "pace": 1.7142857142857142,
+                "proj": 1.5014285714285713,
+                "finish": 0.7075,
+                "recent_done": 3,
+                "to_go": 3
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.83,
+              "chance_on_time": 0.8750602493238056,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 1.1429],
+              [1794568843, 0.8529],
+              [1794569443, 0.6885],
+              [1794570043, 1.1429],
+              [1794570643, 0.9768],
+              [1794571243, 1.2889],
+              [1794571843, 1.1429],
+              [1794572443, 1.3687],
+              [1794573043, 1.249]
+            ]
+          },
+          {
+            "project": "localswim V2",
+            "milestone": "T06",
+            "agent": "claude",
+            "active_hours": 1.33,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 0,
+              "needs_terry": 0,
+              "ready_for_review": 5,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794568843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 5,
+            "total": 5,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "done",
+            "reason": "done",
+            "metrics": {
+              "work": 1.0,
+              "clock": 0.665,
+              "rtr": 1.5037593984962405,
+              "too_early": false,
+              "trend": {
+                "delta": 0.29163818637502836,
+                "minutes": 60,
+                "pace": 1.6,
+                "proj": 1.536,
+                "finish": 0.665,
+                "recent_done": 4,
+                "to_go": 0
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 1.33,
+              "chance_on_time": 1.0,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794568843, 0.0],
+              [1794569443, 1.2121],
+              [1794570043, 0.8],
+              [1794570643, 1.194],
+              [1794571243, 1.4458],
+              [1794571843, 1.2],
+              [1794572443, 1.3675],
+              [1794573043, 1.5038]
+            ]
+          },
+          {
+            "project": "mobile-onboarding",
+            "milestone": "M12",
+            "agent": "codex",
+            "active_hours": 2.17,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 5,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 3,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794565843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571243.0,
+            "finished": 3,
+            "total": 9,
+            "stale": true,
+            "stalled": true,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "silent",
+            "metrics": {
+              "work": 0.3333333333333333,
+              "clock": 0.7233333333333333,
+              "rtr": 0.4608294930875576,
+              "too_early": false,
+              "trend": {
+                "delta": -0.1089710767130122,
+                "minutes": 60,
+                "pace": 0.3333333333333333,
+                "proj": 0.4255555555555556,
+                "finish": 2.7233333333333336,
+                "recent_done": 1,
+                "to_go": 6
+              },
+              "trend_bin": "down",
+              "projection_hours": 8.170000000000002,
+              "chance_on_time": 0.01993830356344417,
+              "call": "running_late"
+            },
+            "spark": [
+              [1794565843, 0.0],
+              [1794566443, 0.0],
+              [1794567043, 0.0],
+              [1794567643, 0.4975],
+              [1794568243, 0.4016],
+              [1794568843, 0.3333],
+              [1794569443, 0.5698],
+              [1794570043, 0.5013],
+              [1794570643, 0.4444],
+              [1794571243, 0.5988],
+              [1794571843, 0.5464],
+              [1794572443, 0.5],
+              [1794573043, 0.4608]
+            ]
+          },
+          {
+            "project": "search-index",
+            "milestone": "T03",
+            "agent": "codex",
+            "active_hours": 1.83,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 1,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": "Pick an index strategy: per-tenant or shared",
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571843.0,
+            "finished": 1,
+            "total": 5,
+            "stale": true,
+            "stalled": true,
+            "mode": "ratio",
+            "color": "red",
+            "reason": "needs_terry",
+            "metrics": {
+              "work": 0.2,
+              "clock": 0.915,
+              "rtr": 0.2185792349726776,
+              "too_early": false,
+              "trend": {
+                "delta": -0.263348475870696,
+                "minutes": 60,
+                "pace": 0.0,
+                "proj": 0.2,
+                "finish": null,
+                "recent_done": 0,
+                "to_go": 4
+              },
+              "trend_bin": "sharp_down",
+              "projection_hours": null,
+              "chance_on_time": 0.00012967546406117414,
+              "call": "running_late"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 0.0],
+              [1794568843, 0.597],
+              [1794569443, 0.4819],
+              [1794570043, 0.4],
+              [1794570643, 0.3419],
+              [1794571243, 0.3008],
+              [1794571843, 0.2667],
+              [1794572443, 0.2395],
+              [1794573043, 0.2186]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example state.stale.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "now": 1794575143.1330886,
+        "last_report_at": 1794573043.0,
+        "feed": "stale",
+        "thresholds": {
+          "stale_minutes": 25,
+          "stall_minutes": 45,
+          "trend_minutes": 60,
+          "min_history_minutes": 45,
+          "min_block_used": 0.15,
+          "min_stories_for_rtr": 3
+        },
+        "milestones": [
+          {
+            "project": "auth-refresh",
+            "milestone": "M3",
+            "agent": "codex",
+            "active_hours": 0.33,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 4,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794572443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 1,
+            "total": 6,
+            "stale": true,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "silent",
+            "metrics": {
+              "work": 0.16666666666666666,
+              "clock": 0.0825,
+              "rtr": 2.02020202020202,
+              "too_early": true,
+              "trend": null,
+              "trend_bin": null,
+              "projection_hours": null,
+              "chance_on_time": null,
+              "call": null
+            },
+            "spark": [[1794572443, 0.0], [1794573043, 2.0202]]
+          },
+          {
+            "project": "docs-site",
+            "milestone": "T02",
+            "agent": "claude",
+            "active_hours": 2.0,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 1,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794566443,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571243.0,
+            "finished": 4,
+            "total": 6,
+            "stale": true,
+            "stalled": true,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "silent",
+            "metrics": {
+              "work": 0.6666666666666666,
+              "clock": 0.6666666666666666,
+              "rtr": 1.0,
+              "too_early": false,
+              "trend": {
+                "delta": -0.5,
+                "minutes": 60,
+                "pace": 0.4999999999999999,
+                "proj": 0.8333333333333333,
+                "finish": 1.3333333333333335,
+                "recent_done": 1,
+                "to_go": 2
+              },
+              "trend_bin": "sharp_down",
+              "projection_hours": 4.0,
+              "chance_on_time": 0.3812815664617708,
+              "call": "toss_up"
+            },
+            "spark": [
+              [1794566443, 0.0],
+              [1794567043, 1.5152],
+              [1794567643, 1.0],
+              [1794568243, 1.4925],
+              [1794568843, 1.2048],
+              [1794569443, 1.5],
+              [1794570043, 1.2821],
+              [1794570643, 1.1278],
+              [1794571243, 1.3333],
+              [1794571843, 1.1976],
+              [1794572443, 1.0929],
+              [1794573043, 1.0]
+            ]
+          },
+          {
+            "project": "FGA",
+            "milestone": "T04",
+            "agent": "claude",
+            "active_hours": 1.83,
+            "cap_hours": 4.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 4,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794572443.0,
+            "finished": 4,
+            "total": 7,
+            "stale": true,
+            "stalled": true,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "silent",
+            "metrics": {
+              "work": 0.5714285714285714,
+              "clock": 0.4575,
+              "rtr": 1.2490241998438718,
+              "too_early": false,
+              "trend": {
+                "delta": 0.5605560414961954,
+                "minutes": 60,
+                "pace": 1.7142857142857142,
+                "proj": 1.5014285714285713,
+                "finish": 0.7075,
+                "recent_done": 3,
+                "to_go": 3
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 2.83,
+              "chance_on_time": 0.8750602493238056,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 1.1429],
+              [1794568843, 0.8529],
+              [1794569443, 0.6885],
+              [1794570043, 1.1429],
+              [1794570643, 0.9768],
+              [1794571243, 1.2889],
+              [1794571843, 1.1429],
+              [1794572443, 1.3687],
+              [1794573043, 1.249]
+            ]
+          },
+          {
+            "project": "localswim V2",
+            "milestone": "T06",
+            "agent": "claude",
+            "active_hours": 1.33,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 0,
+              "in_progress": 0,
+              "needs_terry": 0,
+              "ready_for_review": 5,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794568843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794573043.0,
+            "finished": 5,
+            "total": 5,
+            "stale": false,
+            "stalled": false,
+            "mode": "ratio",
+            "color": "done",
+            "reason": "done",
+            "metrics": {
+              "work": 1.0,
+              "clock": 0.665,
+              "rtr": 1.5037593984962405,
+              "too_early": false,
+              "trend": {
+                "delta": 0.29163818637502836,
+                "minutes": 60,
+                "pace": 1.6,
+                "proj": 1.536,
+                "finish": 0.665,
+                "recent_done": 4,
+                "to_go": 0
+              },
+              "trend_bin": "sharp_up",
+              "projection_hours": 1.33,
+              "chance_on_time": 1.0,
+              "call": "on_time"
+            },
+            "spark": [
+              [1794568843, 0.0],
+              [1794569443, 1.2121],
+              [1794570043, 0.8],
+              [1794570643, 1.194],
+              [1794571243, 1.4458],
+              [1794571843, 1.2],
+              [1794572443, 1.3675],
+              [1794573043, 1.5038]
+            ]
+          },
+          {
+            "project": "mobile-onboarding",
+            "milestone": "M12",
+            "agent": "codex",
+            "active_hours": 2.17,
+            "cap_hours": 3.0,
+            "lanes": {
+              "ready_for_work": 5,
+              "in_progress": 1,
+              "needs_terry": 0,
+              "ready_for_review": 3,
+              "completed": 0
+            },
+            "needs_me": null,
+            "first_report_at": 1794565843,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571243.0,
+            "finished": 3,
+            "total": 9,
+            "stale": true,
+            "stalled": true,
+            "mode": "ratio",
+            "color": "yellow",
+            "reason": "silent",
+            "metrics": {
+              "work": 0.3333333333333333,
+              "clock": 0.7233333333333333,
+              "rtr": 0.4608294930875576,
+              "too_early": false,
+              "trend": {
+                "delta": -0.1089710767130122,
+                "minutes": 60,
+                "pace": 0.3333333333333333,
+                "proj": 0.4255555555555556,
+                "finish": 2.7233333333333336,
+                "recent_done": 1,
+                "to_go": 6
+              },
+              "trend_bin": "down",
+              "projection_hours": 8.170000000000002,
+              "chance_on_time": 0.01993830356344417,
+              "call": "running_late"
+            },
+            "spark": [
+              [1794565843, 0.0],
+              [1794566443, 0.0],
+              [1794567043, 0.0],
+              [1794567643, 0.4975],
+              [1794568243, 0.4016],
+              [1794568843, 0.3333],
+              [1794569443, 0.5698],
+              [1794570043, 0.5013],
+              [1794570643, 0.4444],
+              [1794571243, 0.5988],
+              [1794571843, 0.5464],
+              [1794572443, 0.5],
+              [1794573043, 0.4608]
+            ]
+          },
+          {
+            "project": "search-index",
+            "milestone": "T03",
+            "agent": "codex",
+            "active_hours": 1.83,
+            "cap_hours": 2.0,
+            "lanes": {
+              "ready_for_work": 2,
+              "in_progress": 1,
+              "needs_terry": 1,
+              "ready_for_review": 1,
+              "completed": 0
+            },
+            "needs_me": "Pick an index strategy: per-tenant or shared",
+            "first_report_at": 1794567043,
+            "updated_at": 1794573043.0,
+            "last_move_at": 1794571843.0,
+            "finished": 1,
+            "total": 5,
+            "stale": true,
+            "stalled": true,
+            "mode": "ratio",
+            "color": "red",
+            "reason": "needs_terry",
+            "metrics": {
+              "work": 0.2,
+              "clock": 0.915,
+              "rtr": 0.2185792349726776,
+              "too_early": false,
+              "trend": {
+                "delta": -0.263348475870696,
+                "minutes": 60,
+                "pace": 0.0,
+                "proj": 0.2,
+                "finish": null,
+                "recent_done": 0,
+                "to_go": 4
+              },
+              "trend_bin": "sharp_down",
+              "projection_hours": null,
+              "chance_on_time": 0.00012967546406117414,
+              "call": "running_late"
+            },
+            "spark": [
+              [1794567043, 0.0],
+              [1794567643, 0.0],
+              [1794568243, 0.0],
+              [1794568843, 0.597],
+              [1794569443, 0.4819],
+              [1794570043, 0.4],
+              [1794570643, 0.3419],
+              [1794571243, 0.3008],
+              [1794571843, 0.2667],
+              [1794572443, 0.2395],
+              [1794573043, 0.2186]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "example stop.request.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "project": "FGA",
+        "milestone": "M12"
+      }
+    },
+    {
+      "name": "example stop.request.json as a stop",
+      "kind": "stop",
+      "valid": true,
+      "body": {
+        "project": "FGA",
+        "milestone": "M12"
+      }
+    },
+    {
+      "name": "example stop.response.json as a report",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "ok": true,
+        "project": "FGA",
+        "milestone": "M12"
+      }
+    },
+    {
+      "name": "example stop.response.json as a stop",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "ok": true,
+        "project": "FGA",
+        "milestone": "M12"
+      }
+    },
+    {
+      "name": "body is null",
+      "kind": "report",
+      "valid": false,
+      "body": null
+    },
+    {
+      "name": "stop body is null",
+      "kind": "stop",
+      "valid": false,
+      "body": null
+    },
+    {
+      "name": "body is a string",
+      "kind": "report",
+      "valid": false,
+      "body": "FGA"
+    },
+    {
+      "name": "stop body is a string",
+      "kind": "stop",
+      "valid": false,
+      "body": "FGA"
+    },
+    {
+      "name": "body is a number",
+      "kind": "report",
+      "valid": false,
+      "body": 1
+    },
+    {
+      "name": "stop body is a number",
+      "kind": "stop",
+      "valid": false,
+      "body": 1
+    },
+    {
+      "name": "body is true",
+      "kind": "report",
+      "valid": false,
+      "body": true
+    },
+    {
+      "name": "stop body is true",
+      "kind": "stop",
+      "valid": false,
+      "body": true
+    },
+    {
+      "name": "body is an empty object",
+      "kind": "report",
+      "valid": false,
+      "body": {}
+    },
+    {
+      "name": "stop body is an empty object",
+      "kind": "stop",
+      "valid": false,
+      "body": {}
+    },
+    {
+      "name": "body is an array of one report",
+      "kind": "report",
+      "valid": false,
+      "body": [
+        {
+          "agent": "codex",
+          "project": "FGA",
+          "milestone": "T04",
+          "active_hours": 1.85,
+          "cap_hours": 4.0,
+          "lanes": {
+            "ready_for_work": 2,
+            "in_progress": 1,
+            "needs_terry": 0,
+            "ready_for_review": 3,
+            "completed": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "stop body is an array of one report",
+      "kind": "stop",
+      "valid": false,
+      "body": [
+        {
+          "agent": "codex",
+          "project": "FGA",
+          "milestone": "T04",
+          "active_hours": 1.85,
+          "cap_hours": 4.0,
+          "lanes": {
+            "ready_for_work": 2,
+            "in_progress": 1,
+            "needs_terry": 0,
+            "ready_for_review": 3,
+            "completed": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "body is an empty array",
+      "kind": "report",
+      "valid": false,
+      "body": []
+    },
+    {
+      "name": "stop body is an empty array",
+      "kind": "stop",
+      "valid": false,
+      "body": []
+    },
+    {
+      "name": "missing agent",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "missing project",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "missing milestone",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "missing active_hours",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "missing cap_hours",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "missing lanes",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0
+      }
+    },
+    {
+      "name": "needs_me omitted is fine",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "unknown field need_me",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "need_me": "Look"
+      }
+    },
+    {
+      "name": "unknown field status",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "status": "done"
+      }
+    },
+    {
+      "name": "unknown field at",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "at": 1794573043
+      }
+    },
+    {
+      "name": "unknown field with a slash and tilde",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "a/b~c": 1
+      }
+    },
+    {
+      "name": "agent \"claude\"",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "claude",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "agent \"codex\"",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "agent \"Claude\"",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "Claude",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "agent \"gpt\"",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "gpt",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "agent \"\"",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "agent null",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": null,
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "agent 1",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": 1,
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "agent [\"claude\"]",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": ["claude"],
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project empty",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project one letter",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "F",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project one space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": " ",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project leading space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": " FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project trailing space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA ",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project leading tab",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "\tFGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "localswim V2",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner tab",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "a\tb",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner newline",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FG\nA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project trailing newline",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA\n",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project trailing CR",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA\r",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project leading BOM",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "\ufeffFGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project trailing BOM",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA\ufeff",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner BOM",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "F\ufeffGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project trailing NBSP",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA\u00a0",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner NBSP",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "a\u00a0b",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner ideographic space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "a\u3000b",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project leading ideographic space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "\u3000ab",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner NEL",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "a\u0085b",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner DEL",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "a\u007fb",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner NUL",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "a\u0000b",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner U+2028",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "a\u2028b",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner U+2029",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "a\u2029b",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project trailing U+2029",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "ab\u2029",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project inner zero-width space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "a\u200bb",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project leading zero-width space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "\u200bab",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project leading U+200A",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "\u200aab",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project one emoji",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "\ud83d\ude00",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project number",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": 12,
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project null",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": null,
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project array",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": ["FGA"],
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone empty",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone one letter",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "F",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone one space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": " ",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone leading space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": " FGA",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone trailing space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "FGA ",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone leading tab",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "\tFGA",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "localswim V2",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner tab",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "a\tb",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner newline",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "FG\nA",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone trailing newline",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "FGA\n",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone trailing CR",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "FGA\r",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone leading BOM",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "\ufeffFGA",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone trailing BOM",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "FGA\ufeff",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner BOM",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "F\ufeffGA",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone trailing NBSP",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "FGA\u00a0",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner NBSP",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "a\u00a0b",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner ideographic space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "a\u3000b",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone leading ideographic space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "\u3000ab",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner NEL",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "a\u0085b",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner DEL",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "a\u007fb",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner NUL",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "a\u0000b",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner U+2028",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "a\u2028b",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner U+2029",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "a\u2029b",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone trailing U+2029",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "ab\u2029",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone inner zero-width space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "a\u200bb",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone leading zero-width space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "\u200bab",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone leading U+200A",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "\u200aab",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone one emoji",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "\ud83d\ude00",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone number",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": 12,
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone null",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": null,
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone array",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": ["FGA"],
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "needs_me empty",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": ""
+      }
+    },
+    {
+      "name": "needs_me one letter",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "F"
+      }
+    },
+    {
+      "name": "needs_me one space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": " "
+      }
+    },
+    {
+      "name": "needs_me leading space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": " FGA"
+      }
+    },
+    {
+      "name": "needs_me trailing space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "FGA "
+      }
+    },
+    {
+      "name": "needs_me leading tab",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "\tFGA"
+      }
+    },
+    {
+      "name": "needs_me inner space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "localswim V2"
+      }
+    },
+    {
+      "name": "needs_me inner tab",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "a\tb"
+      }
+    },
+    {
+      "name": "needs_me inner newline",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "FG\nA"
+      }
+    },
+    {
+      "name": "needs_me trailing newline",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "FGA\n"
+      }
+    },
+    {
+      "name": "needs_me trailing CR",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "FGA\r"
+      }
+    },
+    {
+      "name": "needs_me leading BOM",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "\ufeffFGA"
+      }
+    },
+    {
+      "name": "needs_me trailing BOM",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "FGA\ufeff"
+      }
+    },
+    {
+      "name": "needs_me inner BOM",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "F\ufeffGA"
+      }
+    },
+    {
+      "name": "needs_me trailing NBSP",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "FGA\u00a0"
+      }
+    },
+    {
+      "name": "needs_me inner NBSP",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "a\u00a0b"
+      }
+    },
+    {
+      "name": "needs_me inner ideographic space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "a\u3000b"
+      }
+    },
+    {
+      "name": "needs_me leading ideographic space",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "\u3000ab"
+      }
+    },
+    {
+      "name": "needs_me inner NEL",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "a\u0085b"
+      }
+    },
+    {
+      "name": "needs_me inner DEL",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "a\u007fb"
+      }
+    },
+    {
+      "name": "needs_me inner NUL",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "a\u0000b"
+      }
+    },
+    {
+      "name": "needs_me inner U+2028",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "a\u2028b"
+      }
+    },
+    {
+      "name": "needs_me inner U+2029",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "a\u2029b"
+      }
+    },
+    {
+      "name": "needs_me trailing U+2029",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "ab\u2029"
+      }
+    },
+    {
+      "name": "needs_me inner zero-width space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "a\u200bb"
+      }
+    },
+    {
+      "name": "needs_me leading zero-width space",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "\u200bab"
+      }
+    },
+    {
+      "name": "needs_me leading U+200A",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "\u200aab"
+      }
+    },
+    {
+      "name": "needs_me one emoji",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "\ud83d\ude00"
+      }
+    },
+    {
+      "name": "needs_me number",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": 12
+      }
+    },
+    {
+      "name": "needs_me null",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": null
+      }
+    },
+    {
+      "name": "needs_me array",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": ["FGA"]
+      }
+    },
+    {
+      "name": "project at 64 characters",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project at 65 characters",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project at 64 emoji, 128 UTF-16 units",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "project at 65 emoji",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone at 32 characters",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone at 33 characters",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone at 32 emoji, 64 UTF-16 units",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "milestone at 33 emoji",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "needs_me at 200 characters",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    },
+    {
+      "name": "needs_me at 201 characters",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    },
+    {
+      "name": "needs_me at 200 emoji, 400 UTF-16 units",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00"
+      }
+    },
+    {
+      "name": "needs_me at 201 emoji",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00"
+      }
+    },
+    {
+      "name": "needs_me a sentence",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        },
+        "needs_me": "Confirm the T06 demo build on your phone before cutover."
+      }
+    },
+    {
+      "name": "active_hours 0",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 0,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "active_hours -0.0",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": -0.0,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "active_hours -0.01",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": -0.01,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "active_hours 168",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 168,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "active_hours 168.0001",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 168.0001,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "active_hours 200",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 200,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "active_hours \"1.5\"",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": "1.5",
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "active_hours true",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": true,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "active_hours null",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": null,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "active_hours 1e+300",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1e300,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "cap_hours 0",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "cap_hours -0.0",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": -0.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "cap_hours 0.0001",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 0.0001,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "cap_hours 168",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 168,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "cap_hours 169",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 169,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "cap_hours -1",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": -1,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "cap_hours \"4\"",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": "4",
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "cap_hours false",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": false,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "cap_hours null",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": null,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "lanes an array",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": [1, 2, 3, 4, 5]
+      }
+    },
+    {
+      "name": "lanes null",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": null
+      }
+    },
+    {
+      "name": "lanes empty",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {}
+      }
+    },
+    {
+      "name": "lane ready_for_work missing",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "lane in_progress missing",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "lane needs_terry missing",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "ready_for_review": 3,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "lane ready_for_review missing",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "completed": 1
+        }
+      }
+    },
+    {
+      "name": "lane completed missing",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3
+        }
+      }
+    },
+    {
+      "name": "lane backlog added",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1,
+          "backlog": 0
+        }
+      }
+    },
+    {
+      "name": "lane blocked added",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1,
+          "blocked": 0
+        }
+      }
+    },
+    {
+      "name": "lanes as the invalid-report example",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 1,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 1,
+          "backlog": 4
+        }
+      }
+    },
+    {
+      "name": "lane completed 0",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 0
+        }
+      }
+    },
+    {
+      "name": "lane completed 999",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 999
+        }
+      }
+    },
+    {
+      "name": "lane completed 1000",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1000
+        }
+      }
+    },
+    {
+      "name": "lane completed -1",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": -1
+        }
+      }
+    },
+    {
+      "name": "lane completed 1.5",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1.5
+        }
+      }
+    },
+    {
+      "name": "lane completed 1.0",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1.0
+        }
+      }
+    },
+    {
+      "name": "lane completed 100.0",
+      "kind": "report",
+      "valid": true,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 100.0
+        }
+      }
+    },
+    {
+      "name": "lane completed \"3\"",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": "3"
+        }
+      }
+    },
+    {
+      "name": "lane completed true",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": true
+        }
+      }
+    },
+    {
+      "name": "lane completed null",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": null
+        }
+      }
+    },
+    {
+      "name": "lane completed 1e+300",
+      "kind": "report",
+      "valid": false,
+      "body": {
+        "agent": "codex",
+        "project": "FGA",
+        "milestone": "T04",
+        "active_hours": 1.85,
+        "cap_hours": 4.0,
+        "lanes": {
+          "ready_for_work": 2,
+          "in_progress": 1,
+          "needs_terry": 0,
+          "ready_for_review": 3,
+          "completed": 1e300
+        }
+      }
+    },
+    {
+      "name": "stop lowercased",
+      "kind": "stop",
+      "valid": true,
+      "body": {
+        "project": "fga",
+        "milestone": "m12"
+      }
+    },
+    {
+      "name": "stop missing milestone",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "project": "FGA"
+      }
+    },
+    {
+      "name": "stop missing project",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "milestone": "M12"
+      }
+    },
+    {
+      "name": "stop with agent",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "project": "FGA",
+        "milestone": "M12",
+        "agent": "codex"
+      }
+    },
+    {
+      "name": "stop project leading space",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "project": " FGA",
+        "milestone": "M12"
+      }
+    },
+    {
+      "name": "stop milestone 33 characters",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "project": "FGA",
+        "milestone": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    },
+    {
+      "name": "stop milestone 32 characters",
+      "kind": "stop",
+      "valid": true,
+      "body": {
+        "project": "FGA",
+        "milestone": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    },
+    {
+      "name": "stop project null",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "project": null,
+        "milestone": "M12"
+      }
+    },
+    {
+      "name": "stop project inner newline",
+      "kind": "stop",
+      "valid": false,
+      "body": {
+        "project": "F\nGA",
+        "milestone": "M12"
+      }
+    }
+  ]
+}

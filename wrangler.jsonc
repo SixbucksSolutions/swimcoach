@@ -11,5 +11,16 @@
   },
   "observability": {
     "enabled": true
+  },
+  // One Board Durable Object holds every tracked milestone and its samples (MVP-03 A).
+  "durable_objects": {
+    "bindings": [{ "name": "BOARD", "class_name": "Board" }]
+  },
+  // Declared with exports, Cloudflare's current form, not the legacy migrations array (Lead,
+  // 2026-11-14, before the Board's first deploy). The switch is one-way: once deployed with
+  // exports, this Worker cannot return to migrations. No Durable Object had been deployed yet,
+  // so there was no migration history to keep.
+  "exports": {
+    "Board": { "type": "durable-object", "storage": "sqlite" }
   }
 }

@@ -8,7 +8,7 @@
   "scripts": {
     "types": "wrangler types src/worker-configuration.d.ts",
     "typecheck": "tsc --noEmit",
-    "lint": "biome check --error-on-warnings .",
+    "lint": "biome check --error-on-warnings . && node scripts/biome-no-infos.mjs",
     "test": "vitest run",
     "check": "wrangler types --check src/worker-configuration.d.ts && npm run typecheck && npm run lint && npm test"
   },
@@ -18,5 +18,8 @@
     "typescript": "7.0.2",
     "vitest": "5.1.0",
     "wrangler": "4.162.0"
+  },
+  "dependencies": {
+    "jose": "6.2.17"
   }
 }

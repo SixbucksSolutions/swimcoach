@@ -5,6 +5,7 @@
     "includes": [
       "src/**",
       "test/**",
+      "scripts/**/*.mjs",
       "*.ts",
       "*.json",
       "*.jsonc",
@@ -28,6 +29,12 @@
     //
     // Warnings: preset all enables some rules at warning severity, and biome check exits 0 on
     // warnings alone. The lint script therefore passes --error-on-warnings (package.json).
+    // Infos: some preset-all rules report at info severity, and Biome has no switch to fail on
+    // infos. scripts/biome-no-infos.mjs reads Biome's JSON summary and fails the gate on any
+    // error, warning or info (T2 review of PR #6, 2026-11-14). Proof of fire, 2026-11-14:
+    // planted src/probe-info.ts reading process.exitCode, which only noProcessGlobal (info)
+    // reports. biome check --error-on-warnings exited 0 ("Found 1 info"); npm run lint exited 1
+    // ("Biome reported 0 errors, 0 warnings and 1 infos; the gate allows none"). File deleted.
     // Proof of fire, 2026-11-13: planted src/probe-warning.ts holding "export function noop():
     // void {}". Biome reported lint/suspicious/noEmptyBlockStatements ("Found 1 warning") and
     // npm run check exited 1. Without the flag the same file exits 0. File deleted.
@@ -57,6 +64,13 @@
         // the Workers runtime and typed by @cloudflare/vitest-plugin, so Biome cannot resolve
         // it. False positive; tsc resolves it and is the real check.
         "noUnresolvedImports": "off"
+        // useQwikValidLexicalScope stays ON (RFC 2119 keywords below). Two T2 authors reported it
+        // misfiring on plain TypeScript and wrote around it. Neither the Lead nor the PR #14
+        // reviewer could reproduce that on Biome 2.6.7: five plain arrow-function shapes gave 0
+        // findings, while Qwik-shaped $() code does fire it (PR #15 review). The exclusion had no
+        // reproduced evidence, so the off switch from PR #14 was reverted (2026-11-13).
+        // This rule MUST NOT be turned off without a reproduced false positive. Whoever next sees
+        // it fire on plain TypeScript MUST keep that code as the evidence before turning it off.
       },
       "style": {
         // 2 findings: src/index.ts and vitest.config.ts. A Worker MUST default-export its
@@ -64,8 +78,42 @@
         "noDefaultExport": "off",
         // 1 finding: an HTTP status code (404) in the handler. A status code is its own name,
         // and a named constant for it hides the meaning. Taste, not a defect.
-        "noMagicNumbers": "off"
+        "noMagicNumbers": "off",
+        // 28 findings with the default options (Lead, T2, 2026-11-13; recounted by the PR #6
+        // review): every one a snake_case field in src/contract.ts. Those names are the JSON
+        // wire contract (contract/schemas/), which V2 must reproduce byte for byte, so renaming
+        // them to camelCase would mean a mapping layer whose only job is to undo the rename. The
+        // rule stays on for everything else; type and object-literal properties may also be
+        // snake_case. Once that override applied, 2 more findings appeared: ACCESS_TEAM_DOMAIN
+        // and ACCESS_AUD, Worker variable names, which Cloudflare's own convention writes in
+        // CONSTANT_CASE; type properties may therefore also be CONSTANT_CASE. MVP-05 A (PR #11)
+        // then hit the same names in object literals (an AccessConfig built in a test), so
+        // object-literal properties may also be CONSTANT_CASE.
+        // Level error, not on: "on" means the rule's default severity, info, which never fails.
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "conventions": [
+              {
+                "selector": { "kind": "typeProperty" },
+                "formats": ["camelCase", "snake_case", "CONSTANT_CASE"]
+              },
+              {
+                "selector": { "kind": "objectLiteralProperty" },
+                "formats": ["camelCase", "snake_case", "CONSTANT_CASE"]
+              }
+            ]
+          }
+        }
       }
     }
-  }
+  },
+  // scripts/ holds Node build tools, not Worker code. noNodejsModules guards Worker and browser
+  // code against Node built-ins; a Node tool needs them (2 findings in biome-no-infos.mjs).
+  "overrides": [
+    {
+      "includes": ["scripts/**"],
+      "linter": { "rules": { "correctness": { "noNodejsModules": "off" } } }
+    }
+  ]
 }
