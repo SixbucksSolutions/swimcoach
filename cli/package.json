@@ -1,0 +1,10 @@
+{
+  "name": "swimcoach-cli",
+  "private": true,
+  "type": "module",
+  "description": "The swimcoach CLI's own package, so Node's types stay out of the Worker's tsc program",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "26.6.6"
+  }
+}

@@ -1,10 +1,21 @@
 {
   // The CLI and its tests run under Node, so they get Node's types instead of the Worker types the
   // root tsconfig.json uses; the two type sets conflict, which is why this is a second project.
+  //
+  // Node's types live ONLY in cli/node_modules (cli/package.json), never in the root node_modules.
+  // In the root they leak into the Worker's tsc program through @cloudflare/vitest-plugin/types ->
+  // miniflare -> undici (/// <reference types="node" />), and "types" cannot stop that, so tsc
+  // accepted globalThis.Buffer and localStorage in src/, which throw in workerd (PR #21 reviews).
+  // typeRoots points this program at cli/node_modules/@types, so it finds them and the root
+  // program cannot.
   "extends": "../tsconfig.json",
   // erasableSyntaxOnly makes tsc refuse what Node's type stripping cannot run: enums, namespaces,
   // parameter properties.
-  "compilerOptions": { "types": ["node"], "erasableSyntaxOnly": true },
+  "compilerOptions": {
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node"],
+    "erasableSyntaxOnly": true
+  },
   "include": ["./**/*.ts", "../test/cli/**/*.ts", "../package.json"],
-  "exclude": []
+  "exclude": ["./node_modules"]
 }

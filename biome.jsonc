@@ -10,7 +10,7 @@
       "*.ts",
       "*.json",
       "*.jsonc",
-      "!package-lock.json",
+      "!**/package-lock.json",
       "!src/worker-configuration.d.ts"
     ]
   },
@@ -127,14 +127,18 @@
       "linter": { "rules": { "style": { "noProcessEnv": "off" } } }
     },
     {
-      // @types/node is installed for the CLI. It leaks into the root tsc program through
-      // @cloudflare/vitest-plugin/types -> miniflare -> undici (/// <reference types="node" />),
-      // so tsc no longer refuses Node globals in src/. Without nodejs_compat (wrangler.jsonc)
-      // workerd throws ReferenceError on them. This list is the gate that replaces tsc here
-      // (PR #21 review, finding 1). process is also reported by noProcessGlobal at info.
+      // A SECOND guard. The first is tsc: @types/node lives only in cli/node_modules
+      // (cli/package.json), so the root tsc program has no Node types and refuses Node globals in
+      // src/. Installed in the root node_modules, it leaks into that program through
+      // @cloudflare/vitest-plugin/types -> miniflare -> undici (/// <reference types="node" />).
+      // Without nodejs_compat (wrangler.jsonc) workerd throws ReferenceError on Node globals. If
+      // @types/node ever reaches the root node_modules again, this list still catches the bare
+      // names. It cannot catch globalThis.Buffer or names it does not list, such as localStorage
+      // (PR #21 re-review), which is why tsc is the primary guard. process is also reported by
+      // noProcessGlobal at info.
       // Proof of fire, 2026-11-13: planted src/zz-probe.ts calling Buffer.byteLength("x").
-      // Before this override npm run typecheck and npm run lint both passed it; after, npm run
-      // check exited 1 on lint/style/noRestrictedGlobals. File deleted.
+      // With @types/node in the root, npm run typecheck passed it and npm run check exited 1 on
+      // lint/style/noRestrictedGlobals. File deleted.
       "includes": ["src/**"],
       "linter": {
         "rules": {
