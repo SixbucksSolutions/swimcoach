@@ -10,7 +10,10 @@ Runs three checks against GET /healthz on the URL named in the CLI config file:
   (c) A request with the real client ID and a wrong secret is refused.
 The script never follows a redirect, never prints the client secret, and sends the token only
 to the url in the same config file. It exits 0 when every check passes, 1 when a check fails,
-and 2 when the config file is unusable. See docs/runbooks/access-setup.md.
+and 2 when the config file is unusable. A network failure (unknown host, refused connection, TLS
+error) prints "Fail (check): could not reach host: message" for that check, and the other checks
+still run. The script turns script tracing off first (Set-PSDebug -Off) and prints one line saying
+so, because "Set-PSDebug -Trace 2" would print the secret's variable assignment. See docs/runbooks/access-setup.md.
 
 .PARAMETER ConfigPath
 The CLI config file. Defaults to %USERPROFILE%\.secrets\swimcoach\cli.json (contract/cli.md section 5).
@@ -19,6 +22,11 @@ The CLI config file. Defaults to %USERPROFILE%\.secrets\swimcoach\cli.json (cont
 param(
     [string]$ConfigPath = (Join-Path -Path $env:USERPROFILE -ChildPath '.secrets\swimcoach\cli.json')
 )
+
+# Tracing prints every variable assignment, including the client secret, so it goes off before the
+# config is read. The line below tells Terry that the script did this.
+Set-PSDebug -Off
+Write-Output 'Script tracing (Set-PSDebug) is off for this run, so the secret is never traced.'
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -61,18 +69,22 @@ function Invoke-Probe {
 
     # Never follow a redirect: a redirect to the Access login host is itself the answer. With
     # -MaximumRedirection 0, PowerShell 7 still returns the 302 but also writes a non-terminating
-    # "maximum redirection count exceeded" error, so that error is silenced and collected, and the
-    # response alone says what happened. A null response is a transport failure.
-    $transportError = $null
-    $response = Invoke-WebRequest -Uri $Uri -Method Get -Headers $Headers -MaximumRedirection 0 `
-        -SkipHttpErrorCheck -TimeoutSec 30 -ErrorAction SilentlyContinue -ErrorVariable transportError `
-        -Debug:$false -Verbose:$false
-    if ($null -eq $response) {
-        $problem = 'no response'
-        if ($transportError) {
-            $problem = @($transportError)[0].Exception.GetType().Name
+    # "maximum redirection count exceeded" error, so -ErrorAction SilentlyContinue silences that one.
+    # A transport failure (unknown host, refused connection, TLS error, timeout) is a terminating
+    # error that -ErrorAction does not silence, so the try/catch turns it into Status 0.
+    $hostName = ([uri]$Uri).Host
+    try {
+        $response = Invoke-WebRequest -Uri $Uri -Method Get -Headers $Headers -MaximumRedirection 0 `
+            -SkipHttpErrorCheck -TimeoutSec 30 -ErrorAction SilentlyContinue -Debug:$false -Verbose:$false
+    } catch {
+        return [pscustomobject]@{
+            Status = 0; Location = ''; Body = ''; HostName = $hostName; Problem = $_.Exception.Message
         }
-        return [pscustomobject]@{ Status = 0; Location = ''; Body = ''; Problem = $problem }
+    }
+    if ($null -eq $response) {
+        return [pscustomobject]@{
+            Status = 0; Location = ''; Body = ''; HostName = $hostName; Problem = 'no response'
+        }
     }
     $location = ''
     if ($response.Headers.ContainsKey('Location')) {
@@ -82,6 +94,7 @@ function Invoke-Probe {
         Status   = [int]$response.StatusCode
         Location = $location
         Body     = [string]$response.Content
+        HostName = $hostName
         Problem  = ''
     }
 }
@@ -91,7 +104,7 @@ function Get-RefusalVerdict {
     param([pscustomobject]$Probe)
 
     if ($Probe.Status -eq 0) {
-        return "The request failed before any answer arrived ($($Probe.Problem))."
+        return "could not reach $($Probe.HostName): $($Probe.Problem)"
     }
     if ($Probe.Status -in 301, 302, 303, 307, 308) {
         $target = $null
@@ -143,8 +156,11 @@ $probe = Invoke-Probe -Uri $healthUrl -Headers @{
 if ($probe.Status -eq 200) {
     Write-Output 'Pass  (b) Service token: admitted (HTTP 200).'
 } else {
-    $detail = if ($probe.Status -eq 0) { "the request failed ($($probe.Problem))" } else { "HTTP $($probe.Status)" }
-    Write-Output "Fail  (b) Service token: expected HTTP 200, got $detail. Check the Service Auth policy and the token."
+    if ($probe.Status -eq 0) {
+        Write-Output "Fail  (b) Service token: could not reach $($probe.HostName): $($probe.Problem)"
+    } else {
+        Write-Output "Fail  (b) Service token: expected HTTP 200, got HTTP $($probe.Status). Check the Service Auth policy and the token."
+    }
     $failed++
 }
 
