@@ -57,6 +57,7 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 | `design/ui-mock/` | PNG renders of the mock, with an index README |
 | `reference/prototype/` | The prototype (reference only) |
 | `scripts/wrangler.ps1` | Runs Wrangler with the Cloudflare token and account ID read from files in `%USERPROFILE%\.secrets\swimcoach`. Every local Wrangler command MUST use it; Terry keeps these credentials out of environment variables |
+| `scripts/localswim.ps1` | Runs the shared localswim service's CLI as Bot, for swimcoach's own work cards (board `swimcoach`). Every localswim call MUST use it; RESUME says where the service and credentials live |
 
 ## Working agreements
 

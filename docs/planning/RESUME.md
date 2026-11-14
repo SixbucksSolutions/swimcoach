@@ -3,6 +3,27 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
+## V1 started (2026-11-14, evening)
+
+- **V1 work is tracked as cards on the `swimcoach` board of Terry's shared localswim service**
+  (Terry, 2026-11-14: reuse the existing board). Board `62728944-eac7-482c-bd46-4d8f206e5381`; its
+  #0001 to #0016 are the retired chatops design's, all Completed and kept as history. V1's cards start
+  at #0017. The decisions that block V1 sit in Needs Terry (#0017 acceptance, #0018 V1's quality bar,
+  #0019 branch and review process, #0020 device check step 8); proposed work and the decisions that
+  can wait sit in Backlog.
+- **Every localswim call MUST go through `scripts/localswim.ps1`**, which runs the CLI as Bot with
+  the token at Process scope for one run (Terry granted reading the Bot credential, 2026-11-14). The
+  service runs from `C:\Projects\localswim-v2` (the installed build, `127.0.0.1:8811`); the source repo
+  is `C:\Projects\localswim`, where only UI work is under way. Bot MAY create cards in Backlog, Ready
+  For Work, Blocked and Needs Terry and move them up to Ready For Review; only Terry moves a card to
+  Completed.
+- **Baseline re-verified at `4f7237f`:** `npm run check` (1,470 tests), API `--suite full` on
+  `swimcoach-test` 68/68, UI 118/118 on both Workers. API `clock-free` on production was skipped on
+  purpose so no `zz acceptance` card lands on the live board beside a real agent.
+- **The first real agent's schedule fires:** after the hand-sent 3:20 PM report, every report landed
+  on the :x0 mark to the second (3:30 to 4:30 PM at least). Card #0026 closes the idle-thread
+  requirement as OBE if that holds.
+
 ## Handoff to V1 (2026-11-14, evening)
 
 - **`mvp/integration` is deleted** (Terry, 2026-11-14: "Go ahead and delete mvp branch"), locally and
@@ -380,7 +401,9 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
      and `LOCALSWIM_TOKEN` (`docs/windows-operations.md`). The help is multi-level: append `--help` to
      an object or action.
    - The reporter MUST NOT parse JSON files, and MUST NOT use any other localswim copy:
-     not `localswim-v2`, not `localswim-legacy-v1`, not `localswim-state-store` (V1, before the
+     not `localswim-v2` (corrected 2026-11-14: `C:\Projects\localswim-v2` is the live installed
+     service, which `scripts/localswim.ps1` uses; this rule was written for a reporter that was never
+     built), not `localswim-legacy-v1`, not `localswim-state-store` (V1, before the
      cutover), and not the uv-installed `localswim` on `PATH`, a broken Python V1 install whose
      `localswim.pth` points at the removed `C:\Projects\localswim\src`.
    - **Superseded the same day by Terry's data path** (now in `mvp-stories.md` MVP-06): cards are not
