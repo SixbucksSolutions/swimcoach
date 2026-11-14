@@ -7,6 +7,8 @@ Writes, next to the SVG:
     swimcoach-512.png        the mark at 512 x 512, transparent corners
     swimcoach-touch-180.png  the iPhone home-screen icon: 180 x 180, the mark centered on the page's
                              dark ground (#0b0f14), full bleed, because iOS rounds the corners itself
+and, for the MVP page, the same full-bleed treatment at three sizes in public/icons/:
+    touch-180.png, icon-192.png, icon-512.png
 """
 
 import argparse
@@ -17,6 +19,8 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
 LOGO = ROOT / "design" / "logo"
+ICONS = ROOT / "public" / "icons"
+GROUND = "#0b0f14"  # --bg in docs/brand.md section 5
 
 
 def page(svg: str, size: int, ground: str | None, inset: float) -> str:
@@ -49,9 +53,16 @@ def main() -> None:
     parser.parse_args()
     svg = (LOGO / "swimcoach.svg").read_text(encoding="utf-8")
     shoot(page(svg, 512, None, 0), 512, LOGO / "swimcoach-512.png")
-    shoot(page(svg, 180, "#0b0f14", 0.16), 180, LOGO / "swimcoach-touch-180.png")
+    shoot(page(svg, 180, GROUND, 0.16), 180, LOGO / "swimcoach-touch-180.png")
     for f in ("swimcoach-512.png", "swimcoach-touch-180.png"):
         print("Wrote", (LOGO / f).relative_to(ROOT))
+    # The page's own copies, served from /icons/<name>.png. Full bleed on the page ground, like the
+    # touch icon: iOS rounds its corners, and Android masks the 192 and 512 sizes itself.
+    ICONS.mkdir(parents=True, exist_ok=True)
+    sizes = ((180, "touch-180.png"), (192, "icon-192.png"), (512, "icon-512.png"))
+    for size, name in sizes:
+        shoot(page(svg, size, GROUND, 0.16), size, ICONS / name)
+        print("Wrote", (ICONS / name).relative_to(ROOT))
 
 
 if __name__ == "__main__":
