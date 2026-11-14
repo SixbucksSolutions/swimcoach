@@ -31,6 +31,15 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   workerd install scripts as blocked by `allowScripts`; check, build and deploy work without them.
 - **Remaining Terry gates:** step 8 above, and MVP-12's demo and acceptance, which also needs one real
   project agent reporting through the CLI for a full turn (`docs/agents/swimcoach-reporting.md`).
+- **After T6 is deployed (Terry, 2026-11-14):** add an early section to `README.md` titled exactly
+  "Agents Directed To Post Updates". It MUST give the exact CLI instructions: the shared binary's
+  absolute path (`C:\Projects\swimcoach\bin\swimcoach.cmd`, never `PATH`), the config path the CLI
+  reads by itself, every required argument and what it holds, `stop`, cadence and exit codes. **It MUST
+  lead with the stdin JSON form, `report --file -`**, with the exact JSON shape; the named-flag form
+  comes second. Terry's decisions: arguments stay named flags, not positional; JSON input keeps the
+  name `--file` (`--json` already switches output), and `--file` XOR the field flags is already
+  enforced (exit 2, checked 2026-11-14). Test every shell example (PowerShell, cmd, Git Bash) with
+  `--dry-run` before committing.
 
 ## T4 closed (2026-11-14 UTC); next: Terry's MVP-08 phone check, then T5
 
