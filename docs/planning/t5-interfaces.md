@@ -61,36 +61,33 @@ area estimate becomes a measurement. Each result is recorded in the ledger as `m
   and such a check says so. `playwright` is pinned exactly in `acceptance/package.json`.
 - **Access.** The browser context sends the Access service-token headers from the same config file as
   the API suite (`--config`, the `cli.json` shape). The secret never reaches stdout, stderr or a report.
-- **Tiers, as the API suite:** `--suite full` against `swimcoach-test` seeds boards with the test clock
-  and may use any state; `--suite clock-free` against production uses only `zz acceptance` milestones,
-  never `needs_me` or Needs Terry, and stops what it adds. MVP-12 runs both.
-- **Network states without touching the server:** OFFLINE and SIGN IN come from Playwright request
-  interception on the page's own polls (abort, or answer 401), never from breaking the Worker.
+- **The suite never writes to the server (Lead, before dispatch; this replaces a seeding design).** It
+  loads the real page from the deployment and answers the page's own state polls through Playwright's
+  request routing, with bodies that MUST match `contract/schemas/state.schema.json`; the API suite is
+  what proves the server produces such bodies. So the UI suite is safe against production, needs no
+  tiers, and several runs never collide on the shared test Worker's board. Time is Playwright's clock.
+  OFFLINE and SIGN IN are answers too (abort, 401, 403, a redirect), never a broken Worker. WebKit
+  refuses a scripted redirect, so a redirect answer runs only with `--browser chrome`; 401 and 403 are
+  the WebKit sign-in cases (the page treats all three alike). The page clock is paused: page time moves
+  only through `open()` and `advance()`. An answer the route cannot give fails the case.
+- **Three ways to run:** `node acceptance/ui/run.ts --config <file>` (a deployment through Access),
+  `--local public` (a local copy, no secret, for authors), and `--browser chrome` for the fallback.
+  Authors develop with `--local`; the Lead and the reviewers run `--config` against `swimcoach-test`,
+  and MVP-12 against production.
 - **Ledger IDs are the contract.** Every check's id is the ledger row it proves (`"UX-058"`, or several).
   A check MUST NOT prove a row whose V1 cell reads `No: ...`. Superseded rows are proven through their
   successors.
 
 ### The frozen case format (`acceptance/ui/types.ts`, the Lead)
 
-```ts
-export interface UiCase {
-  readonly ids: readonly string[];        // ledger rows proved, such as ["UX-058", "UX-059"]
-  readonly title: string;
-  readonly tier: "clock-free" | "full";
-  run(ctx: UiContext): Promise<void>;     // throws (node:assert) on failure
-}
-export interface UiContext {
-  readonly page: import("playwright").Page; // 402 x 874, WebKit, service-token headers
-  seed(board: readonly SeedMilestone[]): Promise<void>; // stops every milestone, then reports these
-  poll(): Promise<void>;                  // waits for the page's next successful poll
-  readonly suite: "clock-free" | "full";
-}
-```
-
-`SeedMilestone` is a report body plus an optional `history` of earlier timed reports (hours ago), so a
-check can build a trend, a stall or silence through the test clock. `harness.ts` launches the browser,
-opens `/`, and implements `seed` and `poll`; `run.ts` takes `--config` and `--suite` exactly as
-`acceptance/api/run.ts` does; `cases/index.ts` concatenates the two case files below.
+The code is the frozen text: `acceptance/ui/types.ts` (`UiCase { ids, title, run(ctx) }`; `UiContext`
+with `page`, `answer(next)`, `open()`, `advance(ms)`, `example(name)` and `now()`). `harness.ts`
+launches the browser and gives each case a fresh context and clock; `run.ts` refuses a case whose
+ids name a superseded or unknown ledger row (`ledger.ts`); `cases/index.ts` joins the two case files
+below. The Lead's one case, UX-162 (the empty board reads LIVE), passed in WebKit both `--local` and
+`--config` against `swimcoach-test` before dispatch. First run on a machine:
+`npx --prefix acceptance playwright install webkit`. The UI suite is not part of `npm run check`
+(CI has no browser); every author and reviewer runs it with `--local` or `--config`.
 
 ### MVP-11 A: overview checks (Sonnet 5.5 / medium)
 

@@ -192,6 +192,13 @@ describe("the router's refusals", () => {
     `${API}/state/`,
     "/api/2026-11-12/state",
     "/nope",
+    // The icon and manifest routes take only their exact shapes (t5-interfaces.md, MVP-10).
+    "/manifest.json",
+    "/manifest.webmanifest/",
+    "/icons/Icon.png",
+    "/icons/icon.svg",
+    "/icons/../index.html",
+    "/icons/sub/icon.png",
   ])("answers %s with 404 not_found", async (path) => {
     const response = await call(path);
     expect(response.status).toBe(404);
@@ -210,6 +217,10 @@ describe("the router's refusals", () => {
     ["POST", `${API}/state`, "GET"],
     ["DELETE", "/healthz", "GET"],
     ["POST", "/", "GET"],
+    // The manifest and icon routes exist and take only GET (t5-interfaces.md, MVP-10). Before this
+    // change both answered 404, so these rows fail on the old router.
+    ["POST", "/manifest.webmanifest", "GET"],
+    ["POST", "/icons/icon-192.png", "GET"],
   ])("answers %s %s with 405 and Allow: %s", async (method, path, allow) => {
     const response = await call(path, { method });
     expect(response.status).toBe(405);
