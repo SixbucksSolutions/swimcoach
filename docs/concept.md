@@ -596,6 +596,11 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
     for example once the next increment has started. For the MVP, entries are removed only by the
     project agent's swimcoach CLI stop command, because that is easier. The MVP's page MUST NOT grow
     this control.
+14. **Push updates to the page (Terry, 2026-11-13).** The MVP polls `GET /api/state` every 10 seconds,
+    and that is fine for the MVP. Push (server-to-page updates, for example SSE from the Board Durable
+    Object) is a goal for V1 and is REQUIRED for V2. V2 MUST still handle a phone that slept and lost
+    its connection, by reading the full state on wake. Worker-level Access does not support WebSockets,
+    so SSE over plain HTTP is the likely route on Cloudflare.
 
 ## 9. Design history (superseded; source not kept)
 
