@@ -16,6 +16,12 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   `mvp/integration` remain.
 - **The gate before T5 is Terry's MVP-08 phone check.** His four open calls are listed below. Do not
   start T5 until he passes MVP-08 or names changes.
+- **T5 base:** `main` = `mvp/integration` at the commit that adds `docs/planning/t5-interfaces.md`
+  (relay rule 8, checked: only those two branches, locally and on GitHub; no worktree; no open PR).
+  Production runs `0cd8f69`: PR #34 (bare hero +10 px, UX-155, "Just let it land") and PR #35 (30 s
+  poll, 40 s breathing, OFFLINE at 90 s, agents at most every 5 minutes per milestone, UX-156 to
+  UX-162). Full 68/68 on test (run `p84eu4`), clock-free 41/41 on production. Ledger: 162 rows, 28
+  superseded. T5 plan: `docs/planning/t5-interfaces.md`.
 - **MVP-08 PASSED: Terry, 2026-11-14, "Yes". T5 is open.** The `zz demo` milestones are stopped; the
   production board is empty (`feed` `no_data`). Remaining Terry gates: MVP-10's device checklist (the
   Access session is already 7 days and the icon is on his home screen; re-adding the icon MAY be needed
