@@ -139,6 +139,12 @@ function sameNameSize(have, want) {
  */
 const sizeCache = new WeakMap();
 
+/**
+ * Bumped by fontsLoaded() each time a font finishes loading. It is part of every cache key, so a name
+ * sized in the fallback font before Inter arrived is measured again after (concept.md 3.4).
+ */
+let fontEpoch = 0;
+
 /** At most this many correction passes after the first estimate (UX-068). */
 const NAME_MAX_PASSES = 3;
 
@@ -241,7 +247,7 @@ function wantedNameSize(name, half, basePx, state) {
   }
   const text = name.textContent ?? "";
   const buttonClass = name.closest("button")?.className ?? "pc";
-  const key = `${half}|${buttonClass}|${room}|${text}`;
+  const key = `${fontEpoch}|${half}|${buttonClass}|${room}|${text}`;
   const cached = sizeCache.get(name);
   if (cached?.key === key) {
     return cached.want;
@@ -315,6 +321,15 @@ export function renderOverview(view) {
     html += renderCard(card);
   }
   return `${html}</div>`;
+}
+
+/**
+ * Tells fitCards that a font finished loading, so its next run measures every name again instead of
+ * keeping a size taken in the fallback font. The controller calls it, then fits once more.
+ * @returns {void}
+ */
+export function fontsLoaded() {
+  fontEpoch += 1;
 }
 
 /**

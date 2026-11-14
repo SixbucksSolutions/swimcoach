@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { fontsLoaded } from "../../public/js/overview.js";
 import {
   type Dom,
   type FakeName,
@@ -158,5 +159,30 @@ describe("fitCards: an unchanged poll does no DOM work (UX-110)", () => {
     run(fakePage(800, fakeCards(3, [long])));
     expect([dom.appended, dom.removed]).toEqual([1, 1]);
     expect(long.writes).toHaveLength(1);
+  });
+});
+
+describe("fitCards: a font that lands after the first fit (concept.md 3.4)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("measures again once after fontsLoaded(), then goes quiet again", () => {
+    const dom = installDom();
+    const names = [fakeName(LONG_NAME, 252), fakeName("ab", 252)];
+    const cards = fakeCards(3, names);
+    const page = fakePage(800, cards);
+    run(page);
+    run(page);
+    const steady = [dom.appended, dom.measured];
+    fontsLoaded();
+    run(page);
+    // One more probe and fresh measurements: the font state is in the cache key.
+    expect(dom.appended).toBe((steady[0] ?? 0) + 1);
+    expect(dom.measured).toBeGreaterThan(steady[1] ?? 0);
+    const refit = [dom.appended, dom.measured, ...names.map((n) => n.writes.length)];
+    run(page);
+    run(page);
+    expect([dom.appended, dom.measured, ...names.map((n) => n.writes.length)]).toEqual(refit);
   });
 });

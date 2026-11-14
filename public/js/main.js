@@ -11,6 +11,7 @@ import { alertOnNewAsk, onBell, paintBell } from "./alerts.js";
 import { ui } from "./dom.js";
 import { ALL } from "./format.js";
 import { fitOverview, go, onKey, onTap, render, syncDots } from "./nav.js";
+import { fontsLoaded } from "./overview.js";
 import { signedOut, startPolling } from "./poll.js";
 
 /** @import { View } from "./view.js" */
@@ -22,12 +23,47 @@ const TOUCH_RETRY_MS = 300; // a paint waits while a finger is on the displays
 let latest = null;
 let touching = false;
 let paintQueued = false;
+let facesAtFit = -1; // font faces loaded at the last fit; -1 before the first
+
+/** @returns {number}   the font faces loaded so far */
+function loadedFaces() {
+  let n = 0;
+  for (const face of document.fonts) {
+    if (face.status === "loaded") {
+      n += 1;
+    }
+  }
+  return n;
+}
+
+/**
+ * Tells fitCards when a font has loaded since the last fit, so it measures the names again rather
+ * than keep a size taken in the fallback font (concept.md 3.4).
+ * @returns {boolean}   whether one had
+ */
+function noteFonts() {
+  const n = loadedFaces();
+  if (n === facesAtFit) {
+    return false;
+  }
+  facesAtFit = n;
+  fontsLoaded();
+  return true;
+}
+
+/** A font that lands after the first fit: fit the overview once more. */
+function onFontsLoaded() {
+  if (facesAtFit !== -1 && noteFonts()) {
+    fitOverview();
+  }
+}
 
 /**
  * Draws a View, then alerts on a new ask by chiming and jumping to the overview (UX-126, UX-127).
  * @param {View} view
  */
 function draw(view) {
+  noteFonts();
   render(view);
   if (alertOnNewAsk(view)) {
     go(ALL);
@@ -101,6 +137,9 @@ function start() {
     setTimeout(resolve, REVEAL_CAP_MS);
   });
   Promise.race([Promise.all([firstPoll, document.fonts.ready]), cap]).then(reveal, reveal);
+  // Inter can land after the first fit when the network is slow (the reveal does not wait past 3 s).
+  document.fonts.addEventListener("loadingdone", onFontsLoaded);
+  document.fonts.ready.then(onFontsLoaded, reportError);
 }
 
 if ("document" in globalThis && document.querySelector("#pages") !== null) {

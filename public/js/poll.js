@@ -11,7 +11,7 @@
 // IN in OFFLINE's red, the displays gray out, and the warning line says to tap it; a tap reloads (the
 // home-screen web app has no reload button). The next good poll clears it.
 
-import { restartAnimation, setText, syncBreath, ui } from "./dom.js";
+import { restartBreath, setText, syncBreath, ui } from "./dom.js";
 import { dur, fmtTime, POLL_MS } from "./format.js";
 import { toView } from "./state.js";
 
@@ -132,7 +132,7 @@ async function poll() {
       lastView = got;
       lastOk = Date.now();
       authFailed = false;
-      restartAnimation(ui("#health i")); // the dot breathes 16 s from each good poll
+      restartBreath(); // the dot breathes 16 s from each good poll
       onView?.(got);
     }
   } finally {
