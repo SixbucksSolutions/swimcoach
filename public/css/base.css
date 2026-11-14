@@ -79,7 +79,10 @@ html.loading body {
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 100dvh;
+  /* 100%, not 100dvh: the home-screen app draws under the status bar (black-translucent), and
+     standalone WebKit reports 100dvh as the screen minus that bar, which left a 62 px gap under the
+     dots on an iPhone 16 Pro (UX-172). html and body are 100% of the whole screen. */
+  height: 100%;
   width: 100%;
   overflow: hidden;
   padding-top: env(safe-area-inset-top);
