@@ -111,13 +111,12 @@ interface ClassifyInput {
   readonly fromFlags: boolean;
 }
 
-function isRefusal(status: number, answer: JsonObject | undefined): answer is JsonObject {
-  return (
-    status >= MIN_CLIENT_ERROR &&
-    status <= MAX_CLIENT_ERROR &&
-    answer?.ok === false &&
-    typeof answer.error === "string"
-  );
+function isContractError(answer: JsonObject | undefined): answer is JsonObject {
+  return answer?.ok === false && typeof answer.error === "string";
+}
+
+function isClientError(status: number): boolean {
+  return status >= MIN_CLIENT_ERROR && status <= MAX_CLIENT_ERROR;
 }
 
 function classify(input: ClassifyInput): Outcome {
@@ -144,8 +143,19 @@ function classify(input: ClassifyInput): Outcome {
     }
     return { exit: 0, line, raw: text };
   }
-  if (!isRefusal(status, answer)) {
+  if (!isContractError(answer)) {
     return brokenContract(status);
+  }
+  if (!isClientError(status)) {
+    // A contract-shaped error that is not a 4xx (a 500 internal): the server's own words come
+    // first, then the CLI's summary. The exit stays 7 (cli.md section 4).
+    return {
+      exit: 7,
+      lines: [
+        ...refusalLines(answer, fromFlags),
+        `The server answered ${status} (${String(answer.error)}).`,
+      ],
+    };
   }
   const lines = [
     `The server refused the request (${status} ${String(answer.error)}).`,

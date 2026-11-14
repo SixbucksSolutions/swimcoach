@@ -127,6 +127,40 @@
       "linter": { "rules": { "style": { "noProcessEnv": "off" } } }
     },
     {
+      // @types/node is installed for the CLI. It leaks into the root tsc program through
+      // @cloudflare/vitest-plugin/types -> miniflare -> undici (/// <reference types="node" />),
+      // so tsc no longer refuses Node globals in src/. Without nodejs_compat (wrangler.jsonc)
+      // workerd throws ReferenceError on them. This list is the gate that replaces tsc here
+      // (PR #21 review, finding 1). process is also reported by noProcessGlobal at info.
+      // Proof of fire, 2026-11-13: planted src/zz-probe.ts calling Buffer.byteLength("x").
+      // Before this override npm run typecheck and npm run lint both passed it; after, npm run
+      // check exited 1 on lint/style/noRestrictedGlobals. File deleted.
+      "includes": ["src/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedGlobals": {
+              "level": "error",
+              "options": {
+                "deniedGlobals": {
+                  "Buffer": "Node-only global; the Worker runs on workerd without nodejs_compat",
+                  "process": "Node-only global; the Worker runs on workerd without nodejs_compat",
+                  "global": "Node-only global; the Worker runs on workerd without nodejs_compat",
+                  "require": "Node-only global; the Worker runs on workerd without nodejs_compat",
+                  "module": "Node-only global; the Worker runs on workerd without nodejs_compat",
+                  "exports": "Node-only global; the Worker runs on workerd without nodejs_compat",
+                  "__dirname": "Node-only global; the Worker runs on workerd without nodejs_compat",
+                  "__filename": "Node-only global; the Worker runs on workerd without nodejs_compat",
+                  "setImmediate": "Node-only global; the Worker runs on workerd without nodejs_compat",
+                  "clearImmediate": "Node-only global; the Worker runs on workerd without nodejs_compat"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       "includes": ["scripts/**"],
       "linter": { "rules": { "correctness": { "noNodejsModules": "off" } } }
     }
