@@ -5,6 +5,7 @@ describe("GET /healthz", () => {
   it("answers ok, as contract/api.md section 7 requires", async () => {
     const response = await exports.default.fetch("http://example.com/healthz");
     expect(response.status).toBe(200);
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
     expect(await response.json()).toEqual({ ok: true });
   });
 

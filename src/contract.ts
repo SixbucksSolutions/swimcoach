@@ -83,6 +83,22 @@ export type PlanResult =
   | { readonly ok: true; readonly plan: ReportPlan }
   | { readonly ok: false; readonly error: "clock_went_backward" };
 
+/** MVP-03 B's pure ingest step (api.md 4.4), called by MVP-03 A's Board. Exported as `planReport`. */
+export type PlanReport = (
+  prev: StoredMilestone | null,
+  newest: Sample | null,
+  report: Report,
+  receivedAt: EpochSeconds,
+) => PlanResult;
+
+/** MVP-04 B's chance on time (concept.md 4.4), called by MVP-04 A. Exported as `chanceToFinish`. */
+export type ChanceToFinish = (
+  recentDone: number,
+  span: number,
+  toGo: number,
+  remaining: number,
+) => number;
+
 /** Storage owned by the Board Durable Object (MVP-03 A). Names match ASCII case-insensitively (api.md 4.3). */
 export interface BoardStore {
   /** The tracked milestone with this key, or null. */

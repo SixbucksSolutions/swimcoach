@@ -5,7 +5,8 @@ export default {
   fetch(request: Request): Response {
     const { pathname } = new URL(request.url);
     if (request.method === "GET" && pathname === "/healthz") {
-      return Response.json({ ok: true });
+      // contract/api.md section 1: every API answer carries Cache-Control: no-store.
+      return Response.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
     }
     return new Response("Not found", { status: 404 });
   },
