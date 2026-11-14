@@ -70,6 +70,15 @@ Owns `src/routes/report.ts`, `src/routes/stop.ts`, `test/routes/report.test.ts`,
   `reportResponse` / `stopResponse`, `409 clock_went_backward`, `404 not_tracked`.
 - Responses MUST validate against the schemas in `contract/schemas/report.schema.json`.
 
+## Date-versioned API paths (Terry, 2026-11-13)
+
+Terry: "let's date version it ... `/api/2026-11-13/...`". The API's routes are `POST
+/api/2026-11-13/report`, `POST /api/2026-11-13/stop` and `GET /api/2026-11-13/state`. `/healthz` stays
+unversioned (liveness, not API). Unversioned `/api/...` paths are NOT aliases: they answer `404
+not_found`. A breaking change to a request or response MUST get a new date path; an additive,
+backward-compatible change keeps the current date. V2 MUST serve the same dated paths. The Lead makes
+the contract, router and CLI changes in the wiring PR below; route handlers never see the path.
+
 ## The Lead, after the four merge
 
 Wires the routes into `src/index.ts`: Access first, then `requestTime`, then route by exact path with
