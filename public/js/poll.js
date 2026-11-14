@@ -132,7 +132,7 @@ async function poll() {
       lastView = got;
       lastOk = Date.now();
       authFailed = false;
-      restartBreath(); // the dot breathes 16 s from each good poll
+      restartBreath(); // the dot breathes 40 s from each good poll (UX-157)
       onView?.(got);
     }
   } finally {

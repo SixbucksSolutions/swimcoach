@@ -459,8 +459,9 @@ project agent (Codex or Claude) --> swimcoach CLI --> Worker API (Cloudflare Acc
                                      phone browser <-- GET / and GET /api/state (every 30 s)
 ```
 
-- **Project agents push their own status.** The agent working a project runs the swimcoach CLI on
-  every card move and as a 10-minute heartbeat. Each update is a complete picture of its (project,
+- **Project agents push their own status.** The agent working a project runs the swimcoach CLI at
+  milestone start, after card moves and as a 10-minute heartbeat, but never more often than once every
+  5 minutes per milestone (Terry, 2026-11-14). Each update is a complete picture of its (project,
   milestone). There is no swimcoach agent, no monitoring agent and no relay. Contract:
   `docs/planning/mvp-stories.md` MVP-01 and MVP-06.
 
