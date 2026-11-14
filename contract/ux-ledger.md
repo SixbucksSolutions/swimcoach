@@ -47,8 +47,8 @@ load-bearing.
 | J. Navigation | UX-113 to UX-124 | 12 |
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
-| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-140 | 6 |
-| **Total** | | **140** (5 superseded: UX-016, 017, 018, 133, 134) |
+| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-144 | 10 |
+| **Total** | | **144** (13 superseded: UX-016, 017, 018, 021 to 026, 028, 053, 133, 134) |
 
 ## A. Status line
 
@@ -79,14 +79,14 @@ load-bearing.
 
 | ID | State or transition | Rule | Render | Check | V1 |
 | --- | --- | --- | --- | --- | --- |
-| UX-021 | One slot (one project, or only GO TO KEYBOARD): four-slot mode, full-height slot | c3.2 4/8 grid | - | No render of exactly one; reach with one project | Pending |
-| UX-022 | Two slots: four-slot mode, two full-height slots, empty space below | c3.2 4/8 grid | `keyboard-00-all-projects.png` |  | Pending |
-| UX-023 | Three slots: four-slot mode, three full-height slots | c3.2 4/8 grid | `allgreen-00-all-projects.png` |  | Pending |
-| UX-024 | Four slots: four-slot mode fills the Card display area exactly | c3.2 4/8 grid | - | Reach with four projects | Pending |
-| UX-025 | Five or more slots: eight-slot mode, half-height slots; a fifth slot flips every Card to half height | c3.2 4/8 grid | `afternoon-00-all-projects.png` | Six slots shown (GO TO KEYBOARD plus five Cards, seven dots); check the 4 to 5 flip | Pending |
-| UX-026 | Full slots measure 183.3 px and half slots 86.6 px at 402 x 874 **(measured)** | c3.2 more room below status line | `keyboard-00-all-projects.png`, `afternoon-00-all-projects.png` |  | Pending |
+| UX-021 | One slot (one project, or only GO TO KEYBOARD): four-slot mode, full-height slot | c3.2 4/8 grid | - | No render of exactly one; reach with one project | No: superseded by UX-141 |
+| UX-022 | Two slots: four-slot mode, two full-height slots, empty space below | c3.2 4/8 grid | `keyboard-00-all-projects.png` |  | No: superseded by UX-141 |
+| UX-023 | Three slots: four-slot mode, three full-height slots | c3.2 4/8 grid | `allgreen-00-all-projects.png` |  | No: superseded by UX-141 |
+| UX-024 | Four slots: four-slot mode fills the Card display area exactly | c3.2 4/8 grid | - | Reach with four projects | No: superseded by UX-141 |
+| UX-025 | Five or more slots: eight-slot mode, half-height slots; a fifth slot flips every Card to half height | c3.2 4/8 grid | `afternoon-00-all-projects.png` | Six slots shown (GO TO KEYBOARD plus five Cards, seven dots); check the 4 to 5 flip | No: superseded by UX-141 |
+| UX-026 | Full slots measure 183.3 px and half slots 86.6 px at 402 x 874 **(measured)** | c3.2 more room below status line | `keyboard-00-all-projects.png`, `afternoon-00-all-projects.png` |  | No: superseded by UX-144 |
 | UX-027 | Every slot on a screen is the same height | c3.2 | `afternoon-00-all-projects.png` |  | Pending |
-| UX-028 | More than eight slots scroll; slots never shrink below the content minimum (101.7 px full, 83.5 px half) | c3.2 | - | Reach with nine projects; no render | Pending |
+| UX-028 | More than eight slots scroll; slots never shrink below the content minimum (101.7 px full, 83.5 px half) | c3.2 | - | Reach with nine projects; no render | No: superseded by UX-142 |
 | UX-029 | Card display area starts 24 px below the Health box; the Health box sits 13 px below the top **(measured)** | c3.2 more room | `afternoon-00-all-projects.png` | The two breathing widgets MUST NOT be pulled back together | Pending |
 | UX-030 | Detail blurb: two lines in a full slot, one line ending in the U+2026 ellipsis glyph (b7; CSS truncation, or `&hellip;` / `String.fromCharCode(0x2026)` in source) in a half slot; all Cards on a screen show the same line count | c3.2, b7 | `keyboard-00-all-projects.png`, `afternoon-00-all-projects.png` |  | Pending |
 
@@ -121,7 +121,7 @@ load-bearing.
 | UX-050 | No red project: no slot is reserved; row one is the first green or yellow Card | c3.2 "no space is reserved" | `allgreen-00-all-projects.png` |  | Pending |
 | UX-051 | Red projects leave the ordinary list; they do not also appear as their own Cards | c3.2 | `keyboard-00-all-projects.png` |  | Pending |
 | UX-052 | Remaining Cards keep alphabetical order below it, even if a project between two others went red | c3.2 | `afternoon-00-all-projects.png` |  | Pending |
-| UX-053 | GO TO KEYBOARD takes one of the 4 or 8 slots and counts toward the five-slot threshold | c3.2 4/8 grid | `afternoon-00-all-projects.png` |  | Pending |
+| UX-053 | GO TO KEYBOARD takes one of the 4 or 8 slots and counts toward the five-slot threshold | c3.2 4/8 grid | `afternoon-00-all-projects.png` |  | No: superseded by UX-143 |
 | UX-054 | Tapping GO TO KEYBOARD opens the first red project's display | c3.2 "Tap goes to the first one" | - | Transition | Pending |
 | UX-055 | A red project's own display shows its full ask | c3.2 | `keyboard-01-fga-t04-top.png` |  | Pending |
 | UX-056 | GO TO KEYBOARD never grows with the number of asks (one Detail blurb line of names) | c3.2 OBE note | `keyboard-00-all-projects.png` |  | Pending |
@@ -260,3 +260,7 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-138 | STALE does not fire when every project is done (LIVE, not STALE) | c3.1 STALE "while some project is unfinished" | `alldone-00-all-projects.png` | Supersedes UX-018 | Pending |
 | UX-139 | Detail blurb words for `over_budget` and `under_budget`: "Over budget" and "Under budget" | Terry, 2026-11-13 (t4-interfaces.md decision 2) | - | Supersedes UX-133; `project.test.ts` small-block cases | Pending |
 | UX-140 | The project display in `count_and_time` mode drops the hero RTR, the RTR chart and the projection tiles, puts `why` in the hero, and keeps Work against time, Swimlanes and the footer | Terry, 2026-11-13 (t4-interfaces.md decision 4) | - | Supersedes UX-134; `project.test.ts` small-block cases | Pending |
+| UX-141 | The 3/6 slot grid. One to three slots: three-slot mode, full-height slots, each a third of the Card display area, empty space below when fewer. Four or more slots: six-slot mode, half-height slots; a fourth slot flips every Card to half height | c3.2, Terry 2026-11-14: "For MVP let's just lock at 3/6 slots rather than 4/8. three is plenty and we can revisit at V1+" | - | Supersedes UX-021 to UX-025. Found on his iPhone: seven slots did not fit the home-screen app's card area under the 4/8 grid | Pending |
+| UX-142 | More than six slots scroll; slots never shrink below the content minimum (101.7 px full, 83.5 px half) | c3.2 | - | Supersedes UX-028; reach with seven projects | Pending |
+| UX-143 | GO TO KEYBOARD takes one of the 3 or 6 slots and counts toward the four-slot threshold | c3.2 | - | Supersedes UX-053 | Pending |
+| UX-144 | Slot height comes from the measured Card display area on the phone, not the mock's screen. On the iPhone 16 Pro as a home-screen app the area is about 625 px (estimated from Terry's screenshot, 2026-11-14), so six half slots (at least 6 x 83.5 + 5 x 10 = 551 px) fit without scrolling | c3.2 | - | Supersedes UX-026, whose 183.3 / 86.6 px assumed the full 874 px screen. Measure the real area on the phone before MVP-12 | Pending |

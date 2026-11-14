@@ -3,10 +3,11 @@
    joined the first .pc rule (noDuplicateSelectors), and the two .pc.kbd / .pc.green overrides moved
    below the .pc .nm rules they override (noDescendingSpecificity; the higher specificity wins in either
    order). */
-/* The 4/8 slot grid (concept.md 3.2, Terry 2026-11-13). The overview has 4 equal slots, or 8 half-height
-   slots once there are 5 or more cards. GO TO KEYBOARD takes one slot; red projects leave the list.
-   fitCards() sets --slot from the screen height before the browser paints, never below the height a
-   card's content needs, so more than 8 cards scroll instead of squeezing. */
+/* The 3/6 slot grid (concept.md 3.2; UX-141, Terry 2026-11-14, superseding the 4/8 grid for the MVP).
+   The overview has 3 equal slots, or 6 half-height slots once there are 4 or more. GO TO KEYBOARD takes
+   one slot; red projects leave the list. fitCards() sets --slot from the screen height before the
+   browser paints, never below the height a card's content needs, so more than 6 slots scroll instead
+   of squeezing. */
 .cards {
   flex: 1 0 auto;
   display: grid;
@@ -103,9 +104,9 @@
 }
 /* The status is indented half the name's em (12px of 24px): with the lighter weight, the indent
    separates detail from title without drawing a line (Terry, 2026-11-13).
-   Content minimums, used by fitCards(): a 4-slot card holds the name and two detail lines with 18px
-   below them, the same 18px as above the name (101.7px). An 8-slot card holds a 20px name and one detail
-   line ending in "..." with the same 18px below (83.5px). */
+   Content minimums, used by fitCards(): a full-slot card holds the name and two detail lines with 18px
+   below them, the same 18px as above the name (101.7px). A half-slot card holds a 20px name and one
+   detail line ending in "..." with the same 18px below (83.5px). */
 .cards.half .pc .nm {
   padding-top: 4.1px;
 }

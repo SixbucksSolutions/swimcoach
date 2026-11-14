@@ -162,21 +162,21 @@ function plain(n: number): CardView[] {
   return Array.from({ length: n }, (_unused, i) => card({ key: keyOf(`p${i}`), title: `p${i}` }));
 }
 
-describe("renderOverview: the half class follows the slot count", () => {
-  it("has no half class up to four slots", () => {
+describe("renderOverview: the half class follows the slot count (3/6 grid, UX-141)", () => {
+  it("has no half class up to three slots", () => {
     expect(gridClass(plain(1))).toBe("cards");
-    expect(gridClass(plain(4))).toBe("cards");
+    expect(gridClass(plain(3))).toBe("cards");
   });
 
-  it("has half from five slots", () => {
-    expect(gridClass(plain(5))).toBe("cards half");
-    expect(gridClass(plain(9))).toBe("cards half");
+  it("has half from four slots", () => {
+    expect(gridClass(plain(4))).toBe("cards half");
+    expect(gridClass(plain(7))).toBe("cards half");
   });
 
   it("counts GO TO KEYBOARD as one slot, however many red cards", () => {
-    expect(gridClass([red("r"), ...plain(3)])).toBe("cards");
-    expect(gridClass([red("r"), ...plain(4)])).toBe("cards half");
-    expect(gridClass([red("r1"), red("r2"), red("r3"), ...plain(3)])).toBe("cards");
+    expect(gridClass([red("r"), ...plain(2)])).toBe("cards");
+    expect(gridClass([red("r"), ...plain(3)])).toBe("cards half");
+    expect(gridClass([red("r1"), red("r2"), red("r3"), ...plain(2)])).toBe("cards");
   });
 });
 
