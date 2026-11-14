@@ -13,6 +13,10 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - Carried into T2's contract work: Ajv strict mode warns that `project`, `milestone` and `needsMe`
   lack a local `"type": "string"`; the schema says "every code point" but Go cannot test lone
   surrogates; `contract/fixtures/README.md` "Open for Terry" item 1 (midnight) is settled by api.md 6.9.
+- Carried into MVP-09: the Board's retention alarm prunes on the real clock, so on the test Worker,
+  samples stamped more than 14 days before real time can vanish within a day (MVP-03 A hand-off).
+  The test Worker SHOULD disable or re-base pruning.
+- Carried into MVP-07: `snapshot().samples` is keyed by `milestoneKey()` from `src/board/store.ts`.
 - Carried into MVP-07: the router answers unknown paths with a plain-text 404 and wrong methods with
   404; api.md requires `404 not_found`, `405 method_not_allowed` with `Allow`, and `errorResponse`
   bodies (PR #6 second review).
