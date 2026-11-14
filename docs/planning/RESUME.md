@@ -69,7 +69,8 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - **For Terry at the MVP-08 phone check (his calls, not yet decided):**
   1. **Decided 2026-11-14: keep it** ("Yes laptop is good"; UX-153). The desktop view is a centered
      402 x 874 column with no bezel or side panel.
-  2. SIGN IN: an auth failure (redirect, 401, 403) reloads once per 5 minutes so Access can show its
+  2. **Decided 2026-11-14: keep it** (Terry took the Lead's recommendation; UX-154). SIGN IN: an auth
+     failure (redirect, 401, 403) reloads once per 5 minutes so Access can show its
      login, then shows SIGN IN in OFFLINE's red with the displays grayed. If the reload itself is
      refused, the page shows the header and warning only.
   3. On a small-block display the hero label ("Under budget") sits flush under the title; the reviewer
