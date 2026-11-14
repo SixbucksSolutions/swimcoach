@@ -1,8 +1,21 @@
 # Resume point
 
-Written 2026-11-13, before Terry rebooted, so the next session starts exactly here. RFC 2119 keywords;
-the capitals are load-bearing. **Read this first, then `AGENTS.md`.** Delete or rewrite this file once
-MVP T1 is underway, so it never goes stale.
+First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
+keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
+
+## T1 closed (2026-11-14 00:03 UTC)
+
+- `main` at `95d8f08` holds all of T1: PRs #1-#5, each reviewed by Opus 5.5 / high and
+  squash-merged into `mvp/integration`, then merged to `main` by the Lead.
+- CI run 43531397267 passed `check` and `deploy`; the CI token (Workers Editor) deployed version
+  `2c82febc-8c96-47f4-aece-f12f7632c7dc`. The live `/` matches `mocks/index.html` by SHA2-256.
+- `mvp/integration` is fast-forwarded to `main` for T2.
+- Carried into T2's contract work: Ajv strict mode warns that `project`, `milestone` and `needsMe`
+  lack a local `"type": "string"`; the schema says "every code point" but Go cannot test lone
+  surrogates; `contract/fixtures/README.md` "Open for Terry" item 1 (midnight) is settled by api.md 6.9.
+- **Next: T2** (MVP-03 Board Durable Object, MVP-04 metrics, MVP-05 Access). The Lead writes T2's
+  frozen interfaces first. MVP-05's Access steps are Terry's gate and need the Zero Trust
+  organization confirmed (risk 2).
 
 ## Where things stand
 
@@ -16,7 +29,7 @@ MVP T1 is underway, so it never goes stale.
 | Stories | 12 stories, MVP-01 to MVP-12, in 6 turns: `docs/planning/mvp-stories.md` |
 | Diagram | `docs/planning/mvp-execution-plan-legal-portrait.pdf` (print) and the 300 ppi PNG, rendered from `mvp-plan.json` by `render-plan.py` |
 | Staffing | `docs/planning/mvp-staffing-plan.md`: a per-turn relay, 28 authors and 18 reviewers, at most 6 at once |
-| Code | **None written yet.** Nothing is deployed |
+| Code | **T1 merged and deployed** (see "T1 closed" above). `contract/` holds MVP-01; the Worker scaffold and CI are MVP-02 |
 
 ## Blocked on Terry, before T1 can deploy
 
