@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""Embed the swimcoach mark into mocks/index.html: favicon, header mark, and home-screen icon.
+"""Embed the swimcoach mark into an HTML page: favicon, header mark, and home-screen icon.
 
-    python mocks/tools/embed-logo.py
+    python mocks/tools/embed-logo.py                            (mocks/index.html)
+    python mocks/tools/embed-logo.py --target public/index.html
+
+Run it on both pages: the mock is the approved reference and public/index.html is the MVP page.
 
 design/logo/swimcoach.svg is the ONE definition of the mark. This writes it, between the LOGO:BEGIN
 and LOGO:END markers, as:
@@ -42,18 +45,31 @@ def block(svg_uri: str, touch_b64: str) -> str:
     )
 
 
+def shown(path: Path) -> str:
+    """The path relative to the repository when it is inside it, for the closing message."""
+    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Embed the swimcoach mark into the clickable mock.")
-    parser.parse_args()
-    html = PAGE.read_text(encoding="utf-8")
+    parser = argparse.ArgumentParser(description="Embed the swimcoach mark into an HTML page.")
+    parser.add_argument(
+        "--target",
+        type=Path,
+        default=PAGE,
+        help="the HTML file to write into (default: mocks/index.html)",
+    )
+    page: Path = parser.parse_args().target.resolve()
+    # newline="" on both ends: read_text() would turn CRLF into LF and the write would keep it.
+    with page.open(encoding="utf-8", newline="") as f:
+        html = f.read()
     if not MARKERS.search(html):
-        raise SystemExit(f"LOGO:BEGIN / LOGO:END markers not found in {PAGE}")
+        raise SystemExit(f"LOGO:BEGIN / LOGO:END markers not found in {page}")
     uri = svg_data_uri(SVG.read_text(encoding="utf-8"))
     touch = base64.b64encode(TOUCH.read_bytes()).decode("ascii")
     html = MARKERS.sub(lambda m: m.group(1) + block(uri, touch) + m.group(2), html, count=1)
-    with PAGE.open("w", encoding="utf-8", newline="") as f:
+    with page.open("w", encoding="utf-8", newline="") as f:
         f.write(html)
-    print(f"Embedded {SVG.name} ({len(uri):,} chars as a URI) and {TOUCH.name} into {PAGE.relative_to(ROOT)}")
+    print(f"Embedded {SVG.name} ({len(uri):,} chars as a URI) and {TOUCH.name} into {shown(page)}")
 
 
 if __name__ == "__main__":

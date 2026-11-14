@@ -5,7 +5,8 @@ own license, and the full text travels with the component.
 
 ## Inter typeface
 
-- **Used for:** all text in the clickable mock (`mocks/index.html`), embedded as a font file.
+- **Used for:** all text in the page (`public/index.html`) and the clickable mock (`mocks/index.html`),
+  embedded in each as a font file.
 - **Copyright:** Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)
 - **License:** SIL Open Font License, Version 1.1. Full text:
   [`third_party/inter/LICENSE.txt`](third_party/inter/LICENSE.txt)

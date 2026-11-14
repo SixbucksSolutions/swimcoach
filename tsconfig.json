@@ -15,5 +15,6 @@
     "resolveJsonModule": true
   },
   "include": ["src", "test", "vitest.config.ts", "src/worker-configuration.d.ts"],
-  "exclude": ["test/cli"]
+  // test/cli is checked by cli/tsconfig.json and test/page by tsconfig.page.json (DOM types).
+  "exclude": ["test/cli", "test/page"]
 }

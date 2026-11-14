@@ -1,0 +1,348 @@
+/* The shared token stylesheet: palette, base, the shell (status line, warning, pages, dots), and the
+   desktop column. Lifted from the approved mock (mocks/index.html); overview.css and project.css hold
+   each display's own rules. */
+
+:root {
+  /* Palette: docs/brand.md section 5. Use a token; a new hex here needs a reason in the brand guide. */
+  /* Brand: four core colors, all from the mark. The wordmark is "swim" lane blue, "coach" lane amber. */
+  --lane-blue: #85b8ff;
+  --lane-amber: #e2a100;
+  --lane-green: #4bce97;
+  --board: #1d2125;
+  /* Neutrals: one slate ramp, darkest to lightest. --panel2 is the mark's board; --stack-* its back boards. */
+  --bg: #0b0f14;
+  --panel: #131a22;
+  --panel2: var(--board);
+  --line: #243140;
+  --stack-1: #3b4550;
+  --stack-2: #5a6573;
+  --text: #e8eef4;
+  --dim: #93a3b3;
+  --faint: #5f7082;
+  /* Status: meaning, never decoration. Good news is lane green: --ok for text on the page (9.68:1), and
+     --ok-fill, the same hue darkened until pure white on it is 7.11:1 (WCAG AAA). Text on --ok-fill MUST
+     stay full opacity. Done is quiet slate, not a color. */
+  --ok: var(--lane-green);
+  --ok-fill: #1b6445;
+  --risk: #facc15;
+  --bad: #f87171;
+  --bad-fill: #dc2626;
+  --done: var(--dim);
+  --me: var(--bad);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  font:
+    16px / 1.35 Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+/* No render flicker (concept.md 3.4): hidden until the font file and first render are ready, then one fade. */
+body {
+  transition: opacity 0.2s ease-in;
+}
+
+html.loading body {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+}
+
+/* ---------- the shell ---------- */
+#phone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  padding-top: env(safe-area-inset-top);
+  background: var(--bg);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 8px;
+  flex: none;
+  min-width: 0;
+}
+
+header h1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+#brand {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  background: center / contain no-repeat var(--brand);
+}
+
+header h1 .word {
+  color: var(--lane-blue);
+}
+
+header h1 .word span {
+  color: var(--lane-amber);
+}
+
+/* Status line, right to left: bell, health box, clock, locked together at one 8px gap (header gap);
+   margin-left:auto on the clock pushes the group right and leaves the mark and wordmark alone on the left. */
+#clock {
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+#snd {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: var(--panel);
+  color: var(--dim);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+
+#snd svg {
+  width: 18px;
+  height: 18px;
+}
+
+#snd.on {
+  color: var(--lane-blue);
+  border-color: var(--lane-blue);
+}
+
+#health {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border-radius: 7px;
+  font-size: 13px;
+  color: #fff;
+  background: var(--panel2);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+#health b {
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+#health span {
+  opacity: 0.85;
+}
+
+#health span:empty {
+  display: none;
+}
+
+#health i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0.3;
+}
+
+#health.live {
+  background: var(--ok-fill);
+}
+
+#health.live i {
+  animation: breathe 2s ease-in-out 8;
+}
+
+#health.live span {
+  opacity: 1;
+}
+
+/* STALE and OFFLINE are single-use status shades and stay literal beside their rules (docs/brand.md
+   section 5). */
+#health.stale {
+  background: #9a3412;
+}
+
+#health.off {
+  background: #991b1b;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* The warning flag's tints are single-use status shades too (docs/brand.md section 5). */
+#warn {
+  margin: 2px 14px 8px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  background: #3b1408;
+  border: 1px solid #fb923c;
+  color: #fed7aa;
+  font-size: 17px;
+  font-weight: 600;
+  flex: none;
+}
+
+#warn:empty {
+  display: none;
+}
+
+#pages {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+
+#phone[data-health="off"] #pages,
+#phone[data-health="stale"] #pages {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.page {
+  flex: 0 0 100%;
+  width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow-y: auto;
+  padding: 13px 14px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* No visible scrollbars: the dots are the position indicator. ::-webkit-scrollbar covers WebKit
+   (Terry's phone); scrollbar-width covers the rest, where the browser supports it. */
+#pages::-webkit-scrollbar,
+.page::-webkit-scrollbar {
+  display: none;
+}
+
+@supports (scrollbar-width: none) {
+  #pages,
+  .page {
+    scrollbar-width: none;
+  }
+}
+
+.page > * {
+  flex-shrink: 0;
+}
+
+#dots {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 2px 0 max(6px, env(safe-area-inset-bottom));
+}
+
+#dots button {
+  border: 0;
+  background: none;
+  padding: 8px 4px;
+}
+
+/* biome-ignore lint/style/noDescendingSpecificity: compared with #health.live i, a different element; the rule matches selectors by their last part alone. */
+#dots i {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+#dots button.on i {
+  background: var(--text);
+}
+
+#dots button:first-child i {
+  border-radius: 2px;
+}
+
+/* GO TO KEYBOARD's breath (overview.css), kept here beside the LIVE dot's so the two stay one rhythm. */
+@keyframes throb {
+  50% {
+    filter: brightness(1.18);
+  }
+}
+
+/* ---------- desktop: one centered phone-sized column ----------
+   The one layout change from the mock (t4-interfaces.md, MVP-08 "Desktop"): the column keeps the
+   402 x 874 phone size but drops the bezel border, shadow and notch, and the mock's side panel. */
+@media (min-width: 760px) {
+  html,
+  body {
+    overflow: auto;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 28px 24px;
+    min-height: 100%;
+  }
+
+  #phone {
+    flex: none;
+    width: 402px;
+    height: 874px;
+  }
+}
