@@ -117,6 +117,17 @@ function listen() {
     fitOverview();
     go(ui("#pages").dataset.cur ?? ALL, "auto");
   });
+  // The warning line takes room from the Card display area when it appears (STALE, OFFLINE,
+  // SIGN IN) and gives it back when it goes, often with no new view to draw. Refit whenever the
+  // area's height changes, so six half slots always fit (UX-142, UX-144; MVP-12 visual review).
+  // fitCards writes only what changed, so a refit at an unchanged size touches nothing (UX-110).
+  let fittedHeight = pages.clientHeight;
+  new ResizeObserver(() => {
+    if (pages.clientHeight !== fittedHeight) {
+      fittedHeight = pages.clientHeight;
+      fitOverview();
+    }
+  }).observe(pages);
 }
 
 // Reveal once (concept.md 3.4): after the first poll settles and the font is ready, capped at 3 s
