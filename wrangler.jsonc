@@ -11,5 +11,10 @@
   },
   "observability": {
     "enabled": true
-  }
+  },
+  // One Board Durable Object holds every tracked milestone and its samples (MVP-03 A).
+  "durable_objects": {
+    "bindings": [{ "name": "BOARD", "class_name": "Board" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Board"] }]
 }
