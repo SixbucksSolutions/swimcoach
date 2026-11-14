@@ -36,7 +36,6 @@ const NO_HEADER = "header is missing or empty";
 
 /** An AccessConfig; undefined stands for a Worker variable that was never set. */
 function config(team: string | undefined, aud: string | undefined): AccessConfig {
-  // biome-ignore lint/style/useNamingConvention: the frozen contract names Worker variables in CONSTANT_CASE.
   const cfg = { ACCESS_TEAM_DOMAIN: team, ACCESS_AUD: aud };
   return cfg as AccessConfig;
 }
