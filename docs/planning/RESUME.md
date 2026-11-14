@@ -25,6 +25,11 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   - The UX ledger gained a V1 column; changed rows are superseded, never rewritten; the rows still
     standing become V1 requirements at MVP-12.
   - Relay rule 9 (`mvp-staffing-plan.md`): subagents only for parallel work or independent review.
+  - **The overview is locked to a 3/6 slot grid for the MVP** (Terry: "three is plenty and we can
+    revisit at V1+"). Seven demo cards under 4/8 spilled past the bottom of the home-screen app, whose
+    card area is about 625 px (estimate; measure before MVP-12). PR #32 (`a12605e`, authored by the
+    Lead per rule 9), deployed as `main` `dcdf18a`; UX-141 to UX-147 supersede the 4/8 rows (ledger:
+    147 rows, 16 superseded). Full 68/68 on test (run `1ligdb`), clock-free 41/41 on production.
   - Still open from the list below: the desktop column, SIGN IN, small-block hero spacing. The six
     `zz demo` milestones are still on production; stop them when the demo ends.
 
