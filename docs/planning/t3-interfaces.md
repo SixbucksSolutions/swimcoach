@@ -75,8 +75,11 @@ Owns `src/routes/report.ts`, `src/routes/stop.ts`, `test/routes/report.test.ts`,
 Terry: "let's date version it ... `/api/2026-11-13/...`". The API's routes are `POST
 /api/2026-11-13/report`, `POST /api/2026-11-13/stop` and `GET /api/2026-11-13/state`. `/healthz` stays
 unversioned (liveness, not API). Unversioned `/api/...` paths are NOT aliases: they answer `404
-not_found`. A breaking change to a request or response MUST get a new date path; an additive,
-backward-compatible change keeps the current date. V2 MUST serve the same dated paths. The Lead makes
+not_found`. Terry's versioning rule, in his words: "non-API-breaking changes to fix defects behind
+endpoints do not require a version rev. We do rev the date if we add, change behavior, or remove
+methods/endpoints." So adding, changing the behavior of, or removing any method or endpoint MUST get a
+new date path, and only a defect fix that keeps the API unchanged MAY keep the current date. V2 MUST
+serve the same dated paths. The Lead makes
 the contract, router and CLI changes in the wiring PR below; route handlers never see the path.
 
 ## The Lead, after the four merge
