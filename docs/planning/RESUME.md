@@ -3,7 +3,21 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
-## T4 in progress (2026-11-14 UTC)
+## T4 closed (2026-11-14 UTC); next: Terry's MVP-08 phone check, then T5
+
+- **`main` at `38c97d9` holds all of T4**, merged from `mvp/integration` (`824c7ed`): PRs #23-#30.
+  CI run 43559508287 (`check` and `deploy` both success) put it on production. `swimcoach-test` was
+  redeployed from the same `main` as version `b9d27288-fbf8-4d62-b71e-03e2087d5692`.
+- **Verified on the deployed T4 build:** `--suite full` on `swimcoach-test` 68/68 (run `y39r80`);
+  `--suite clock-free` on production 41/41 (run `9qpeqo`); a page smoke test (scratch script,
+  service token, `redirect: "manual"`) fetched `/` (title "swimcoach") and all 15 `/css/` and `/js/`
+  assets it references with 200 on both Workers. iOS WebKit is NOT verified; that is Terry's check.
+- Branches: every T4 dev branch is deleted on the remote and locally; only `main` and
+  `mvp/integration` remain.
+- **The gate before T5 is Terry's MVP-08 phone check.** His four open calls are listed below. Do not
+  start T5 until he passes MVP-08 or names changes.
+
+### How T4 went (kept for the record)
 
 - `mvp/integration` holds MVP-08 B (#24, project display) and all of MVP-09: the harness (#26,
   `d9cc68b`) and 68 cases (#27, `cf66c20`). Every PR was reviewed by Opus 5.5 / high; #26 and #27 each
@@ -27,9 +41,10 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - MVP-08 merged into integration: #25 (08-A, `7c4247d`, three review rounds), #28 (08-C,
   `8f93547`, three rounds). Reviewers proved in Chromium at 402 x 874 that an identical poll makes ZERO
   DOM mutations on `document` (the status clock's once-a-minute change is the only writer), including
-  after Inter loads late. The visual review (57 screens, 0-1.06 % pixel diff) found 2 defects, now in
-  a fix PR (`t4/mvp-08-fix`): a name ellipsized by `clientWidth` rounding, and a red display's hero
-  repeating the ask instead of the call (new `CardView.callWhy`).
+  after Inter loads late. The visual review (57 screens, 0-1.06 % pixel diff) found 2 defects, fixed
+  in #30 (`824c7ed`): a name ellipsized by `clientWidth` rounding, and a red display's hero repeating
+  the ask instead of the call (new `CardView.callWhy`). The Needs Terry ask shows ONLY in the project
+  display's "Go to keyboard" flag; the overview's GO TO KEYBOARD slot lists titles only.
 - **For Terry at the MVP-08 phone check (his calls, not yet decided):**
   1. The desktop view is a centered 402 x 874 column with no bezel or side panel (the one sanctioned
      layout change; he has not seen it).
