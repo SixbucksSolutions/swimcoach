@@ -118,7 +118,7 @@ only this; neither reads the API body or recomputes a verdict (api.md 6).
 `why` words: `done` "Done"; `needs_terry` the `needs_me` text; `silent` "Agent silent for " +
 `dur(silentSeconds)`; `running_late` "Running late"; `stalled` "No ticket moved in " + `dur(now -
 lastMoveAt)`; `toss_up` "Toss-up"; `too_early` "Too early to call"; `on_time` "On time"; `over_budget`
-"Over budget" and `under_budget` "Under budget" as placeholders until Terry picks words (UX-133).
+"Over budget" and `under_budget` "Under budget" (Terry, 2026-11-13; UX-133).
 
 ### MVP-08 A: overview display (Sonnet 5.5 / medium)
 
