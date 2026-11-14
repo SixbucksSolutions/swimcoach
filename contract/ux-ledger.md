@@ -47,8 +47,9 @@ load-bearing.
 | J. Navigation | UX-113 to UX-124 | 12 |
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
-| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-162 | 28 |
-| **Total** | | **162** (28 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 071, 073, 111, 112, 132, 133, 134, 136, 137, 150) |
+| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-162, UX-167 to UX-169 | 31 |
+| N. Phone and home screen (MVP-10) | UX-163 to UX-166 | 4 |
+| **Total** | | **169** (31 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 071, 073, 090, 093, 094, 111, 112, 132, 133, 134, 136, 137, 150; 2 retired: UX-037, UX-083) |
 
 ## A. Status line
 
@@ -100,7 +101,7 @@ load-bearing.
 | UX-034 | Done state ranks above red: a done project with a stale `needs_me` shows done (needs Terry, c8 item 3: the done and gray colors) | c3.2 "first match wins" table order (Done is row 1, Red is row 2), api.md 6.6 | - | Contrived; no render | Pending |
 | UX-035 | Red project: needs-you item (a ticket in Needs Terry, or `needs_me` text) | c3.2 states row 2 | `keyboard-00-all-projects.png` | Red projects leave the list; see area D | Pending |
 | UX-036 | Yellow: agent silent over 25 min | c3.2 states row 3 | `silent-00-all-projects.png` | Detail blurb names the reason | No: superseded by UX-152 |
-| UX-037 | RETIRED: "Yellow: status `blocked`" cannot happen. The report has no `status` field (api.md 6.2), and Blocked never appears on the dashboard (c3.2, Terry 2026-11-13). c3.2's card-states table row 3 still lists `status blocked`; that row is stale in concept.md | c3.2, api.md 6.2 | - | RETIRED; no check | Pending |
+| UX-037 | RETIRED: "Yellow: status `blocked`" cannot happen. The report has no `status` field (api.md 6.2), and Blocked never appears on the dashboard (c3.2, Terry 2026-11-13). c3.2's card-states table row 3 still lists `status blocked`; that row is stale in concept.md | c3.2, api.md 6.2 | - | RETIRED; no check | No: retired |
 | UX-038 | Yellow: the call is "Running late" | c3.2 states row 3 | `afternoon-00-all-projects.png` (mobile-onboarding) |  | Pending |
 | UX-039 | Yellow: no ticket moved in 45 min | c3.2 states row 3 | - | No render | Pending |
 | UX-040 | Yellow: the call is "Toss-up" | c3.2 states row 3 | `afternoon-00-all-projects.png` (docs-site) |  | Pending |
@@ -166,14 +167,14 @@ load-bearing.
 | UX-080 | Large RTR padding reserves the hand's reach; the hand never touches the name or the label; the label is centered on the number | c3.2 decided | `afternoon-03-fga-t04-top.png` |  | Pending |
 | UX-081 | Needs-you text shows when the project is red | c3.3 part 3 | `keyboard-01-fga-t04-top.png` |  | Pending |
 | UX-082 | Stale-agent warning shows when the agent is silent | c3.3 part 3 | `silent-01-docs-site-top.png` |  | Pending |
-| UX-083 | RETIRED: the report carries no `tldr` (api.md 6.10: "the report no longer carries them"); c3.3 part 3 is stale. The project display shows no tldr line | c3.3 part 3, api.md 6.10 | - | RETIRED; no check | Pending |
+| UX-083 | RETIRED: the report carries no `tldr` (api.md 6.10: "the report no longer carries them"); c3.3 part 3 is stale. The project display shows no tldr line | c3.3 part 3, api.md 6.10 | - | RETIRED; no check | No: retired |
 | UX-084 | RTR today: line chart across the day, dashed line at 1.00, start and end times | c3.3 part 4 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-085 | Projection tiles: chance on time, with "3 landed in last 60m, 3 to go" | c3.3 part 5 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-086 | Projection tile: lands, "1h 10m early" or late | c3.3 part 5 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-087 | Projection tiles: RTR at end of block, and RTR trend as a signed change | c3.3 part 5 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-088 | Too early to call: one tile says so and states the gates | c3.3 part 5, c4.6 | `morning-01-docs-site-top.png` |  | Pending |
 | UX-089 | Work against time: two bars, tickets done of total and hours used of allocated | c3.3 part 6 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
-| UX-090 | Work bar takes the display's color on green and yellow only | c3.3 part 7 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
+| UX-090 | Work bar takes the display's color on green and yellow only | c3.3 part 7 | `afternoon-03-fga-t04-bottom.png` |  | No: superseded by UX-167 |
 | UX-091 | Footer: last ticket move, last report time, reporting agent | c3.3 part 8 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-092 | A done project's display shows done styling (lightest neutral, no state color) | c3.3 | `alldone-01-docs-site-top.png`, `alldone-01-docs-site-bottom.png` |  | Pending |
 
@@ -181,8 +182,8 @@ load-bearing.
 
 | ID | State or transition | Rule | Render | Check | V1 |
 | --- | --- | --- | --- | --- | --- |
-| UX-093 | Green or yellow display: three rows: Ready For Work, In progress, Ready for review, plus the Completed row (needs Terry: api.md 4.1 and 6.10 make Completed new to the page; whether it shows as a fourth row is not decided) | c3.3 part 7, api.md 4.1, 6.10 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
-| UX-094 | Each row shows name, count, share, and its own bar under the row; the Completed row follows the same rule, and whether it is hidden at 0 is needs Terry | c3.3 part 7, api.md 6.10 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
+| UX-093 | Green or yellow display: three rows: Ready For Work, In progress, Ready for review, plus the Completed row (needs Terry: api.md 4.1 and 6.10 make Completed new to the page; whether it shows as a fourth row is not decided) | c3.3 part 7, api.md 4.1, 6.10 | `afternoon-03-fga-t04-bottom.png` |  | No: superseded by UX-168 |
+| UX-094 | Each row shows name, count, share, and its own bar under the row; the Completed row follows the same rule, and whether it is hidden at 0 is needs Terry | c3.3 part 7, api.md 6.10 | `afternoon-03-fga-t04-bottom.png` |  | No: superseded by UX-169 |
 | UX-095 | The 100% bar sits below the rows and is split into those lanes | c3.3 part 7 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-096 | Backlog and Blocked lanes are not shown | c3.3 part 7, c3.2 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-097 | An empty Needs Terry lane is not shown | c3.3 part 7 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
@@ -282,3 +283,18 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-160 | The LIVE dot and GO TO KEYBOARD breathe in step: same 2 s `ease-in-out` cycle, same peak, 20 cycles | c3.2 breathing sync | `keyboard-00-all-projects.png` | Supersedes UX-071 (8 cycles); compare both animations' current time; MUST agree to the millisecond | Pending |
 | UX-161 | Health box LIVE, with the breathing dot, when every tracked milestone is done and a poll got a 200 within three poll intervals (api.md 6.7 `feed` `idle`) | c3.1 table, Terry 2026-11-14 | `alldone-00-all-projects.png` | Supersedes UX-136 (30 s at the 10 s poll) | Pending |
 | UX-162 | Health box LIVE, with the breathing dot and no age, when no milestone is tracked and a poll got a 200 within three poll intervals (api.md 6.7 `feed` `no_data`) | c3.1 table, Terry 2026-11-14: "I want to know the empty list IS the live data" | - | Supersedes UX-137 (30 s at the 10 s poll); reach with an empty database | Pending |
+| UX-167 | The Work bar takes the display's state color on every level (green, yellow, red, gray, done); the Time bar is neutral (`--dim`) | c3.3 part 7; the approved mock's `.meter` sets `--c` to the display's tone for every level (mocks/index.html 160-163, 392) | `afternoon-03-fga-t04-bottom.png` | Supersedes UX-090, which said "green and yellow only" against the mock (found by MVP-11 B, 2026-11-14) | Pending |
+| UX-168 | Green or yellow display: three Swimlanes rows, Ready For Work, In progress and Ready for review. Completed is never a row, even when it holds tickets, and still counts as finished; Needs Terry never shows here (any ticket in it makes the display red) | c3.3 part 7; Terry 2026-11-13 (t4-interfaces.md decision 3): "Never show completed; usually has a few hundred tickets" | `afternoon-03-fga-t04-bottom.png` | Supersedes UX-093, whose Completed row was "needs Terry" | Pending |
+| UX-169 | Each Swimlanes row shows its name, count and share, with its own bar under the row; there is no Completed row | c3.3 part 7; t4-interfaces.md decision 3 | `afternoon-03-fga-t04-bottom.png` | Supersedes UX-094, whose Completed row was "needs Terry" | Pending |
+
+## N. Phone and home screen (MVP-10)
+
+Rows MVP-10 added on 2026-11-14 so the device check's steps are ledger rows too; a browser can prove
+only part of each, so each carries its manual step from `docs/runbooks/mvp-10-device-check.md`.
+
+| ID | State or transition | Rule | Render | Check | V1 |
+| --- | --- | --- | --- | --- | --- |
+| UX-163 | Added to the iPhone home screen, the icon's suggested and shown name is exactly `swimcoach` (the page's `apple-mobile-web-app-title` and the manifest's `short_name`), not the page title | MVP-10, RESUME "Carried into MVP-10" | - | manual: device check steps 1 and 2 | Pending |
+| UX-164 | Launched from the home-screen icon, the page opens full-screen (standalone), with no browser address bar or toolbar | MVP-10; Terry 2026-11-13: iOS "opens it like a legit thing, not wrapped in chrome" | - | manual: device check step 3 | Pending |
+| UX-165 | Opened from the home-screen icon four hours or more after the last use, the page shows the board without a sign-in page (the 7-day Access session holds inside the home-screen app's own cookies) | MVP-10, RESUME risk 8 | - | manual: device check steps 4 and 8 | Pending |
+| UX-166 | The home-screen icon is the swimcoach mark on the dark ground (`design/logo/swimcoach-touch-180.png`), never a screenshot of the page. The page embeds it as a data URI, because every served path sits behind Cloudflare Access and a fetch without the login cookie would get the login redirect | MVP-10; MVP-10 review, 2026-11-14 | `design/logo/swimcoach-touch-180.png` | manual: device check step 2; `test/page/assets.test.ts` checks the embedded 180 px PNG | Pending |
