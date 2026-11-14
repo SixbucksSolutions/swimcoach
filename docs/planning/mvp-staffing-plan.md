@@ -154,6 +154,20 @@ every re-reviewer after a correction. Author roles keep the model and effort the
    - T1 exception: T1's authors were dispatched into the shared checkout before this rule existed. The
      Lead turns each T1 author's files into that author's branch and pull request; from T2 on, authors
      do it themselves.
+9. **Subagents only for parallel work or independent review** (Terry, 2026-11-14, verbatim:
+   "subagents are encouraged, but only when subagent work can be done in parallel/overlap OR
+   independent review is needed. Never spin up a single subagent to do work the parent agent is able
+   to do." His reason: it "uses unnecessary tokens").
+   - Two or more independent stories or parts at once: author subagents, as above.
+   - Review of any work, the Lead's included: a reviewer subagent (Opus 5.5 / high). Review is the
+     independence this rule protects.
+   - A single story, fix round or follow-up change with nothing else running: the Lead MUST author it
+     itself, on its own branch and pull request, and a reviewer subagent reviews it. The Lead MUST NOT
+     dispatch one author and wait.
+   - This narrows rule 4: a correction with no other work in flight goes to the Lead, not to a
+     correction author.
+   - It was written after the Lead dispatched single authors for PR #30 (the MVP-08 visual fix round)
+     and PR #31 (the phone-check change) while idle.
 
 ## Steps only Terry can do
 
