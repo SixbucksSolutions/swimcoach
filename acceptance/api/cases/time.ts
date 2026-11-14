@@ -90,7 +90,7 @@ export const timeCases: Case[] = [
           "invalid_test_clock",
           "malformed clock with text/plain (400 before 415)",
         );
-        const unknown = await h.request("GET", "/api/2026-11-13/nope", {
+        const unknown = await h.request("GET", "/api/2026-11-14/nope", {
           headers: { [CLOCK_HEADER]: "abc" },
         });
         expectError(h, unknown, 404, "not_found", "malformed clock on an unknown path (404 first)");
@@ -335,8 +335,8 @@ export const timeCases: Case[] = [
         const silent = await stateOf(h, start + 25 * MINUTE + 1);
         h.expectClose(silent.now, start + 25 * MINUTE + 1, "state.now");
         for (const [name, color, reason, stale] of [
-          ["ratio", "yellow", "silent", true],
-          ["two cards", "yellow", "silent", true],
+          ["ratio", "gray", "silent", true],
+          ["two cards", "gray", "silent", true],
           ["all done", "done", "done", false],
         ] as const) {
           const entry = mustFind(silent, project, name, "at 25 min + 1 s");

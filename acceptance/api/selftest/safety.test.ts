@@ -49,7 +49,7 @@ describe("production safety on the clock-free suite", () => {
         /needs_terry/u,
       );
       await assert.rejects(
-        h.request("POST", "/api/2026-11-13/report", { raw: JSON.stringify(reportBody("FGA")) }),
+        h.request("POST", "/api/2026-11-14/report", { raw: JSON.stringify(reportBody("FGA")) }),
         /MUST start with/u,
       );
       assert.equal(stub.requests.length, 0);

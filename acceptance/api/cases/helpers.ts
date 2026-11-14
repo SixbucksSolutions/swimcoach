@@ -9,9 +9,9 @@ const LOWER_ASCII = /[a-z]/gu;
 const JSON_TYPE = /^application\/json/iu;
 const NO_STORE = /(?:^|[\s,])no-store(?:$|[\s,])/iu;
 
-export const REPORT_PATH = "/api/2026-11-13/report";
-export const STOP_PATH = "/api/2026-11-13/stop";
-export const STATE_PATH = "/api/2026-11-13/state";
+export const REPORT_PATH = "/api/2026-11-14/report";
+export const STOP_PATH = "/api/2026-11-14/stop";
+export const STATE_PATH = "/api/2026-11-14/state";
 export const CLOCK_HEADER = "Swimcoach-Test-Now";
 export const DAY = 86_400;
 
@@ -313,7 +313,7 @@ export function derivedVerdict(entry: MilestoneState): { color: string; reason: 
     return { color: "red", reason: "needs_terry" };
   }
   if (entry.stale) {
-    return { color: "yellow", reason: "silent" };
+    return { color: "gray", reason: "silent" };
   }
   if (ratio && call === "running_late") {
     return { color: "yellow", reason: "running_late" };

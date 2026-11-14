@@ -6,7 +6,7 @@ import { isRecord, parseJson } from "./json.ts";
 import type { Reply, Send } from "./types.ts";
 
 /** The dated API version the suite tests (contract/api.md, "Versioning"). */
-const API_VERSION = "2026-11-13";
+const API_VERSION = "2026-11-14";
 const REPORT_PATH = `/api/${API_VERSION}/report`;
 const STOP_PATH = `/api/${API_VERSION}/stop`;
 const STATE_PATH = `/api/${API_VERSION}/state`;

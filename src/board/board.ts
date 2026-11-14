@@ -24,7 +24,7 @@ const RETENTION_SECONDS = 14 * SECONDS_PER_DAY;
 export type ReportResult = PlanResult;
 
 /**
- * Everything GET /api/2026-11-13/state reads. `samples` is keyed by `milestoneKey()` from ./store.
+ * Everything GET /api/2026-11-14/state reads. `samples` is keyed by `milestoneKey()` from ./store.
  */
 export interface BoardSnapshot {
   readonly milestones: StoredMilestone[];
@@ -65,7 +65,7 @@ export class Board extends DurableObject<Env> {
     return this.#store.stopMilestone(request.project, request.milestone);
   }
 
-  /** Every tracked milestone and its samples, oldest first, for GET /api/2026-11-13/state. */
+  /** Every tracked milestone and its samples, oldest first, for GET /api/2026-11-14/state. */
   snapshot(): BoardSnapshot {
     return {
       milestones: this.#store.listMilestones(),
@@ -76,7 +76,7 @@ export class Board extends DurableObject<Env> {
   /**
    * Once a day, delete samples older than 14 days (api.md section 10). An alarm has no request, so
    * it reads the real clock; a test deployment's header clock (api.md section 9) cannot reach it.
-   * Milestones are never removed here: only POST /api/2026-11-13/stop removes one.
+   * Milestones are never removed here: only POST /api/2026-11-14/stop removes one.
    */
   override async alarm(): Promise<void> {
     this.#store.pruneSamplesBefore(Date.now() / 1000 - RETENTION_SECONDS);

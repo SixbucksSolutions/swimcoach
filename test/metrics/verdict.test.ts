@@ -92,7 +92,7 @@ const RATIO_ROWS: readonly Row[] = [
     "silent beats running_late",
     { updated_at: NOW - 30 * MINUTE },
     { call: "running_late" },
-    "yellow",
+    "gray",
     "silent",
   ],
   [
@@ -131,7 +131,7 @@ const COUNT_ROWS: readonly Row[] = [
     "red",
     "needs_terry",
   ],
-  ["silent", { lanes: ONE, updated_at: NOW - 30 * MINUTE }, {}, "yellow", "silent"],
+  ["silent", { lanes: ONE, updated_at: NOW - 30 * MINUTE }, {}, "gray", "silent"],
   [
     "over budget",
     { lanes: ONE, active_hours: 4.5 },

@@ -20,7 +20,7 @@ You MUST report:
 2. **On every card move.** Above all when a card moves to Ready For Review or to Needs Terry. A card in
    Needs Terry raises GO TO KEYBOARD on his phone, so report it at once.
 3. **As a heartbeat at least every 10 minutes while you work**, even when nothing changed. Silence for 25
-   minutes turns the milestone yellow and marks it STALE.
+   minutes turns the milestone gray and marks it STALE.
 
 ### What to send
 

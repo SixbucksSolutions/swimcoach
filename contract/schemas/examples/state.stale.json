@@ -33,7 +33,7 @@
       "stale": true,
       "stalled": false,
       "mode": "ratio",
-      "color": "yellow",
+      "color": "gray",
       "reason": "silent",
       "metrics": {
         "work": 0.16666666666666666,
@@ -79,7 +79,7 @@
       "stale": true,
       "stalled": true,
       "mode": "ratio",
-      "color": "yellow",
+      "color": "gray",
       "reason": "silent",
       "metrics": {
         "work": 0.6666666666666666,
@@ -173,7 +173,7 @@
       "stale": true,
       "stalled": true,
       "mode": "ratio",
-      "color": "yellow",
+      "color": "gray",
       "reason": "silent",
       "metrics": {
         "work": 0.5714285714285714,
@@ -341,7 +341,7 @@
       "stale": true,
       "stalled": true,
       "mode": "ratio",
-      "color": "yellow",
+      "color": "gray",
       "reason": "silent",
       "metrics": {
         "work": 0.3333333333333333,

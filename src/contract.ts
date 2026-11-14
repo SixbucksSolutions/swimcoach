@@ -6,8 +6,10 @@
  * The date in every API path, `/api/<date>/...` (contract/api.md, "Versioning"). Adding, removing
  * or changing the behavior of a method or endpoint MUST get a new date; a defect fix that keeps the
  * API unchanged MAY keep this one. The Worker's router and the CLI both read it from here.
+ * 2026-11-14: a silent card's `color` changed from yellow to gray (api.md 6.6), so the date moved;
+ * the server no longer serves 2026-11-13.
  */
-export const API_VERSION = "2026-11-13";
+export const API_VERSION = "2026-11-14";
 
 /** Whole or fractional seconds since the Unix epoch, on the server's clock (api.md section 9). */
 export type EpochSeconds = number;
@@ -39,7 +41,7 @@ export interface Report {
   readonly needs_me?: string;
 }
 
-/** The body of POST /api/2026-11-13/stop, already validated. */
+/** The body of POST /api/2026-11-14/stop, already validated. */
 export interface StopRequest {
   readonly project: string;
   readonly milestone: string;

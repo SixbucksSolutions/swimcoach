@@ -85,7 +85,7 @@ logo's grays are the same grays.
 | `--panel` | `#131a22` | Tiles, the mock's scenario sheet |
 | `--panel2` | `= --board` | Health box when idle, bar tracks |
 | `--line` | `#243140` | Borders, dividers, parked lanes |
-| `--stack-1` | `#3B4550` | The "too early" gray card; the mark's middle board |
+| `--stack-1` | `#3B4550` | The gray card (too early to call, or agent silent); the mark's middle board |
 | `--stack-2` | `#5A6573` | Lane shades; the mark's back board |
 | `--faint` | `#5f7082` | Axis labels, footers (3.78:1, deliberately quiet) |
 | `--dim` | `#93a3b3` | Secondary text; done (7.44:1 on `--bg`) |
@@ -102,7 +102,7 @@ not just describe a state. Status colors MUST NOT be used for decoration.
 | Green (LIVE, on-time card) | **Relax.** Look away; this is safe to ignore for now |
 | Yellow (needs attention) | **Keep an eye on it.** Not bad, but slipping in a direction worth knowing |
 | Red (GO TO KEYBOARD) | **Get up.** Only Terry can move this |
-| Gray (too early to call) | **Nothing yet.** There is not enough history to judge, so do not try |
+| Gray (not enough fresh data: too early to call, or the agent went silent) | **Nothing yet.** There is not enough fresh data to signal green or yellow, so do not try (Terry, 2026-11-14) |
 | Slate (done) | **Nothing.** It is finished |
 | Orange / red health box (STALE, OFFLINE) | **Distrust the page.** Everything below is old |
 

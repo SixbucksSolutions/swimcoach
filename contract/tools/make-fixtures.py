@@ -211,7 +211,7 @@ def card_verdict(card: CardInputs) -> tuple[str, str]:
     rows: tuple[tuple[str, str, bool], ...] = (
         ("done", "done", card.done),
         ("red", "needs_terry", card.needs_me),
-        ("yellow", "silent", card.stale),
+        ("gray", "silent", card.stale),
         ("yellow", "running_late", ratio and card.call == "running_late"),
         ("yellow", "over_budget", not ratio and card.active_hours > card.cap_hours),
         ("yellow", "stalled", ratio and card.stalled),

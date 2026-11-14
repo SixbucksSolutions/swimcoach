@@ -1,4 +1,4 @@
-// GET /api/2026-11-13/state (MVP-07 A): contract/api.md section 6. Pure body builder plus the
+// GET /api/2026-11-14/state (MVP-07 A): contract/api.md section 6. Pure body builder plus the
 // thin handler.
 
 import type { BoardSnapshot } from "../board/board.ts";
@@ -107,7 +107,7 @@ export function stateBody(snapshot: BoardSnapshot, now: EpochSeconds): unknown {
   };
 }
 
-/** GET /api/2026-11-13/state: reads the Board's snapshot and answers 200 with the section 6 body. */
+/** GET /api/2026-11-14/state: reads the Board's snapshot and answers 200 with the section 6 body. */
 export async function handleState(env: Env, now: EpochSeconds): Promise<Response> {
   const snapshot = await boardStub(env).snapshot();
   return jsonResponse(stateBody(snapshot, now));
