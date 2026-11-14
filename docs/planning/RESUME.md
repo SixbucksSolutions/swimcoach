@@ -59,6 +59,10 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - Follow-up (non-blocking, PR #9 review): the chance tests miss two mutations, deleting the
   compensated sum and moving the Lanczos cutoff from 5 to 4; the "span too small" test never reaches
   the `p = 0` limit. Strengthen them in a later turn.
+- Carried into MVP-10: Terry added the page to his iPhone home screen on 2026-11-13. The S1 icon is
+  right, but the label reads "(1)swimcoach·c..." because iOS took the mock's `<title>` (needs-you count
+  plus "swimcoach · clickable mock"). MVP-10 MUST set `apple-mobile-web-app-title` and the manifest
+  `short_name` to `swimcoach`, and MVP-08 SHOULD drop "clickable mock" from the title.
 - Carried into MVP-09: the Board's retention alarm prunes on the real clock, so on the test Worker,
   samples stamped more than 14 days before real time can vanish within a day (MVP-03 A hand-off).
   The test Worker SHOULD disable or re-base pruning.
