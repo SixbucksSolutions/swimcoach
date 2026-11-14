@@ -73,8 +73,12 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
      failure (redirect, 401, 403) reloads once per 5 minutes so Access can show its
      login, then shows SIGN IN in OFFLINE's red with the displays grayed. If the reload itself is
      refused, the page shows the header and warning only.
-  3. On a small-block display the hero label ("Under budget") sits flush under the title; the reviewer
-     offers 10px of space if he wants it.
+  3. **Deferred by Terry to a later turn (2026-11-14): "Don't do it now put it in a later turn."** On a
+     small-block display the hero label ("Under budget") was said to sit flush under the title. Terry
+     said yes to 10 px, but the PR #34 review measured that the premise was wrong: the visible gap was
+     already about 11 px, the same as a ratio hero's arrow, and 10 px more makes it about 21 px. PR #34
+     is parked as a draft (code correct, wording false); UX-155 is reserved for it. The Lead
+     recommends dropping it. Ask Terry: keep (fix the wording, merge) or drop (close #34).
   4. Whether to post a few `zz demo` milestones with the CLI so the board has cards during the demo.
 
 ## T3 closed (2026-11-13, Terry's evening)
