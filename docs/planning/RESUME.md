@@ -15,7 +15,10 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - **`scripts/check-access.ps1` passed 3 of 3 against production:** no credentials 302 to the Access
   login host, service token 200, wrong secret 401. **Risk 9 is resolved:** Access on `workers.dev`
   works on this account.
-- Remaining for MVP-05/MVP-10: Terry's PIN login on the iPhone. Then T3 opens (MVP-06, MVP-07).
+- **Terry's iPhone PIN login worked (2026-11-13, 8:35pm local):** Chrome on the iPhone 16 Pro loaded
+  the board through Access, LIVE badge and all. The page still shows the mock's scenario data; real
+  data arrives with MVP-07 (T3) and MVP-08 (T4). MVP-05 is complete. **T3 opens next** (MVP-06 CLI
+  client, MVP-07 state and report API), Lead's call under relay rule 8.
 
 ## T2 closed (2026-11-14 01:03 UTC); waiting on Terry's Access steps
 
