@@ -3,6 +3,20 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
+## Access proven (2026-11-13, Terry's evening)
+
+- Terry ran the runbook: Zero Trust org `snowy-queen-54cf` (already existed, Free plan), One-time
+  PIN login added, Worker-level Access on All traffic (7-day app session), policies `terry` (Allow,
+  `Terry.Ott@gmail.com`, 1-month session) and `swimcoach-cli` (Service Auth, non-expiring token),
+  `cli.json` written (shape checked by the Lead without reading values). Google login was considered
+  and dropped for the MVP: "Simple is good."
+- PR #16 wired `verifyAccess` into the router with `run_worker_first: true`; deployed as `main`
+  `923473c`, CI run 43540993578 green.
+- **`scripts/check-access.ps1` passed 3 of 3 against production:** no credentials 302 to the Access
+  login host, service token 200, wrong secret 401. **Risk 9 is resolved:** Access on `workers.dev`
+  works on this account.
+- Remaining for MVP-05/MVP-10: Terry's PIN login on the iPhone. Then T3 opens (MVP-06, MVP-07).
+
 ## T2 closed (2026-11-14 01:03 UTC); waiting on Terry's Access steps
 
 - `main` at `725a67e` holds all of T2: PRs #6-#15, each reviewed by Opus 5.5 / high and
