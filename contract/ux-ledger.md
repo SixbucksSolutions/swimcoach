@@ -8,6 +8,13 @@ load-bearing.
 
 - Each row has an ID (`UX-001`, ...). A check in MVP-11 MUST cite the ID it proves. An ID MUST NOT be
   renumbered or reused once a check cites it; a retired row stays, marked `RETIRED`.
+- **A row MUST NOT be rewritten when Terry changes his mind.** The old row keeps its text and gains
+  "**Superseded by UX-nnn**"; the new row gets the next free ID and says "Supersedes UX-nnn". Terry,
+  2026-11-14: "we can show how the sausage is made." The MVP exists to try things on the real phone,
+  and the ledger records each change of mind with its date and reason.
+- **The rows still standing at the end of the MVP, neither superseded nor retired, become V1
+  requirements.** Terry, 2026-11-14: "throw stuff at the wall and see what works. Those that we keep
+  become V1 requirements."
 - **Rule** names what the row proves and cites a section of [`docs/concept.md`](../docs/concept.md)
   (`c3.2` means concept.md section 3.2) or [`docs/brand.md`](../docs/brand.md) (`b5` means brand.md section 5).
 - **Render** is the file in [`design/ui-mock/`](../design/ui-mock/) that shows the state. A dash means no
@@ -16,7 +23,7 @@ load-bearing.
 - Viewer: Chrome on an iPhone 16 Pro, 402 x 874 CSS px (1206 x 2622 px at 3x). A check MUST run at that size.
 - Screen-part names follow concept.md section 2 exactly: Status line, Health box, Card display area, Card,
   Title line, Detail blurb. Other terms: Swimlanes, GO TO KEYBOARD (the slot), slot, display.
-- Every row describes behavior the MVP MUST show and V2 MUST reproduce. Rows marked **(measured)** carry
+- Every row that is not superseded or retired describes behavior the MVP MUST show and V2 MUST reproduce. Rows marked **(measured)** carry
   a pixel or time figure from the mock; a check SHOULD allow about 1 px of tolerance on pixel figures and
   MUST NOT relax a time figure.
 
