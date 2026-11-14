@@ -22,7 +22,9 @@ finish. You do nothing for that step.
    "(1)swimcoach·c..." stays until the icon is added again.
 2. **Add it again.** In Chrome, open `https://swimcoach.sixbuckssolutions.workers.dev`. Sign in with the
    PIN if Access asks. Tap Share, then Add to Home Screen. **Check:** the suggested name is exactly
-   `swimcoach`. Tap Add.
+   `swimcoach`, and the preview icon is the swimcoach mark (three stacked boards with blue, amber and
+   green bars) on the dark ground, not a screenshot of the page. Tap Add. **Check** the same icon on the
+   home screen.
 3. **Launch from the icon.** **Check:** it opens full-screen, with no Chrome address bar or toolbar.
 4. **Sign in inside the app if asked.** The home-screen app keeps its own cookies, separate from Chrome
    (RESUME risk 8), so Access MAY ask for the PIN once more here. That is expected, once.
