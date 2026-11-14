@@ -650,6 +650,13 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
     Object) is a goal for V1 and is REQUIRED for V2. V2 MUST still handle a phone that slept and lost
     its connection, by reading the full state on wake. Worker-level Access does not support WebSockets,
     so SSE over plain HTTP is the likely route on Cloudflare.
+15. **Is a done milestone a GO TO KEYBOARD call? (open, Terry, 2026-11-14).** A done milestone MAY
+    become a Needs Terry call, because reviewing a four-hour block's code is keyboard work: "I _do_ need
+    to code review a four hour chunk of work which is definitely not something I do on my phone." That
+    would revise D3 ("Ready For Review alone is not a request"), under which a done card stays quiet
+    slate. Not decided. Card #0034 on the `swimcoach` localswim board builds the quiet version first: done
+    cards leave the grid for a "Done: N" line above the page dots, a nudge to review and then have the
+    agent send `stop`.
 
 ## 9. Design history (superseded; source not kept)
 
