@@ -95,9 +95,11 @@ expected output. **Survives:** all of it.
 
 **Goal:** one Durable Object that stores the board and outlives every deploy.
 
-- SQLite tables `projects`, `samples`, `events` (prototype section 6.4), created by migration.
-- Report ingest with validation against MVP-01's schema; arrays of reports; lane overrides.
-- A Durable Object alarm deletes samples and events older than 14 days.
+- SQLite tables for tracked milestones and their samples, keyed by (project, milestone) and created
+  idempotently. No events table: nothing in the contract reads one (`contract/api.md`).
+- Report ingest with validation against MVP-01's schema: one complete report per request, no arrays,
+  no cards, no lane overrides (`contract/api.md` 4.1).
+- A Durable Object alarm deletes samples older than 14 days (`contract/api.md` section 10).
 
 **Done when:** a deploy between two reports keeps both reports' samples. **Survives:** the storage
 model as described in the contract.
@@ -161,8 +163,8 @@ is the one that knows what its milestone holds.
 
 **Goal:** the three endpoints, exactly as contracted.
 
-- `GET /api/state?since=` assembles snapshots, trend, `spark`, staleness and the health fields the page
-  needs (`docs/concept.md` section 6.3).
+- `GET /api/state` assembles the milestones, metrics, verdicts, `spark` and the health fields the page
+  needs (`contract/api.md` section 6). There is no `?since=` and no day boundary (api.md 6.9).
 - `POST /api/report` and the stop-tracking route for a (project, milestone) tuple call the Durable
   Object.
 
