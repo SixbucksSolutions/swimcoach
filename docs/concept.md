@@ -232,7 +232,10 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 - **No separator line between the name and the status.** Considered and declined, 2026-11-13. Size
   (24 px against 14 px), weight (800 against 500) and a 5 px gap already make the two tiers. A rule
   inside a colored card adds one more shape to scan at a glance, and it would compete with the clock
-  hand at 12 o'clock on the same card. Hierarchy comes from type, not lines.
+  hand at 12 o'clock on the same card. Hierarchy comes from type, not lines. **The 12 px blurb indent
+  (UX-069) is Terry's chosen alternative to that underline:** "It was instead of underline, we liked
+  the blurb indent better" (Terry, 2026-11-14). V2 MUST keep the indent and MUST NOT bring the line
+  back.
 - **The status is indented 12 px under the name instead**, half the name's 24 px em. Terry's idea,
   2026-11-13: "The lighter weight font and a modest indent will be gorgeous to my brain." It separates
   detail from title without adding a shape.
