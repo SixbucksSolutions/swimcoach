@@ -112,8 +112,8 @@ function chart(card, tone) {
 function hero(card, tone) {
   let big = "";
   let label = "";
-  // A hero with no big RTR is "bare": the stylesheet gives it the 10px above that the big RTR's own
-  // height gives a ratio hero (UX-155, Terry 2026-11-14).
+  // A hero with no big RTR is "bare", and the stylesheet sets it 10px lower (UX-155, Terry's call,
+  // 2026-11-14).
   let cls = "hero bare";
   if (card.mode === "ratio" && card.rtr !== null) {
     cls = "hero";

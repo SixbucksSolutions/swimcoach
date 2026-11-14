@@ -467,7 +467,7 @@ describe("renderProject small-block (count_and_time) mode", () => {
     expect(html).not.toContain("RTR");
   });
 
-  it("marks the hero bare, so it gets the 10px a big RTR would give it (UX-155)", () => {
+  it("marks the hero bare, so the stylesheet sets it 10px lower (UX-155)", () => {
     expect(render(small)).toContain('<div class="hero bare" style="--c:var(--ok)">');
   });
 
