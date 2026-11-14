@@ -19,9 +19,9 @@ const T0 = 1_800_000_000_000; // the page clock, in ms
 const SEC = 1000;
 const ELLIPSIS = String.fromCharCode(8230); // U+2026
 
-/** The afternoon View with its newest report ageSeconds old at its own now. */
-function aged(ageSeconds: number): View {
-  const view = toView(afternoon);
+/** A View (the afternoon one by default) with its newest report ageSeconds old at its own now. */
+function aged(ageSeconds: number, body: unknown = afternoon): View {
+  const view = toView(body);
   return { ...view, lastReportAt: view.now - ageSeconds };
 }
 
@@ -59,8 +59,17 @@ describe("healthOf", () => {
     ["24m 59s after a report", aged(24 * 60 + 50), 9, ["live", "LIVE", 1499, ""]],
     ["aging past 25 minutes", aged(24 * 60 + 50), 11, ["stale", "STALE", 1501, quiet("25m")]],
     ["the stale example", toView(stale), 0, ["stale", "STALE", 2100.133, quiet("35m")]],
-    ["every milestone done", toView(alldone), 0, ["idle", "IDLE", 0.902, ""]],
-    ["an empty board", toView(empty), 0, ["idle", "NO DATA", null, ""]],
+    // An empty or all-done board with working polls reads LIVE (UX-136, UX-137, UX-138; Terry,
+    // 2026-11-14).
+    ["every milestone done (feed idle)", toView(alldone), 0, ["live", "LIVE", 0.902, ""]],
+    ["every milestone done, an hour on", aged(3600, alldone), 0, ["live", "LIVE", 3600, ""]],
+    ["an empty board (feed no_data)", toView(empty), 0, ["live", "LIVE", null, ""]],
+    [
+      "an empty board, 30 s after the last good poll",
+      toView(empty),
+      30,
+      ["live", "LIVE", null, ""],
+    ],
     ["an empty board, unreachable", toView(empty), 31, ["off", "OFFLINE", 31, gone("1m")]],
   ] as const)("%s", (_label, view, seconds, [st, label, age, msg]) => {
     const h = healthOf(view, T0, T0 + seconds * SEC);

@@ -173,6 +173,11 @@ export function signedOut() {
  * The health box (concept.md 3.1; api.md 6.7), the pure core of the mock's tick(). lastOkMs is the
  * last successful poll; before the first, the time the page started waiting, so a board that never
  * answers still turns OFFLINE. OFFLINE comes only from the page's own failed polls.
+ *
+ * An empty or all-done board with working polls is LIVE (Terry, 2026-11-14: "I want to know the empty
+ * list IS the live data"). The neutral IDLE and NO DATA boxes are retired: feed `no_data` is LIVE with
+ * no age (UX-137), and feed `idle` is LIVE with its age (UX-136), because STALE applies only while a
+ * project is unfinished (UX-138).
  * @param {View|null} view   the last successful poll's View, or null before the first
  * @param {number} lastOkMs
  * @param {number} nowMs
@@ -192,14 +197,11 @@ export function healthOf(view, lastOkMs, nowMs) {
     return { st: "wait", label: ELLIPSIS, age: null, msg: "" };
   }
   if (view.feed === "no_data" || view.lastReportAt === null) {
-    return { st: "idle", label: "NO DATA", age: null, msg: "" };
+    return { st: "live", label: "LIVE", age: null, msg: "" };
   }
   // The server's feed is right at view.now; between polls the page ages it by the same rule.
   const age = view.now - view.lastReportAt + sinceOk / 1000;
-  if (view.feed === "idle") {
-    return { st: "idle", label: "IDLE", age, msg: "" };
-  }
-  if (age > view.thresholds.staleMinutes * 60) {
+  if (view.feed !== "idle" && age > view.thresholds.staleMinutes * 60) {
     const msg = `No agent has reported for ${dur(age)}. Everything below is old.`;
     return { st: "stale", label: "STALE", age, msg };
   }

@@ -28,6 +28,9 @@ const NAME_PX = Object.freeze({ full: 24, half: 20 });
 /** The smallest a shrunken Title line gets before CSS ends it in an ellipsis (UX-068). */
 const NAME_MIN_PX = 14;
 
+/** The GO TO KEYBOARD slot's key in slotKey; no CardView.key looks like it. */
+const KBD_KEY = "*kbd*";
+
 // biome-ignore lint/security/noSecrets: display text for the empty state, not a secret.
 const EMPTY_STATE = '<div class="empty">No reports yet today.</div>';
 
@@ -298,6 +301,24 @@ export function renderOverview(view) {
     html += renderCard(card);
   }
   return `${html}</div>`;
+}
+
+/**
+ * The overview's slot key, for morph()'s keyOf (UX-135): a card's `data-go`, which is CardView.key,
+ * and one fixed key for the GO TO KEYBOARD slot. That slot's `data-go` follows the first red card, so
+ * keying it by `data-go` would turn the card that just went red into the slot instead of letting the
+ * slot arrive as a new node. Anything that is not a slot has no key.
+ * @param {Element} el
+ * @returns {string|null}
+ */
+export function slotKey(el) {
+  if (!el.classList.contains("pc")) {
+    return null;
+  }
+  if (el.classList.contains("kbd")) {
+    return KBD_KEY;
+  }
+  return el.getAttribute("data-go");
 }
 
 /**
