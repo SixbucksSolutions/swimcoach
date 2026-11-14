@@ -63,8 +63,9 @@
 //
 // `callWhy` is `why` for every reason but needs_terry. On a needs_terry card it is the words for the
 // first api.md 6.6 row AFTER needs_terry that the state's fields match, so a red display's hero keeps
-// the call while the flag and the overview blurb carry the ask (visual review MVP-08, item 2; the
-// mock's facts() never put the ask in the hero). words.js reasonPastAsk() walks those rows' own
+// the call while the "Go to keyboard" flag carries the ask, the only place the ask shows: the
+// overview's GO TO KEYBOARD slot lists red cards by title (visual review MVP-08, item 2; the mock's
+// facts() never put the ask in the hero). words.js reasonPastAsk() walks those rows' own
 // fields, which state.js reads, in order:
 //   ratio            stale -> silent; metrics.call running_late; stalled; metrics.call toss_up;
 //                    metrics.too_early; else on_time
