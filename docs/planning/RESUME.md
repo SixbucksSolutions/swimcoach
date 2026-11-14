@@ -13,6 +13,9 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - Carried into T2's contract work: Ajv strict mode warns that `project`, `milestone` and `needsMe`
   lack a local `"type": "string"`; the schema says "every code point" but Go cannot test lone
   surrogates; `contract/fixtures/README.md` "Open for Terry" item 1 (midnight) is settled by api.md 6.9.
+- Carried into MVP-07: the router answers unknown paths with a plain-text 404 and wrong methods with
+  404; api.md requires `404 not_found`, `405 method_not_allowed` with `Allow`, and `errorResponse`
+  bodies (PR #6 second review).
 - **Next: T2** (MVP-03 Board Durable Object, MVP-04 metrics, MVP-05 Access). The Lead writes T2's
   frozen interfaces first. MVP-05's Access steps are Terry's gate and need the Zero Trust
   organization confirmed (risk 2).
