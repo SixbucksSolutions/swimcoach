@@ -53,12 +53,26 @@ function Invoke-Probe {
         [hashtable]$Headers = @{}
     )
 
-    # Never follow a redirect: a redirect to the Access login host is itself the answer.
-    try {
-        $response = Invoke-WebRequest -Uri $Uri -Method Get -Headers $Headers -MaximumRedirection 0 `
-            -SkipHttpErrorCheck -TimeoutSec 30
-    } catch {
-        return [pscustomobject]@{ Status = 0; Location = ''; Body = ''; Problem = $_.Exception.GetType().Name }
+    # The debug stream of Invoke-WebRequest prints every request header, including the client secret.
+    # These two preferences are local to this function, so they also beat -Debug on the script and
+    # a profile that sets $DebugPreference = 'Continue'.
+    $DebugPreference = 'SilentlyContinue'
+    $VerbosePreference = 'SilentlyContinue'
+
+    # Never follow a redirect: a redirect to the Access login host is itself the answer. With
+    # -MaximumRedirection 0, PowerShell 7 still returns the 302 but also writes a non-terminating
+    # "maximum redirection count exceeded" error, so that error is silenced and collected, and the
+    # response alone says what happened. A null response is a transport failure.
+    $transportError = $null
+    $response = Invoke-WebRequest -Uri $Uri -Method Get -Headers $Headers -MaximumRedirection 0 `
+        -SkipHttpErrorCheck -TimeoutSec 30 -ErrorAction SilentlyContinue -ErrorVariable transportError `
+        -Debug:$false -Verbose:$false
+    if ($null -eq $response) {
+        $problem = 'no response'
+        if ($transportError) {
+            $problem = @($transportError)[0].Exception.GetType().Name
+        }
+        return [pscustomobject]@{ Status = 0; Location = ''; Body = ''; Problem = $problem }
     }
     $location = ''
     if ($response.Headers.ContainsKey('Location')) {

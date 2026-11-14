@@ -31,7 +31,7 @@ Worker verifies the `Cf-Access-Jwt-Assertion` header itself, `contract/api.md` s
 
 ## Steps that change your account
 
-Steps 2, 3, 4, 5, 6 and 8 create or change something on your Cloudflare account. Step 7 writes one local
+Steps 2, 3, 4, 5, 6, 8 and 11 create or change something on your Cloudflare account. Step 7 writes one local
 file. Steps 1, 9 and 10 only read or test (step 10 sends three requests to the Worker's `/healthz`).
 
 ## 1. Look for an existing Zero Trust organization (reads only)
@@ -77,8 +77,9 @@ Source: <https://developers.cloudflare.com/workers/configuration/cloudflare-acce
 2. Open the **Access** tab, then select **Protect this Worker behind Access**.
 3. Choose **All traffic**. **Previews only** would leave the production URL public, and that fails the
    goal.
-4. Under **Authentication policy**, the dashboard offers only **Cloudflare account** and **Email domain**.
-   Choose **Cloudflare account** for now, so the application can be saved. You replace the policy in step 5.
+4. Under **Authentication policy**, the dashboard offers **Cloudflare account**, **Email domain**, or an
+   existing policy. Choose **Cloudflare account** for now, so the application can be saved. You replace
+   the policy in step 5.
 5. Select **Apply Access**.
 6. Open **Zero Trust > Access controls > Applications** and find the application this created (its
    domain is `swimcoach.sixbuckssolutions.workers.dev`). If you find no such application, or the Worker's
@@ -116,7 +117,7 @@ Source: <https://developers.cloudflare.com/cloudflare-one/access-controls/servic
    call exit 5, so put the expiry date in your calendar.**
 4. Select **Generate token**.
 5. **The Client Secret is shown once.** Copy the Client ID and the Client Secret straight into the file
-   in step 7. Do not paste either into chat, a repository, an environment variable, a ticket or a note.
+   in step 7. You MUST NOT paste either into chat, a repository, an environment variable, a ticket or a note.
    If you lose the secret, the fix is a new token (or a rotated one) and a new file.
 6. Go back to step 5.3 and finish the `swimcoach-cli` policy.
 
@@ -167,7 +168,8 @@ Source: <https://developers.cloudflare.com/cloudflare-one/access-controls/applic
 
 ## 10. Prove it
 
-Run, in PowerShell 7:
+Run it from the repo root. In cmd, `cd /d C:\Projects\swimcoach`. In PowerShell, `Set-Location C:\Projects\swimcoach`.
+Then run, in PowerShell 7:
 
 ```
 pwsh -File scripts\check-access.ps1
@@ -189,7 +191,7 @@ too. Until then expect (b) to show HTTP 401: that is the Worker failing closed, 
 After it passes, open the Worker URL in the iPhone browser, log in with a PIN, and confirm the board
 loads. That test MUST run on the phone (`docs/planning/RESUME.md` risk 8).
 
-## 11. Fallback: a custom hostname
+## 11. Fallback: a custom hostname (CHANGES YOUR ACCOUNT)
 
 If Access will not attach to `workers.dev` (step 4.6 fails, or step 10 (a) shows HTTP 200), the fallback
 is a custom hostname on a zone in your account. The Access docs require the domain to belong to an active
