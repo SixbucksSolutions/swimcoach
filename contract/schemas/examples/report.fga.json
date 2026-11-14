@@ -1,0 +1,14 @@
+{
+  "agent": "codex",
+  "project": "FGA",
+  "milestone": "T04",
+  "active_hours": 1.85,
+  "cap_hours": 4.0,
+  "lanes": {
+    "ready_for_work": 2,
+    "in_progress": 1,
+    "needs_terry": 0,
+    "ready_for_review": 3,
+    "completed": 1
+  }
+}

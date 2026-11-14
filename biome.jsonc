@@ -1,0 +1,71 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": [
+      "src/**",
+      "test/**",
+      "*.ts",
+      "*.json",
+      "*.jsonc",
+      "!package-lock.json",
+      "!src/worker-configuration.d.ts"
+    ]
+  },
+  "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
+  // Assist actions: preset all was tried and reported 5 findings: useSortedKeys x4 and
+  // useSortedPackageJson x1. They would alphabetize wrangler.jsonc, tsconfig.json and
+  // package.json, which buries name and main below the settings. Taste, so the recommended
+  // set (import organizing) stays.
+  "assist": { "enabled": true, "actions": { "preset": "recommended" } },
+  "linter": {
+    "enabled": true,
+    // Method (global rule of 2026-08-17): run every rule once, keep what reports defects,
+    // drop what reports taste, record the evidence here. Measured 2026-11-13, Biome 2.6.7,
+    // with linter.rules.preset all over 7 files (the empty scaffold). The corpus is tiny, so
+    // these counts are weak evidence: re-run with preset all when real code lands and revisit
+    // each exclusion below.
+    //
+    // Warnings: preset all enables some rules at warning severity, and biome check exits 0 on
+    // warnings alone. The lint script therefore passes --error-on-warnings (package.json).
+    // Proof of fire, 2026-11-13: planted src/probe-warning.ts holding "export function noop():
+    // void {}". Biome reported lint/suspicious/noEmptyBlockStatements ("Found 1 warning") and
+    // npm run check exited 1. Without the flag the same file exits 0. File deleted.
+    //
+    // Nursery: preset does not apply to the nursery group, so all 305 nursery rules were set to
+    // error by name and run once over the scaffold (Biome 2.6.7, 2026-11-13). Findings per rule:
+    //   useLowercaseTestTitle 1, usePackageJsonCpu 1, usePackageJsonEngines 1, all others 0.
+    // The three are taste (test title casing, and package.json cpu/engines fields for a Worker
+    // that runs on workerd, not Node), so they stay off. Every other nursery rule reported
+    // nothing on this tiny corpus, and stays off too: nursery rules may change meaning between
+    // releases, and re-running the same sweep on real code is the way to promote more.
+    // Enabled by name below: noFloatingPromises, noMisusedPromises and useAwaitThenable. They
+    // are the only floating-promise checks available while TypeScript 7 blocks typescript-eslint,
+    // and an unawaited promise is a top defect class in a Worker or Durable Object.
+    // Proof of fire, 2026-11-13: planted src/probe-promise.ts with an async function save()
+    // and a bare "save();" call. Biome reported lint/nursery/noFloatingPromises ("Found 1
+    // error") and biome lint exited 1. File deleted.
+    "rules": {
+      "preset": "all",
+      "nursery": {
+        "noFloatingPromises": "error",
+        "noMisusedPromises": "error",
+        "useAwaitThenable": "error"
+      },
+      "correctness": {
+        // 1 finding: the cloudflare:workers import in the test. A virtual module supplied by
+        // the Workers runtime and typed by @cloudflare/vitest-plugin, so Biome cannot resolve
+        // it. False positive; tsc resolves it and is the real check.
+        "noUnresolvedImports": "off"
+      },
+      "style": {
+        // 2 findings: src/index.ts and vitest.config.ts. A Worker MUST default-export its
+        // handler and Vitest reads a default-exported config. The platform requires it.
+        "noDefaultExport": "off",
+        // 1 finding: an HTTP status code (404) in the handler. A status code is its own name,
+        // and a named constant for it hides the meaning. Taste, not a defect.
+        "noMagicNumbers": "off"
+      }
+    }
+  }
+}

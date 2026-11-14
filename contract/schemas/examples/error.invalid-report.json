@@ -1,0 +1,15 @@
+{
+  "ok": false,
+  "error": "invalid_report",
+  "message": "The report is incomplete or malformed; nothing was stored.",
+  "problems": [
+    {
+      "path": "/lanes",
+      "message": "Required lane \"completed\" is missing; every update carries all five lanes."
+    },
+    {
+      "path": "/lanes/backlog",
+      "message": "Unknown lane \"backlog\"; Backlog and Blocked are never reported."
+    }
+  ]
+}
