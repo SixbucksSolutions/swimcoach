@@ -33,3 +33,17 @@ own license, and the full text travels with the component.
   there.
 - **Version and changes:** 8.20.0 from npm, unmodified. The version is pinned in
   `acceptance/package.json`.
+
+## Playwright
+
+- **Used for:** driving a browser (WebKit, or the installed Chrome) in the UI acceptance suite
+  (`acceptance/ui/`). Not bundled into the Worker or the page.
+- **Copyright:** Copyright (c) Microsoft Corporation. Portions Copyright 2017 Google Inc. (see the
+  NOTICE file).
+- **License:** Apache License 2.0. Full text: [`third_party/playwright/LICENSE`](third_party/playwright/LICENSE)
+  and its NOTICE, [`third_party/playwright/NOTICE`](third_party/playwright/NOTICE), both copied
+  unchanged from the npm packages `playwright` and `playwright-core`. Its dependency `playwright-core`
+  and the browser builds it downloads (`npx --prefix acceptance playwright install webkit`) carry their
+  own licenses.
+- **Version and changes:** 1.65.1 from npm, unmodified. The version is pinned in
+  `acceptance/package.json`.

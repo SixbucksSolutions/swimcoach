@@ -192,6 +192,13 @@ describe("the router's refusals", () => {
     `${API}/state/`,
     "/api/2026-11-12/state",
     "/nope",
+    // The icon and manifest routes take only their exact shapes (t5-interfaces.md, MVP-10).
+    "/manifest.json",
+    "/manifest.webmanifest/",
+    "/icons/Icon.png",
+    "/icons/icon.svg",
+    "/icons/../index.html",
+    "/icons/sub/icon.png",
   ])("answers %s with 404 not_found", async (path) => {
     const response = await call(path);
     expect(response.status).toBe(404);
