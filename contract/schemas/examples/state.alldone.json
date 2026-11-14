@@ -1,0 +1,167 @@
+{
+  "now": 1794573043.9016745,
+  "last_report_at": 1794573043.0,
+  "feed": "idle",
+  "thresholds": {
+    "stale_minutes": 25,
+    "stall_minutes": 45,
+    "trend_minutes": 60,
+    "min_history_minutes": 45,
+    "min_block_used": 0.15,
+    "min_stories_for_rtr": 3
+  },
+  "milestones": [
+    {
+      "project": "docs-site",
+      "milestone": "T02",
+      "agent": "claude",
+      "active_hours": 1.17,
+      "cap_hours": 3.0,
+      "lanes": {
+        "ready_for_work": 0,
+        "in_progress": 0,
+        "needs_terry": 0,
+        "ready_for_review": 6,
+        "completed": 0
+      },
+      "needs_me": null,
+      "first_report_at": 1794569443,
+      "updated_at": 1794573043.0,
+      "last_move_at": 1794573043.0,
+      "finished": 6,
+      "total": 6,
+      "stale": false,
+      "stalled": false,
+      "mode": "ratio",
+      "color": "done",
+      "reason": "done",
+      "metrics": {
+        "work": 1.0,
+        "clock": 0.38999999999999996,
+        "rtr": 2.5641025641025643,
+        "too_early": false,
+        "trend": {
+          "delta": 2.5641025641025643,
+          "minutes": 60,
+          "pace": 3.000000000000001,
+          "proj": 2.830000000000001,
+          "finish": 0.38999999999999996,
+          "recent_done": 6,
+          "to_go": 0
+        },
+        "trend_bin": "sharp_up",
+        "projection_hours": 1.17,
+        "chance_on_time": 1.0,
+        "call": "on_time"
+      },
+      "spark": [
+        [
+          1794569443,
+          0.0
+        ],
+        [
+          1794570043,
+          1.5152
+        ],
+        [
+          1794570643,
+          2.0
+        ],
+        [
+          1794571243,
+          2.2388
+        ],
+        [
+          1794571843,
+          2.4096
+        ],
+        [
+          1794572443,
+          2.5
+        ],
+        [
+          1794573043,
+          2.5641
+        ]
+      ]
+    },
+    {
+      "project": "FGA",
+      "milestone": "T04",
+      "agent": "claude",
+      "active_hours": 1.33,
+      "cap_hours": 4.0,
+      "lanes": {
+        "ready_for_work": 0,
+        "in_progress": 0,
+        "needs_terry": 0,
+        "ready_for_review": 7,
+        "completed": 0
+      },
+      "needs_me": null,
+      "first_report_at": 1794568843,
+      "updated_at": 1794573043.0,
+      "last_move_at": 1794573043.0,
+      "finished": 7,
+      "total": 7,
+      "stale": false,
+      "stalled": false,
+      "mode": "ratio",
+      "color": "done",
+      "reason": "done",
+      "metrics": {
+        "work": 1.0,
+        "clock": 0.3325,
+        "rtr": 3.007518796992481,
+        "too_early": false,
+        "trend": {
+          "delta": 1.2759170653907497,
+          "minutes": 60,
+          "pace": 3.428571428571429,
+          "proj": 3.2885714285714287,
+          "finish": 0.3325,
+          "recent_done": 6,
+          "to_go": 0
+        },
+        "trend_bin": "sharp_up",
+        "projection_hours": 1.33,
+        "chance_on_time": 1.0,
+        "call": "on_time"
+      },
+      "spark": [
+        [
+          1794568843,
+          0.0
+        ],
+        [
+          1794569443,
+          1.7316
+        ],
+        [
+          1794570043,
+          2.2857
+        ],
+        [
+          1794570643,
+          2.5586
+        ],
+        [
+          1794571243,
+          2.7539
+        ],
+        [
+          1794571843,
+          2.8571
+        ],
+        [
+          1794572443,
+          2.9304
+        ],
+        [
+          1794573043,
+          3.0075
+        ]
+      ]
+    }
+  ]
+}

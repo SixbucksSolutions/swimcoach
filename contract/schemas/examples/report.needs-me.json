@@ -1,0 +1,15 @@
+{
+  "agent": "claude",
+  "project": "localswim V2",
+  "milestone": "T06",
+  "active_hours": 3.1,
+  "cap_hours": 4,
+  "lanes": {
+    "ready_for_work": 0,
+    "in_progress": 1,
+    "needs_terry": 1,
+    "ready_for_review": 4,
+    "completed": 0
+  },
+  "needs_me": "Confirm the T06 demo build on your phone before cutover."
+}
