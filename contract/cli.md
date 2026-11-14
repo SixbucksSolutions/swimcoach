@@ -42,7 +42,7 @@ There is **no create command.** The first `report` for a (project, milestone) ad
 
 ## 2. `swimcoach report`
 
-Sends one complete status report to `POST /api/report`.
+Sends one complete status report to `POST /api/2026-11-13/report`.
 
 | Flag | Report field | Value |
 | --- | --- | --- |
@@ -78,7 +78,7 @@ Sends one complete status report to `POST /api/report`.
 
 ## 3. `swimcoach stop`
 
-Tells swimcoach to stop tracking one (project, milestone), through `POST /api/stop`. Both flags are
+Tells swimcoach to stop tracking one (project, milestone), through `POST /api/2026-11-13/stop`. Both flags are
 required. The server deletes the milestone and its history, and the card leaves the phone.
 
 When to run it (Terry, 2026-11-13): only after Terry tells the project's agent the milestone is
@@ -142,8 +142,10 @@ follows.
 
 ## 6. HTTP behavior
 
-- `report` sends `POST <url>/api/report`; `stop` sends `POST <url>/api/stop`. Both carry
-  `Content-Type: application/json`, `CF-Access-Client-Id` and `CF-Access-Client-Secret`.
+- `report` sends `POST <url>/api/2026-11-13/report`; `stop` sends `POST <url>/api/2026-11-13/stop`.
+  Both carry `Content-Type: application/json`, `CF-Access-Client-Id` and `CF-Access-Client-Secret`.
+- The CLI MUST send to the dated paths of the API version it was built for ([`api.md`](api.md),
+  "Versioning"). The unversioned `/api/...` paths answer `404`.
 - The CLI MUST NOT follow redirects. A redirect means Access wants an interactive login, which is exit 5.
 - The CLI MUST NOT send the `Swimcoach-Test-Now` header ([`api.md`](api.md) section 9). The black-box
   suite drives HTTP directly; the CLI only ever talks to the real clock.

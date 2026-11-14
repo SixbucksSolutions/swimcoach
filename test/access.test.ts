@@ -130,7 +130,7 @@ function requestWith(token?: string): Request {
   if (token !== undefined) {
     headers.set(ACCESS_JWT_HEADER, token);
   }
-  return new Request("https://swimcoach.example/api/state", { headers });
+  return new Request("https://swimcoach.example/api/2026-11-13/state", { headers });
 }
 
 /** The local test JWKS, counting how often verification asks it for a key. */

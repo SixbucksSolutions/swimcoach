@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/SixbucksSolutions/swimcoach/main/contract/schemas/state.schema.json",
   "title": "swimcoach board state",
-  "description": "The 200 body of GET /api/state: everything the page renders, with every metric and verdict already computed by the server. contract/api.md is the normative text; this schema is its machine-checkable half.",
+  "description": "The 200 body of GET /api/2026-11-13/state: everything the page renders, with every metric and verdict already computed by the server. contract/api.md is the normative text; this schema is its machine-checkable half.",
   "type": "object",
   "additionalProperties": false,
   "required": ["now", "last_report_at", "feed", "thresholds", "milestones"],
