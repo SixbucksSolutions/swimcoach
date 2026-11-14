@@ -128,6 +128,12 @@ async function runCase(entry: UiCase): Promise<void> {
   const ctx = await (ui as UiRun).newContext();
   try {
     await entry.run(ctx);
+    const [failure] = ctx.failures();
+    if (failure !== undefined) {
+      throw new Error("The page's state route could not give the case's answer.", {
+        cause: failure,
+      });
+    }
   } finally {
     await ctx.close();
   }
