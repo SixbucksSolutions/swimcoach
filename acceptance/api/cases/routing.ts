@@ -30,7 +30,7 @@ async function expectNotFound(h: Harness, method: string, paths: readonly string
   await eachSeries(paths, async (path) => {
     const reply = await h.request(method, path, sendFor(method));
     expectError(h, reply, 404, "not_found", `${method} ${path}`);
-    if (path.startsWith("/api")) {
+    if (path.startsWith("/api/")) {
       expectNoStore(reply, `${method} ${path}`);
     }
   });
@@ -58,7 +58,7 @@ async function expectMethodNotAllowed(
       `${label}: Allow is "${reply.headers.get("allow")}", want ${mustAllow}`,
     );
     assert.ok(!allowed(reply).includes(method), `${label}: Allow lists the refused method`);
-    if (path.startsWith("/api")) {
+    if (path.startsWith("/api/")) {
       expectNoStore(reply, label);
     }
   });

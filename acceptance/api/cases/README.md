@@ -4,19 +4,19 @@ MVP-09 B. Black-box cases in the frozen format of `../types.ts`; the harness (MV
 them. They import nothing from `src/`, `cli/`, `test/` or `public/`, and read `contract/` as data.
 RFC 2119 keywords; the capitals are load-bearing.
 
-| IDs | File | Tier | Covers |
-| --- | --- | --- | --- |
-| API-001 to 006 | `access.ts` | clock-free | Access refusals, `/healthz` |
-| API-010 to 016 | `routing.ts` | clock-free | 404, 405 with `Allow`, query strings, `no-store` |
+| IDs            | File            | Tier       | Covers                                                          |
+| -------------- | --------------- | ---------- | --------------------------------------------------------------- |
+| API-001 to 006 | `access.ts`     | clock-free | Access refusals, `/healthz`                                     |
+| API-010 to 016 | `routing.ts`    | clock-free | 404, 405 with `Allow`, query strings, `no-store`                |
 | API-020 to 030 | `validation.ts` | clock-free | 415, 413, `invalid_json`, `invalid_report`, `invalid_stop`, BOM |
-| API-040 to 048 | `names.ts` | clock-free | Name rules, code-point lengths, limits, ASCII identity |
-| API-049 | `names.ts` | timed | Names with no `zz acceptance` prefix |
-| API-060 to 066 | `lifecycle.ts` | clock-free | Add, duplicate, none, replace, stop, re-add, order |
-| API-080 | `production.ts` | clock-free | `test_clock_disabled` (a no-op in the `full` tier) |
-| API-100 to 112 | `golden.ts` | timed | Every `contract/fixtures/*.json`; `midnight-rollover` twice |
-| API-120 to 125 | `time.ts` | timed | Test clock, 409, 60 s window, `last_move_at`, stale, stalled |
-| API-130 to 141 | `feed.ts` | timed | `feed` states, `spark` thinning |
-| API-150 to 151 | `needs-me.ts` | timed | `needs_me` and the Needs Terry sentence |
+| API-040 to 048 | `names.ts`      | clock-free | Name rules, code-point lengths, limits, ASCII identity          |
+| API-049        | `names.ts`      | timed      | Names with no `zz acceptance` prefix                            |
+| API-060 to 066 | `lifecycle.ts`  | clock-free | Add, duplicate, none, replace, stop, re-add, order              |
+| API-080        | `production.ts` | clock-free | `test_clock_disabled` (a no-op in the `full` tier)              |
+| API-100 to 112 | `golden.ts`     | timed      | Every `contract/fixtures/*.json`; `midnight-rollover` twice     |
+| API-120 to 125 | `time.ts`       | timed      | Test clock, 409, 60 s window, `last_move_at`, stale, stalled    |
+| API-130 to 141 | `feed.ts`       | timed      | `feed` states, `spark` thinning                                 |
+| API-150 to 151 | `needs-me.ts`   | timed      | `needs_me` and the Needs Terry sentence                         |
 
 A fixture added to `contract/fixtures/` without a line in `golden.ts` stops the suite from loading.
 

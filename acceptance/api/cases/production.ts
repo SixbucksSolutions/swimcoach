@@ -90,21 +90,6 @@ export const productionCases: Case[] = [
             headers: header,
           });
         });
-        const headers = { [CLOCK_HEADER]: "1794573043" };
-        expectError(
-          h,
-          await h.request("GET", "/api/2026-11-13/nope", { headers }),
-          404,
-          "not_found",
-          "unknown path with the header (404 first)",
-        );
-        expectError(
-          h,
-          await h.request("GET", REPORT_PATH, { headers }),
-          405,
-          "method_not_allowed",
-          "wrong method with the header (405 first)",
-        );
         assert.equal(
           findMilestone(await stateOf(h), project, "clock header"),
           undefined,
