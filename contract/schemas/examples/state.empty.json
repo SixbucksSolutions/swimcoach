@@ -1,0 +1,14 @@
+{
+  "now": 1794573043.0,
+  "last_report_at": null,
+  "feed": "no_data",
+  "thresholds": {
+    "stale_minutes": 25,
+    "stall_minutes": 45,
+    "trend_minutes": 60,
+    "min_history_minutes": 45,
+    "min_block_used": 0.15,
+    "min_stories_for_rtr": 3
+  },
+  "milestones": []
+}

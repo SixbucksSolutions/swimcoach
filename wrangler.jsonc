@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "swimcoach",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-13",
+  "workers_dev": true,
+  // No routes: the hostname is attached later by MVP-02's deploy step.
+  "assets": {
+    // The approved mock, served unchanged. mocks/.assetsignore keeps tools/ out.
+    "directory": "./mocks"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
