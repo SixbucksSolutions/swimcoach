@@ -1,23 +1,30 @@
-// Overview display checks (MVP-11 A owns this file; t5-interfaces.md). The Lead's one case proves
-// the harness end to end; MVP-11 A keeps or reworks it.
-import assert from "node:assert/strict";
+// Overview display checks (MVP-11 A owns this file and the overview-*.ts files it joins). One case per
+// behavior, each citing the UX ledger rows it proves; the split is only so no file outgrows Biome's
+// file-length limit. Rows a browser cannot prove (the chime's sound, the real phone) are listed in the
+// pull request, not here.
 import type { UiCase } from "../types.ts";
+import { alertCases } from "./overview-alerts.ts";
+import { breathCases } from "./overview-breath.ts";
+import { cardCases } from "./overview-cards.ts";
+import { healthCases } from "./overview-health.ts";
+import { keyboardCases } from "./overview-keyboard.ts";
+import { layoutCases } from "./overview-layout.ts";
+import { loadCases } from "./overview-load.ts";
+import { slotCases } from "./overview-slots.ts";
+import { smallCases } from "./overview-small.ts";
+import { statusCases } from "./overview-status.ts";
 
-export const overviewCases: UiCase[] = [
-  {
-    ids: ["UX-162"],
-    title: "An empty board reads LIVE with no age, over the empty-state line",
-    async run(ctx) {
-      ctx.answer({ body: ctx.example("empty") });
-      await ctx.open();
-      const health = ctx.page.locator("#health");
-      assert.equal(await health.getAttribute("class"), "live");
-      assert.equal((await ctx.page.locator("#health b").textContent())?.trim(), "LIVE");
-      assert.equal((await ctx.page.locator("#health span").textContent())?.trim(), "");
-      assert.equal(
-        (await ctx.page.locator("#pages .empty").textContent())?.trim(),
-        "No reports yet today.",
-      );
-    },
-  },
+const overviewCases: UiCase[] = [
+  ...statusCases,
+  ...healthCases,
+  ...cardCases,
+  ...smallCases,
+  ...keyboardCases,
+  ...layoutCases,
+  ...slotCases,
+  ...breathCases,
+  ...loadCases,
+  ...alertCases,
 ];
+
+export { overviewCases };
