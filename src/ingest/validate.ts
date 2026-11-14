@@ -1,4 +1,4 @@
-// Validation of the two write bodies, POST /api/2026-11-13/report and POST /api/2026-11-13/stop
+// Validation of the two write bodies, POST /api/2026-11-14/report and POST /api/2026-11-14/stop
 // (contract/api.md 4.1, 4.2 and 5). Hand-written checks, not a JSON Schema engine: Ajv compiles with new Function, which
 // Workers forbid. These checks MUST agree with contract/schemas/report.schema.json exactly; the
 // tests in test/ingest/ hold them to Python jsonschema's verdicts on every example, a corpus of
@@ -228,7 +228,7 @@ function checkLanes(object: JsonObject, problems: Problem[]): Lanes | undefined 
 }
 
 /**
- * Validates the body of POST /api/2026-11-13/report against report.schema.json and reports every
+ * Validates the body of POST /api/2026-11-14/report against report.schema.json and reports every
  * violation it finds. On success the report is a fresh object holding only the schema's fields;
  * needs_me is present only when it was sent.
  */
@@ -271,7 +271,7 @@ function validateReport(body: unknown): ValidateReportResult {
 }
 
 /**
- * Validates the body of POST /api/2026-11-13/stop against report.schema.json's $defs/stopRequest.
+ * Validates the body of POST /api/2026-11-14/stop against report.schema.json's $defs/stopRequest.
  */
 function validateStop(body: unknown): ValidateStopResult {
   const problems: Problem[] = [];

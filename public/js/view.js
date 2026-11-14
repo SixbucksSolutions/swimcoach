@@ -1,6 +1,6 @@
 // @ts-check
 // The frozen projection (docs/planning/t4-interfaces.md, MVP-08). The controller (state.js) turns
-// GET /api/2026-11-13/state into one View per successful poll. Both renderers read only this; neither
+// GET /api/2026-11-14/state into one View per successful poll. Both renderers read only this; neither
 // reads the API body or recomputes a verdict (contract/api.md section 6).
 //
 // JSDoc types only: nothing here runs. Import them with
@@ -32,8 +32,9 @@
  * @property {'ratio'|'count_and_time'} mode
  * @property {boolean} tooEarly       metrics.too_early, ratio mode, not done
  * @property {number|null} rtr        metrics.rtr; null in count_and_time mode
- * @property {Dir|null} dir           null when trend is null, when done, or in count_and_time mode
- * @property {{delta:number, minutes:number, proj:number|null, recentDone:number, toGo:number}|null} trend   same nulls as dir
+ * @property {Dir|null} dir           null when trend is null, when done, in count_and_time mode, or
+ *                                    when reason is silent (UX-152: a gray card draws no arrow)
+ * @property {{delta:number, minutes:number, proj:number|null, recentDone:number, toGo:number}|null} trend   same nulls as dir, except that a silent card keeps it
  * @property {number|null} chance     metrics.chance_on_time, same nulls as dir
  * @property {number|null} marginSeconds   (cap_hours - projection_hours) * 3600; null when projection_hours is
  * @property {number|null} work

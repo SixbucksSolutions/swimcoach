@@ -8,7 +8,7 @@ render-mock.py, so OUT_DIR (default design/ui-page) and design/ui-mock compare f
     <scenario>-00-all-projects.png
     <scenario>-NN-<display>-top.png / -bottom.png   (one pair per project display)
 
-It serves public/ on a local port and answers GET /api/2026-11-13/state with
+It serves public/ on a local port and answers GET /api/2026-11-14/state with
 contract/schemas/examples/state.<scenario>.json, every time in it shifted so `now` is the real now.
 Scenarios, as in the mock:
 - "stale" and "offline" are the afternoon gone wrong, so only their overview is rendered.
@@ -40,7 +40,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PUBLIC = ROOT / "public"
 EXAMPLES = ROOT / "contract" / "schemas" / "examples"
 MOCK_RENDERS = ROOT / "design" / "ui-mock"
-STATE_PATH = "/api/2026-11-13/state"
+STATE_PATH = "/api/2026-11-14/state"
 ASSET = re.compile(r"^/(?P<dir>css|js)/(?P<name>[a-z]+)\.(?P<ext>css|js)$")
 CONTENT_TYPES = {"css": "text/css; charset=utf-8", "js": "text/javascript; charset=utf-8"}
 

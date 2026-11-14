@@ -32,7 +32,7 @@ describe("the controller draws the board", () => {
   it("polls the dated state path with no-store, a manual redirect and a timeout", async () => {
     await loadPage(fresh(afternoon));
     const options = { cache: "no-store", redirect: "manual", signal: expect.any(AbortSignal) };
-    expect(fetch).toHaveBeenCalledWith("/api/2026-11-13/state", expect.objectContaining(options));
+    expect(fetch).toHaveBeenCalledWith("/api/2026-11-14/state", expect.objectContaining(options));
   });
 
   it("draws one section per card in the server's order, the dots, the title and LIVE", async () => {

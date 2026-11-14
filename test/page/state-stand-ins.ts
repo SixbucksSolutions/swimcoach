@@ -108,7 +108,10 @@ function expectedCallWhy(m: Json, now: number): string {
   return expectedWhy({ ...m, reason }, now);
 }
 
-/** The call's parts as view.js states them: null when trend is null, done, or count_and_time. */
+/**
+ * The call's parts as view.js states them: null when trend is null, done, or count_and_time; and no
+ * dir on a silent card (UX-152), whose trend and chance stay.
+ */
 function expectedCall(m: Json): Pick<CardView, "trend" | "dir" | "chance"> {
   const metrics = m.metrics as Json;
   const t = metrics.trend as Json | null;
@@ -122,11 +125,11 @@ function expectedCall(m: Json): Pick<CardView, "trend" | "dir" | "chance"> {
     recentDone: t.recent_done as number,
     toGo: t.to_go as number,
   };
-  return {
-    trend,
-    dir: DIRS[metrics.trend_bin as string] ?? null,
-    chance: metrics.chance_on_time as number,
-  };
+  let dir = DIRS[metrics.trend_bin as string] ?? null;
+  if (m.reason === "silent") {
+    dir = null;
+  }
+  return { trend, dir, chance: metrics.chance_on_time as number };
 }
 
 /** The CardView for one raw milestone, field by field from the frozen typedef. */

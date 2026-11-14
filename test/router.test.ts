@@ -143,8 +143,13 @@ describe("the router's routes", () => {
     expect(await response.json()).toEqual({ ok: true });
   });
 
-  it("dates the API with 2026-11-13", () => {
-    expect(API_VERSION).toBe("2026-11-13");
+  it("dates the API with 2026-11-14", () => {
+    expect(API_VERSION).toBe("2026-11-14");
+  });
+
+  it("no longer serves the retired 2026-11-13 date", async () => {
+    const response = await call("/api/2026-11-13/state");
+    expect(response.status).toBe(404);
   });
 
   it("stores a report and lists it in state, through the real Board", async () => {

@@ -47,8 +47,8 @@ load-bearing.
 | J. Navigation | UX-113 to UX-124 | 12 |
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
-| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-147 | 13 |
-| **Total** | | **147** (16 superseded: UX-016, 017, 018, 021 to 026, 028, 053, 065, 066, 111, 133, 134) |
+| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-152 | 18 |
+| **Total** | | **152** (21 superseded: UX-016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 111, 112, 132, 133, 134) |
 
 ## A. Status line
 
@@ -73,7 +73,7 @@ load-bearing.
 | UX-017 | Health box NO DATA: neutral box when no milestone is tracked | c3.1 table, api.md 6.7 | - | No render; reach with an empty database | No: superseded by UX-137 |
 | UX-018 | STALE does not fire when every project is done (IDLE wins over STALE) | c3.1 STALE "while some project is unfinished" | `alldone-00-all-projects.png` |  | No: superseded by UX-138 |
 | UX-019 | Recovery: the first good poll after OFFLINE returns the box to the state the data calls for, which is LIVE only while the newest report is under 25 min old; the gray is removed | c3.1, api.md 6.7 | - | Transition; no render. Also check a recovery with an old newest report: the box shows STALE, not LIVE | Pending |
-| UX-020 | Silent agent alone (one project over 25 min silent, another fresh) keeps the box LIVE and makes that Card yellow | c3.1, c3.2 yellow rules | `silent-00-all-projects.png` |  | Pending |
+| UX-020 | Silent agent alone (one project over 25 min silent, another fresh) keeps the box LIVE and makes that Card yellow | c3.1, c3.2 yellow rules | `silent-00-all-projects.png` |  | No: superseded by UX-148 |
 
 ## B. Overview slot modes
 
@@ -99,7 +99,7 @@ load-bearing.
 | UX-033 | Done Card when `total > 0` and `finished == total` (api.md 6.2): dark slate, Name plus the Detail blurb 'Done' (needs Terry, c8 item 3: the done color) | c3.2 states row 1, api.md 6.2 | `afternoon-00-all-projects.png` (localswim v2) |  | Pending |
 | UX-034 | Done state ranks above red: a done project with a stale `needs_me` shows done (needs Terry, c8 item 3: the done and gray colors) | c3.2 "first match wins" table order (Done is row 1, Red is row 2), api.md 6.6 | - | Contrived; no render | Pending |
 | UX-035 | Red project: needs-you item (a ticket in Needs Terry, or `needs_me` text) | c3.2 states row 2 | `keyboard-00-all-projects.png` | Red projects leave the list; see area D | Pending |
-| UX-036 | Yellow: agent silent over 25 min | c3.2 states row 3 | `silent-00-all-projects.png` | Detail blurb names the reason | Pending |
+| UX-036 | Yellow: agent silent over 25 min | c3.2 states row 3 | `silent-00-all-projects.png` | Detail blurb names the reason | No: superseded by UX-152 |
 | UX-037 | RETIRED: "Yellow: status `blocked`" cannot happen. The report has no `status` field (api.md 6.2), and Blocked never appears on the dashboard (c3.2, Terry 2026-11-13). c3.2's card-states table row 3 still lists `status blocked`; that row is stale in concept.md | c3.2, api.md 6.2 | - | RETIRED; no check | Pending |
 | UX-038 | Yellow: the call is "Running late" | c3.2 states row 3 | `afternoon-00-all-projects.png` (mobile-onboarding) |  | Pending |
 | UX-039 | Yellow: no ticket moved in 45 min | c3.2 states row 3 | - | No render | Pending |
@@ -108,7 +108,7 @@ load-bearing.
 | UX-042 | Green: the call is "On time"; shows Name, RTR, arrow, no Detail blurb | c3.2 states row 5 | `allgreen-00-all-projects.png` |  | Pending |
 | UX-043 | Green fill is `--ok-fill` `#1B6445` with pure white text at full opacity; contrast 7:1 or better **(measured 7.11:1)** | AGENTS.md, b5 | `allgreen-00-all-projects.png` | A second green MUST NOT appear | Pending |
 | UX-044 | Backlog and Blocked never appear on any Card or display; no "1 blocked" note | c3.2 | `afternoon-00-all-projects.png` |  | Pending |
-| UX-045 | Precedence: the first matching rule wins (done, red, yellow, gray, green); the yellow sub-order is silent, running_late, over_budget, stalled, toss_up | c3.2, api.md 6.6 | - | Table-driven check over the fixture set | Pending |
+| UX-045 | Precedence: the first matching rule wins (done, red, yellow, gray, green); the yellow sub-order is silent, running_late, over_budget, stalled, toss_up | c3.2, api.md 6.6 | - | Table-driven check over the fixture set | No: superseded by UX-149 |
 | UX-046 | Cards that mix all five looks side by side read at a glance | c3.2 | `afternoon-00-all-projects.png` | One of every card | Pending |
 
 ## D. GO TO KEYBOARD slot
@@ -205,7 +205,7 @@ load-bearing.
 | UX-109 | The 10-second poll never fades, blanks or flashes the page | c3.4 | - | Observe across several polls | Pending |
 | UX-110 | A poll changes only the values that changed (the real page, not the mock's whole-HTML rewrite) | c3.4 | - | Mutation observer: unchanged nodes stay untouched | Pending |
 | UX-111 | The slot mode is chosen in the same step that draws the Cards, before first paint | c3.2, c3.4 | - | No eight-to-four reflow after paint | No: superseded by UX-147 |
-| UX-112 | Polling runs every 10 s against `GET /api/2026-11-13/state` | c3.1 | - |  | Pending |
+| UX-112 | Polling runs every 10 s against `GET /api/2026-11-13/state` | c3.1 | - |  | No: superseded by UX-150 |
 
 ## J. Navigation
 
@@ -243,7 +243,7 @@ reaches this mode, so no render exists. Source: c8 item 10, api.md 6.5 and 6.6.
 | ID | State or transition | Rule | Render | Check | V1 |
 | --- | --- | --- | --- | --- | --- |
 | UX-131 | A milestone with `total < 3` (`mode` is `count_and_time`): the Card shows "N of M done" and the hours used of the cap, with no RTR and no clock hand | c8 item 10, api.md 6.5 | - | Fixture `state.small-blocks.json` | Pending |
-| UX-132 | In `count_and_time` mode the Card is green while `active_hours` is within `cap_hours` (reason `under_budget`) and yellow once it is over (reason `over_budget`); red only for `needs_me`; silent still applies (yellow); done still ranks first | c8 item 10, api.md 6.6 | - | Fixture `state.small-blocks.json`; stalled, running_late, toss_up and too_early do not apply | Pending |
+| UX-132 | In `count_and_time` mode the Card is green while `active_hours` is within `cap_hours` (reason `under_budget`) and yellow once it is over (reason `over_budget`); red only for `needs_me`; silent still applies (yellow); done still ranks first | c8 item 10, api.md 6.6 | - | Fixture `state.small-blocks.json`; stalled, running_late, toss_up and too_early do not apply | No: superseded by UX-151 |
 | UX-133 | Detail blurb words for `over_budget` and `under_budget`: api.md 6.6 assigns the wording to this ledger; Terry has not chosen it (needs Terry) | api.md 6.6 | - | Wording pending; the check MUST NOT pass until Terry fixes the words | No: superseded by UX-139 |
 | UX-134 | What the project display shows in `count_and_time` mode (RTR block, charts, projection tiles): no doc defines it (needs Terry) | c8 item 10, api.md 6.5 | - | Pending Terry | No: superseded by UX-140 |
 
@@ -267,3 +267,8 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-145 | RTR weight 900; size scales with Card height, between 18 and 52 px: 52 px full and about 33.4 px half at 402 x 874 under the 3/6 grid **(measured** in Chrome by the PR #32 review**)** | c3.2 second tier | - | Supersedes UX-065, whose 21.4 px half was the 4/8 grid's | Pending |
 | UX-146 | The hand stays at least 16 px from the Card edge: about 56 px full and at least 16 px half at 402 x 874 under the 3/6 grid **(measured** in Chrome by the PR #32 review**)** | c3.2 | - | Supersedes UX-066, whose 25 px full was the 4/8 grid's | Pending |
 | UX-147 | The slot mode is chosen in the same step that draws the Cards, before first paint | c3.2, c3.4 | - | Supersedes UX-111, whose check named the 4/8 grid; no six-to-three reflow after paint | Pending |
+| UX-148 | Silent agent alone (one project over 25 min silent, another fresh) keeps the box LIVE and makes that Card gray, with "Agent silent for ..." as its Detail blurb | c3.2 card states, api.md 6.6; Terry 2026-11-14: gray means "not enough FRESH data to signal green/yellow" | - | Supersedes UX-020 (yellow) | Pending |
+| UX-149 | Precedence: the first matching rule wins: done, red, silent (gray), the yellow rules in the order running_late, over_budget, stalled, toss_up, then too_early (gray), then green | c3.2, api.md 6.6 | - | Supersedes UX-045; table-driven check over the fixture set | Pending |
+| UX-150 | Polling runs every 10 s against `GET /api/2026-11-14/state`; the retired `/api/2026-11-13/` paths answer 404 | c3.1, api.md Versioning | - | Supersedes UX-112 (the API date moved when silent turned gray) | Pending |
+| UX-151 | In `count_and_time` mode the Card is green while `active_hours` is within `cap_hours` (reason `under_budget`) and yellow once it is over (reason `over_budget`); red only for `needs_me`; silent still applies (gray); done still ranks first | c8 item 10, api.md 6.6 | - | Supersedes UX-132; fixture `state.small-blocks.json`; stalled, running_late, toss_up and too_early do not apply | Pending |
+| UX-152 | Gray: agent silent over 25 min. The Detail blurb names the reason ("Agent silent for ..."), the RTR stays, and no clock-hand arrow is drawn, as on a too-early card | c3.2 states row 4, api.md 6.6 row 3; Terry 2026-11-14: gray is "not enough FRESH data to signal green/yellow"; no arrow is the Lead's call | `silent-00-all-projects.png` (mock shows yellow) | Supersedes UX-036 | Pending |

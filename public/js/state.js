@@ -1,6 +1,6 @@
 // @ts-check
 // The state body to the frozen View (docs/planning/t4-interfaces.md, MVP-08 C). The controller calls
-// toView() once per successful poll of GET /api/2026-11-13/state; both renderers read only its result.
+// toView() once per successful poll of GET /api/2026-11-14/state; both renderers read only its result.
 // The server computes every metric and verdict (contract/api.md section 6). This module renames them,
 // applies the documented nulls, and words `why` and `callWhy` (words.js). It recomputes no verdict.
 //
@@ -336,6 +336,13 @@ function cardOf(raw, now, path) {
   const why = whyOf(reason, needsMe, ages, path);
   const stale = bool(m, "stale", path);
   const card = { reason, why, needsMe, mode, stale, tooEarly, ages };
+  const call = callOf(metrics, callable, mp);
+  // A silent card is gray, "not enough FRESH data to signal green/yellow" (api.md 6.6, Terry
+  // 2026-11-14), so it draws no clock-hand arrow either (UX-152). The trend and chance stay for the
+  // display's tiles, which say how old they are through the stale flag.
+  if (reason === "silent") {
+    call.dir = null;
+  }
   return {
     key: JSON.stringify([asciiLower(project), asciiLower(milestone)]),
     title: `${project} ${milestone}`,
@@ -350,7 +357,7 @@ function cardOf(raw, now, path) {
     mode,
     tooEarly: callable && tooEarly,
     rtr: shownRtr,
-    ...callOf(metrics, callable, mp),
+    ...call,
     ...countsOf(m, metrics, path),
     updatedAt,
     lastMoveAt,
@@ -358,7 +365,7 @@ function cardOf(raw, now, path) {
 }
 
 /**
- * The 200 body of GET /api/2026-11-13/state to the frozen View. Throws on any field it reads that is
+ * The 200 body of GET /api/2026-11-14/state to the frozen View. Throws on any field it reads that is
  * missing or of the wrong type.
  * @param {unknown} body
  * @returns {View}

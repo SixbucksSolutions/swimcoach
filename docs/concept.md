@@ -262,9 +262,16 @@ Card states, first match wins:
 |---|---|---|---|
 | 1 | Done (dark slate) | Report says `status: done`, or every counted ticket is finished | Name |
 | 2 | **Red** | The project has a needs-you item: a ticket in an attention lane (Needs Terry) or a `needs_me` text | Name, the ask, RTR, arrow |
-| 3 | **Yellow** | Any of: agent silent over 25 min; the call is "Running late"; no ticket moved in 45 min; the call is "Toss-up" | Name, one line saying which, RTR, arrow |
-| 4 | Gray | Too early to call | Name, "Too early to call", RTR, no arrow |
+| 3 | **Yellow** | Any of: the call is "Running late"; no ticket moved in 45 min; the call is "Toss-up" | Name, one line saying which, RTR, arrow |
+| 4 | Gray | Agent silent over 25 min, which is checked before row 3; or too early to call | Name, "Agent silent for ..." or "Too early to call", RTR, no arrow |
 | 5 | **Green** | Everything else, which means the call is "On time" | Name, RTR, arrow, nothing else |
+
+- **Gray means "not enough FRESH data to signal green/yellow."** Terry, 2026-11-14, at the MVP-08 phone
+  check: "let's change agent silent to the 'too early to call' gray. We can describe that color as 'not
+  enough FRESH data to signal green/yellow'." Until then a silent agent's card was yellow and listed in
+  row 3. A silent card still outranks every yellow rule (api.md 6.6 row 3), and like a too-early card
+  it draws no arrow (UX-152, the Lead's call: an arrow is a signal). The change moved the API date to
+  2026-11-14 (api.md, Versioning).
 
 - **Red is reserved for "Terry must act".** Terry: "RFW -> In Progress -> RFR are green/yellow. Needs
   Terry is red."
@@ -406,8 +413,8 @@ shows RTR 1.90, which means nothing.
 ### 4.7 Other timers
 
 - **Stalled:** no change in any lane count for 45 minutes (`SWIMCOACH_STALL_MINUTES`). Yellow.
-- **Agent silent:** a project with no report for 25 minutes (`SWIMCOACH_STALE_MINUTES`). Yellow, plus a
-  warning on its display. The same 25 minutes drives the health box's STALE state.
+- **Agent silent:** a project with no report for 25 minutes (`SWIMCOACH_STALE_MINUTES`). Gray (yellow
+  until Terry's 2026-11-14 change; section 3.2), plus a warning on its display. The same 25 minutes drives the health box's STALE state.
 
 ## 5. How the localswim lanes map in
 

@@ -61,6 +61,15 @@ describe("toView: the documented nulls and words", () => {
     ]);
   });
 
+  it("draws no arrow on a gray silent card, though its trend stays for the display (UX-152)", () => {
+    const silent = toView(example("stale")).cards.filter((c) => c.reason === "silent");
+    expect(silent.length).toBeGreaterThan(0);
+    for (const c of silent) {
+      expect([c.level, c.dir]).toEqual(["gray", null]);
+    }
+    expect(silent.some((c) => c.trend !== null)).toBe(true);
+  });
+
   it("words a silent agent by its own age, and a red card by its ask", () => {
     const silent = toView(example("stale")).cards.filter((c) => c.reason === "silent");
     expect(new Set(silent.map((c) => c.why))).toEqual(new Set(["Agent silent for 35m"]));
