@@ -12,7 +12,8 @@ import {
   pollOnce,
   settle,
 } from "./overview-kit.ts";
-import { cardsOf, healthOf, statusBoxesOf } from "./overview-probe.ts";
+import { untilLabel, waitFor } from "./overview-nav.ts";
+import { cardsOf, healthOf, runningBreaths, statusBoxesOf } from "./overview-probe.ts";
 
 const OUTAGE_MINUTES = 65;
 const LONG_ENOUGH_FOR_OFFLINE_MS = 100_000;
@@ -42,7 +43,8 @@ function signInCase(status: 401 | 403): UiCase {
       });
       ctx.answer({ fail: status });
       await ctx.open();
-      await settle(ctx);
+      // The page reloads once, and how long that takes depends on the network: wait for the box.
+      assert.ok(await untilLabel(ctx, "SIGN IN"), "The box reads SIGN IN after the reload.");
       assert.equal(loads.length, 2, "The page loads once and reloads once.");
       const box = await healthOf(ctx.page);
       assert.equal(box.label, "SIGN IN");
@@ -59,14 +61,19 @@ function signInCase(status: 401 | 403): UiCase {
       assert.equal((await healthOf(ctx.page)).label, "SIGN IN");
       assert.equal(loads.length, 2, "No second reload inside 5 minutes.");
       await ctx.advance(2 * MINUTE_MS);
-      await settle(ctx);
-      assert.equal(loads.length, 3, "A refusal after 5 minutes reloads once more.");
+      assert.ok(
+        await waitFor(async () => loads.length === 3),
+        "A refusal after 5 minutes reloads once more.",
+      );
+      assert.ok(await untilLabel(ctx, "SIGN IN"));
+      // The board answers again; a tap on the warning line reloads the page, which then reads LIVE.
+      ctx.answer({ body: ctx.example("afternoon") });
       await ctx.page.locator("#warn").click();
-      await settle(ctx);
-      assert.equal(loads.length, 4, "A tap on the warning line reloads the page.");
-      // The next good poll clears it.
-      await openWith(ctx, ctx.example("afternoon"));
-      assert.equal((await healthOf(ctx.page)).label, "LIVE");
+      assert.ok(
+        await waitFor(async () => loads.length === 4),
+        "A tap on the warning line reloads.",
+      );
+      assert.ok(await untilLabel(ctx, "LIVE"), "The next good poll clears SIGN IN.");
     },
   };
 }
@@ -79,7 +86,6 @@ const healthCases: UiCase[] = [
     async run(ctx) {
       await openWith(ctx, ctx.example("stale"));
       const h = await healthOf(ctx.page);
-      assert.equal(h.cls, "stale");
       assert.equal(h.label, "STALE");
       assert.equal(h.age, "", "STALE shows the word only.");
       assert.equal(h.bg, COLOR.stale);
@@ -105,8 +111,8 @@ const healthCases: UiCase[] = [
     async run(ctx) {
       await openWith(ctx, older(ctx.example("alldone"), 40 * SECONDS_PER_MINUTE));
       const h = await healthOf(ctx.page);
-      assert.equal(h.cls, "live");
       assert.equal(h.label, "LIVE");
+      assert.equal(h.bg, COLOR.okFill);
       assert.equal(h.age, "40m");
       assert.equal(h.warnShown, false);
       assert.equal(h.pagesOpacity, 1);
@@ -119,13 +125,12 @@ const healthCases: UiCase[] = [
     async run(ctx) {
       await openWith(ctx, ctx.example("alldone"));
       const h = await healthOf(ctx.page);
-      assert.equal(h.cls, "live");
+      assert.equal(h.label, "LIVE");
       assert.equal(h.bg, COLOR.okFill);
-      assert.equal(h.dot[0]?.name, "breathe");
-      assert.equal(h.dot[0]?.state, "running");
+      assert.equal(runningBreaths(h.dot).length, 1, "The dot breathes.");
       assert.deepEqual(
-        (await cardsOf(ctx.page)).map((c) => c.cls),
-        ["pc done", "pc done"],
+        (await cardsOf(ctx.page)).map((c) => c.bg),
+        [COLOR.board, COLOR.board],
       );
     },
   },
@@ -139,12 +144,12 @@ const healthCases: UiCase[] = [
       await ctx.advance(TWO_POLLS_AND_A_BIT_MS);
       await settle(ctx);
       const held = await healthOf(ctx.page);
-      assert.equal(held.cls, "live", "Two failed polls leave the box LIVE.");
+      assert.equal(held.label, "LIVE", "Two failed polls leave the box LIVE.");
+      assert.equal(held.bg, COLOR.okFill);
       assert.equal(held.pagesOpacity, 1);
       await ctx.advance(10_000);
       await settle(ctx);
       const off = await healthOf(ctx.page);
-      assert.equal(off.cls, "off");
       assert.equal(off.label, "OFFLINE");
       assert.equal(off.age, "");
       assert.equal(off.bg, COLOR.offline);
@@ -182,7 +187,8 @@ const healthCases: UiCase[] = [
       ctx.answer({ body: ctx.example("afternoon") });
       await pollOnce(ctx);
       const live = await healthOf(ctx.page);
-      assert.equal(live.cls, "live", "A fresh newest report reads LIVE.");
+      assert.equal(live.label, "LIVE", "A fresh newest report reads LIVE.");
+      assert.equal(live.bg, COLOR.okFill);
       assert.equal(live.pagesOpacity, 1, "The gray is removed.");
       assert.equal(live.pagesFilter, "none");
       assert.equal(live.warnShown, false);

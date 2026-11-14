@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import type { UiCase, UiContext } from "../types.ts";
 import { near, openWith, pause, pollOnce, settle } from "./overview-kit.ts";
-import { cardsOf, healthOf, probe } from "./overview-probe.ts";
+import { cardsOf, healthOf, probe, runningBreaths } from "./overview-probe.ts";
 
 const FROZEN_WAIT_MS = 41_000;
 const WARM_UP_MS = 1200;
@@ -22,10 +22,10 @@ async function inStep(ctx: UiContext, when: string): Promise<number> {
 
 async function running(ctx: UiContext): Promise<{ dot: number; slot: number }> {
   const { dot } = await healthOf(ctx.page);
-  const [kbd] = (await cardsOf(ctx.page)).filter((c) => c.cls.includes("kbd"));
+  const kbd = (await cardsOf(ctx.page)).find((c) => c.name === "GO TO KEYBOARD");
   return {
-    dot: dot.filter((a) => a.state === "running").length,
-    slot: kbd?.animations.filter((a) => a.state === "running").length ?? -1,
+    dot: runningBreaths(dot).length,
+    slot: runningBreaths(kbd?.animations ?? []).length,
   };
 }
 
@@ -37,14 +37,12 @@ const breathCases: UiCase[] = [
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       const { dot } = await healthOf(ctx.page);
-      const [kbd] = (await cardsOf(ctx.page)).filter((c) => c.cls.includes("kbd"));
-      const slot = kbd?.animations.find((a) => a.name === "throb");
-      assert.ok(dot[0] && slot, "Both breathe.");
-      for (const a of [dot[0], slot]) {
-        assert.equal(a.duration, 2000);
-        assert.equal(a.iterations, 20);
-        assert.equal(a.end, 40_000);
-        assert.equal(a.state, "running");
+      const kbd = (await cardsOf(ctx.page)).find((c) => c.name === "GO TO KEYBOARD");
+      const [dotBreath] = runningBreaths(dot);
+      const [slot] = runningBreaths(kbd?.animations ?? []);
+      assert.ok(dotBreath && slot, "Both breathe.");
+      for (const a of [dotBreath, slot]) {
+        assert.equal(a.end, 40_000, "Twenty cycles of 2 s, 40 s in all.");
       }
       assert.equal((await healthOf(ctx.page)).dotCss.timing, "ease-in-out");
       assert.equal(kbd?.css.timing, "ease-in-out");

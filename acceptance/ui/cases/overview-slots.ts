@@ -195,7 +195,7 @@ const slotCases: UiCase[] = [
   {
     ids: ["UX-070"],
     title:
-      "Inside a Card: 18 px of room below the last blurb line at the content minimum, 15.4 px of padding above the name",
+      "Inside a Card at the content minimum: 18 px below the last blurb line, and the mock's 15.4 px above the Title line's box",
     async run(ctx) {
       await setViewport(ctx, 420);
       const asks = ["alpha", "bravo"].map((p) =>
@@ -203,9 +203,14 @@ const slotCases: UiCase[] = [
       );
       const [kbd] = await show(ctx, [...asks, ...quiet(2)]);
       assert.ok(kbd?.detailBox, "GO TO KEYBOARD has a blurb.");
+      assert.equal(kbd.name, "GO TO KEYBOARD");
       near(kbd.box.h, 101.7, 0.4, "a full slot at the content minimum");
       near(kbd.box.b - kbd.detailBox.b, 18, 1, "room below the last blurb line");
-      near(kbd.nameBox.y - kbd.box.y, 15.4, 1, "room above the Title line");
+      // The ledger says 18 px above the Title line. Measured 2026-11-14 in WebKit at 402 x 874 with
+      // the same method on mocks/index.html and on the page: both put the Title line's box 15.39 px
+      // below the Card's top edge (capitals about 19 px by WebKit's font metrics). The page equals
+      // the mock, so this asserts the mock's value; the row's top half is reported to the Lead.
+      near(kbd.nameBox.y - kbd.box.y, 15.4, 0.5, "the mock's room above the Title line's box");
     },
   },
   {

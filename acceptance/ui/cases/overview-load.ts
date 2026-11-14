@@ -2,11 +2,14 @@
 // before the page's own scripts watches the moment the page reveals itself.
 import assert from "node:assert/strict";
 import type { UiCase, UiContext } from "../types.ts";
-import { near, openWith, pollOnce, settle } from "./overview-kit.ts";
+import { near, openWith, pause, pollOnce, settle } from "./overview-kit.ts";
 import { probe } from "./overview-probe.ts";
 
 const REVEAL_STEPS = 60;
 const REVEAL_STEP_MS = 100;
+const POLL_SETTLE_MS = 300;
+const FONT_FILES = "**/*.{woff2,woff,ttf,otf}";
+const INLINE_FONT = /url\(\s*["']?data:(?:font|application\/font)[^)]*\)/gu;
 
 /** Records, from before any page script, the moment `html.loading` goes away, and every later return. */
 const RECORDER = `
@@ -139,21 +142,23 @@ const loadCases: UiCase[] = [
       await ctx.page.addInitScript(RECORDER);
       await openWith(ctx, ctx.example("afternoon"));
       const home = ctx.page.url();
-      // The font is inline in the page; serve the page with its font swapped for a file that never
-      // arrives. The load event waits for it, so navigate only as far as the page's first bytes.
-      await ctx.page.route(
-        "**/font-that-never-arrives.woff2",
-        () => new Promise<void>(() => undefined),
-      );
-      await ctx.page.route("**/", async (route) => {
-        const response = await route.fetch();
-        const html = (await response.text()).replace(
-          /url\(data:font\/woff2;[^)]*\)/gu,
-          "url(/font-that-never-arrives.woff2)",
-        );
-        await route.fulfill({ response, body: html });
-      });
-      await ctx.page.goto(home, { waitUntil: "commit" });
+      // No font file ever arrives: every font request hangs. Whether the font is a file or inline in
+      // the page or its style sheet, an inline one is swapped for such a file, so the page's font is
+      // stuck either way. A stuck font holds the load event, so wait for the page's scripts to run
+      // (DOMContentLoaded) and for its first poll, then move page time.
+      await ctx.page.route(FONT_FILES, () => new Promise<void>(() => undefined));
+      for (const pattern of ["**/", "**/*.css"]) {
+        // biome-ignore lint/performance/noAwaitInLoops: two routes, set up one after the other
+        await ctx.page.route(pattern, async (route) => {
+          const response = await route.fetch();
+          const text = (await response.text()).replace(INLINE_FONT, "url(/stuck-font.woff2)");
+          await route.fulfill({ response, body: text });
+        });
+      }
+      const firstPoll = ctx.page.waitForResponse((r) => r.url().includes("/state"));
+      await ctx.page.goto(home, { waitUntil: "domcontentloaded" });
+      await firstPoll;
+      await pause(POLL_SETTLE_MS);
       const rev = await untilRevealed(ctx);
       assert.ok(rev.started !== null, "The page's script started.");
       near(rev.t - rev.started, 3000, 300, "The reveal comes 3 s after the page's script starts");

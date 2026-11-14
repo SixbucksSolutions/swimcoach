@@ -1,26 +1,15 @@
-// Overview checks, area D: the GO TO KEYBOARD slot (MVP-11 A).
+// Overview checks, area D: the GO TO KEYBOARD slot (MVP-11 A). The slot is found by its Title line.
 import assert from "node:assert/strict";
 import type { UiCase } from "../types.ts";
-import {
-  at,
-  COLOR,
-  currentKey,
-  fillers,
-  keyOf,
-  near,
-  openWith,
-  overviewOf,
-  pick,
-  reds,
-  tapCard,
-  untilTrue,
-} from "./overview-kit.ts";
-import { boxOf, cardsOf, probe } from "./overview-probe.ts";
+import { at, COLOR, fillers, near, openWith, overviewOf, pick, reds } from "./overview-kit.ts";
+import { tapCard, viewing } from "./overview-nav.ts";
+import { boxOf, cardsOf, probe, runningBreaths } from "./overview-probe.ts";
 
 const MIDDLE_DOT = "·";
 const THREE_DOTS = "...";
 const TWO_LINES_PX = 36.4;
 const ONE_LINE_PX = 18.2;
+const GTK = "GO TO KEYBOARD";
 
 const keyboardCases: UiCase[] = [
   {
@@ -30,14 +19,11 @@ const keyboardCases: UiCase[] = [
     async run(ctx) {
       const cards = await overviewOf(ctx, [pick("flat"), pick("red"), pick("green")]);
       const first = at(cards, 0);
-      assert.equal(first.cls, "pc kbd");
-      assert.equal(first.name, "GO TO KEYBOARD");
+      assert.equal(first.name, GTK);
       assert.equal(first.detail, "search-index T03");
       assert.equal(first.bg, COLOR.badFill);
       assert.equal(first.fg, COLOR.white);
-      assert.equal(first.go, keyOf("search-index", "T03"));
-      const throb = first.animations.find((a) => a.name === "throb");
-      assert.equal(throb?.state, "running", "The red slot breathes.");
+      assert.equal(runningBreaths(first.animations).length, 1, "The red slot breathes.");
       assert.equal(first.css.timing, "ease-in-out");
       assert.equal(
         cards.filter((c) => c.name === "search-index T03").length,
@@ -53,11 +39,11 @@ const keyboardCases: UiCase[] = [
     async run(ctx) {
       await openWith(ctx, ctx.example("keyboard"));
       const cards = await cardsOf(ctx.page);
-      assert.equal(at(cards, 0).name, "GO TO KEYBOARD");
+      assert.equal(at(cards, 0).name, GTK);
       assert.equal(at(cards, 0).detail, `localswim V2 T06 ${MIDDLE_DOT} search-index T03`);
       assert.deepEqual(
         cards.map((c) => c.name),
-        ["GO TO KEYBOARD", "FGA T04"],
+        [GTK, "FGA T04"],
       );
     },
   },
@@ -94,7 +80,7 @@ const keyboardCases: UiCase[] = [
     async run(ctx) {
       const cards = await overviewOf(ctx, [pick("flat"), pick("green"), pick("yellow")]);
       assert.equal(
-        cards.some((c) => c.cls.includes("kbd")),
+        cards.some((c) => c.name === GTK),
         false,
       );
       const area = await boxOf(ctx.page, "#pages .cards");
@@ -114,7 +100,7 @@ const keyboardCases: UiCase[] = [
       ]);
       assert.deepEqual(
         cards.map((c) => c.name),
-        ["GO TO KEYBOARD", "alpha T04", "charlie T04"],
+        [GTK, "alpha T04", "charlie T04"],
       );
     },
   },
@@ -122,22 +108,15 @@ const keyboardCases: UiCase[] = [
     ids: ["UX-054", "UX-055"],
     title: "Tapping GO TO KEYBOARD opens the first red project's display, which shows its full ask",
     async run(ctx) {
-      await openWith(ctx, ctx.example("afternoon"));
-      const key = keyOf("search-index", "T03");
-      await tapCard(ctx, key);
+      // Two red projects, in the server's order: localswim V2 first, then search-index.
+      await openWith(ctx, ctx.example("keyboard"));
+      await tapCard(ctx, GTK);
       assert.ok(
-        await untilTrue(ctx, `q('#pages').dataset.cur === ${JSON.stringify(key)}`),
-        "The display slid to search-index.",
+        await viewing(ctx, "localswim V2 T06"),
+        "The display of the first red project opens, not the last.",
       );
-      assert.equal(await currentKey(ctx), key);
-      const text = await probe<string>(
-        ctx.page,
-        `q(${JSON.stringify(`#pages section[data-key='${key}']`)}).textContent`,
-      );
-      assert.ok(
-        text.includes("Pick an index strategy: per-tenant or shared"),
-        "The project's own display shows the full ask.",
-      );
+      const text = await probe<string>(ctx.page, "inView().textContent");
+      assert.ok(text.includes("1 ticket in Needs Terry"), "Its own display shows its full ask.");
     },
   },
 ];

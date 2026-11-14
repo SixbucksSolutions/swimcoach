@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { setTimeout as sleep } from "node:timers/promises";
 import { STATE_PATH } from "../../api/transport.ts";
 import type { UiContext } from "../types.ts";
-import { type CardInfo, cardsOf, probe } from "./overview-probe.ts";
+import { type CardInfo, cardsOf } from "./overview-probe.ts";
 
 type Json = Record<string, unknown>;
 
@@ -26,13 +26,10 @@ const COLOR = {
   laneAmber: "rgb(226, 161, 0)", // --lane-amber #E2A100, "coach"
 } as const;
 
-const ALL_KEY = "*all*";
 const POLL_MS = 30_000;
 const MINUTE_MS = 60_000;
 const SETTLE_REAL_MS = 80;
 const SETTLE_PAGE_MS = 20;
-const WAIT_STEP_MS = 50;
-const WAIT_LIMIT_MS = 3000;
 
 /** The kinds of milestone the afternoon and allgreen examples hold, by what they look like. */
 type Kind = "gray" | "yellow" | "green" | "done" | "late" | "red" | "flat";
@@ -139,15 +136,6 @@ function titleOf(ctx: UiContext, p: Pick): string {
   return `${p.project ?? String(m.project)} ${String(m.milestone)}`;
 }
 
-/** The page's `data-go` key for a project and milestone: a JSON array, ASCII-lowercased. */
-function keyOf(project: string, milestone: string): string {
-  return JSON.stringify([asciiLower(project), asciiLower(milestone)]);
-}
-
-function asciiLower(text: string): string {
-  return text.replace(/[A-Z]/gu, (c) => c.toLowerCase());
-}
-
 /** A copy of a body with every report time `seconds` older, `now` unchanged. */
 function older(body: Json, seconds: number): Json {
   const out = structuredClone(body);
@@ -229,38 +217,13 @@ function pageErrors(ctx: UiContext): string[] {
   return errors;
 }
 
-/** Waits in real time until a page expression is true; for the browser's own smooth scrolls. */
-async function untilTrue(ctx: UiContext, expression: string): Promise<boolean> {
-  for (let waited = 0; waited <= WAIT_LIMIT_MS; waited += WAIT_STEP_MS) {
-    // biome-ignore lint/performance/noAwaitInLoops: each look follows a real-time wait
-    if (await probe<boolean>(ctx.page, expression)) {
-      return true;
-    }
-    await sleep(WAIT_STEP_MS);
-  }
-  return false;
-}
-
-/** Taps a card (a click, the page's own tap handler) by its `data-go` key. */
-async function tapCard(ctx: UiContext, key: string): Promise<void> {
-  await ctx.page.locator(`#pages .pc[data-go='${key}']`).click();
-}
-
-/** The key of the display now in view. */
-function currentKey(ctx: UiContext): Promise<string> {
-  return probe<string>(ctx.page, "q('#pages').dataset.cur ?? ''");
-}
-
 export type { Json, Kind, Pick };
 export {
-  ALL_KEY,
   at,
   board,
   COLOR,
   countPolls,
-  currentKey,
   fillers,
-  keyOf,
   MINUTE_MS,
   named,
   near,
@@ -275,8 +238,6 @@ export {
   reds,
   retimed,
   settle,
-  tapCard,
   titleOf,
-  untilTrue,
   withBin,
 };

@@ -20,6 +20,15 @@ import { cardsOf, contrast, healthOf, styleOf } from "./overview-probe.ts";
 const SILENT_SECONDS = 1920;
 const STALLED_SECONDS = 3000;
 
+/** The fill each card level paints with (docs/brand.md section 5). */
+const FILL = {
+  done: COLOR.board,
+  red: COLOR.badFill,
+  gray: COLOR.stack1,
+  yellow: COLOR.risk,
+  green: COLOR.okFill,
+} as const;
+
 interface Row {
   readonly name: string;
   readonly want: "done" | "red" | "gray" | "yellow" | "green";
@@ -102,11 +111,11 @@ const cardCases: UiCase[] = [
     title: "A Card never changes position when its color changes",
     async run(ctx) {
       const before = await overviewOf(ctx, flipBoard("yellow", "toss_up"));
-      assert.equal(named(before, "bravo T02").cls, "pc yellow");
+      assert.equal(named(before, "bravo T02").bg, COLOR.risk);
       ctx.answer({ body: board(ctx, flipBoard("green", "on_time")) });
       await pollOnce(ctx);
       const after = await cardsOf(ctx.page);
-      assert.equal(named(after, "bravo T02").cls, "pc green");
+      assert.equal(named(after, "bravo T02").bg, COLOR.okFill);
       assert.deepEqual(
         after.map((c) => c.name),
         before.map((c) => c.name),
@@ -126,13 +135,12 @@ const cardCases: UiCase[] = [
         ...fillers(1),
       ]);
       const done = named(cards, "finished T06");
-      assert.equal(done.cls, "pc done");
       assert.equal(done.bg, COLOR.board);
       assert.equal(done.fg, COLOR.dim);
       assert.equal(done.detail, "Done");
       assert.equal(done.rtr, null, "A done Card shows no RTR.");
       assert.equal(
-        cards.some((c) => c.cls.includes("kbd")),
+        cards.some((c) => c.name === "GO TO KEYBOARD"),
         false,
         "A done project with a stale ask opens no GO TO KEYBOARD slot.",
       );
@@ -160,7 +168,6 @@ const cardCases: UiCase[] = [
       ];
       for (const [name, words] of expected) {
         const card = named(cards, name);
-        assert.equal(card.cls, "pc yellow");
         assert.equal(card.bg, COLOR.risk);
         assert.equal(card.fg, COLOR.riskText);
         assert.equal(card.detail, words);
@@ -174,7 +181,6 @@ const cardCases: UiCase[] = [
     title: "Gray (too early): Too early to call, the RTR, and no arrow",
     async run(ctx) {
       const card = named(await overviewOf(ctx, [pick("gray")]), "auth-refresh M3");
-      assert.equal(card.cls, "pc gray");
       assert.equal(card.bg, COLOR.stack1);
       assert.equal(card.fg, COLOR.grayText);
       assert.equal(card.detail, "Too early to call");
@@ -187,7 +193,7 @@ const cardCases: UiCase[] = [
     title: "Green: the name, the RTR and the arrow, and no blurb",
     async run(ctx) {
       const card = named(await overviewOf(ctx, [pick("green")]), "FGA T04");
-      assert.equal(card.cls, "pc green");
+      assert.equal(card.bg, COLOR.okFill);
       assert.equal(card.detail, null);
       assert.equal(card.rtr, "1.25");
       assert.equal(card.handLabel, "Sharp up");
@@ -250,12 +256,11 @@ const cardCases: UiCase[] = [
       await openWith(ctx, ctx.example("silent"));
       const cards = await cardsOf(ctx.page);
       const silent = named(cards, "mobile-onboarding M12");
-      assert.equal(silent.cls, "pc gray");
       assert.equal(silent.bg, COLOR.stack1);
       assert.equal(silent.detail, "Agent silent for 32m");
       assert.equal(silent.rtr, "0.89");
       assert.equal(silent.handBox, null);
-      assert.equal(named(cards, "FGA T04").cls, "pc green");
+      assert.equal(named(cards, "FGA T04").bg, COLOR.okFill);
       assert.equal(
         (await healthOf(ctx.page)).label,
         "LIVE",
@@ -282,7 +287,7 @@ const cardCases: UiCase[] = [
       for (const row of rows.filter((r) => r.want !== "red")) {
         const card = cards.find((c) => c.name.startsWith(`${row.name} `));
         assert.ok(card, `${row.name} has a Card.`);
-        assert.equal(card.cls, `pc ${row.want}`, row.name);
+        assert.equal(card.bg, FILL[row.want], `${row.name} fill`);
         assert.equal(card.detail, row.blurb, `${row.name} blurb`);
       }
     },

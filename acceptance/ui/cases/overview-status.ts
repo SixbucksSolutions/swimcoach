@@ -2,18 +2,9 @@
 // in overview-health.ts.
 import assert from "node:assert/strict";
 import type { UiCase, UiContext } from "../types.ts";
-import {
-  COLOR,
-  keyOf,
-  near,
-  older,
-  openWith,
-  retimed,
-  settle,
-  tapCard,
-  untilTrue,
-} from "./overview-kit.ts";
-import { healthOf, probe, statusBoxesOf, styleOf } from "./overview-probe.ts";
+import { COLOR, near, older, openWith, retimed, settle } from "./overview-kit.ts";
+import { tapCard, viewing } from "./overview-nav.ts";
+import { healthOf, probe, runningBreaths, statusBoxesOf, styleOf } from "./overview-probe.ts";
 
 const HEADER_HEIGHT = 52;
 const GUTTER = 14;
@@ -45,17 +36,15 @@ const statusCases: UiCase[] = [
     async run(ctx) {
       ctx.answer({ body: ctx.example("empty") });
       await ctx.open();
-      const health = ctx.page.locator("#health");
-      assert.equal(await health.getAttribute("class"), "live");
-      assert.equal((await ctx.page.locator("#health b").textContent())?.trim(), "LIVE");
-      assert.equal((await ctx.page.locator("#health span").textContent())?.trim(), "");
+      const h = await healthOf(ctx.page);
+      assert.equal(h.label, "LIVE");
+      assert.equal(h.bg, COLOR.okFill);
+      assert.equal(h.age, "");
       assert.equal(
         (await ctx.page.locator("#pages .empty").textContent())?.trim(),
         "No reports yet today.",
       );
-      const { dot } = await healthOf(ctx.page);
-      assert.equal(dot.length, 1, "The LIVE dot breathes.");
-      assert.equal(dot[0]?.name, "breathe");
+      assert.equal(runningBreaths(h.dot).length, 1, "The LIVE dot breathes.");
     },
   },
   {
@@ -81,8 +70,8 @@ const statusCases: UiCase[] = [
       await openAtLocalTime(ctx, ctx.example("afternoon"), 14, 25);
       const s = await statusBoxesOf(ctx.page);
       assert.ok(s.clock.r < s.health.x, "The clock ends before the Health box starts.");
-      const order = await probe<string[]>(ctx.page, "headerOrder()");
-      assert.deepEqual(order, ["h1", "clock", "health", "snd"]);
+      assert.ok(s.health.r < s.bell.x, "The bell is last.");
+      assert.ok(s.wordmark.r < s.clock.x, "The wordmark is first.");
       assert.equal(s.clockText, "2:25pm");
     },
   },
@@ -122,11 +111,8 @@ const statusCases: UiCase[] = [
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       const before = await statusBoxesOf(ctx.page);
-      await tapCard(ctx, keyOf("FGA", "T04"));
-      assert.ok(
-        await untilTrue(ctx, `q('#pages').scrollLeft >= ${PAGE_WIDTH * 3 - 1}`),
-        "The display slid over.",
-      );
+      await tapCard(ctx, "FGA T04");
+      assert.ok(await viewing(ctx, "FGA T04"), "The display slid over.");
       await settle(ctx);
       const after = await statusBoxesOf(ctx.page);
       assert.deepEqual(after, before, "Every part of the Status line keeps its box.");
@@ -187,9 +173,7 @@ const statusCases: UiCase[] = [
       assert.equal(h.fg, COLOR.white);
       assert.equal(h.weight, "800");
       assert.equal(h.age, "");
-      assert.equal(h.dot.length, 1);
-      assert.equal(h.dot[0]?.name, "breathe");
-      assert.equal(h.dot[0]?.state, "running");
+      assert.equal(runningBreaths(h.dot).length, 1, "The dot breathes.");
     },
   },
   {
@@ -198,7 +182,6 @@ const statusCases: UiCase[] = [
     async run(ctx) {
       await openWith(ctx, older(ctx.example("afternoon"), 7 * 60));
       const h = await healthOf(ctx.page);
-      assert.equal(h.cls, "live");
       assert.equal(h.label, "LIVE");
       assert.equal(h.age, "7m");
       assert.equal(h.bg, COLOR.okFill);

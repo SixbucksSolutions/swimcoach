@@ -4,6 +4,9 @@
 import assert from "node:assert/strict";
 import type { Page } from "playwright";
 
+/** --text #E8EEF4: what a lit page dot is filled with. */
+const TEXT_COLOR = "rgb(232, 238, 244)";
+
 /** A box in CSS px, with the derived edges. */
 interface Box {
   readonly x: number;
@@ -35,11 +38,9 @@ interface CssAnimation {
 }
 
 interface CardInfo {
-  readonly cls: string;
   readonly bg: string;
   readonly fg: string;
   readonly box: Box;
-  readonly go: string | null;
   readonly name: string;
   readonly nameBox: Box;
   readonly nameSize: number;
@@ -64,7 +65,6 @@ interface CardInfo {
 }
 
 interface HealthInfo {
-  readonly cls: string;
   readonly label: string;
   readonly age: string;
   readonly bg: string;
@@ -77,7 +77,6 @@ interface HealthInfo {
   readonly warnShown: boolean;
   readonly pagesOpacity: number;
   readonly pagesFilter: string;
-  readonly phoneHealth: string | null;
 }
 
 /** The parts of the Status line, as boxes. */
@@ -126,7 +125,7 @@ const card = (c) => {
   const rt = q('.rt', c);
   const hand = q('.hand', c);
   return {
-    cls: c.className, bg: cs(c).backgroundColor, fg: cs(c).color, box: box(c), go: c.getAttribute('data-go'),
+    bg: cs(c).backgroundColor, fg: cs(c).color, box: box(c),
     name: b.textContent, nameBox: box(b), nameSize: num(cs(b).fontSize), nameWeight: cs(b).fontWeight,
     nameClipped: b.scrollWidth > b.clientWidth + 1, nameOverflow: cs(b).textOverflow,
     detail: s ? s.textContent : null, detailBox: box(s), detailSize: s ? num(cs(s).fontSize) : null,
@@ -142,22 +141,24 @@ const health = () => {
   const h = q('#health');
   const w = q('#warn');
   return {
-    cls: h.className, label: q('#health b').textContent, age: q('#health span').textContent,
+    label: q('#health b').textContent, age: q('#health span').textContent,
     bg: cs(h).backgroundColor, fg: cs(h).color, weight: cs(q('#health b')).fontWeight, box: box(h),
     dot: anims(q('#health i')), dotCss: css(q('#health i')), warn: w.textContent, warnShown: cs(w).display !== 'none',
     pagesOpacity: num(cs(q('#pages')).opacity), pagesFilter: cs(q('#pages')).filter,
-    phoneHealth: q('#phone').getAttribute('data-health'),
   };
 };
 const statusBoxes = () => ({
   header: box(q('header')), brand: box(q('#brand')), wordmark: box(q('header h1')), clock: box(q('#clock')),
   health: box(q('#health')), bell: box(q('#snd')), clockText: q('#clock').textContent,
 });
-const headerOrder = () => [...q('header').children].map((e) => e.id || e.tagName.toLowerCase());
-const breaths = () => [
-  q('#health i').getAnimations()[0].currentTime,
-  q('#pages .pc.kbd').getAnimations().find((a) => a.animationName === 'throb').currentTime,
-];
+const gtk = () => qa('#pages .cards .pc').find((c) => q('.nm b', c).textContent === 'GO TO KEYBOARD');
+const breath = (e) => e.getAnimations().find((a) => {
+  const t = a.effect.getComputedTiming();
+  return t.duration === 2000 && t.iterations === 20;
+});
+const breaths = () => [breath(q('#health i')).currentTime, breath(gtk()).currentTime];
+const inView = () => qa('#pages > section.page').find((s) => Math.abs(s.getBoundingClientRect().left) < 2);
+const litDot =(lit) => qa('#dots button i').findIndex((i) => cs(i).backgroundColor === lit);
 const wordmark = () => ({
   text: q('header h1').textContent, swim: cs(q('header h1 .word')).color, coach: cs(q('header h1 .word span')).color,
 });
@@ -166,15 +167,17 @@ const texts = () => ({
   axis: qa('.xax span').map((e) => e.textContent),
 });
 const bellInfo = () => ({
-  text: q('#snd').textContent, paths: qa('#snd svg path').length, on: q('#snd').classList.contains('on'),
+  text: q('#snd').textContent, paths: qa('#snd svg path').length,
   label: q('#snd').getAttribute('aria-label'),
 });
 const area = () => {
   const p = q('#pages .page');
   const c = q('#pages .cards');
+  const top = box(c).y;
+  const bottom = box(p).y + p.clientHeight - num(cs(p).paddingBottom);
   return {
-    top: box(c).y, bottom: box(p).y + p.clientHeight - num(cs(p).paddingBottom), scrollHeight: p.scrollHeight,
-    clientHeight: p.clientHeight, half: c.classList.contains('half'), overflowY: cs(p).overflowY,
+    top, bottom, scrollHeight: p.scrollHeight, clientHeight: p.clientHeight,
+    half: box(q('#pages .cards .pc')).h < (bottom - top) / 4, overflowY: cs(p).overflowY,
   };
 };
 `;
@@ -210,6 +213,16 @@ function styleOf(page: Page, selector: string, property: string): Promise<string
   return probe<string>(page, `cs(q(${JSON.stringify(selector)}))[${JSON.stringify(property)}]`);
 }
 
+/** The animations that are a breath: a 2 s cycle run 20 times, still running. Found by timing, not by name. */
+function runningBreaths(list: readonly AnimationInfo[]): AnimationInfo[] {
+  return list.filter((a) => a.duration === 2000 && a.iterations === 20 && a.state === "running");
+}
+
+/** Which page dot is lit, by paint: the one filled with the text color (--text #E8EEF4); -1 if none. */
+function litDotOf(page: Page): Promise<number> {
+  return probe<number>(page, `litDot(${JSON.stringify(TEXT_COLOR)})`);
+}
+
 function luminance(rgb: string): number {
   const match = /^rgb\((?<r>\d+), (?<g>\d+), (?<b>\d+)\)$/u.exec(rgb);
   assert.ok(match?.groups, `"${rgb}" is not an opaque rgb() color.`);
@@ -231,4 +244,15 @@ function contrast(a: string, b: string): number {
 }
 
 export type { AnimationInfo, Area, Box, CardInfo, CssAnimation, HealthInfo, StatusBoxes };
-export { areaOf, boxOf, cardsOf, contrast, healthOf, probe, statusBoxesOf, styleOf };
+export {
+  areaOf,
+  boxOf,
+  cardsOf,
+  contrast,
+  healthOf,
+  litDotOf,
+  probe,
+  runningBreaths,
+  statusBoxesOf,
+  styleOf,
+};
