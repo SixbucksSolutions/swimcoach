@@ -1,5 +1,8 @@
-// Command-line parsing for the swimcoach CLI (contract/cli.md sections 1 and 2). Pure: it reads no
-// file and prints nothing. Every problem it finds is collected, so one message can name them all.
+// Command-line parsing for the swimcoach CLI (contract/cli.md sections 1 and 2), on Commander, the
+// most used Node argument parser (Terry, 2026-11-14: "the most common/ubiquitous TS equiv to
+// argparse"). Pure: it reads no file and prints nothing. This module only declares the flags and
+// turns Commander's errors into the contract's wording; Commander does the parsing.
+import { CommanderError, InvalidArgumentError, Option, Command as Parser } from "commander";
 
 type Command = "report" | "stop";
 
@@ -50,11 +53,27 @@ const SHORT_FLAGS: Readonly<Record<string, string>> = Object.freeze({
   j: "json",
 });
 
-/** A short flag token: one dash and one letter, nothing attached. */
-const SHORT_TOKEN = /^-[A-Za-z]$/u;
+const LONG_TO_SHORT: ReadonlyMap<string, string> = new Map(
+  Object.entries(SHORT_FLAGS).map(([letter, name]) => [name, letter]),
+);
 
-/** One dash and a letter, with or without more after it: a short flag, or a mistyped one. */
-const SHORT_LIKE = /^-[A-Za-z]/u;
+/** An argument that is itself a flag: two dashes, or one dash and one letter. Never a value. */
+const FLAG_TOKEN = /^(?:--|-[A-Za-z]$)/u;
+
+/** A short flag with an equals sign, `-p=FGA`, which Commander would read as the value "=FGA". */
+const SHORT_WITH_EQUALS = /^-[A-Za-z]=/u;
+
+/** The quoted token or option in a Commander message: '--url=x' or '-p, --project <name>'. */
+const QUOTED = /'(?<quoted>[^']+)'/u;
+
+/** A long flag name inside a Commander option description. */
+const LONG_NAME = /--(?<name>[a-z-]+)/u;
+
+/** The arguments Commander found left over, after "got N: ". */
+const LEFT_OVER = /got \d+: (?<rest>.*)\.$/u;
+
+const TWICE = "is given twice";
+const NO_VALUE = "needs a value";
 
 interface ParsedFlags {
   readonly flags: ReadonlyMap<string, string>;
@@ -66,138 +85,124 @@ type ParseResult =
   | { readonly ok: true; readonly parsed: ParsedFlags }
   | { readonly ok: false; readonly errors: readonly string[] };
 
-/** What the parser has collected so far. */
-interface State {
-  readonly flags: Map<string, string>;
-  readonly errors: string[];
-  dryRun: boolean;
-  json: boolean;
+/** A value check for every value flag: refuses a second copy and an argument that is a flag. */
+function once(value: string, previous: string | undefined): string {
+  if (FLAG_TOKEN.test(value)) {
+    throw new InvalidArgumentError(NO_VALUE);
+  }
+  if (previous !== undefined) {
+    throw new InvalidArgumentError(TWICE);
+  }
+  return value;
 }
 
-function unknownFlag(name: string, command: Command): string {
+/** Commander's flag spelling for one long name, with its short form. */
+function spelling(name: string, takesValue: boolean): string {
+  const letter = LONG_TO_SHORT.get(name);
+  if (takesValue) {
+    return `-${letter}, --${name} <value>`;
+  }
+  return `-${letter}, --${name}`;
+}
+
+/** A fresh parser for one command: the command's flags and nothing else. */
+function parserFor(command: Command): Parser {
+  const parser = new Parser(command);
+  parser.exitOverride();
+  parser.configureOutput({ writeErr: () => undefined, writeOut: () => undefined });
+  parser.helpOption(false);
+  parser.showSuggestionAfterError(false);
+  parser.allowExcessArguments(false);
+  for (const name of VALUE_FLAGS[command]) {
+    parser.addOption(new Option(spelling(name, true)).argParser(once));
+  }
+  for (const name of SWITCHES) {
+    parser.addOption(new Option(spelling(name, false)));
+  }
+  return parser;
+}
+
+/** The long name of a flag token Commander did not know: "--url=x" is url, "-a" is agent. */
+function unknownName(token: string): string {
+  if (token.startsWith("--")) {
+    return token.slice(2).split("=")[0] ?? "";
+  }
+  return SHORT_FLAGS[token.slice(1)] ?? "";
+}
+
+function unknownFlag(token: string, command: Command): string {
+  const name = unknownName(token);
   if (name === "url") {
     return "The flag --url does not exist; the service address comes only from the config file.";
+  }
+  if (SWITCHES.includes(name) && token.includes("=")) {
+    return `The flag --${name} takes no value.`;
+  }
+  if (name === "") {
+    return `Unknown flag ${token}.`;
   }
   return `Unknown flag --${name} for the ${command} command.`;
 }
 
-/** Splits "--name=value" at the first equals sign; a token without one has no inline value. */
-function splitToken(token: string): { name: string; inline: string | undefined } {
-  const equals = token.indexOf("=");
-  if (equals === -1) {
-    return { name: token.slice(2), inline: undefined };
+/** The contract's wording for one Commander error, which always starts with a capital. */
+function explain(error: CommanderError, command: Command): string {
+  const quoted = QUOTED.exec(error.message)?.groups?.quoted ?? "";
+  const long = LONG_NAME.exec(quoted)?.groups?.name ?? "";
+  if (error.code === "commander.unknownOption") {
+    return unknownFlag(quoted, command);
   }
-  return { name: token.slice(2, equals), inline: token.slice(equals + 1) };
-}
-
-/**
- * Reads one flag token as a long name and an inline value. A short form maps to its long name and
- * never carries an inline value. Returns undefined, after recording why, for a token that is no flag.
- */
-function readFlag(
-  token: string,
-  state: State,
-): { name: string; inline: string | undefined } | undefined {
-  if (token.startsWith("--")) {
-    return splitToken(token);
+  if (error.code === "commander.optionMissingArgument") {
+    return `The flag --${long} ${NO_VALUE}.`;
   }
-  if (SHORT_TOKEN.test(token)) {
-    const name = SHORT_FLAGS[token.slice(1)];
-    if (name === undefined) {
-      state.errors.push(`Unknown flag ${token}.`);
-      return undefined;
+  if (error.code === "commander.invalidArgument") {
+    if (error.message.endsWith(TWICE)) {
+      return `The flag --${long} ${TWICE}.`;
     }
-    return { name, inline: undefined };
+    return `The flag --${long} ${NO_VALUE}.`;
   }
-  if (SHORT_LIKE.test(token)) {
-    state.errors.push(
-      `Unexpected argument "${token}"; a short flag is one letter, with its value as the next argument.`,
-    );
-    return undefined;
+  if (error.code === "commander.excessArguments") {
+    const first = LEFT_OVER.exec(error.message)?.groups?.rest?.split(", ")[0] ?? "";
+    return `Unexpected argument "${first}"; every value must follow its flag.`;
   }
-  state.errors.push(`Unexpected argument "${token}"; every value must follow its flag.`);
-  return undefined;
+  return "The command line cannot be read.";
 }
 
-function parseSwitch(name: string, inline: string | undefined, state: State): void {
-  if (inline !== undefined) {
-    state.errors.push(`The flag --${name} takes no value.`);
-  } else if (name === "dry-run") {
-    state.dryRun = true;
-  } else {
-    state.json = true;
-  }
-}
-
-/** True when an argument is itself a flag, so it can never be taken as the previous flag's value. */
-function isFlagToken(arg: string): boolean {
-  return arg.startsWith("--") || SHORT_TOKEN.test(arg);
-}
-
-/**
- * Takes a flag's value: after an equals sign, or the next argument. A next argument that is a flag
- * (two dashes, or one dash and one letter) is never a value, so a forgotten value cannot swallow
- * the next flag; write --project=--odd or --project=-x for such a name. Returns how many arguments
- * the flag used.
- */
-function parseValueFlag(
-  name: string,
-  inline: string | undefined,
-  next: string | undefined,
-  state: State,
-): number {
-  let value = inline;
-  let used = 1;
-  if (value === undefined) {
-    if (next === undefined || isFlagToken(next)) {
-      state.errors.push(`The flag --${name} needs a value.`);
-      return 1;
-    }
-    value = next;
-    used = 2;
-  }
-  if (state.flags.has(name)) {
-    state.errors.push(`The flag --${name} is given twice.`);
-  } else {
-    state.flags.set(name, value);
-  }
-  return used;
-}
-
-/** Parses the token at `index` and returns how many arguments it used. */
-function parseToken(
-  command: Command,
-  args: readonly string[],
-  index: number,
-  state: State,
-): number {
-  const flag = readFlag(args[index] ?? "", state);
-  if (flag === undefined) {
-    return 1;
-  }
-  const { name, inline } = flag;
-  if (SWITCHES.includes(name)) {
-    parseSwitch(name, inline, state);
-    return 1;
-  }
-  if (!VALUE_FLAGS[command].includes(name)) {
-    state.errors.push(unknownFlag(name, command));
-    return 1;
-  }
-  return parseValueFlag(name, inline, args[index + 1], state);
+/** True when a switch was given. */
+function switchOn(parser: Parser, name: string): boolean {
+  return parser.getOptionValue(new Option(`--${name}`).attributeName()) === true;
 }
 
 /** Parses the arguments after the command word. */
 function parseFlags(command: Command, args: readonly string[]): ParseResult {
-  const state: State = { flags: new Map(), errors: [], dryRun: false, json: false };
-  let index = 0;
-  while (index < args.length) {
-    index += parseToken(command, args, index, state);
+  const attached = args.find((arg) => SHORT_WITH_EQUALS.test(arg));
+  if (attached !== undefined) {
+    return {
+      ok: false,
+      errors: [
+        `Unexpected argument "${attached}"; a short flag takes its value as the next argument.`,
+      ],
+    };
   }
-  if (state.errors.length > 0) {
-    return { ok: false, errors: state.errors };
+  const parser = parserFor(command);
+  try {
+    parser.parse([...args], { from: "user" });
+  } catch (error) {
+    if (error instanceof CommanderError) {
+      return { ok: false, errors: [explain(error, command)] };
+    }
+    throw error;
   }
-  return { ok: true, parsed: { flags: state.flags, dryRun: state.dryRun, json: state.json } };
+  const flags = new Map<string, string>();
+  for (const name of VALUE_FLAGS[command]) {
+    const value: unknown = parser.getOptionValue(new Option(`--${name}`).attributeName());
+    if (typeof value === "string") {
+      flags.set(name, value);
+    }
+  }
+  return {
+    ok: true,
+    parsed: { flags, dryRun: switchOn(parser, "dry-run"), json: switchOn(parser, "json") },
+  };
 }
 
 export type { Command, ParsedFlags, ParseResult };

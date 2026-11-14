@@ -100,13 +100,22 @@ describe("short forms do what their long forms do", () => {
   });
 });
 
+describe("Commander's conventions for short forms", () => {
+  it("accepts an attached value and bundled switches", async () => {
+    const attached = await runCli(["report", "-acodex", "-pFGA", ...SHORT_REPORT.slice(4), "-nj"]);
+    expect(attached.code).toBe(0);
+    expect(JSON.parse(attached.stdout)).toEqual(REPORT_BODY);
+  });
+});
+
 describe("exit 2 for short forms used wrongly", () => {
   it.each([
     [["-x", "1"], "Unknown flag -x."],
-    [["-nj"], "a short flag is one letter"],
-    [["-pFGA"], "a short flag is one letter"],
+    [["-p=FGA"], "a short flag takes its value as the next argument"],
     [["-p", "A", "--project", "B"], "--project is given twice"],
     [["-p", "-m", "B"], "--project needs a value"],
+    [["-p", "A", "-q", "-n"], "--needs-me needs a value"],
+    [["-p", "A", "--dry-run=1"], "--dry-run takes no value"],
   ])("refuses %j", async (extra, message) => {
     const result = await runCli(["report", ...SHORT_REPORT.slice(4), ...extra, "-n"]);
     expect(result.code).toBe(2);

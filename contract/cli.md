@@ -43,16 +43,20 @@ means the same flag in every command, and no letter is used twice.
 | `-t` | `--needs-terry` | | |
 | `-r` | `--ready-for-review` | | |
 
-- **A short form behaves exactly like its long form**, in every rule of this document: the same value,
-  the same refusals, the same exit codes. The two MAY be mixed in one command, and giving one flag in
-  both forms is the same error as giving it twice.
-- **A short form's value is always the next argument** (`-p FGA`). The CLI MUST refuse an attached
-  value (`-pFGA`, `-p=FGA`) and bundled switches (`-nj`) with exit 2. `--name=value` stays valid for
-  long forms.
-- An argument that is a short form (one dash and one letter) is never taken as the previous flag's
-  value, just as an argument starting with two dashes is not. A name that looks like a flag goes in
-  with an equals sign on the long form: `--project=-x`.
-- Error messages name the long form.
+- **A short form MUST behave exactly like its long form** in every rule of this document: the same
+  value, the same refusals, the same exit codes. The two MAY be mixed in one command. Giving one flag in
+  both forms MUST be refused like giving it twice.
+- **The CLI parses with Commander** (Terry, 2026-11-14: the most used argparse equivalent for
+  TypeScript; any other parser needs his approval), and follows its conventions: a short form's value
+  MAY be the next argument (`-p FGA`) or attached (`-pFGA`), and switches MAY be bundled (`-nj`). A
+  long form's value MAY follow an equals sign (`--project=FGA`).
+- **A short form with an equals sign (`-p=FGA`) MUST be refused** with exit 2, because Commander
+  would read the value as `=FGA`.
+- **A value that is itself a flag MUST be refused** with exit 2: one that starts with two dashes, or
+  is one dash and one letter (`-q -n` is a missing value, not the sentence `-n`). This holds in every
+  form, so a project or milestone name MUST NOT look like a flag.
+- Every error message MUST name the flag by its long form, except an unknown short form, which has
+  none and MUST be named as typed (`Unknown flag -x.`).
 
 Common options, on `report` and `stop`:
 
