@@ -37,11 +37,14 @@ const ROUTES: ReadonlyMap<string, Route> = new Map<string, Route>([
   [`${API_PREFIX}/stop`, { method: "POST", run: handleStop }],
   [`${API_PREFIX}/state`, { method: "GET", run: (_request, env, now) => handleState(env, now) }],
   ["/", { method: "GET", run: serveAsset }],
+  // The web app manifest (t5-interfaces.md, MVP-10): a page asset, not an API endpoint.
+  ["/manifest.webmanifest", { method: "GET", run: serveAsset }],
 ]);
 
-// The page's stylesheets and modules (t4-interfaces.md, MVP-08): one flat directory each, lowercase
-// names only, so no path can reach anything else in ./public. index.html is reachable only as "/".
-const ASSET_PATH = /^\/(?:css|js)\/[a-z]+\.(?:css|js)$/u;
+// The page's stylesheets and modules (t4-interfaces.md, MVP-08), and its icons (t5-interfaces.md,
+// MVP-10): one flat directory each, lowercase names only, so no path can reach anything else in
+// ./public. index.html is reachable only as "/".
+const ASSET_PATH = /^\/(?:(?:css|js)\/[a-z]+\.(?:css|js)|icons\/[a-z0-9-]+\.png)$/u;
 const ASSET_ROUTE: Route = { method: "GET", run: serveAsset };
 
 function routeFor(pathname: string): Route | undefined {
