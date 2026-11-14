@@ -192,8 +192,10 @@ header h1 .word span {
   background: var(--ok-fill);
 }
 
+/* 20 cycles, 40 s: outlasts the 30 s poll plus its 8 s timeout, and stops about 10 s after a missed
+   poll, so a dead page still stops breathing by itself (UX-157). */
 #health.live i {
-  animation: breathe 2s ease-in-out 8;
+  animation: breathe 2s ease-in-out 20;
 }
 
 #health.live span {

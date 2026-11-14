@@ -18,8 +18,11 @@ const ARROW_PATH = '<path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentC
 /** The overview's page key. A card key is a JSON array string, so it can never equal this. */
 export const ALL = "*all*";
 
-/** The poll interval (concept.md section 3.1). */
-export const POLL_MS = 10_000;
+/**
+ * The poll interval (concept.md section 3.1). 30 s since Terry, 2026-11-14: project agents report no
+ * more often than every five minutes, so a faster poll only repeats the same answer (UX-156).
+ */
+export const POLL_MS = 30_000;
 
 /**
  * The palette token each card level paints with (docs/brand.md section 5).

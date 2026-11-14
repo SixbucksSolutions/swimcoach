@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import afternoon from "../../contract/schemas/examples/state.afternoon.json" with { type: "json" };
 import keyboard from "../../contract/schemas/examples/state.keyboard.json" with { type: "json" };
+import { POLL_MS } from "../../public/js/format.js";
 import { toView } from "../../public/js/state.js";
 import {
   $,
@@ -52,7 +53,7 @@ describe("the controller draws the board", () => {
 
   it("adds and removes sections as milestones come and go", async () => {
     await loadPage(fresh(afternoon), fresh(keyboard));
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     expect(sections()).toEqual(["*all*", ...toView(keyboard).cards.map((c) => c.key)]);
     expect(document.title).toBe("(2) swimcoach");
   });
@@ -66,7 +67,7 @@ describe("the controller on a steady board (UX-110)", () => {
     await loadPage(fresh(afternoon));
     await revealed();
     const changes = watchDocument();
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     expect(fetch).toHaveBeenCalledTimes(2);
     expect(changes()).toEqual([]);
   });
@@ -77,7 +78,7 @@ describe("the controller on a steady board (UX-110)", () => {
     Object.assign($("#health i"), { getAnimations: () => [breath] });
     await revealed();
     const changes = watchDocument();
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     expect([breath.currentTime, breath.play.mock.calls.length]).toEqual([0, 1]);
     expect(changes()).toEqual([]);
   });
@@ -116,7 +117,7 @@ describe("the controller when the font lands late (concept.md 3.4)", () => {
     fireLoadingDone(); // a second event for the same load fits nothing more
     expect([fits.mock.calls.length, bumps.mock.calls.length]).toEqual([2, 2]);
     const changes = watchDocument();
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     // The steady poll fits again, from the cache: no new font state, no change.
     expect([fits.mock.calls.length, bumps.mock.calls.length]).toEqual([3, 2]);
     expect(changes()).toEqual([]);
@@ -127,19 +128,19 @@ describe("the controller on failed polls", () => {
   beforeEach(setUp);
   afterEach(tearDown);
 
-  it("turns OFFLINE after 30 s of failed polls, never SIGN IN", async () => {
+  it("turns OFFLINE after three failed polls (90 s), never SIGN IN", async () => {
     await loadPage(fresh(afternoon), new TypeError("Failed to fetch"));
-    await vi.advanceTimersByTimeAsync(30 * SEC);
+    await vi.advanceTimersByTimeAsync(3 * POLL_MS);
     expect(health()).toEqual(["live", "LIVE", "live"]);
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     expect(health()).toEqual(["off", "OFFLINE", "off"]);
-    expect($("#warn").textContent).toBe("Can't reach the board for 1m. Everything below is old.");
+    expect($("#warn").textContent).toBe("Can't reach the board for 2m. Everything below is old.");
     expect([stubs.reload, stubs.reported].map((f) => f.mock.calls.length)).toEqual([0, 0]);
   });
 
   it("counts a body it cannot read as a failed poll, and says why in the console", async () => {
     await loadPage(fresh(afternoon), { now: "soon" });
-    await vi.advanceTimersByTimeAsync(40 * SEC);
+    await vi.advanceTimersByTimeAsync(4 * POLL_MS);
     expect(health()).toEqual(["off", "OFFLINE", "off"]);
     expect(stubs.reported).toHaveBeenCalledWith(expect.any(TypeError));
   });
@@ -158,7 +159,7 @@ describe("the controller on a sign-in failure", () => {
   it("shows SIGN IN, not OFFLINE, when the reload is spent, and a tap reloads", async () => {
     sessionStorage.setItem("swimcoach.authReloadAt", String(T0 - 60 * SEC));
     await loadPage(fresh(afternoon), 401);
-    await vi.advanceTimersByTimeAsync(70 * SEC);
+    await vi.advanceTimersByTimeAsync(4 * POLL_MS); // past OFFLINE's 90 s, still SIGN IN
     expect(stubs.reload).not.toHaveBeenCalled();
     expect(health()).toEqual(["off", "SIGN IN", "off"]);
     expect($("#warn").textContent).toBe("Signed out of the board. Tap here to sign in again.");
@@ -170,7 +171,7 @@ describe("the controller on a sign-in failure", () => {
     sessionStorage.setItem("swimcoach.authReloadAt", String(T0));
     await loadPage(401, fresh(afternoon));
     expect($("#health b").textContent).toBe("SIGN IN");
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     expect([$("#health b").textContent, $("#warn").textContent]).toEqual(["LIVE", ""]);
   });
 });

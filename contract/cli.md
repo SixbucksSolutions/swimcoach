@@ -176,9 +176,11 @@ In cmd, a `%` inside a value is expanded as a variable; an agent SHOULD avoid `%
 The full instruction text a project's agent follows is MVP-06's deliverable. These rules from the
 contract bind it:
 
-- **Push at milestone start, on every card move, and as a heartbeat at least every 10 minutes while
-  working.** A card moving to Ready for review or Needs Terry above all: a Needs Terry card raises GO TO
-  KEYBOARD. A milestone silent for 25 minutes goes gray and the health box goes STALE.
+- **Push at milestone start, after card moves, and as a heartbeat at least every 10 minutes while
+  working, but never more often than once every 5 minutes** (Terry, 2026-11-14). Each push is the
+  complete picture, so moves between pushes land in the next one. A card moving to Ready for review or
+  Needs Terry above all: a Needs Terry card raises GO TO KEYBOARD. A milestone silent for 25 minutes goes
+  gray and the health box goes STALE.
 - **Count only this milestone's epic,** never the whole cumulative board.
 - **Decision D3:** count a card in Needs Terry, and send `--needs-me`, only for a gate waiting on Terry
   himself (visual confirmation, Completed, cutover, a demo). An agent-owned gate changes nothing, and a

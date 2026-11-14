@@ -31,6 +31,12 @@ function fakeFetch(): Promise<unknown> {
   return Promise.resolve(reply);
 }
 
+/** Whether a change landed outside the status line's clock (see watchDocument). */
+function outsideClock(record: MutationRecord): boolean {
+  const clock = document.querySelector("#clock");
+  return clock === null || !clock.contains(record.target);
+}
+
 export const T0 = 1_800_000_000_000; // the page clock, in ms, on a minute boundary
 export const SEC = 1000;
 export const OVERVIEW = "../../public/js/overview.js";
@@ -103,7 +109,9 @@ export async function revealed(): Promise<void> {
 
 /**
  * Records every change anywhere in the document; call the result to read them. Start it after the
- * one-time reveal (the `loading` class), which is the page load's change, not a poll's.
+ * one-time reveal (the `loading` class), which is the page load's change, not a poll's. The status
+ * line's clock is left out: it is UX-110's one allowed writer, once a minute, and a 30 s poll steps
+ * over a minute boundary every other time.
  */
 export function watchDocument(): () => MutationRecord[] {
   // The records reach the callback after the test's awaits, so keep what it is handed.
@@ -111,7 +119,7 @@ export function watchDocument(): () => MutationRecord[] {
   const observer = new MutationObserver((records) => seen.push(...records));
   const all = { subtree: true, childList: true, attributes: true, characterData: true };
   observer.observe(document, all);
-  return () => [...seen, ...observer.takeRecords()];
+  return () => [...seen, ...observer.takeRecords()].filter(outsideClock);
 }
 
 export function $(selector: string): HTMLElement {
