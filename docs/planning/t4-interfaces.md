@@ -97,6 +97,10 @@ only this; neither reads the API body or recomputes a verdict (api.md 6).
  * @property {Level} level
  * @property {string} reason          state.reason, unchanged
  * @property {string} why             the words for reason (api.md 6.6), aged to view.now
+ * @property {string} callWhy         the call without the ask: `why`, except for needs_terry, where it is
+ *                                    the words for the first api.md 6.6 row after needs_terry that the
+ *                                    milestone matches (added by the Lead after the MVP-08 visual review,
+ *                                    PR #30; the display's hero shows it, the flag shows the ask)
  * @property {string|null} needsMe
  * @property {boolean} stale          state.stale; silentSeconds = now - updatedAt
  * @property {number} silentSeconds
