@@ -111,6 +111,29 @@ describe("fitCards: one-line names", () => {
   });
 });
 
+describe("fitCards: a fractional box (visual review MVP-08, item 1)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("measures the box fractionally, so a rounded-up width cannot accept an overflow", () => {
+    // The live case: a 167.656px box whose clientWidth reads 168. In the stand-in widths, a 168px
+    // box takes this name at 17.4px, 167.696px wide, which overflows 167.656px; the fractional box
+    // takes 17.3px, which fits. A fit that read clientWidth would give both boxes 17.4px.
+    const text = "mobile-onboarding M12";
+    installDom();
+    const rounded = fakeName(text, 168);
+    run(fakePage(800, fakeCards(3, [rounded])));
+    expect(widthAt(text, Number.parseFloat(rounded.style.fontSize))).toBeGreaterThan(167.656);
+    installDom();
+    const fractional = fakeName(text, 167.656);
+    run(fakePage(800, fakeCards(3, [fractional])));
+    const fitted = widthAt(text, Number.parseFloat(fractional.style.fontSize));
+    expect(fitted).toBeLessThanOrEqual(167.656);
+    expect([rounded.style.fontSize, fractional.style.fontSize]).toEqual(["17.4px", "17.3px"]);
+  });
+});
+
 describe("fitCards: an unchanged poll does no DOM work (UX-110)", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
@@ -145,7 +168,7 @@ describe("fitCards: an unchanged poll does no DOM work (UX-110)", () => {
     const page = fakePage(800, fakeCards(3, [long]));
     run(page);
     const { measured } = dom;
-    long.clientWidth = 200;
+    long.width = 200;
     run(page);
     const afterWidth = dom.measured;
     long.textContent = `${LONG_NAME}-x`;

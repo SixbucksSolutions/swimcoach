@@ -1,3 +1,4 @@
+// biome-ignore-all lint/style/noExcessiveLinesPerFile: one file for toView (t4-interfaces.md, MVP-08 C); the expected CardView mirrors the frozen typedef one property per line, and callWhy (visual review MVP-08, item 2) took it past 300.
 import { describe, expect, it } from "vitest";
 import { dur } from "../../public/js/format.js";
 import { toView } from "../../public/js/state.js";
@@ -73,6 +74,31 @@ function expectedWhy(m: Json, now: number): string {
   return WORDS[m.reason as string] ?? "?";
 }
 
+/**
+ * callWhy as view.js states it: why, except on a needs_terry card, where it is the words for the
+ * first api.md 6.6 row after needs_terry that the raw fields match.
+ */
+function expectedCallWhy(m: Json, now: number): string {
+  if (m.reason !== "needs_terry") {
+    return expectedWhy(m, now);
+  }
+  const metrics = m.metrics as Json;
+  const rows: [boolean, string][] = [
+    [m.stale === true, "silent"],
+    [
+      m.mode === "count_and_time" && (m.active_hours as number) > (m.cap_hours as number),
+      "over_budget",
+    ],
+    [m.mode === "count_and_time", "under_budget"],
+    [metrics.call === "running_late", "running_late"],
+    [m.stalled === true, "stalled"],
+    [metrics.call === "toss_up", "toss_up"],
+    [metrics.too_early === true, "too_early"],
+  ];
+  const reason = rows.find(([match]) => match)?.[1] ?? "on_time";
+  return expectedWhy({ ...m, reason }, now);
+}
+
 /** The call's parts as view.js states them: null when trend is null, done, or count_and_time. */
 function expectedCall(m: Json): Pick<CardView, "trend" | "dir" | "chance"> {
   const metrics = m.metrics as Json;
@@ -117,6 +143,7 @@ function expectedCard(m: Json, now: number): CardView {
     level: m.color as CardView["level"],
     reason: m.reason as string,
     why: expectedWhy(m, now),
+    callWhy: expectedCallWhy(m, now),
     needsMe: m.needs_me as string | null,
     stale: m.stale as boolean,
     silentSeconds: now - (m.updated_at as number),
@@ -220,14 +247,45 @@ describe("toView: the documented nulls and words", () => {
   });
 });
 
-// Every field toView() reads. One it does not read (first_report_at, stalled, trend_minutes,
-// min_stories_for_rtr, metrics.call, trend.pace, trend.finish) is not listed. "m" is the first card.
+describe("toView: callWhy, the call a red display's hero shows (visual review MVP-08, item 2)", () => {
+  it("words the keyboard example's red cards as the mock's heroes did", () => {
+    const red = toView(example("keyboard")).cards.filter((c) => c.level === "red");
+    expect(red.map((c) => [c.title, c.callWhy])).toEqual([
+      ["localswim V2 T06", "On time"],
+      ["search-index T03", "Running late"],
+    ]);
+    const afternoon = toView(example("afternoon")).cards.find((c) => c.level === "red");
+    expect([afternoon?.title, afternoon?.callWhy]).toEqual(["search-index T03", "Running late"]);
+  });
+
+  it("gives callWhy the same words as why on every other card", () => {
+    for (const name of NAMES) {
+      for (const c of toView(example(name)).cards.filter((x) => x.reason !== "needs_terry")) {
+        expect(c.callWhy).toBe(c.why);
+      }
+    }
+  });
+
+  it("takes the server's call as sent, never recomputed from chance", () => {
+    const body = changed(
+      { color: "red", reason: "needs_terry", needs_me: "Pick one", stalled: true },
+      { call: "toss_up", chance_on_time: 0.99 },
+    );
+    expect(toView(body).cards[0]?.callWhy.startsWith("No ticket moved in ")).toBe(true);
+    Object.assign(first(body), { stalled: false });
+    expect(toView(body).cards[0]?.callWhy).toBe("Toss-up");
+  });
+});
+
+// Every field toView() reads. One it does not read (first_report_at, trend_minutes,
+// min_stories_for_rtr, trend.pace, trend.finish) is not listed. "m" is the first card.
 const READ = [
   "now last_report_at feed thresholds milestones",
   "thresholds.stale_minutes thresholds.stall_minutes thresholds.min_history_minutes",
   "thresholds.min_block_used m.project m.milestone m.agent m.active_hours m.cap_hours m.lanes",
-  "m.needs_me m.updated_at m.last_move_at m.finished m.total m.stale m.mode m.color m.reason",
-  "m.metrics m.spark metrics.work metrics.clock metrics.rtr metrics.too_early metrics.trend",
+  "m.needs_me m.updated_at m.last_move_at m.finished m.total m.stale m.stalled m.mode m.color",
+  "m.reason m.metrics m.spark metrics.work metrics.clock metrics.rtr metrics.too_early",
+  "metrics.call metrics.trend",
   "metrics.trend_bin metrics.projection_hours metrics.chance_on_time trend.delta trend.minutes",
   "trend.proj trend.recent_done trend.to_go lanes.ready_for_work lanes.in_progress",
   "lanes.needs_terry lanes.ready_for_review lanes.completed",

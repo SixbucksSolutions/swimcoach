@@ -20,6 +20,7 @@ function card(over: Partial<CardView> = {}): CardView {
     level: "green",
     reason: "on_time",
     why: "On time",
+    callWhy: "On time",
     needsMe: null,
     stale: false,
     silentSeconds: 120,
@@ -92,6 +93,73 @@ describe("renderProject header and hero", () => {
     const html = render(card({ dir: null, trend: null }));
     expect(html).toContain('<div class="lab">RTR<b>On time</b></div>');
     expect(html).not.toContain('class="hand"');
+  });
+
+  it("escapes the why in the hero", () => {
+    expect(render(card({ why: "A <b>&", callWhy: "A <b>&" }))).toContain(
+      '<div class="lab">RTR &middot; up<b>A &lt;b&gt;&amp;</b></div>',
+    );
+  });
+
+  it("escapes a needs_terry card's callWhy in the hero", () => {
+    const html = render(
+      card({ level: "red", reason: "needs_terry", why: "ask", needsMe: "ask", callWhy: "A <b>&" }),
+    );
+    expect(html).toContain("<b>A &lt;b&gt;&amp;</b></div></div>");
+  });
+});
+
+describe("renderProject on a red (needs_terry) display", () => {
+  /** The keyboard example's two red cards, as toView() builds them (state.test.ts). */
+  const late = card({
+    title: "search-index T03",
+    level: "red",
+    reason: "needs_terry",
+    why: "Pick an index strategy: per-tenant or shared",
+    callWhy: "Running late",
+    needsMe: "Pick an index strategy: per-tenant or shared",
+    dir: -2,
+  });
+  const onTime = card({
+    title: "localswim V2 T06",
+    level: "red",
+    reason: "needs_terry",
+    why: "1 ticket in Needs Terry",
+    callWhy: "On time",
+    needsMe: "1 ticket in Needs Terry",
+  });
+
+  it("puts the call in the hero, as the mock did", () => {
+    expect(render(late)).toContain(
+      '<div class="lab">RTR &middot; sharp down<b>Running late</b></div>',
+    );
+    expect(render(onTime)).toContain('<div class="lab">RTR &middot; up<b>On time</b></div>');
+  });
+
+  it("keeps the ask in the flag, and only there", () => {
+    const html = render(late);
+    expect(html).toContain(
+      '<div class="flag me"><b>Go to keyboard:</b> Pick an index strategy: per-tenant or shared</div>',
+    );
+    expect(html.split("Pick an index strategy")).toHaveLength(2);
+  });
+
+  it("shows the call in a red small block's hero too", () => {
+    const html = render(
+      card({
+        mode: "count_and_time",
+        level: "red",
+        reason: "needs_terry",
+        why: "Pick one",
+        callWhy: "Under budget",
+        needsMe: "Pick one",
+        rtr: null,
+        dir: null,
+        trend: null,
+        chance: null,
+      }),
+    );
+    expect(html).toContain('<div class="lab"><b>Under budget</b></div>');
   });
 });
 
@@ -241,6 +309,11 @@ describe("renderProject work against time", () => {
     );
   });
 
+  it("spells small-block hours as the overview card does (hoursOfCap)", () => {
+    const html = render(card({ activeHours: 0.75, capHours: 2, clock: 0.375 }));
+    expect(html).toContain("<b>0.75 of 2.0</b> hrs &middot; 38%");
+  });
+
   it("leaves the Work row out when there is no work fraction, and keeps Time", () => {
     const html = render(card({ work: null }));
     expect(html).not.toContain("<label>Work</label>");
@@ -301,7 +374,9 @@ describe("renderProject swimlanes", () => {
 
 describe("renderProject swimlane colors", () => {
   it("colors done lanes with the display's color on green and yellow only", () => {
-    expect(render(card({ level: "green" }))).toContain("var(--ok)");
+    expect(render(card({ level: "green" }))).toContain(
+      '<i style="background:var(--ok)"></i>Ready for review',
+    );
     expect(render(card({ level: "yellow" }))).toContain(
       '<i style="background:var(--risk)"></i>Ready for review',
     );
@@ -372,6 +447,7 @@ describe("renderProject small-block (count_and_time) mode", () => {
     level: "green",
     reason: "under_budget",
     why: "Under budget",
+    callWhy: "Under budget",
     rtr: null,
     dir: null,
     trend: null,
@@ -406,7 +482,13 @@ describe("renderProject small-block (count_and_time) mode", () => {
   });
 
   it("shows the over-budget words on a yellow card", () => {
-    const html = render({ ...small, level: "yellow", reason: "over_budget", why: "Over budget" });
+    const html = render({
+      ...small,
+      level: "yellow",
+      reason: "over_budget",
+      why: "Over budget",
+      callWhy: "Over budget",
+    });
     expect(html).toContain("<b>Over budget</b>");
   });
 });

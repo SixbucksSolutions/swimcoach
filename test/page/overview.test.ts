@@ -21,6 +21,7 @@ function card(over: Partial<CardView> = {}): CardView {
     level: "green",
     reason: "on_time",
     why: "On time",
+    callWhy: "On time",
     needsMe: null,
     stale: false,
     silentSeconds: 30,
@@ -253,7 +254,7 @@ describe("renderOverview: count_and_time mode (UX-131)", () => {
   it("shows N of M done and hours of the cap, with no RTR and no hand", () => {
     const [only] = buttons([small()]);
     expect(only?.cls).toBe("green");
-    expect(blurbOf(only)).toBe("1 of 2 done · 1.5 of 4 hrs");
+    expect(blurbOf(only)).toBe("1 of 2 done · 1.5 of 4.0 hrs");
     expect(only?.inner).not.toContain('class="rt"');
     expect(only?.inner).not.toContain("hand");
   });
@@ -266,13 +267,12 @@ describe("renderOverview: count_and_time mode (UX-131)", () => {
       activeHours: 5,
     });
     expect(buttons([over])[0]?.cls).toBe("yellow");
-    expect(blurbFor(over)).toBe("1 of 2 done · 5 of 4 hrs");
+    expect(blurbFor(over)).toBe("1 of 2 done · 5 of 4.0 hrs");
   });
 
-  it("rounds hours to one decimal", () => {
-    expect(blurbFor(small({ activeHours: 2.27, capHours: 4.04 }))).toBe(
-      "1 of 2 done · 2.3 of 4 hrs",
-    );
+  it("spells hours as the project display does: used to two decimals, the cap to one", () => {
+    const blurb = blurbFor(small({ activeHours: 0.75, capHours: 2 }));
+    expect(blurb).toBe("1 of 2 done · 0.75 of 2.0 hrs");
   });
 
   it("shows Done for a done card and the silence for a silent one", () => {
