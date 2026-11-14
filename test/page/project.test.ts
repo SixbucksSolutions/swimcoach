@@ -467,6 +467,10 @@ describe("renderProject small-block (count_and_time) mode", () => {
     expect(html).not.toContain("RTR");
   });
 
+  it("marks the hero bare, so the stylesheet sets it 10px lower (UX-155)", () => {
+    expect(render(small)).toContain('<div class="hero bare" style="--c:var(--ok)">');
+  });
+
   it("drops the RTR chart and the projection tiles", () => {
     const html = render(small);
     expect(html).not.toContain("RTR today");

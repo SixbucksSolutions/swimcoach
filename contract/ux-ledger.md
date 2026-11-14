@@ -47,8 +47,8 @@ load-bearing.
 | J. Navigation | UX-113 to UX-124 | 12 |
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
-| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-162 (UX-155 reserved for PR #34) | 27 |
-| **Total** | | **161** (28 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 071, 073, 111, 112, 132, 133, 134, 136, 137, 150) |
+| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-162 | 28 |
+| **Total** | | **162** (28 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 071, 073, 111, 112, 132, 133, 134, 136, 137, 150) |
 
 ## A. Status line
 
@@ -274,6 +274,7 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-152 | Gray: agent silent over 25 min. The Detail blurb names the reason ("Agent silent for ..."), the RTR stays, and no clock-hand arrow is drawn, as on a too-early card | c3.2 states row 4, api.md 6.6 row 3; Terry 2026-11-14: gray is "not enough FRESH data to signal green/yellow"; no arrow is the Lead's call | `silent-00-all-projects.png` (mock shows yellow) | Supersedes UX-036 | Pending |
 | UX-153 | On a desktop browser the page is a centered 402 x 874 phone-width column with no bezel, notch or side panel; it works exactly as on the phone | Terry 2026-11-14, at the MVP-08 phone check: "Yes laptop is good" | - | New rule; the mock's bezel and scenario panel were mock chrome | Pending |
 | UX-154 | SIGN IN: when Access refuses a poll (a redirect, 401 or 403), the page reloads at most once per 5 minutes per tab so Access can show its login; after that the Health box reads SIGN IN in OFFLINE's red, the displays gray out, and the warning line "Signed out of the board. Tap here to sign in again." reloads on a tap. An auth refusal never counts toward OFFLINE | c3.1 table; the Lead's recommendation, which Terry took on 2026-11-14 ("I'll take your recommendation") | `signin-drawn-00-all-projects.png` (visual review) | New rule | Pending |
+| UX-155 | A project display's hero with no big RTR (small-block mode) gets 10 px of extra space below the title: the visible gap is about 21 px, against about 11 px before (measured in Chrome at 402 x 874 by the PR #34 review) | Terry 2026-11-14, at the MVP-08 phone check: "Just let it land" | - | New rule; `project.test.ts` checks the `bare` class | Pending |
 | UX-156 | Polling runs every 30 s against `GET /api/2026-11-14/state`; the retired `/api/2026-11-13/` paths answer 404 | c3.1, api.md Versioning; Terry 2026-11-14: agents report "no more often than once every five minutes", so "we can lower web client poll to every 30 seconds" | - | Supersedes UX-150 (every 10 s) | Pending |
 | UX-157 | The breathing runs a fixed 40 s (20 cycles of 2 s) from each good poll and then stops, so a frozen page stops by itself about 10 s after a missed poll; 40 s outlasts a 30 s poll plus its 8 s timeout | c3.1; the Lead's call when the poll moved to 30 s | - | Supersedes UX-073 (16 s, 8 cycles); freeze the page script and watch | Pending |
 | UX-158 | LIVE requires both: a poll got a 200 within the last three poll intervals (90 s at the 30 s poll) AND the newest report is under 25 min old, or no project is unfinished | c3.1 table | `afternoon-00-all-projects.png` | Supersedes UX-011 (30 s at the 10 s poll); LIVE holds through two failed polls | Pending |
