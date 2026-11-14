@@ -54,7 +54,7 @@ load-bearing.
 
 | ID | State or transition | Rule | Render | Check | V1 |
 | --- | --- | --- | --- | --- | --- |
-| UX-001 | Status line on the overview: mark and wordmark alone on the left; clock, Health box and bell locked together on the right, 8 px apart | c3.1 layout | `afternoon-00-all-projects.png` |  | Pending |
+| UX-001 | Status line on the overview: mark and wordmark alone on the left; clock, Health box and bell locked together on the right, 8 px apart | c3.1 layout | `afternoon-00-all-projects.png` | manual: on Terry's iPhone 16 Pro, MVP-10 device check step 5, the wordmark, clock, Health box and bell sit fully below the Dynamic Island and the clock | Pending |
 | UX-002 | Status line on a project display looks and sits the same as on the overview | c3.1 "on every display" | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-003 | Clock is left of the Health box, never right of it; the page MUST NOT show "LIVE 2:25 PM" order | c3.1 why the clock stays left | `afternoon-00-all-projects.png` |  | Pending |
 | UX-004 | Wordmark: "swim" in lane blue `#85B8FF`, "coach" in lane amber `#E2A100` | b3, c13 | `afternoon-00-all-projects.png` |  | Pending |
@@ -213,15 +213,15 @@ load-bearing.
 | --- | --- | --- | --- | --- | --- |
 | UX-113 | Overview is the first display; its dot is square | c3 | `afternoon-00-all-projects.png` |  | Pending |
 | UX-114 | One further dot per tracked milestone; the active dot is highlighted | c3 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
-| UX-115 | Tapping a Card opens that project's display | c3 | - | Transition | Pending |
-| UX-116 | Tapping "All projects" returns to the overview | c3.3, c13 | - | Transition; the old `\u0000all` key defect MUST NOT recur | Pending |
-| UX-117 | Swipe left moves to the next display | c3 | - | Transition | Pending |
-| UX-118 | Swipe right moves to the previous display | c3 | - | Transition | Pending |
-| UX-119 | Tapping a dot jumps to that display | c13 | - | Transition | Pending |
+| UX-115 | Tapping a Card opens that project's display | c3 | - | Transition; manual: on Terry's iPhone 16 Pro, MVP-10 device check step 7, a tap on a Card opens that project's display | Pending |
+| UX-116 | Tapping "All projects" returns to the overview | c3.3, c13 | - | Transition; the old `\u0000all` key defect MUST NOT recur; manual: on Terry's iPhone 16 Pro, MVP-10 device check step 7, a tap on '‹ All projects' returns to the overview | Pending |
+| UX-117 | Swipe left moves to the next display | c3 | - | Transition; manual: on Terry's iPhone 16 Pro, MVP-10 device check step 7, a left swipe moves to the next display | Pending |
+| UX-118 | Swipe right moves to the previous display | c3 | - | Transition; manual: on Terry's iPhone 16 Pro, MVP-10 device check step 7, a right swipe moves to the previous display | Pending |
+| UX-119 | Tapping a dot jumps to that display | c13 | - | Transition; manual: on Terry's iPhone 16 Pro, MVP-10 device check step 7, a tap on a dot jumps to that display | Pending |
 | UX-120 | Swiping right on the overview does nothing (no wrap) (inferred, needs Terry: c3 says nothing about wrap at the swipe ends) | c3 | - |  | Pending |
 | UX-121 | Swiping left on the last display does nothing (no wrap) (inferred, needs Terry: c3 says nothing about wrap at the swipe ends) | c3 | - |  | Pending |
 | UX-122 | A project display scrolls vertically, top to bottom; Status line stays pinned (inferred, needs Terry: the mock pins the Status line, see `afternoon-03-fga-t04-bottom.png`, but no doc states the rule) | c3.3 | `afternoon-03-fga-t04-top.png`, `afternoon-03-fga-t04-bottom.png` |  | Pending |
-| UX-123 | The dots stay visible at the bottom on every display | c3 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
+| UX-123 | The dots stay visible at the bottom on every display | c3 | `afternoon-03-fga-t04-bottom.png` | manual: on Terry's iPhone 16 Pro, MVP-10 device check step 5, the dots sit fully above the home indicator bar | Pending |
 | UX-124 | When a project disappears or appears between polls, the dots and displays update without jumping the viewer away from the current display (inferred, needs Terry: c3 says nothing about updates holding the viewer in place) | c3 | - | No render; the board is expected to change under the viewer | Pending |
 
 ## K. Alerts
@@ -229,10 +229,10 @@ load-bearing.
 | ID | State or transition | Rule | Render | Check | V1 |
 | --- | --- | --- | --- | --- | --- |
 | UX-125 | Bell is a slashed icon when Alerts are off, plain when on; no text, so the Status line never wraps in OFFLINE | c3.1, c13 | `afternoon-00-all-projects.png` |  | Pending |
-| UX-126 | Alerts on: a new needs-you item plays a two-tone chime | c3.1 | - | Needs a prior tap for audio | Pending |
-| UX-127 | Alerts on: the page jumps to the overview when the new needs-you item arrives | c3.1 | - | Transition | Pending |
-| UX-128 | On the viewer (WebKit, no vibration API), a new needs-you item plays the chime only and raises no script error (needs Terry: c3.1 still mentions vibrate) | c3.1 | - |  | Pending |
-| UX-129 | Sound needs one tap first (browser rule); the bell tap provides it | c3.1 | - |  | Pending |
+| UX-126 | Alerts on: a new needs-you item plays a two-tone chime | c3.1 | - | Needs a prior tap for audio; manual: on Terry's iPhone 16 Pro, MVP-10 device check step 7, with Alerts on, a new red Card plays a two-tone chime that Terry hears (sound; a browser cannot hear it) | Pending |
+| UX-127 | Alerts on: the page jumps to the overview when the new needs-you item arrives | c3.1 | - | Transition; manual: on Terry's iPhone 16 Pro, MVP-10 device check step 7, with Alerts on, the page jumps to the all-projects display when the new red Card arrives | Pending |
+| UX-128 | On the viewer (WebKit, no vibration API), a new needs-you item plays the chime only and raises no script error (needs Terry: c3.1 still mentions vibrate) | c3.1 | - | manual: on Terry's iPhone 16 Pro (WebKit), a new needs-you item plays the chime with no vibration and no error banner or broken page; MVP-10 device check step 7 | Pending |
+| UX-129 | Sound needs one tap first (browser rule); the bell tap provides it | c3.1 | - | manual: on Terry's iPhone 16 Pro, MVP-10 device check step 7, the first tap on the bell turns Alerts on and the next new red Card is audible; no earlier sound plays | Pending |
 | UX-130 | Alerts off: no chime, no jump | c3.1 | - |  | Pending |
 
 ## L. count_and_time mode (decision D1)
@@ -260,10 +260,10 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-138 | STALE does not fire when every project is done (LIVE, not STALE) | c3.1 STALE "while some project is unfinished" | `alldone-00-all-projects.png` | Supersedes UX-018 | Pending |
 | UX-139 | Detail blurb words for `over_budget` and `under_budget`: "Over budget" and "Under budget" | Terry, 2026-11-13 (t4-interfaces.md decision 2) | - | Supersedes UX-133; `project.test.ts` small-block cases | Pending |
 | UX-140 | The project display in `count_and_time` mode drops the hero RTR, the RTR chart and the projection tiles, puts `why` in the hero, and keeps Work against time, Swimlanes and the footer | Terry, 2026-11-13 (t4-interfaces.md decision 4) | - | Supersedes UX-134; `project.test.ts` small-block cases | Pending |
-| UX-141 | The 3/6 slot grid. One to three slots: three-slot mode, full-height slots, each a third of the Card display area, empty space below when fewer. Four or more slots: six-slot mode, half-height slots; a fourth slot flips every Card to half height | c3.2, Terry 2026-11-14: "For MVP let's just lock at 3/6 slots rather than 4/8. three is plenty and we can revisit at V1+" | - | Supersedes UX-021 to UX-025. Found on his iPhone: seven slots did not fit the home-screen app's card area under the 4/8 grid | Pending |
-| UX-142 | More than six slots scroll; slots never shrink below the content minimum (101.7 px full, 83.5 px half) | c3.2 | - | Supersedes UX-028; reach with seven projects | Pending |
+| UX-141 | The 3/6 slot grid. One to three slots: three-slot mode, full-height slots, each a third of the Card display area, empty space below when fewer. Four or more slots: six-slot mode, half-height slots; a fourth slot flips every Card to half height | c3.2, Terry 2026-11-14: "For MVP let's just lock at 3/6 slots rather than 4/8. three is plenty and we can revisit at V1+" | - | Supersedes UX-021 to UX-025. Found on his iPhone: seven slots did not fit the home-screen app's card area under the 4/8 grid; manual: on Terry's iPhone 16 Pro, MVP-10 device check step 6, six slots fit on one screen without scrolling | Pending |
+| UX-142 | More than six slots scroll; slots never shrink below the content minimum (101.7 px full, 83.5 px half) | c3.2 | - | Supersedes UX-028; reach with seven projects; manual: on Terry's iPhone 16 Pro, MVP-10 device check step 6, a seventh Card is reached by scrolling | Pending |
 | UX-143 | GO TO KEYBOARD takes one of the 3 or 6 slots and counts toward the four-slot threshold | c3.2 | - | Supersedes UX-053 | Pending |
-| UX-144 | Slot height comes from the measured Card display area on the phone, not the mock's screen. On the iPhone 16 Pro as a home-screen app the area is about 625 px (estimated from Terry's screenshot, 2026-11-14), so six half slots (at least 6 x 83.5 + 5 x 10 = 551 px) fit without scrolling | c3.2 | - | Supersedes UX-026, whose 183.3 / 86.6 px assumed the full 874 px screen. Measure the real area on the phone before MVP-12 | Pending |
+| UX-144 | Slot height comes from the measured Card display area on the phone, not the mock's screen. On the iPhone 16 Pro as a home-screen app the area is about 625 px (estimated from Terry's screenshot, 2026-11-14), so six half slots (at least 6 x 83.5 + 5 x 10 = 551 px) fit without scrolling | c3.2 | - | Supersedes UX-026, whose 183.3 / 86.6 px assumed the full 874 px screen. Measure the real area on the phone before MVP-12; manual: on Terry's iPhone 16 Pro, MVP-10 device check step 6, measure the Card display area from Terry's screenshot (the estimate is about 625 px) and confirm six half slots fit without scrolling | Pending |
 | UX-145 | RTR weight 900; size scales with Card height, between 18 and 52 px: 52 px full and about 33.4 px half at 402 x 874 under the 3/6 grid **(measured** in Chrome by the PR #32 review**)** | c3.2 second tier | - | Supersedes UX-065, whose 21.4 px half was the 4/8 grid's | Pending |
 | UX-146 | The hand stays at least 16 px from the Card edge: about 56 px full and at least 16 px half at 402 x 874 under the 3/6 grid **(measured** in Chrome by the PR #32 review**)** | c3.2 | - | Supersedes UX-066, whose 25 px full was the 4/8 grid's | Pending |
 | UX-147 | The slot mode is chosen in the same step that draws the Cards, before first paint | c3.2, c3.4 | - | Supersedes UX-111, whose check named the 4/8 grid; no six-to-three reflow after paint | Pending |
