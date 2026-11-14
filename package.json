@@ -6,17 +6,19 @@
   "description": "Self-hosted, mobile-first status board for agent-run software projects",
   "license": "MIT",
   "scripts": {
-    "postinstall": "npm ci --prefix cli",
+    "postinstall": "npm ci --prefix cli && npm ci --prefix acceptance",
     "types": "wrangler types src/worker-configuration.d.ts",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p cli/tsconfig.json",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p cli/tsconfig.json && tsc --noEmit -p tsconfig.page.json && tsc --noEmit -p acceptance/tsconfig.json",
     "lint": "biome check --error-on-warnings . && node scripts/biome-no-infos.mjs",
     "test": "vitest run",
-    "check": "wrangler types --check src/worker-configuration.d.ts && npm run typecheck && npm run lint && npm test"
+    "acceptance:selftest": "npm run selftest --prefix acceptance",
+    "check": "wrangler types --check src/worker-configuration.d.ts && npm run typecheck && npm run lint && npm test && npm run acceptance:selftest"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.7",
     "@cfworker/json-schema": "4.1.6",
     "@cloudflare/vitest-plugin": "1.8.2",
+    "happy-dom": "21.0.4",
     "typescript": "7.0.2",
     "vitest": "5.1.0",
     "wrangler": "4.162.0"

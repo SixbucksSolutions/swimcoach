@@ -300,10 +300,13 @@ makes the card red.
   nothing to move for most of its life.
 - Red is reserved for "Terry must act". Backlog and Blocked never appear.
 
-The mock's words for each reason, for MVP-08: `done` "Done"; `needs_terry` the `needs_me` text;
-`silent` "Agent silent for 35m"; `running_late` "Running late"; `stalled` "No ticket moved in 52m";
-`toss_up` "Toss-up"; `too_early` "Too early to call"; `on_time` "On time". The words for
-`over_budget` and `under_budget` are MVP-08's and the UX ledger's call.
+The mock's words for each reason, for MVP-08: `done` "Done"; `silent` "Agent silent for 35m";
+`running_late` "Running late"; `stalled` "No ticket moved in 52m"; `toss_up` "Toss-up"; `too_early`
+"Too early to call"; `on_time` "On time". The words for `over_budget` and `under_budget` are MVP-08's
+and the UX ledger's call. A `needs_terry` card is always `red`, and the overview's GO TO KEYBOARD
+slot lists red cards by title only, so the `needs_me` text shows only in the project display's "Go to
+keyboard" flag. The display's hero shows the call: the words for the first row after `needs_terry`
+that the milestone matches, as the mock's hero did.
 
 ### 6.7 `feed`: the health box
 

@@ -6,6 +6,11 @@
       "src/**",
       "cli/**",
       "test/**",
+      "acceptance/**",
+      // The page (MVP-08). index.html is left out: it carries the embedded font and mark as data
+      // URIs between generated markers, and its scripts and styles live in js/ and css/.
+      "public/**/*.js",
+      "public/**/*.css",
       "scripts/**/*.mjs",
       "*.ts",
       "*.json",
@@ -167,6 +172,74 @@
     {
       "includes": ["scripts/**"],
       "linter": { "rules": { "correctness": { "noNodejsModules": "off" } } }
+    },
+    {
+      // The page's stylesheets (MVP-08). Measured 2026-11-13 on public/css/base.css, the first of
+      // the three, with preset all: 23 noHexColors, 1 noExcessiveLinesPerFile, 2 useBaseline, 2
+      // noDescendingSpecificity. The last two were fixed in the CSS (an @supports gate, a reorder,
+      // one biome-ignore beside a false positive). The first two are turned off here:
+      // - noHexColors: the palette is defined in hex by docs/brand.md section 5, and the single-use
+      //   status shades stay literal beside their rules there. Hex is the brand guide's notation
+      //   (the formatter lowercases it), so a token greps, ignoring case, to its row. Taste, not a
+      //   defect.
+      // - noExcessiveLinesPerFile: the formatter writes one declaration per line, so the mock's 56
+      //   lines of shell CSS became 348. The count measures formatter output, not complexity.
+      "includes": ["public/**/*.css"],
+      "linter": {
+        "rules": {
+          "style": { "noHexColors": "off", "noExcessiveLinesPerFile": "off" }
+        }
+      }
+    },
+    {
+      // 9 findings (useConsistentMethodSignatures), all in the frozen case format, which
+      // t4-interfaces.md gives with method signatures. Rewriting them as properties would change
+      // the frozen text and its parameter variance; the rule stays on for the rest of the suite.
+      "includes": ["acceptance/api/types.ts"],
+      "linter": { "rules": { "style": { "useConsistentMethodSignatures": "off" } } }
+    },
+    {
+      // The black-box API suite (MVP-09) is a Node program that V2 runs unchanged, so it MUST NOT
+      // import the MVP's code (t4-interfaces.md, MVP-09 "Decisions"). It MAY read contract/ as data.
+      // Measured 2026-11-14 (MVP-09 A), Biome 2.6.7, preset all over acceptance/ after the code
+      // findings were fixed. What stays off, and why:
+      // - suspicious/noMisplacedAssertion (21), noConditionalExpect (2), useExpect (1): Biome only
+      //   counts assertions written inside an it()/test() callback. The suite's assertions live in
+      //   helpers (harness.ts, compare.ts) and in each Case.run, which runner.ts wraps in one it()
+      //   per case, so every finding is the frozen case format working as designed. Not defects.
+      // - performance/useTopLevelRegex (26): a regex literal inside an assertion call, run once per
+      //   test. Hoisting 26 one-use patterns into constants buys nothing; taste, not a defect.
+      "includes": ["acceptance/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noMisplacedAssertion": "off",
+            "noConditionalExpect": "off",
+            "useExpect": "off"
+          },
+          "performance": { "useTopLevelRegex": "off" },
+          "correctness": { "noNodejsModules": "off" },
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["**/src/**", "**/cli/**", "**/test/**", "**/public/**"],
+                    "message": "The acceptance suite MUST NOT import from src/, cli/, test/ or public/: V2 runs it unchanged."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      // 2 findings (noExcessiveLinesPerFunction), both describe() callbacks in the suite's own
+      // tests: a describe's length is the number of tests it lists, not complexity.
+      "includes": ["acceptance/**/*.test.ts"],
+      "linter": { "rules": { "complexity": { "noExcessiveLinesPerFunction": "off" } } }
     }
   ]
 }

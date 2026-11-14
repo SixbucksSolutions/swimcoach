@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Embed the vendored Inter font file into mocks/index.html as a base64 @font-face rule.
+"""Embed the vendored Inter font file into an HTML page as a base64 @font-face rule.
 
-    python mocks/tools/embed-font.py
+    python mocks/tools/embed-font.py                            (mocks/index.html)
+    python mocks/tools/embed-font.py --target public/index.html
 
-The mock stays one self-contained file with no network, so the font travels inside it. The rule is
-written between the FONT:BEGIN and FONT:END markers. Re-run after replacing the font file in
-third_party/inter/. Inter is licensed under the SIL Open Font License 1.1; see
-third_party/inter/LICENSE.txt and THIRD-PARTY-NOTICES.md.
+The mock stays one self-contained file with no network, so the font travels inside it. The MVP page
+(public/index.html) carries it the same way, so its reveal waits on one HTML response and nothing else
+(docs/concept.md section 3.4). The rule is written between the FONT:BEGIN and FONT:END markers.
+Re-run on both pages after replacing the font file in third_party/inter/. Inter is licensed under the
+SIL Open Font License 1.1; see third_party/inter/LICENSE.txt and THIRD-PARTY-NOTICES.md.
 """
 
 import argparse
@@ -31,17 +33,30 @@ def font_face(font: Path) -> str:
     )
 
 
+def shown(path: Path) -> str:
+    """The path relative to the repository when it is inside it, for the closing message."""
+    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Embed the Inter font file into the clickable mock.")
-    parser.parse_args()
-    html = PAGE.read_text(encoding="utf-8")
+    parser = argparse.ArgumentParser(description="Embed the Inter font file into an HTML page.")
+    parser.add_argument(
+        "--target",
+        type=Path,
+        default=PAGE,
+        help="the HTML file to write into (default: mocks/index.html)",
+    )
+    page: Path = parser.parse_args().target.resolve()
+    # newline="" on both ends: read_text() would turn CRLF into LF and the write would keep it.
+    with page.open(encoding="utf-8", newline="") as f:
+        html = f.read()
     if not MARKERS.search(html):
-        raise SystemExit(f"FONT:BEGIN / FONT:END markers not found in {PAGE}")
+        raise SystemExit(f"FONT:BEGIN / FONT:END markers not found in {page}")
     rule = font_face(FONT)
     html = MARKERS.sub(lambda m: m.group(1) + rule + m.group(2), html, count=1)
-    with PAGE.open("w", encoding="utf-8", newline="") as f:
+    with page.open("w", encoding="utf-8", newline="") as f:
         f.write(html)
-    print(f"Embedded {FONT.name} ({FONT.stat().st_size:,} bytes) into {PAGE.relative_to(ROOT)}")
+    print(f"Embedded {FONT.name} ({FONT.stat().st_size:,} bytes) into {shown(page)}")
 
 
 if __name__ == "__main__":

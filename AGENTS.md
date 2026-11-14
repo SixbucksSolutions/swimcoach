@@ -35,13 +35,15 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 | `docs/concept.md` | The concept and knowledge transfer. Keep it current when decisions change |
 | `docs/brand.md` | The brand guide: mark, wordmark, typeface, colors, motion, voice. Check it before adding any visual |
 | `docs/img/` | Screenshots of the prototype |
-| `mocks/index.html` | The clickable mock: one self-contained file, no server |
+| `public/` | The MVP page (MVP-08), served from `GET /`, `/css/*.css` and `/js/*.js`: `index.html`, `css/`, and `js/` ES modules checked by `tsc -p tsconfig.page.json` (`// @ts-check` plus JSDoc, no build step) |
+| `acceptance/` | The black-box API acceptance suite (MVP-09); `acceptance/api/types.ts` is its frozen case format |
+| `mocks/index.html` | The clickable mock: one self-contained file, no server. The approved design; no longer deployed |
 | `mocks/tools/make-scenarios.py` | Builds the mock's sample data with the prototype's math and writes it into `mocks/index.html` |
 | `mocks/tools/render-mock.py` | Renders every mock screen to `design/ui-mock/` |
-| `mocks/tools/embed-font.py` | Writes the Inter font file into `mocks/index.html` between the `FONT` markers |
+| `mocks/tools/embed-font.py` | Writes the Inter font file into `mocks/index.html` between the `FONT` markers; `--target public/index.html` for the page |
 | `design/logo/` | The swimcoach mark: `swimcoach.svg` is the one definition; PNGs, design history and rules in its README |
 | `mocks/tools/render-logo.py` | Renders the mark to PNG, including the iPhone home-screen icon |
-| `mocks/tools/embed-logo.py` | Writes the mark into `mocks/index.html` between the `LOGO` markers: favicon, touch icon, header `--brand` |
+| `mocks/tools/embed-logo.py` | Writes the mark into `mocks/index.html` between the `LOGO` markers: favicon, touch icon, header `--brand`; `--target public/index.html` for the page |
 | `third_party/inter/` | The Inter font file (Latin subset), its OFL license, and how it was made |
 | `THIRD-PARTY-NOTICES.md` | Credits and licenses for everything not under swimcoach's MIT license |
 | `design/ui-mock/` | PNG renders of the mock, with an index README |

@@ -1,0 +1,16 @@
+{
+  "name": "swimcoach-acceptance",
+  "private": true,
+  "type": "module",
+  "description": "The black-box API acceptance suite's own package (MVP-09): Node 26 and ajv, nothing from the MVP",
+  "license": "MIT",
+  "scripts": {
+    "selftest": "node --test \"api/selftest/*.test.ts\""
+  },
+  "dependencies": {
+    "ajv": "8.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6"
+  }
+}

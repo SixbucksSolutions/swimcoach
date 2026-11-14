@@ -6,8 +6,10 @@
   "workers_dev": true,
   // No routes: the hostname is attached later by MVP-02's deploy step.
   "assets": {
-    // The approved mock, served unchanged. mocks/.assetsignore keeps tools/ out.
-    "directory": "./mocks",
+    // The page (MVP-08): public/index.html, public/css and public/js, served as committed with no
+    // build step. The router decides which paths reach it (src/index.ts). mocks/ stays the approved
+    // reference and is no longer deployed (t4-interfaces.md).
+    "directory": "./public",
     // contract/api.md section 2: the Worker MUST verify Access on every request, the page included.
     // Without run_worker_first, static assets would be answered before the Worker's check runs.
     "binding": "ASSETS",
@@ -32,5 +34,32 @@
   // so there was no migration history to keep.
   "exports": {
     "Board": { "type": "durable-object", "storage": "sqlite" }
+  },
+  // The production configuration above MUST NOT define SWIMCOACH_TEST_CLOCK (contract/api.md
+  // section 9). Only the test Worker below does.
+  "env": {
+    // The test Worker, swimcoach-test (Terry approved option (a), 2026-11-13; t4-interfaces.md). It
+    // runs the same build with the test clock on, for MVP-09's timed cases, behind the same Access
+    // team. Deploy it with: scripts/wrangler.ps1 deploy --env test. vars, durable_objects and exports
+    // do not inherit into an environment, so each is restated here; a separate Worker gets its own
+    // Durable Object namespace, so its Board never shares data with production.
+    "test": {
+      "name": "swimcoach-test",
+      "vars": {
+        "ACCESS_TEAM_DOMAIN": "snowy-queen-54cf.cloudflareaccess.com",
+        // The AUD tag of the "swimcoach-test - Cloudflare Workers" Access application (Terry enabled
+        // it on 2026-11-14: All traffic, policies swimcoach-cli and terry, 7-day session). It differs
+        // from production's, so a token for one Worker never passes the other.
+        "ACCESS_AUD": "091025920b1bd2727c95710a76add7858cc6788e6c3afc088ed4c0085b5e0e6d",
+        // The one enabling value, compared exactly (src/http.ts).
+        "SWIMCOACH_TEST_CLOCK": "on"
+      },
+      "durable_objects": {
+        "bindings": [{ "name": "BOARD", "class_name": "Board" }]
+      },
+      "exports": {
+        "Board": { "type": "durable-object", "storage": "sqlite" }
+      }
+    }
   }
 }
