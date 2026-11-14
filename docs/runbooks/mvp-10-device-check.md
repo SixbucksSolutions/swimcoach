@@ -26,8 +26,10 @@ finish. You do nothing for that step.
    green bars) on the dark ground, not a screenshot of the page. Tap Add. **Check** the same icon on the
    home screen.
 3. **Launch from the icon.** **Check:** it opens full-screen, with no Chrome address bar or toolbar.
-4. **Sign in inside the app if asked.** The home-screen app keeps its own cookies, separate from Chrome
-   (RESUME risk 8), so Access MAY ask for the PIN once more here. That is expected, once.
+4. **No second sign-in.** **Check:** the app opens to the board without asking for the PIN. An icon added
+   from Chrome opens with Chrome's own cookies, so the Access session from step 2 carries over (Terry,
+   2026-11-14; this step first said the app kept separate cookies, and RESUME risk 8 records why that was
+   wrong). A sign-in page here is a defect.
 5. **Safe areas.** **Check:** the status line (wordmark, clock, health box, bell) sits fully below the
    Dynamic Island and the clock, and the dots at the bottom sit fully above the home indicator bar. Send
    a screenshot.

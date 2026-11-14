@@ -86,6 +86,28 @@ const breathCases: UiCase[] = [
     },
   },
   {
+    ids: ["UX-075"],
+    title: "Under reduced motion nothing breathes and the page does not fade in, even while LIVE",
+    async run(ctx) {
+      await ctx.page.emulateMedia({ reducedMotion: "reduce" });
+      await openWith(ctx, ctx.example("afternoon"));
+      assert.equal((await healthOf(ctx.page)).label, "LIVE");
+      assert.ok(
+        (await cardsOf(ctx.page)).some((c) => c.name === "GO TO KEYBOARD"),
+        "GO TO KEYBOARD is on the board.",
+      );
+      assert.deepEqual(await running(ctx), { dot: 0, slot: 0 }, "Neither breathes.");
+      assert.equal(
+        await probe<string>(ctx.page, "cs(q('#health i')).opacity"),
+        "1",
+        "The still LIVE dot is lit, not the dim dot of the other states.",
+      );
+      await pollOnce(ctx);
+      assert.deepEqual(await running(ctx), { dot: 0, slot: 0 }, "A good poll starts no breath.");
+      assert.equal(await probe<string>(ctx.page, "cs(document.body).transitionDuration"), "0s");
+    },
+  },
+  {
     ids: ["UX-157"],
     title:
       "A frozen page stops breathing by itself: 40 s after the last good poll both animations have ended",
