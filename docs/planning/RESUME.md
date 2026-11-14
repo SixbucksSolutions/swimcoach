@@ -22,6 +22,13 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   poll, 40 s breathing, OFFLINE at 90 s, agents at most every 5 minutes per milestone, UX-156 to
   UX-162). Full 68/68 on test (run `p84eu4`), clock-free 41/41 on production. Ledger: 162 rows, 28
   superseded. T5 plan: `docs/planning/t5-interfaces.md`.
+- **T5 progress (2026-11-14):** #36 (routes, UI suite frame), #37 (device checklist, ledger UX-163 to
+  UX-166), #39 (manifest, icons, `apple-mobile-web-app-title`, touch icon kept as a data URI because
+  every path sits behind Access) merged and **shipped mid-turn as `main` `a2840c5`** so Terry can run
+  `docs/runbooks/mvp-10-device-check.md`. Production verified: manifest `application/manifest+json`,
+  icons 200, page 16/16, UI case 1/1, clock-free 41/41. Open: #40 (11-B, 42 project-display cases),
+  #41 (ledger: UX-090/093/094 superseded by UX-167 to UX-169), 11-A (overview cases) still writing,
+  #38 (11-C ledger Check column, draft, phase 2 pending).
 - **MVP-08 PASSED: Terry, 2026-11-14, "Yes". T5 is open.** The `zz demo` milestones are stopped; the
   production board is empty (`feed` `no_data`). Remaining Terry gates: MVP-10's device checklist (the
   Access session is already 7 days and the icon is on his home screen; re-adding the icon MAY be needed
