@@ -155,7 +155,12 @@ describe("exit 2, values and files", () => {
     expect((await runCli([])).code).toBe(2);
     expect((await runCli(["delete"])).code).toBe(2);
     expect((await runCli(["help", "delete"])).code).toBe(2);
-    expect((await runCli(["--version", "extra"])).code).toBe(2);
+  });
+
+  it("prints the version whatever follows it, as Commander does", async () => {
+    const result = await runCli(["--version", "extra"]);
+    expect(result.code).toBe(0);
+    expect(result.stdout).toMatch(VERSION_LINE);
   });
 });
 

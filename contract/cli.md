@@ -24,7 +24,14 @@ swimcoach stop --project <name> --milestone <name> [common options]
 
 swimcoach --version
 swimcoach help [report | stop]
+swimcoach [report | stop] --help
 ```
+
+**Help and usage text MUST come from the parser** (Terry, 2026-11-14: "I just don't want us managing
+our own help strings those should be params to a library that manages that shit for us"). The CLI
+passes each command's and each flag's description to Commander as parameters, and Commander builds
+every usage line and help page. The CLI MUST NOT keep help text of its own. Help and version print on
+stdout and exit 0; `--version` prints the version whatever follows it, as Commander does.
 
 ### Short forms
 
@@ -40,7 +47,7 @@ means the same flag in every command, and no letter is used twice.
 | `-b` | `--cap-hours` (budget) | `-n` | `--dry-run` |
 | `-w` | `--ready-for-work` | `-j` | `--json` |
 | `-i` | `--in-progress` | `-v` | `--version` |
-| `-t` | `--needs-terry` | | |
+| `-t` | `--needs-terry` | `-h` | `--help` |
 | `-r` | `--ready-for-review` | | |
 
 - **A short form MUST behave exactly like its long form** in every rule of this document: the same

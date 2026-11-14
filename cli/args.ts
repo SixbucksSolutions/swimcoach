@@ -1,8 +1,10 @@
-// Command-line parsing for the swimcoach CLI (contract/cli.md sections 1 and 2), on Commander, the
-// most used Node argument parser (Terry, 2026-11-14: "the most common/ubiquitous TS equiv to
-// argparse"). Pure: it reads no file and prints nothing. This module only declares the flags and
-// turns Commander's errors into the contract's wording; Commander does the parsing.
+// The swimcoach command line (contract/cli.md sections 1 to 3), on Commander, the most used Node
+// argument parser. Terry, 2026-11-14: use "the most common/ubiquitous TS equiv to argparse", and
+// never manage help strings by hand: they are parameters to the library, which builds every usage
+// line and help page. This module declares the commands and flags, and turns Commander's errors into
+// the contract's wording. Pure: it reads no file and prints nothing.
 import { CommanderError, InvalidArgumentError, Option, Command as Parser } from "commander";
+import pkg from "../package.json" with { type: "json" };
 
 type Command = "report" | "stop";
 
@@ -33,7 +35,7 @@ const SWITCHES: readonly string[] = ["dry-run", "json"];
 
 /**
  * Each flag's one-letter short form (cli.md section 1). A letter means the same flag in every
- * command, so no letter is reused; `-v` for `--version` is handled before a command is read.
+ * command, and none is reused; `-v` and `-h` belong to Commander's version and help flags.
  */
 const SHORT_FLAGS: Readonly<Record<string, string>> = Object.freeze({
   a: "agent",
@@ -52,6 +54,39 @@ const SHORT_FLAGS: Readonly<Record<string, string>> = Object.freeze({
   n: "dry-run",
   j: "json",
 });
+
+/** Each flag's value placeholder and help description: the parameters Commander's help is built from. */
+const FLAG_HELP: Readonly<Record<string, readonly [placeholder: string, description: string]>> = {
+  agent: ["<codex|claude>", "The agent sending the report"],
+  project: ["<name>", "The project, 1 to 64 characters"],
+  milestone: ["<name>", "The milestone, 1 to 32 characters"],
+  "active-hours": ["<hours>", "Hours of agent time used so far, 0 to 168"],
+  "cap-hours": ["<hours>", "The time budget in hours, over 0 and at most 168"],
+  "ready-for-work": ["<n>", "Cards in Ready For Work, 0 to 999"],
+  "in-progress": ["<n>", "Cards in In progress, 0 to 999"],
+  "needs-terry": ["<n>", "Cards in Needs Terry, 0 to 999"],
+  "ready-for-review": ["<n>", "Cards in Ready For Review, 0 to 999"],
+  completed: ["<n>", "Cards in Completed, 0 to 999"],
+  "needs-me": ["<sentence>", "Optional. One sentence of 1 to 200 characters: what Terry must do"],
+  file: ["<path|->", "Read the whole report as JSON from a file, or - for standard input"],
+  config: ["<path>", "Read this config file instead of the default"],
+  "dry-run": ["", "Validate and print the JSON body; send nothing and read no config"],
+  json: ["", "Print the server's JSON response instead of the one-line summary"],
+};
+
+const COMMAND_HELP: Readonly<Record<Command, readonly [summary: string, after: string]>> = {
+  report: [
+    "Send one complete status report",
+    "\nGive EITHER --file OR every field flag except --needs-me. Every report is complete: no flag\nhas a default. Lane counts are whole numbers. Leave --needs-me out when there is no ask.",
+  ],
+  stop: [
+    "Stop tracking one milestone and delete its history",
+    "\nRun it only after Terry says the milestone is complete. A milestone that is not tracked exits 3.",
+  ],
+};
+
+const EXIT_CODES =
+  "\nExit codes: 0 success, 1 unexpected failure, 2 usage or validation error, 3 not tracked,\n4 refused by the server, 5 authentication failed, 6 config file problem, 7 server unreachable or failed.";
 
 const LONG_TO_SHORT: ReadonlyMap<string, string> = new Map(
   Object.entries(SHORT_FLAGS).map(([letter, name]) => [name, letter]),
@@ -74,6 +109,11 @@ const LEFT_OVER = /got \d+: (?<rest>.*)\.$/u;
 
 const TWICE = "is given twice";
 const NO_VALUE = "needs a value";
+const FLAG_LIKE = "looks like a flag";
+
+/** The value Commander rejected, the second quoted part of its message: argument '-x' is invalid. */
+const REJECTED = /argument '(?<value>[^']*)' is invalid/u;
+const SEE_HELP = "Run swimcoach help for the commands.";
 
 interface ParsedFlags {
   readonly flags: ReadonlyMap<string, string>;
@@ -81,14 +121,16 @@ interface ParsedFlags {
   readonly json: boolean;
 }
 
-type ParseResult =
-  | { readonly ok: true; readonly parsed: ParsedFlags }
-  | { readonly ok: false; readonly errors: readonly string[] };
+/** What one command line asks for: text to print (help, version), a usage error, or a request. */
+type CommandLine =
+  | { readonly kind: "print"; readonly text: string }
+  | { readonly kind: "error"; readonly lines: readonly string[] }
+  | { readonly kind: "run"; readonly command: Command; readonly parsed: ParsedFlags };
 
 /** A value check for every value flag: refuses a second copy and an argument that is a flag. */
 function once(value: string, previous: string | undefined): string {
   if (FLAG_TOKEN.test(value)) {
-    throw new InvalidArgumentError(NO_VALUE);
+    throw new InvalidArgumentError(FLAG_LIKE);
   }
   if (previous !== undefined) {
     throw new InvalidArgumentError(TWICE);
@@ -96,30 +138,43 @@ function once(value: string, previous: string | undefined): string {
   return value;
 }
 
-/** Commander's flag spelling for one long name, with its short form. */
-function spelling(name: string, takesValue: boolean): string {
-  const letter = LONG_TO_SHORT.get(name);
-  if (takesValue) {
-    return `-${letter}, --${name} <value>`;
+/** One flag as a Commander option: its short form, long form, placeholder and description. */
+function optionFor(name: string): Option {
+  const [placeholder, description] = FLAG_HELP[name] ?? ["", ""];
+  const flags = `-${LONG_TO_SHORT.get(name)}, --${name} ${placeholder}`.trimEnd();
+  const option = new Option(flags, description);
+  if (placeholder !== "") {
+    option.argParser(once);
   }
-  return `-${letter}, --${name}`;
+  return option;
 }
 
-/** A fresh parser for one command: the command's flags and nothing else. */
-function parserFor(command: Command): Parser {
-  const parser = new Parser(command);
-  parser.exitOverride();
-  parser.configureOutput({ writeErr: () => undefined, writeOut: () => undefined });
-  parser.helpOption(false);
-  parser.showSuggestionAfterError(false);
-  parser.allowExcessArguments(false);
-  for (const name of VALUE_FLAGS[command]) {
-    parser.addOption(new Option(spelling(name, true)).argParser(once));
+/** The whole command line: the two commands, help and version, with output captured, not printed. */
+function programFor(out: string[]): { program: Parser; ran: { command?: Command; sub?: Parser } } {
+  const ran: { command?: Command; sub?: Parser } = {};
+  const program = new Parser("swimcoach");
+  program.exitOverride();
+  program.configureOutput({ writeOut: (text) => out.push(text), writeErr: () => undefined });
+  program.showSuggestionAfterError(false);
+  program.description("Put a milestone's status on Terry's phone.");
+  program.version(`swimcoach ${pkg.version}`, "-v, --version", "Print the version");
+  program.helpOption("-h, --help", "Show help");
+  program.helpCommand("help [command]", "Show help for a command");
+  program.addHelpText("after", EXIT_CODES);
+  for (const command of ["report", "stop"] as const) {
+    const [summary, after] = COMMAND_HELP[command];
+    const sub = program.command(command).description(summary).allowExcessArguments(false);
+    sub.helpOption("-h, --help", "Show help for this command");
+    for (const name of [...VALUE_FLAGS[command], ...SWITCHES]) {
+      sub.addOption(optionFor(name));
+    }
+    sub.addHelpText("after", after);
+    sub.action(() => {
+      ran.command = command;
+      ran.sub = sub;
+    });
   }
-  for (const name of SWITCHES) {
-    parser.addOption(new Option(spelling(name, false)));
-  }
-  return parser;
+  return { program, ran };
 }
 
 /** The long name of a flag token Commander did not know: "--url=x" is url, "-a" is agent. */
@@ -130,7 +185,7 @@ function unknownName(token: string): string {
   return SHORT_FLAGS[token.slice(1)] ?? "";
 }
 
-function unknownFlag(token: string, command: Command): string {
+function unknownFlag(token: string, command: string): string {
   const name = unknownName(token);
   if (name === "url") {
     return "The flag --url does not exist; the service address comes only from the config file.";
@@ -144,8 +199,8 @@ function unknownFlag(token: string, command: Command): string {
   return `Unknown flag --${name} for the ${command} command.`;
 }
 
-/** The contract's wording for one Commander error, which always starts with a capital. */
-function explain(error: CommanderError, command: Command): string {
+/** The contract's wording for a Commander error about a flag or a stray argument. */
+function explainFlag(error: CommanderError, command: string): string {
   const quoted = QUOTED.exec(error.message)?.groups?.quoted ?? "";
   const long = LONG_NAME.exec(quoted)?.groups?.name ?? "";
   if (error.code === "commander.unknownOption") {
@@ -154,56 +209,83 @@ function explain(error: CommanderError, command: Command): string {
   if (error.code === "commander.optionMissingArgument") {
     return `The flag --${long} ${NO_VALUE}.`;
   }
+  if (error.code === "commander.invalidArgument" && error.message.endsWith(TWICE)) {
+    return `The flag --${long} ${TWICE}.`;
+  }
   if (error.code === "commander.invalidArgument") {
-    if (error.message.endsWith(TWICE)) {
-      return `The flag --${long} ${TWICE}.`;
-    }
-    return `The flag --${long} ${NO_VALUE}.`;
+    const value = REJECTED.exec(error.message)?.groups?.value ?? "";
+    return `The flag --${long} ${NO_VALUE}; "${value}" is a flag, and a value cannot look like one.`;
   }
-  if (error.code === "commander.excessArguments") {
-    const first = LEFT_OVER.exec(error.message)?.groups?.rest?.split(", ")[0] ?? "";
-    return `Unexpected argument "${first}"; every value must follow its flag.`;
-  }
-  return "The command line cannot be read.";
+  const first = LEFT_OVER.exec(error.message)?.groups?.rest?.split(", ")[0] ?? "";
+  return `Unexpected argument "${first}"; every value must follow its flag.`;
 }
 
-/** True when a switch was given. */
-function switchOn(parser: Parser, name: string): boolean {
-  return parser.getOptionValue(new Option(`--${name}`).attributeName()) === true;
+/** What a Commander error means for this command line: printed text, or a usage error (exit 2). */
+function explain(
+  error: CommanderError,
+  argv: readonly string[],
+  out: readonly string[],
+): CommandLine {
+  const [first = "", second = ""] = argv;
+  if (error.exitCode === 0) {
+    // Help or version, written through configureOutput: Commander built the text.
+    return { kind: "print", text: out.join("") };
+  }
+  if (error.code === "commander.help" && first === "help") {
+    return { kind: "error", lines: [`There is no help topic "${second}".`, SEE_HELP] };
+  }
+  if (error.code === "commander.help") {
+    return { kind: "error", lines: ["The command is missing.", SEE_HELP] };
+  }
+  if (error.code === "commander.unknownCommand") {
+    return { kind: "error", lines: [`Unknown command "${first}".`, SEE_HELP] };
+  }
+  return { kind: "error", lines: [explainFlag(error, first)] };
 }
 
-/** Parses the arguments after the command word. */
-function parseFlags(command: Command, args: readonly string[]): ParseResult {
-  const attached = args.find((arg) => SHORT_WITH_EQUALS.test(arg));
-  if (attached !== undefined) {
-    return {
-      ok: false,
-      errors: [
-        `Unexpected argument "${attached}"; a short flag takes its value as the next argument.`,
-      ],
-    };
-  }
-  const parser = parserFor(command);
-  try {
-    parser.parse([...args], { from: "user" });
-  } catch (error) {
-    if (error instanceof CommanderError) {
-      return { ok: false, errors: [explain(error, command)] };
-    }
-    throw error;
-  }
+/** The flags Commander collected for the command that ran, keyed by long name. */
+function collect(command: Command, sub: Parser): ParsedFlags {
   const flags = new Map<string, string>();
   for (const name of VALUE_FLAGS[command]) {
-    const value: unknown = parser.getOptionValue(new Option(`--${name}`).attributeName());
+    const value: unknown = sub.getOptionValue(new Option(`--${name}`).attributeName());
     if (typeof value === "string") {
       flags.set(name, value);
     }
   }
-  return {
-    ok: true,
-    parsed: { flags, dryRun: switchOn(parser, "dry-run"), json: switchOn(parser, "json") },
-  };
+  return { flags, dryRun: switchOn(sub, "dry-run"), json: switchOn(sub, "json") };
 }
 
-export type { Command, ParsedFlags, ParseResult };
-export { FIELD_FLAGS, parseFlags, REQUIRED_FIELD_FLAGS, SHORT_FLAGS };
+/** True when a switch was given. */
+function switchOn(sub: Parser, name: string): boolean {
+  return sub.getOptionValue(new Option(`--${name}`).attributeName()) === true;
+}
+
+/** Parses one whole command line (everything after `swimcoach`). */
+function parseCommandLine(argv: readonly string[]): CommandLine {
+  const attached = argv.find((arg) => SHORT_WITH_EQUALS.test(arg));
+  if (attached !== undefined) {
+    return {
+      kind: "error",
+      lines: [
+        `Unexpected argument "${attached}"; a short flag takes its value as the next argument.`,
+      ],
+    };
+  }
+  const out: string[] = [];
+  const { program, ran } = programFor(out);
+  try {
+    program.parse([...argv], { from: "user" });
+  } catch (error) {
+    if (error instanceof CommanderError) {
+      return explain(error, argv, out);
+    }
+    throw error;
+  }
+  if (ran.command === undefined || ran.sub === undefined) {
+    return { kind: "error", lines: ["The command is missing.", SEE_HELP] };
+  }
+  return { kind: "run", command: ran.command, parsed: collect(ran.command, ran.sub) };
+}
+
+export type { Command, CommandLine, ParsedFlags };
+export { FIELD_FLAGS, parseCommandLine, REQUIRED_FIELD_FLAGS, SHORT_FLAGS };

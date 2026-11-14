@@ -57,6 +57,27 @@ describe("the short-form table", () => {
       expect(letter).toMatch(ONE_LOWERCASE_LETTER);
     }
     expect(Object.keys(SHORT_FLAGS)).not.toContain("v");
+    expect(Object.keys(SHORT_FLAGS)).not.toContain("h");
+  });
+});
+
+describe("Commander builds the help", () => {
+  it.each([[["help"]], [["--help"]], [["-h"]], [["report", "-h"]], [["help", "stop"]]])(
+    "prints help for %j on stdout, exit 0, in capitalized phrases",
+    async (argv) => {
+      const result = await runCli(argv);
+      expect(result.code).toBe(0);
+      expect(result.stdout).toContain("Usage: swimcoach");
+      expect(result.stdout).not.toContain("output the version number");
+      expect(result.stdout).not.toContain("display help for command");
+    },
+  );
+
+  it("lists every report flag's description, as passed to Commander", async () => {
+    const result = await runCli(["report", "--help"]);
+    expect(result.stdout).toContain("-u, --active-hours <hours>");
+    expect(result.stdout).toContain("Hours of agent time used so far, 0 to 168");
+    expect(result.stdout).toContain("Give EITHER --file OR every field flag except --needs-me.");
   });
 });
 
