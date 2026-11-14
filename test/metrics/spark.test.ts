@@ -1,10 +1,8 @@
-// biome-ignore-all lint/correctness/useImportExtensions: Biome asks for ".ts" on every relative import, and tsc refuses ".ts" on a value import (TS5097) because tsconfig.json does not set allowImportingTsExtensions. Extensionless is what moduleResolution "Bundler" expects. Reported to the Lead (MVP-04 A hand-off).
-
 // MVP-04 A: the spark, contract/api.md 6.9.
 
 import { describe, expect, it } from "vitest";
-import type { Sample } from "../../src/contract";
-import { sparkOf } from "../../src/metrics/verdict";
+import type { Sample } from "../../src/contract.ts";
+import { sparkOf } from "../../src/metrics/verdict.ts";
 
 const START = 1_800_000_000;
 const STEP_SECONDS = 600;

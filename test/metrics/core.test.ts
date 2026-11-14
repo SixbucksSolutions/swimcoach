@@ -1,5 +1,3 @@
-// biome-ignore-all lint/correctness/useImportExtensions: Biome asks for ".ts" on every relative import, and tsc refuses ".ts" on a value import (TS5097) because tsconfig.json does not set allowImportingTsExtensions. Extensionless is what moduleResolution "Bundler" expects. Reported to the Lead (MVP-04 A hand-off).
-
 // MVP-04 A: edge cases of computeMetrics (contract/api.md 6.3) that no golden fixture reaches.
 
 import { describe, expect, it } from "vitest";
@@ -9,8 +7,8 @@ import {
   type Sample,
   type StoredMilestone,
   THRESHOLDS,
-} from "../../src/contract";
-import { callOf, computeMetrics, trendBinOf } from "../../src/metrics/core";
+} from "../../src/contract.ts";
+import { callOf, computeMetrics, trendBinOf } from "../../src/metrics/core.ts";
 
 const START = 1_800_000_000;
 const MINUTE = 60;

@@ -1,5 +1,3 @@
-// biome-ignore-all lint/correctness/useImportExtensions: Biome asks for ".ts" on every relative import, and tsc refuses ".ts" on a value import (TS5097) because tsconfig.json does not set allowImportingTsExtensions. Extensionless is what moduleResolution "Bundler" expects. Reported to the Lead (MVP-04 A hand-off).
-
 // MVP-04 A against every card in the state examples of contract/schemas/examples/. They carry a
 // "now" after the newest report, which the golden fixtures do not, so they prove `stale` and the
 // "silent" row of api.md 6.6. They carry no samples, so the trend is not checked here.
@@ -15,10 +13,10 @@ import smallBlocks from "../../contract/schemas/examples/state.small-blocks.json
   type: "json",
 };
 import stale from "../../contract/schemas/examples/state.stale.json" with { type: "json" };
-import type { Agent, Lanes, Metrics, StoredMilestone, Thresholds } from "../../src/contract";
-import { computeMetrics } from "../../src/metrics/core";
-import { cardVerdict } from "../../src/metrics/verdict";
-import { mismatches } from "./replay";
+import type { Agent, Lanes, Metrics, StoredMilestone, Thresholds } from "../../src/contract.ts";
+import { computeMetrics } from "../../src/metrics/core.ts";
+import { cardVerdict } from "../../src/metrics/verdict.ts";
+import { mismatches } from "./replay.ts";
 
 interface Card {
   readonly project: string;

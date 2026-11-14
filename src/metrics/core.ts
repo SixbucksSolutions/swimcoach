@@ -1,5 +1,3 @@
-// biome-ignore-all lint/correctness/useImportExtensions: Biome asks for ".ts" on every relative import, and tsc refuses ".ts" on a value import (TS5097) because tsconfig.json does not set allowImportingTsExtensions. Extensionless is what moduleResolution "Bundler" expects. Reported to the Lead (MVP-04 A hand-off).
-
 // The metric math of contract/api.md 6.3: pure, no I/O, values never rounded.
 // The trend is the prototype's trend_of() (reference/prototype/server.py) field for field, with
 // the "too early to call" gates of docs/concept.md 4.6.
@@ -14,8 +12,8 @@ import type {
   Thresholds,
   Trend,
   TrendBin,
-} from "../contract";
-import { chanceToFinish } from "./chance";
+} from "../contract.ts";
+import { chanceToFinish } from "./chance.ts";
 
 const SECONDS_PER_MINUTE = 60;
 

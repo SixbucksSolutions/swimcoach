@@ -1,5 +1,3 @@
-// biome-ignore-all lint/correctness/useImportExtensions: Biome asks for ".ts" on every relative import, and tsc refuses ".ts" on a value import (TS5097) because tsconfig.json does not set allowImportingTsExtensions. Extensionless is what moduleResolution "Bundler" expects. Reported to the Lead (MVP-04 A hand-off).
-
 // MVP-04 A against every golden fixture in contract/fixtures/ (README there).
 // A new fixture file MUST get an import and an entry in FIXTURES below.
 
@@ -16,10 +14,10 @@ import overCap from "../../contract/fixtures/over-cap.json" with { type: "json" 
 import silent from "../../contract/fixtures/silent.json" with { type: "json" };
 import stale from "../../contract/fixtures/stale.json" with { type: "json" };
 import zeroProgress from "../../contract/fixtures/zero-progress.json" with { type: "json" };
-import { THRESHOLDS } from "../../src/contract";
-import { computeMetrics, finishedOf, totalOf } from "../../src/metrics/core";
-import { cardVerdict } from "../../src/metrics/verdict";
-import { type Fixture, mismatches, replay } from "./replay";
+import { THRESHOLDS } from "../../src/contract.ts";
+import { computeMetrics, finishedOf, totalOf } from "../../src/metrics/core.ts";
+import { cardVerdict } from "../../src/metrics/verdict.ts";
+import { type Fixture, mismatches, replay } from "./replay.ts";
 
 const FIXTURES: readonly Fixture[] = [
   afternoon,

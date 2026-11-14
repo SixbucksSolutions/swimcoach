@@ -1,5 +1,3 @@
-// biome-ignore-all lint/correctness/useImportExtensions: Biome asks for ".ts" on every relative import, and tsc refuses ".ts" on a value import (TS5097) because tsconfig.json does not set allowImportingTsExtensions. Extensionless is what moduleResolution "Bundler" expects. Reported to the Lead (MVP-04 A hand-off).
-
 // MVP-04 A: the card verdict, contract/api.md 6.2 (stale, stalled), 6.4, 6.5 and 6.6.
 
 import { describe, expect, it } from "vitest";
@@ -12,8 +10,8 @@ import {
   type StoredMilestone,
   THRESHOLDS,
   type Thresholds,
-} from "../../src/contract";
-import { cardVerdict, needsMeOf } from "../../src/metrics/verdict";
+} from "../../src/contract.ts";
+import { cardVerdict, needsMeOf } from "../../src/metrics/verdict.ts";
 
 const NOW = 1_800_000_000;
 const MINUTE = 60;

@@ -1,11 +1,9 @@
-// biome-ignore-all lint/correctness/useImportExtensions: Biome asks for ".ts" on every relative import, and tsc refuses ".ts" on a value import (TS5097) because tsconfig.json does not set allowImportingTsExtensions. Extensionless is what moduleResolution "Bundler" expects. Reported to the Lead (MVP-04 A hand-off).
-
 // Test helpers for MVP-04 A: replay a golden fixture (contract/fixtures/README.md) into the
 // stored milestone and samples that contract/api.md 4.4 would leave, and compare values with the
 // README's tolerance.
 
-import type { EpochSeconds, Lanes, Sample, StoredMilestone } from "../../src/contract";
-import { finishedOf, totalOf } from "../../src/metrics/core";
+import type { EpochSeconds, Lanes, Sample, StoredMilestone } from "../../src/contract.ts";
+import { finishedOf, totalOf } from "../../src/metrics/core.ts";
 
 const SECONDS_PER_HOUR = 3600;
 /** api.md 4.4 step 4: the duplicate window. */
