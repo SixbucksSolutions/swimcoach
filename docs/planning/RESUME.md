@@ -3,6 +3,23 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
+## T4 in progress (2026-11-14 UTC)
+
+- `mvp/integration` holds MVP-08 B (#24, project display) and all of MVP-09: the harness (#26,
+  `d9cc68b`) and 68 cases (#27, `cf66c20`). Every PR was reviewed by Opus 5.5 / high; #26 and #27 each
+  needed one fix round. GitHub refuses `--approve` because one account authors and reviews, so
+  reviewers post a `--comment` review headed "approval record" (precedent PR #23).
+- **First real run of the suite: `--suite clock-free` against production passed 41/41** (run
+  `nf0exo`, from a detached `mvp/integration` worktree, `--config` = `cli.json`). Production runs T3
+  code, so this proves the T3 API matches the contract as the cases read it.
+- Lead decision (main `869ceb1`): a clock-free case MAY send `Swimcoach-Test-Now` only to prove
+  `400 test_clock_disabled`; the harness fails the run on any other answer. The `full` tier probes the
+  test clock before its reset, so a `full` run against production stops nothing.
+- Open: #25 (08-A overview, second review round: the `half` class and an idempotent name fit), #28
+  (08-C controller, after #25), then the MVP-08 visual review. `swimcoach-test` still has no Access
+  app; Terry is setting it up, then makes `cli-test.json` himself (an agent MUST NOT read or copy
+  either config file's values).
+
 ## T3 closed (2026-11-13, Terry's evening)
 
 - `main` at `086d930` holds all of T3: PRs #17-#22 (Lead HTTP helpers, report and stop routes, state
