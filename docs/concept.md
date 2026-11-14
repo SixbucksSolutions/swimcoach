@@ -726,7 +726,8 @@ Terry's plan, 2026-11-13. RFC 2119 keywords; the capitals are load-bearing.
 **The sequence is MVP, then V1, then V2** (Terry, 2026-11-14: "gonna go MVP then V1"; "V1 is
 semi-stable and V2 will be rewrite"). V1 is the semi-stable version that follows the MVP; its
 requirements are the UX ledger rows marked `Yes` at MVP acceptance. V2 is the greenfield rewrite this
-section describes. Whether V1 builds on the MVP's code is not yet recorded; ask Terry.
+section describes. **V1 extends the MVP's code** (Terry, 2026-11-14: "V1 will extend MVP code"), so
+the zero-reuse rule below binds V2, not V1.
 
 - **The MVP exists to find out what Terry wants: it is requirements discovery.** It gets the UX right on
   the real phone, with real agents, shipping fast and changing until it "feels right". Vendor and
