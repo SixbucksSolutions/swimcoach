@@ -21,7 +21,7 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   scheduled wakeup while the thread is mid-turn. Reporting that does not depend on an idle agent thread
   is a likely V1 requirement (offered to Terry as a punt; not yet recorded).
 - **Running `npm ci` in `C:\Projects\swimcoach` briefly breaks `bin\swimcoach.cmd`** for every agent
-  while packages reinstall. Do it between the :x0 report marks.
+  while packages reinstall. It SHOULD run between the :x0 report marks.
 
 ## T6 shipped (2026-11-14); next: watch the first real agent, then Terry's demo and acceptance
 
