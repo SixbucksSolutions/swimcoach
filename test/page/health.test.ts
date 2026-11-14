@@ -5,7 +5,10 @@ import alldone from "../../contract/schemas/examples/state.alldone.json" with { 
 import empty from "../../contract/schemas/examples/state.empty.json" with { type: "json" };
 import keyboard from "../../contract/schemas/examples/state.keyboard.json" with { type: "json" };
 import stale from "../../contract/schemas/examples/state.stale.json" with { type: "json" };
-import { healthOf, mayReload, needKeys, outcomeOf, titleOf } from "../../public/js/main.js";
+import { needKeys } from "../../public/js/alerts.js";
+import { healthOf } from "../../public/js/main.js";
+import { titleOf } from "../../public/js/nav.js";
+import { mayReload, outcomeOf } from "../../public/js/poll.js";
 import { toView } from "../../public/js/state.js";
 import type { View } from "../../public/js/view.js";
 

@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { beforeEach, describe, expect, it } from "vitest";
 import afternoon from "../../contract/schemas/examples/state.afternoon.json" with { type: "json" };
-import { dotsHtml } from "../../public/js/main.js";
 import { morph } from "../../public/js/morph.js";
+import { dotsHtml } from "../../public/js/nav.js";
 import { toView } from "../../public/js/state.js";
 
 // morph() (public/js/morph.js): a poll changes only the values that changed (UX-110). The check the
