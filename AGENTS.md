@@ -22,6 +22,8 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
   `https://swimcoach.sixbuckssolutions.workers.dev`. The qualification record is
   `docs/qualification/README.md`. V1's work is tracked as cards on the `swimcoach` localswim board
   (RESUME, "V1 started").
+- **V1's bar is stick time** (Terry, 2026-11-14): he uses the board and decides what to add, change
+  or remove; V1's work comes from that, not from a planned feature list.
 - **The sequence is MVP, then V1, then V2** (Terry, 2026-11-14): "V1 is semi-stable and V2 will be
   rewrite", and "V1 will extend MVP code". So V1 works on this codebase. V2 is the greenfield,
   zero-reuse rewrite of `docs/concept.md` section 14. Whether V2 reproduces the MVP's behavior or V1's
