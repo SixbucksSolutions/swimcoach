@@ -185,6 +185,16 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   the mock's full screen, and seven demo cards under the 4/8 grid spilled past the bottom. Six half
   slots need at least 551 px. The 4/8 grid below is kept as the record of the earlier decision; it is
   superseded for the MVP and MAY return at V1 or later.
+- **3/6 stays for V1** (Terry, 2026-11-14, taking the V1 agent's recommendation). Terry runs **at most
+  three projects at once**: "it's hard to use swimcoach ... when three projects are running
+  simultaneously because the 'Needs Terry' ping rate skyrockets, so three is most I can see juggling at
+  once for the time being." Red projects collapse into the one GO TO KEYBOARD slot, so three projects
+  fill at most three slots, all full slots with two blurb lines. The home-screen fix (UX-172) grew the
+  card area from about 609 px to about 671 px, re-measured: eight half slots still need 738 px, so 4/8
+  does not fit; seven would (644.5 px), but buys room for a fourth project Terry does not run. What
+  can still push the overview into half slots is finished milestones, which stay listed until their
+  agent sends `stop`; if that happens, the fix is keeping done cards off the overview (section 8, item
+  13), not a denser grid.
 - **A 4/8 slot grid (superseded for the MVP by the 3/6 grid above).** Terry, 2026-11-13. The overview has four equal slots, or eight half-height slots
   once there are five or more things to show. Slot height comes from the screen height, so eight half
   slots fill exactly the space of four full ones; it never drops below the height a card's content
