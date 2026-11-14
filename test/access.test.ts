@@ -11,9 +11,13 @@ import {
   SignJWT,
 } from "jose";
 import { beforeAll, describe, expect, it } from "vitest";
-// biome-ignore lint/correctness/useImportExtensions: tsconfig lacks allowImportingTsExtensions, so tsc refuses ".ts" on a value import (TS5097); the Lead owns tsconfig.
-import { ACCESS_JWT_HEADER, accessCertsUrl, remoteJwks, verifyAccess } from "../src/access";
-import type { JwksSource } from "../src/access.ts";
+import {
+  ACCESS_JWT_HEADER,
+  accessCertsUrl,
+  type JwksSource,
+  remoteJwks,
+  verifyAccess,
+} from "../src/access.ts";
 import type { AccessConfig } from "../src/contract.ts";
 
 // Every key below is generated in the test run. Nothing here talks to Cloudflare.
