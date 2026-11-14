@@ -32,14 +32,14 @@
   container-type: size;
 }
 /* GO TO KEYBOARD breathes in step with the LIVE dot (Terry, 2026-11-13): the same 2s ease-in-out cycle
-   peaking at 50%, the same 8 cycles, restarted by the same successful poll (syncBreath). Only while the
+   peaking at 50%, the same 20 cycles (UX-157), restarted by the same successful poll (syncBreath). Only while the
    header says LIVE, so a frozen or stale page stops both together instead of looking alive. */
 .pc.kbd {
   --b: var(--bad-fill);
   --f: #fff;
 }
 #phone[data-health="live"] .pc.kbd {
-  animation: throb 2s ease-in-out 8;
+  animation: throb 2s ease-in-out 20;
 }
 .pc.green {
   --b: var(--ok-fill);

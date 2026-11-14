@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import afternoon from "../../contract/schemas/examples/state.afternoon.json" with { type: "json" };
 import alldone from "../../contract/schemas/examples/state.alldone.json" with { type: "json" };
 import empty from "../../contract/schemas/examples/state.empty.json" with { type: "json" };
+import { POLL_MS } from "../../public/js/format.js";
 import { toView } from "../../public/js/state.js";
 import {
   $,
@@ -57,7 +58,7 @@ describe("a card inserted mid-list (UX-135)", () => {
     await revealed();
     const before = slots();
     const changes = watchDocument();
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     const after = slots();
     // GO TO KEYBOARD, auth-refresh, docs-site, then the new docs-site T09.
     const [added] = after.splice(3, 1);
@@ -75,9 +76,9 @@ describe("a card inserted mid-list (UX-135)", () => {
   it("then changes nothing anywhere in the document on an identical poll (UX-110)", async () => {
     await loadPage(fresh(afternoon), withInserted(fresh(afternoon)));
     await revealed();
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     const changes = watchDocument();
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     expect(fetch).toHaveBeenCalledTimes(3);
     expect(changes()).toEqual([]);
     expect(stubs.animate).toHaveBeenCalledTimes(1);
@@ -92,7 +93,7 @@ describe("other arrivals (UX-135)", () => {
     await loadPage(withoutRed(fresh(afternoon)), fresh(afternoon));
     await revealed();
     const before = slots();
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     const [kbd, ...rest] = slots();
     expect(kbd?.classList.contains("kbd")).toBe(true);
     expect(sameNodes(rest, before)).toBe(true);
@@ -102,7 +103,7 @@ describe("other arrivals (UX-135)", () => {
   it("makes no animate call under prefers-reduced-motion: reduce", async () => {
     stubs.reduceMotion = true;
     await loadPage(fresh(afternoon), withInserted(fresh(afternoon)));
-    await vi.advanceTimersByTimeAsync(10 * SEC);
+    await vi.advanceTimersByTimeAsync(POLL_MS);
     expect(slots()).toHaveLength(7);
     expect(stubs.animate).not.toHaveBeenCalled();
   });

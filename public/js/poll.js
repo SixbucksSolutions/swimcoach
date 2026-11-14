@@ -1,6 +1,6 @@
 // @ts-check
 // Polling and the health box (concept.md 3.1; contract/api.md 6 and 6.7; mock lines 517-546). Polls
-// GET /api/2026-11-14/state every 10 s and when the page comes back into view, and keeps the status
+// GET /api/2026-11-14/state every 30 s and when the page comes back into view, and keeps the status
 // line's clock, health box and warning line current every second.
 //
 // Sign-in (contract/api.md section 2). Once the Access session cookie expires, a poll comes back as a
@@ -21,7 +21,7 @@ import { toView } from "./state.js";
 
 const STATE_PATH = "/api/2026-11-14/state";
 const POLL_TIMEOUT_MS = 8000;
-const OFFLINE_AFTER_MS = POLL_MS * 3; // three failed polls in a row (concept.md 3.1)
+const OFFLINE_AFTER_MS = POLL_MS * 3; // three failed polls in a row, 90 s (concept.md 3.1, UX-158)
 const AUTH_RELOAD_GAP_MS = 5 * 60_000;
 const AUTH_RELOAD_KEY = "swimcoach.authReloadAt";
 // U+2026, the ellipsis glyph, drawn in Inter (docs/brand.md section 7), until the first poll lands.

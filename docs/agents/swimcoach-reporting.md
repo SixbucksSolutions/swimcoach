@@ -14,11 +14,15 @@ feed it.
 
 ### When to report
 
+**You MUST NOT report more often than once every 5 minutes** (Terry, 2026-11-14). Each report is the
+complete current picture, so cards that moved since your last report all land in the next one.
+
 You MUST report:
 
 1. **At milestone start.**
-2. **On every card move.** Above all when a card moves to Ready For Review or to Needs Terry. A card in
-   Needs Terry raises GO TO KEYBOARD on his phone, so report it at once.
+2. **After a card moves, in your next report**, once 5 minutes have passed since the last one. Above all
+   when a card moves to Ready For Review or to Needs Terry. A card in Needs Terry raises GO TO KEYBOARD on
+   his phone, so send that report as soon as the 5 minutes allow.
 3. **As a heartbeat at least every 10 minutes while you work**, even when nothing changed. Silence for 25
    minutes turns the milestone gray and marks it STALE.
 

@@ -1,6 +1,7 @@
 // @ts-check
 // Small DOM helpers the controller's modules share, and the breathing (concept.md 3.1): the LIVE dot
-// breathes a fixed 16 s from each good poll, and every GO TO KEYBOARD slot breathes on its clock.
+// breathes a fixed 40 s (20 cycles of 2 s) from each good poll, which outlasts the 30 s poll plus its
+// 8 s timeout, and every GO TO KEYBOARD slot breathes on its clock (UX-157).
 // Both run through the Web Animations API, so restarting a breath writes nothing to the DOM (UX-110).
 
 /**
@@ -49,7 +50,7 @@ export function setText(el, text) {
 }
 
 /**
- * Starts the LIVE dot's 16 s breath over, from its first frame. Only while the box is LIVE: a box that
+ * Starts the LIVE dot's 40 s breath over, from its first frame. Only while the box is LIVE: a box that
  * turns LIVE starts a fresh CSS animation of its own, and an old one would breathe in another state.
  */
 export function restartBreath() {
