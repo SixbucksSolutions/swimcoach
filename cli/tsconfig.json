@@ -1,0 +1,10 @@
+{
+  // The CLI and its tests run under Node, so they get Node's types instead of the Worker types the
+  // root tsconfig.json uses; the two type sets conflict, which is why this is a second project.
+  "extends": "../tsconfig.json",
+  // erasableSyntaxOnly makes tsc refuse what Node's type stripping cannot run: enums, namespaces,
+  // parameter properties.
+  "compilerOptions": { "types": ["node"], "erasableSyntaxOnly": true },
+  "include": ["./**/*.ts", "../test/cli/**/*.ts", "../package.json"],
+  "exclude": []
+}

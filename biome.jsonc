@@ -4,6 +4,7 @@
   "files": {
     "includes": [
       "src/**",
+      "cli/**",
       "test/**",
       "scripts/**/*.mjs",
       "*.ts",
@@ -111,6 +112,20 @@
   // scripts/ holds Node build tools, not Worker code. noNodejsModules guards Worker and browser
   // code against Node built-ins; a Node tool needs them (2 findings in biome-no-infos.mjs).
   "overrides": [
+    {
+      // cli/ and test/cli/ are a Node program and its tests, so they need Node built-ins
+      // (node:fs, node:http, node:child_process). Only noNodejsModules is switched off here.
+      "includes": ["cli/**", "test/cli/**"],
+      "linter": { "rules": { "correctness": { "noNodejsModules": "off" } } }
+    },
+    {
+      // 1 finding (noProcessEnv), in the test harness: it spawns the CLI with the parent's
+      // environment (Windows needs SystemRoot to start Node) and overrides only HOME and
+      // USERPROFILE, so the default config path points into a temp directory. The CLI itself
+      // reads no environment variable, and the rule stays on for it.
+      "includes": ["test/cli/harness.ts"],
+      "linter": { "rules": { "style": { "noProcessEnv": "off" } } }
+    },
     {
       "includes": ["scripts/**"],
       "linter": { "rules": { "correctness": { "noNodejsModules": "off" } } }
