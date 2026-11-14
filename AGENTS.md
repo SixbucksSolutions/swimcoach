@@ -34,6 +34,8 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 |---|---|
 | `docs/concept.md` | The concept and knowledge transfer. Keep it current when decisions change |
 | `docs/brand.md` | The brand guide: mark, wordmark, typeface, colors, motion, voice. Check it before adding any visual |
+| `docs/planning/post-mvp.md` | Work punted to after the MVP. Punt real-but-not-needed work here instead of building it (Terry: press that button often) |
+| `docs/qualification/` | The MVP-12 qualification record: what passed, where, and the gaps V2 MUST close |
 | `docs/img/` | Screenshots of the prototype |
 | `public/` | The MVP page (MVP-08), served from `GET /`, `/css/*.css` and `/js/*.js`: `index.html`, `css/`, and `js/` ES modules checked by `tsc -p tsconfig.page.json` (`// @ts-check` plus JSDoc, no build step) |
 | `acceptance/` | The black-box API acceptance suite (MVP-09); `acceptance/api/types.ts` is its frozen case format |
