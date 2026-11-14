@@ -18,7 +18,12 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   "all" enables for a project with no such framework (`useQwikValidLexicalScope` misfired for two
   authors), with the count and reason in `biome.jsonc`; and update `t2-interfaces.md` to the
   `{ path, message }` shape of `problems` that MVP-03 B used, which the contract's `errorResponse`
-  requires.
+  requires; add one sentence to `contract/api.md` 6.3 that `chance_on_time` is 1 when `p` rounds to 0
+  and 0 when `1 - p` does (the prototype raises `ValueError` there, so a literal V2 port would crash;
+  PR #9 review).
+- Follow-up (non-blocking, PR #9 review): the chance tests miss two mutations, deleting the
+  compensated sum and moving the Lanczos cutoff from 5 to 4; the "span too small" test never reaches
+  the `p = 0` limit. Strengthen them in a later turn.
 - Carried into MVP-09: the Board's retention alarm prunes on the real clock, so on the test Worker,
   samples stamped more than 14 days before real time can vanish within a day (MVP-03 A hand-off).
   The test Worker SHOULD disable or re-base pruning.
