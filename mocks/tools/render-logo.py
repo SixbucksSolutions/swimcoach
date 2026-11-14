@@ -7,8 +7,11 @@ Writes, next to the SVG:
     swimcoach-512.png        the mark at 512 x 512, transparent corners
     swimcoach-touch-180.png  the iPhone home-screen icon: 180 x 180, the mark centered on the page's
                              dark ground (#0b0f14), full bleed, because iOS rounds the corners itself
-and, for the MVP page, the same full-bleed treatment at three sizes in public/icons/:
-    touch-180.png, icon-192.png, icon-512.png
+and, for the MVP page's web app manifest, the same full-bleed treatment in public/icons/:
+    icon-192.png, icon-512.png
+The iPhone touch icon stays embedded in the page as a data URI (embed-logo.py): every path on the
+Worker sits behind Cloudflare Access, and a served icon fetched without the login cookie would get the
+login redirect instead.
 """
 
 import argparse
@@ -56,10 +59,10 @@ def main() -> None:
     shoot(page(svg, 180, GROUND, 0.16), 180, LOGO / "swimcoach-touch-180.png")
     for f in ("swimcoach-512.png", "swimcoach-touch-180.png"):
         print("Wrote", (LOGO / f).relative_to(ROOT))
-    # The page's own copies, served from /icons/<name>.png. Full bleed on the page ground, like the
-    # touch icon: iOS rounds its corners, and Android masks the 192 and 512 sizes itself.
+    # The manifest's icons, served from /icons/<name>.png. Full bleed on the page ground, like the
+    # touch icon. Not maskable: the mark reaches past a maskable icon's 40 % safe circle.
     ICONS.mkdir(parents=True, exist_ok=True)
-    sizes = ((180, "touch-180.png"), (192, "icon-192.png"), (512, "icon-512.png"))
+    sizes = ((192, "icon-192.png"), (512, "icon-512.png"))
     for size, name in sizes:
         shoot(page(svg, size, GROUND, 0.16), size, ICONS / name)
         print("Wrote", (ICONS / name).relative_to(ROOT))

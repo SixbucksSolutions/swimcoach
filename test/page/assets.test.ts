@@ -1,22 +1,25 @@
 import { describe, expect, it } from "vitest";
 import icon192 from "../../public/icons/icon-192.png?inline";
 import icon512 from "../../public/icons/icon-512.png?inline";
-import touch180 from "../../public/icons/touch-180.png?inline";
 import html from "../../public/index.html?raw";
 import manifestText from "../../public/manifest.webmanifest?raw";
 
 // MVP-10 A: the home-screen assets. iOS took the page title for the label ("(1)swimcoach..."), so the
-// head names the app outright, links the manifest, and points the touch icon at one served file.
+// head names the app outright and links the manifest. The touch icon stays a data URI in the page
+// (embed-logo.py): every path on the Worker sits behind Cloudflare Access, and a served icon fetched
+// without the login cookie would get the login redirect (PR #37/#39 review, 2026-11-14).
 // These tests run under the page's DOM-typed tsconfig, which has no Node types, so Vite reads the files:
 // "?raw" for text, "?inline" (a base64 data URI) for the PNGs (vite-queries.d.ts types both).
+
+const TOUCH_ICON = /<link rel="apple-touch-icon" href="(?<uri>data:image\/png;base64,[^"]+)">/gu;
+const head = html.slice(html.indexOf("<head>"), html.indexOf("</head>"));
+const touchIcons = [...head.matchAll(TOUCH_ICON)].map((m) => m.groups?.uri ?? "");
 
 const PNGS: Record<string, string> = {
   "/icons/icon-192.png": icon192,
   "/icons/icon-512.png": icon512,
-  "/icons/touch-180.png": touch180,
+  touch: touchIcons[0] ?? "",
 };
-
-const head = html.slice(html.indexOf("<head>"), html.indexOf("</head>"));
 
 interface ManifestIcon {
   readonly src: string;
@@ -64,9 +67,10 @@ describe("the page head", () => {
     expect(head).toContain('<link rel="manifest" href="/manifest.webmanifest">');
   });
 
-  it("has exactly one apple-touch-icon, and it is the served 180 px file", () => {
-    const icons = head.match(/<link rel="apple-touch-icon"[^>]*>/gu) ?? [];
-    expect(icons).toEqual(['<link rel="apple-touch-icon" href="/icons/touch-180.png">']);
+  it("has exactly one apple-touch-icon, embedded as a PNG data URI, never a served path", () => {
+    const links = head.match(/<link rel="apple-touch-icon"[^>]*>/gu) ?? [];
+    expect(links).toHaveLength(1);
+    expect(touchIcons).toHaveLength(1);
   });
 
   it("keeps the standalone and safe-area switches", () => {
@@ -100,11 +104,15 @@ describe("the manifest", () => {
       expect(file).toEqual({ signature: PNG_SIGNATURE, width: size, height: size });
     }
   });
+
+  it("declares no maskable icon: the mark reaches past a maskable icon's 40 % safe circle", () => {
+    expect(manifest.icons.filter((i) => i.purpose !== undefined)).toEqual([]);
+  });
 });
 
 describe("the touch icon", () => {
   it("is a 180 px PNG", () => {
-    expect(pngSize("/icons/touch-180.png")).toEqual({
+    expect(pngSize("touch")).toEqual({
       signature: PNG_SIGNATURE,
       width: 180,
       height: 180,
