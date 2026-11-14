@@ -35,7 +35,12 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   Step 5 PASS: the status line clears the Dynamic Island, the dots clear the home bar (UX-001, UX-123).
   Step 6 PASS: six slots on one screen, the seventh scrolls (UX-141, UX-142); measured from his
   screenshot, card area about 625 CSS px, half slot about 93 px, pitch about 104 px (UX-144's estimate
-  holds). Steps 4, 7 and 8 pending.
+  holds). Step 7 PASS: swipe, dots, card and "‹ All projects" all work (UX-115 to UX-119); the bell
+  tap plays an audible chime (UX-129); a new red card plays the two-tone chime and jumps the page to
+  the overview (UX-126, UX-127). Observed: with the iPhone on silent and Do Not Disturb the page still
+  jumped but made no sound, and during a phone call no sound either; iOS mutes web audio then. That is
+  platform behavior, not a defect. Steps 4 (did Access ask for the PIN inside the app?) and 8 (no
+  sign-in four hours later) pending. Demo milestones stopped; the board is empty.
 - **MVP-08 PASSED: Terry, 2026-11-14, "Yes". T5 is open.** The `zz demo` milestones are stopped; the
   production board is empty (`feed` `no_data`). Remaining Terry gates: MVP-10's device checklist (the
   Access session is already 7 days and the icon is on his home screen; re-adding the icon MAY be needed
