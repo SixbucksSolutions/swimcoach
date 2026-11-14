@@ -67,8 +67,8 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   the ask instead of the call (new `CardView.callWhy`). The Needs Terry ask shows ONLY in the project
   display's "Go to keyboard" flag; the overview's GO TO KEYBOARD slot lists titles only.
 - **For Terry at the MVP-08 phone check (his calls, not yet decided):**
-  1. The desktop view is a centered 402 x 874 column with no bezel or side panel (the one sanctioned
-     layout change; he has not seen it).
+  1. **Decided 2026-11-14: keep it** ("Yes laptop is good"; UX-153). The desktop view is a centered
+     402 x 874 column with no bezel or side panel.
   2. SIGN IN: an auth failure (redirect, 401, 403) reloads once per 5 minutes so Access can show its
      login, then shows SIGN IN in OFFLINE's red with the displays grayed. If the reload itself is
      refused, the page shows the header and warning only.
