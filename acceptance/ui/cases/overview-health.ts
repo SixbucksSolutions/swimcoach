@@ -60,12 +60,18 @@ function signInCase(status: 401 | 403): UiCase {
       await settle(ctx);
       assert.equal((await healthOf(ctx.page)).label, "SIGN IN");
       assert.equal(loads.length, 2, "No second reload inside 5 minutes.");
+      // Listen before the clock moves: the old document still reads SIGN IN until the reload lands,
+      // so the label alone cannot tell the two documents apart over a real network.
+      const reloaded = ctx.page.waitForEvent("load");
+      // If an assert below throws first, this wait still settles later; never as an unhandled rejection.
+      reloaded.catch(() => undefined);
       await ctx.advance(2 * MINUTE_MS);
       assert.ok(
         await waitFor(async () => loads.length === 3),
         "A refusal after 5 minutes reloads once more.",
       );
-      assert.ok(await untilLabel(ctx, "SIGN IN"));
+      await reloaded;
+      assert.ok(await untilLabel(ctx, "SIGN IN"), "The reloaded page reads SIGN IN.");
       // The board answers again; a tap on the warning line reloads the page, which then reads LIVE.
       ctx.answer({ body: ctx.example("afternoon") });
       await ctx.page.locator("#warn").click();
