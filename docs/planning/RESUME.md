@@ -3,6 +3,35 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
+## T5 closed (2026-11-14); next: device check step 8, then T6 (MVP-12)
+
+- **`main` = `mvp/integration` at the commit that adds this section**, nothing else on either side:
+  no other branch locally or on GitHub, no worktree, no open PR (relay rule 8). T5 shipped in two
+  steps: `22e171c` merged PRs #36 to #44 (CI 43624180499, `check` and `deploy` success), then
+  `4157a42` fast-forwarded #45 (CI 43625657406, both success). `swimcoach-test` was deployed from
+  `22e171c` as version `983748d7-3964-4104-a083-84d9c25624f7`; #45 changed only the UI suite, so
+  neither Worker's code changed after that.
+- **Verified on the shipped build:** API `--suite full` on `swimcoach-test` 68/68; API `--suite
+  clock-free` on production 41/41; UI suite (WebKit, `--config`) on production 116/116 and on
+  `swimcoach-test` 116/116 after #45.
+- **#45 fixed a race the close exposed.** The two UX-154 SIGN IN cases read SIGN IN off the old
+  document while the 5-minute reload was in flight; they passed locally and on production and failed
+  on `swimcoach-test` (114/116). They now wait for the page's `load` event first; 3/3 runs on test.
+- **MVP-11 is done.** The UI suite has 116 cases; every live UX ledger row names its check (142
+  `browser:` citations, verified by importing the case modules, plus `manual:` results from the device
+  check). Ledger: 171 rows, 33 superseded, 2 retired. UX-131's case was the last gap (#44).
+- **MVP-10:** device check steps 1 to 7 PASS and are in the ledger as `manual:`. **Step 8 is
+  Terry's, due about 4 pm:** open the app from the home-screen icon four hours or more after the last
+  use; it MUST show the board without a sign-in page (UX-171's second half). Record the answer in the
+  ledger as `manual:` in T6's first PR.
+- **Incident, recovered:** removing scratch worktrees whose `node_modules` were junctions into this
+  checkout emptied `node_modules`, `acceptance/node_modules` and `cli/node_modules` here, and a deploy
+  failed on `Could not resolve "jose"`. `npm ci` in all three restored them. Worktrees MUST NOT
+  junction `node_modules`; run `npm ci` in the worktree instead. `npm ci` reports the esbuild and
+  workerd install scripts as blocked by `allowScripts`; check, build and deploy work without them.
+- **Remaining Terry gates:** step 8 above, and MVP-12's demo and acceptance, which also needs one real
+  project agent reporting through the CLI for a full turn (`docs/agents/swimcoach-reporting.md`).
+
 ## T4 closed (2026-11-14 UTC); next: Terry's MVP-08 phone check, then T5
 
 - **`main` at `38c97d9` holds all of T4**, merged from `mvp/integration` (`824c7ed`): PRs #23-#30.
