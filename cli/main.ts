@@ -2,11 +2,9 @@
 // the entry point passes the real ones and a test can pass its own. Output goes through one place,
 // which also removes the service token secret from any text, whatever the text's source.
 import { readFile } from "node:fs/promises";
-import pkg from "../package.json" with { type: "json" };
-import { FIELD_FLAGS, parseFlags } from "./args.ts";
+import { type Command, type ParsedFlags, parseCommandLine } from "./args.ts";
 import { type Built, buildFromFile, buildFromFlags } from "./build.ts";
 import { loadConfig } from "./config.ts";
-import { helpText } from "./help.ts";
 import { type ApiPath, post, REPORT_PATH, STOP_PATH } from "./http.ts";
 import { classify } from "./response.ts";
 
@@ -56,14 +54,8 @@ class Output {
   }
 }
 
+/** Reads the --file report. Commander has already refused --file combined with any field flag. */
 async function readReport(flags: ReadonlyMap<string, string>, io: Io): Promise<Built> {
-  const conflicts = FIELD_FLAGS.filter((flag) => flags.has(flag)).map((flag) => `--${flag}`);
-  if (conflicts.length > 0) {
-    return {
-      ok: false,
-      lines: [`The flag --file cannot be combined with: ${conflicts.join(", ")}.`],
-    };
-  }
   const path = flags.get("file") ?? "";
   let source = path;
   if (path === "-") {
@@ -87,16 +79,12 @@ async function readBytes(path: string, io: Io): Promise<Uint8Array> {
 }
 
 async function runRequest(
-  command: "report" | "stop",
-  args: readonly string[],
+  command: Command,
+  parsed: ParsedFlags,
   io: Io,
   o: Output,
 ): Promise<number> {
-  const result = parseFlags(command, args);
-  if (!result.ok) {
-    return o.fail(USAGE_ERROR, result.errors);
-  }
-  const { flags, dryRun, json } = result.parsed;
+  const { flags, dryRun, json } = parsed;
   let built: Built;
   if (command === "report" && flags.has("file")) {
     built = await readReport(flags, io);
@@ -137,35 +125,17 @@ async function runRequest(
   return 0;
 }
 
-function runHelp(args: readonly string[], o: Output): number {
-  let text: string | undefined;
-  if (args.length <= 1) {
-    text = helpText(args[0]);
-  }
-  if (text === undefined) {
-    return o.fail(USAGE_ERROR, ["Help exists for the topics report and stop only."]);
-  }
-  o.out(text);
-  return 0;
-}
-
+/** Commander reads the whole command line; help and version text are its own (Terry, 2026-11-14). */
 async function dispatch(argv: readonly string[], io: Io, o: Output): Promise<number> {
-  const [first, ...rest] = argv;
-  if (first === "--version" && rest.length === 0) {
-    o.out(`swimcoach ${pkg.version}`);
+  const line = parseCommandLine(argv);
+  if (line.kind === "print") {
+    o.out(line.text.trimEnd());
     return 0;
   }
-  if (first === "help") {
-    return runHelp(rest, o);
+  if (line.kind === "error") {
+    return o.fail(USAGE_ERROR, line.lines);
   }
-  if (first === "report" || first === "stop") {
-    return await runRequest(first, rest, io, o);
-  }
-  let what = "The command is missing.";
-  if (first !== undefined) {
-    what = `Unknown command "${first}".`;
-  }
-  return o.fail(USAGE_ERROR, [what, "Run swimcoach help for the commands."]);
+  return await runRequest(line.command, line.parsed, io, o);
 }
 
 /** Runs one command line and returns its exit code (contract/cli.md section 4). */

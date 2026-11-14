@@ -104,9 +104,9 @@ function validated(command: Command, body: unknown, fromFlags: boolean): Built {
 
 function buildFromFlags(command: Command, flags: ReadonlyMap<string, string>): Built {
   if (command === "stop") {
-    const missing = missingFlags(flags, ["project", "milestone"]);
+    // Commander has already required --project and --milestone (makeOptionMandatory, args.ts).
     const body = { project: flags.get("project") ?? "", milestone: flags.get("milestone") ?? "" };
-    return missing ?? validated(command, body, true);
+    return validated(command, body, true);
   }
   return (
     missingFlags(flags, REQUIRED_FIELD_FLAGS) ??
