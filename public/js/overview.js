@@ -133,30 +133,126 @@ function sameNameSize(have, want) {
 }
 
 /**
- * The inline font-size a Title line needs: "" when its text fits at the stylesheet's size, else the
- * size that fits, never below NAME_MIN_PX. The mock's arithmetic: the text's width AT THE STYLESHEET
- * SIZE, scaled once. That width is measured on `probeName`, a hidden twin of the Title line outside
- * the cards, never on the live node: width is not proportional to size (Inter's opsz axis), so a
- * measure at the size now showing would give a different answer on every poll. The result depends on
- * the text and the box only. Returns null for a line that is not laid out (width 0), left alone.
+ * What a name was last sized for, and the size it got. A name whose key is unchanged needs no
+ * measuring, so an unchanged poll touches no DOM at all: no probe, no writes (UX-110).
+ * @type {WeakMap<HTMLElement, {key: string, want: string}>}
+ */
+const sizeCache = new WeakMap();
+
+/** At most this many correction passes after the first estimate (UX-068). */
+const NAME_MAX_PASSES = 3;
+
+/**
+ * A font size scaled to a candidate value: floored to 0.1px, never below NAME_MIN_PX.
+ * @param {number} px
+ * @returns {number}
+ */
+function clampName(px) {
+  return Math.max(NAME_MIN_PX, Math.floor(px * 10) / 10);
+}
+
+/**
+ * The hidden twin of a card's Title line, used only on a cache miss. Same classes as the live card,
+ * so the same stylesheet font; outside the cards, on the body; visibility hidden, and removed before
+ * fitCards returns, so it never paints.
+ * @typedef {{root: HTMLElement, button: HTMLElement, name: HTMLElement}} Probe
+ */
+
+/**
+ * @param {boolean} half  true in the eight-slot grid, where the stylesheet sets 20px instead of 24px
+ * @returns {Probe|null}
+ */
+function openProbe(half) {
+  const root = document.createElement("div");
+  root.className = "cards";
+  if (half) {
+    root.className = "cards half";
+  }
+  root.style.cssText = "position:absolute;left:-9999px;top:0;visibility:hidden;pointer-events:none";
+  root.innerHTML = '<button class="pc"><div class="nm"><b></b></div></button>';
+  const button = root.querySelector("button");
+  const name = root.querySelector("b");
+  if (!(button && name)) {
+    return null;
+  }
+  document.body.append(root);
+  return { root, button, name };
+}
+
+/**
+ * The width of the probe's text at the font size now set on it.
+ * @param {HTMLElement} probeName
+ * @returns {number}
+ */
+function widthOf(probeName) {
+  const range = document.createRange();
+  range.selectNodeContents(probeName);
+  return range.getBoundingClientRect().width;
+}
+
+/**
+ * The inline font-size a Title line needs, measured on the probe: "" when its text fits at the
+ * stylesheet's size. Otherwise the mock's arithmetic (the width AT THE STYLESHEET SIZE, scaled once),
+ * then a check at that size: Inter's opsz axis makes smaller text relatively wider, so the scaled
+ * text can still overflow, and an ellipsis is reserved for names past the 14px floor (UX-068). Each
+ * pass scales by box / width, at most NAME_MAX_PASSES, always flooring to 0.1px.
+ * @param {Probe} probe
+ * @param {{text: string, buttonClass: string, basePx: number, room: number}} spec  the live name's
+ *   text; its button's classes, so a kbd name measures as kbd; the stylesheet's font size for the
+ *   Title line; and the live name's box width
+ * @returns {string}
+ */
+function measureNameSize(probe, spec) {
+  const { text, buttonClass, basePx, room } = spec;
+  probe.button.className = buttonClass;
+  probe.name.style.fontSize = "";
+  probe.name.textContent = text;
+  const naturalWidth = widthOf(probe.name);
+  if (naturalWidth <= room) {
+    return "";
+  }
+  let size = clampName((basePx * room) / naturalWidth);
+  for (let pass = 0; pass < NAME_MAX_PASSES && size > NAME_MIN_PX; pass += 1) {
+    probe.name.style.fontSize = `${size}px`;
+    const width = widthOf(probe.name);
+    if (width <= room) {
+      break;
+    }
+    size = clampName((size * room) / width);
+  }
+  return `${size}px`;
+}
+
+/**
+ * The inline font-size a live Title line needs, from the cache when its key is unchanged. The result
+ * depends on the text, the box, the grid mode and the button's classes only, never on the size now
+ * showing. Returns null for a line that is not laid out (width 0), which is left alone. `state.probe`
+ * is opened on the first miss.
  * @param {HTMLElement} name  the live Title line
- * @param {HTMLElement} probeName  the hidden twin, at the stylesheet's size
- * @param {number} basePx  the stylesheet's font size for the Title line
+ * @param {boolean} half
+ * @param {number} basePx
+ * @param {{probe: Probe|null}} state
  * @returns {string|null}
  */
-function wantedNameSize(name, probeName, basePx) {
+function wantedNameSize(name, half, basePx, state) {
   const room = name.clientWidth;
   if (room === 0) {
     return null;
   }
-  probeName.textContent = name.textContent;
-  const range = document.createRange();
-  range.selectNodeContents(probeName);
-  const naturalWidth = range.getBoundingClientRect().width;
-  if (naturalWidth <= room) {
-    return "";
+  const text = name.textContent ?? "";
+  const buttonClass = name.closest("button")?.className ?? "pc";
+  const key = `${half}|${buttonClass}|${room}|${text}`;
+  const cached = sizeCache.get(name);
+  if (cached?.key === key) {
+    return cached.want;
   }
-  return `${Math.max(NAME_MIN_PX, Math.floor(((basePx * room) / naturalWidth) * 10) / 10)}px`;
+  state.probe ??= openProbe(half);
+  if (!state.probe) {
+    return null;
+  }
+  const want = measureNameSize(state.probe, { text, buttonClass, basePx, room });
+  sizeCache.set(name, { key, want });
+  return want;
 }
 
 /**
@@ -170,32 +266,17 @@ function wantedNameSize(name, probeName, basePx) {
  * @returns {void}
  */
 function fitNames(cards, half, basePx) {
-  const names = cards.querySelectorAll("b");
-  if (names.length === 0) {
-    return;
-  }
-  const probe = document.createElement("div");
-  probe.className = "cards";
-  if (half) {
-    probe.className = "cards half";
-  }
-  probe.style.cssText =
-    "position:absolute;left:-9999px;top:0;visibility:hidden;pointer-events:none";
-  probe.innerHTML = '<button class="pc"><div class="nm"><b></b></div></button>';
-  const probeName = probe.querySelector("b");
-  if (!probeName) {
-    return;
-  }
-  document.body.append(probe);
+  /** @type {{probe: Probe|null}} */
+  const state = { probe: null };
   try {
-    for (const name of names) {
-      const want = wantedNameSize(name, probeName, basePx);
+    for (const name of cards.querySelectorAll("b")) {
+      const want = wantedNameSize(name, half, basePx, state);
       if (want !== null && !sameNameSize(name.style.fontSize, want)) {
         name.style.fontSize = want;
       }
     }
   } finally {
-    probe.remove();
+    state.probe?.root.remove();
   }
 }
 
