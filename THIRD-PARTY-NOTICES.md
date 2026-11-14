@@ -48,3 +48,14 @@ own license, and the full text travels with the component.
   own licenses.
 - **Version and changes:** 1.65.1 from npm, unmodified. The version is pinned in
   `acceptance/package.json`.
+
+## Commander
+
+- **Used for:** parsing the swimcoach CLI's command line (`cli/args.ts`). Terry chose it on
+  2026-11-14 as the most used argparse equivalent for TypeScript. Not bundled into the Worker or the
+  page.
+- **Copyright:** Copyright (c) 2011 TJ Holowaychuk.
+- **License:** MIT. Full text: [`third_party/commander/LICENSE`](third_party/commander/LICENSE),
+  copied from the npm package `commander` with the text unchanged. It has no dependencies.
+- **Version and changes:** 15.0.0 from npm, unmodified. The version is pinned in
+  `cli/package.json`.

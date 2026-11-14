@@ -18,21 +18,74 @@ swimcoach report --agent <codex|claude> --project <name> --milestone <name>
                  --ready-for-review <n> --completed <n>
                  [--needs-me <sentence>] [common options]
 
-swimcoach report --file <path> [common options]
+swimcoach report --file <path|-> [common options]
 
 swimcoach stop --project <name> --milestone <name> [common options]
 
 swimcoach --version
 swimcoach help [report | stop]
+swimcoach [report | stop] --help
 ```
+
+**Help and usage text MUST come from the parser** (Terry, 2026-11-14: "I just don't want us managing
+our own help strings those should be params to a library that manages that shit for us"). The CLI
+passes each command's and each flag's description to Commander as parameters, and Commander builds
+every usage line and help page. The CLI MUST NOT keep help text of its own. Help and version print on
+stdout and exit 0; `--version` prints the version whatever follows it, as Commander does.
+
+### Short forms
+
+Every flag has exactly one short form: one dash and one lowercase letter (Terry, 2026-11-14). A letter
+means the same flag in every command, and no letter is used twice.
+
+| Short | Long | Short | Long |
+| --- | --- | --- | --- |
+| `-a` | `--agent` | `-d` | `--completed` (done) |
+| `-p` | `--project` | `-q` | `--needs-me` (question) |
+| `-m` | `--milestone` | `-f` | `--file` |
+| `-u` | `--active-hours` (used) | `-c` | `--config` |
+| `-b` | `--cap-hours` (budget) | `-n` | `--dry-run` |
+| `-w` | `--ready-for-work` | `-j` | `--json` |
+| `-i` | `--in-progress` | `-v` | `--version` |
+| `-t` | `--needs-terry` | `-h` | `--help` |
+| `-r` | `--ready-for-review` | | |
+
+- **A short form MUST behave exactly like its long form** in every rule of this document: the same
+  value, the same refusals, the same exit codes. The two MAY be mixed in one command. Giving one flag in
+  both forms MUST be refused like giving it twice.
+- **The CLI parses with Commander** (Terry, 2026-11-14: the most used argparse equivalent for
+  TypeScript; any other parser needs his approval), and follows its conventions: a short form's value
+  MAY be the next argument (`-p FGA`) or attached (`-pFGA`), and switches MAY be bundled (`-nj`). A
+  long form's value MAY follow an equals sign (`--project=FGA`).
+- **Documentation and examples SHOULD show only the spaced form** (`-p FGA`, `--project FGA`): Terry
+  prefers a space between flag and value. Commander has no setting that refuses the other forms
+  (checked in its 15.0.0 source), and refusing them would take parsing code of our own, so they stay
+  accepted (Terry, 2026-11-14: "only want that if free").
+- **Three value checks run in Commander's per-value hook**, because it has no setting for them, and
+  each MUST be refused with exit 2: a value that is itself a flag (two dashes, or one dash and one
+  letter: `-q -n` is a missing value, not the sentence `-n`, so a name MUST NOT look like a flag); a
+  value starting with `=` (Commander reads `-p=FGA` as `=FGA`); and the same flag given twice, in
+  either form.
+- **Parsing, its checks and their messages belong to Commander** (Terry, 2026-11-14: "leave CLI
+  parsing to the battle tested library and keep our code limited to our business logic"). Unknown
+  flags, missing values, stray arguments and `--file` combined with a field flag (Commander's option
+  conflicts) MUST be refused with exit 2 in Commander's own words, with the first letter
+  capitalized, for example `Option '-f, --file <path|->' cannot be used with option '-a, --agent
+  <codex|claude>'`. The CLI words only two parse errors itself, because each states a business
+  rule: why there is no `--url` (section 5), and that a command is required.
+- Commander cannot require a flag only when `--file` is absent, so the rule that every field flag
+  except `--needs-me` is required stays with report validation (section 2), which names every
+  missing flag in one message.
+- Help lines MUST NOT wrap: every line a person reads starts with a capital, a flag, or a command
+  name.
 
 Common options, on `report` and `stop`:
 
 | Option | Meaning |
 | --- | --- |
-| `--dry-run` | Validate and print the JSON body that would be sent, then exit. Nothing is sent, and the config file is not read |
-| `--json` | Print the server's JSON response body on stdout instead of the one-line summary |
-| `--config <path>` | Read this config file instead of the default (section 5). It is the only way to reach a different service |
+| `-n`, `--dry-run` | Validate and print the JSON body that would be sent, then exit. Nothing is sent, and the config file is not read |
+| `-j`, `--json` | Print the server's JSON response body on stdout instead of the one-line summary |
+| `-c`, `--config <path>` | Read this config file instead of the default (section 5). It is the only way to reach a different service |
 
 There is **no `--url` option**, and the CLI MUST refuse one as an unknown flag (exit 2). Section 5 says
 why.
