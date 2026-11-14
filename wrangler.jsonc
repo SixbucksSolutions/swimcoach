@@ -7,7 +7,17 @@
   // No routes: the hostname is attached later by MVP-02's deploy step.
   "assets": {
     // The approved mock, served unchanged. mocks/.assetsignore keeps tools/ out.
-    "directory": "./mocks"
+    "directory": "./mocks",
+    // contract/api.md section 2: the Worker MUST verify Access on every request, the page included.
+    // Without run_worker_first, static assets would be answered before the Worker's check runs.
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  // Cloudflare Access (MVP-05). Neither value is a secret: the team domain is public and the AUD tag
+  // only names the application. Set by Terry's Access runbook, 2026-11-13.
+  "vars": {
+    "ACCESS_TEAM_DOMAIN": "snowy-queen-54cf.cloudflareaccess.com",
+    "ACCESS_AUD": "8fd096b4746b0fe9fbadf29dd437d8d14b2a0d4b0ffa760be8afe5b8c44d3b9c"
   },
   "observability": {
     "enabled": true
