@@ -69,8 +69,9 @@
         // reviewer could reproduce that on Biome 2.6.7: five plain arrow-function shapes gave 0
         // findings, while Qwik-shaped $() code does fire it (PR #15 review). The exclusion had no
         // reproduced evidence, so the off switch from PR #14 was reverted (2026-11-13).
-        // A rule MUST NOT be turned off without a reproduced false positive. Whoever next sees it
-        // fire on plain TypeScript MUST keep that code as the evidence before turning it off.
+        // This rule MUST NOT be turned off without a reproduced false positive. Whoever next sees
+        // it fire on plain TypeScript MUST keep that code as the evidence before turning it off.
+        // (Other exclusions in this file are taste or platform calls, each with its own reason.)
       },
       "style": {
         // 2 findings: src/index.ts and vitest.config.ts. A Worker MUST default-export its
