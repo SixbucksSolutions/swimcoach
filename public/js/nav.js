@@ -6,10 +6,46 @@
 import { syncBreath, ui } from "./dom.js";
 import { ALL, esc } from "./format.js";
 import { morph } from "./morph.js";
-import { fitCards, renderOverview } from "./overview.js";
+import { fitCards, renderOverview, slotKey } from "./overview.js";
 import { renderProject } from "./project.js";
 
 /** @import { View } from "./view.js" */
+
+/** A card that arrives after the first render fades in over 0.3 s `ease-in` (UX-135; brand.md 6). */
+const ARRIVE_MS = 300;
+
+/**
+ * Draws the overview through a keyed morph, so every card already on screen keeps its node.
+ * @param {HTMLElement} el   the overview's section
+ * @param {View} view
+ * @returns {Element[]}   the cards that arrived on this draw; none on the first, which the whole-page
+ *   reveal covers (concept.md 3.4)
+ */
+function drawOverview(el, view) {
+  const first = !el.hasChildNodes();
+  const before = new Set(el.querySelectorAll(".pc"));
+  morph(el, renderOverview(view), slotKey);
+  if (first) {
+    return [];
+  }
+  return [...el.querySelectorAll(".pc")].filter((card) => !before.has(card));
+}
+
+/**
+ * Fades the arrived cards in through the Web Animations API, which writes nothing to the DOM, so the
+ * next steady poll still mutates nothing (UX-110). None under prefers-reduced-motion.
+ * @param {Element[]} arrived
+ */
+function fadeIn(arrived) {
+  if (arrived.length === 0 || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+  // Opacity alone: no transform, so fitNames' measurements and the GO TO KEYBOARD throb are untouched.
+  const frames = [{ opacity: 0 }, { opacity: 1 }];
+  for (const card of arrived) {
+    card.animate(frames, { duration: ARRIVE_MS, easing: "ease-in" });
+  }
+}
 
 function sections() {
   return [...ui("#pages").children].filter((el) => el instanceof HTMLElement);
@@ -121,10 +157,12 @@ export function render(view) {
   if (!want.includes(target)) {
     target = ALL;
   }
+  /** @type {Element[]} */
+  let arrived = [];
   for (const [i, el] of placeSections(want).entries()) {
     const card = view.cards[i - 1];
     if (card === undefined) {
-      morph(el, renderOverview(view));
+      arrived = drawOverview(el, view);
     } else {
       morph(el, renderProject(card, view));
     }
@@ -136,6 +174,7 @@ export function render(view) {
   }
   fitOverview();
   syncBreath();
+  fadeIn(arrived);
   syncDots();
   const title = titleOf(view.asking);
   if (document.title !== title) {
