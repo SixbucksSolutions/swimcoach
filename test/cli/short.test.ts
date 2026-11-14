@@ -43,6 +43,8 @@ const SHORT_REPORT = [
 
 const ONE_LOWERCASE_LETTER = /^[a-z]$/u;
 const VERSION_LINE = /^swimcoach \d+\.\d+\.\d+\n$/u;
+const CAPITAL = /^[A-Z]/u;
+const COMMAND_ROW = /^(?:report|stop|help) \[/u;
 
 function sorted(names: readonly string[]): string[] {
   return [...names].sort((x, y) => x.localeCompare(y));
@@ -70,6 +72,13 @@ describe("Commander builds the help", () => {
       expect(result.stdout).toContain("Usage: swimcoach");
       expect(result.stdout).not.toContain("output the version number");
       expect(result.stdout).not.toContain("display help for command");
+      // Terry's rule: a line a human reads starts with a capital. A flag row starts with its flag
+      // and a command row with the command's name, which are identifiers and stay as they are.
+      const lowercase = result.stdout
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l !== "" && !l.startsWith("-") && !COMMAND_ROW.test(l) && !CAPITAL.test(l));
+      expect(lowercase, "help lines that do not start with a capital").toEqual([]);
     },
   );
 
@@ -111,7 +120,9 @@ describe("short forms do what their long forms do", () => {
     expect(JSON.parse(ok.stdout)).toEqual(REPORT_BODY);
     const mixed = await runCli(["report", "-f", "-", "-a", "codex", "-n"], { stdin });
     expect(mixed.code).toBe(2);
-    expect(mixed.stderr).toContain("--file cannot be combined with: --agent");
+    expect(mixed.stderr).toContain(
+      "Option '-f, --file <path|->' cannot be used with option '-a, --agent",
+    );
   });
 
   it("stops with -p and -m, and prints the version with -v", async () => {
@@ -129,14 +140,20 @@ describe("Commander's conventions for short forms", () => {
   });
 });
 
-describe("exit 2 for short forms used wrongly", () => {
+describe("exit 2 for short forms used wrongly, in Commander's own words", () => {
   it.each([
-    [["-x", "1"], "Unknown flag -x."],
-    [["-p=FGA"], "a short flag takes its value as the next argument"],
-    [["-p", "A", "--project", "B"], "--project is given twice"],
-    [["-p", "-m", "B"], "--project needs a value"],
-    [["-p", "A", "-q", "-n"], "--needs-me needs a value"],
-    [["-p", "A", "--dry-run=1"], "--dry-run takes no value"],
+    [["-x", "1"], "Unknown option '-x'"],
+    [["-p=FGA"], "--project <name>' argument '=FGA' is invalid. A short flag takes its value"],
+    [
+      ["-p", "A", "--project", "B"],
+      "--project <name>' argument 'B' is invalid. The flag is given twice.",
+    ],
+    [["-p", "-m", "B"], "--project <name>' argument '-m' is invalid. It looks like a flag"],
+    [
+      ["-p", "A", "-q", "-n"],
+      "--needs-me <sentence>' argument '-n' is invalid. It looks like a flag",
+    ],
+    [["-p", "A", "--dry-run=1"], "Unknown option '--dry-run=1'"],
   ])("refuses %j", async (extra, message) => {
     const result = await runCli(["report", ...SHORT_REPORT.slice(4), ...extra, "-n"]);
     expect(result.code).toBe(2);
@@ -147,7 +164,7 @@ describe("exit 2 for short forms used wrongly", () => {
   it("refuses a report flag on stop, short or long", async () => {
     const result = await runCli(["stop", "-p", "A", "-m", "B", "-a", "codex", "-n"]);
     expect(result.code).toBe(2);
-    expect(result.stderr).toContain("Unknown flag --agent for the stop command.");
+    expect(result.stderr).toContain("Unknown option '-a'");
   });
 });
 

@@ -2,7 +2,7 @@
 // the entry point passes the real ones and a test can pass its own. Output goes through one place,
 // which also removes the service token secret from any text, whatever the text's source.
 import { readFile } from "node:fs/promises";
-import { type Command, FIELD_FLAGS, type ParsedFlags, parseCommandLine } from "./args.ts";
+import { type Command, type ParsedFlags, parseCommandLine } from "./args.ts";
 import { type Built, buildFromFile, buildFromFlags } from "./build.ts";
 import { loadConfig } from "./config.ts";
 import { type ApiPath, post, REPORT_PATH, STOP_PATH } from "./http.ts";
@@ -54,14 +54,8 @@ class Output {
   }
 }
 
+/** Reads the --file report. Commander has already refused --file combined with any field flag. */
 async function readReport(flags: ReadonlyMap<string, string>, io: Io): Promise<Built> {
-  const conflicts = FIELD_FLAGS.filter((flag) => flags.has(flag)).map((flag) => `--${flag}`);
-  if (conflicts.length > 0) {
-    return {
-      ok: false,
-      lines: [`The flag --file cannot be combined with: ${conflicts.join(", ")}.`],
-    };
-  }
   const path = flags.get("file") ?? "";
   let source = path;
   if (path === "-") {

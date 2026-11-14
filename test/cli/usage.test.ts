@@ -96,7 +96,8 @@ describe("exit 2, flags that do not exist", () => {
 
   it("refuses a flag that has no value, and a repeated flag", async () => {
     expect((await refused(["stop", "--project", "A", "--milestone"])).stderr).toContain(
-      "--milestone needs a value",
+      // refused() appends --config <path>, so --milestone meets a flag where its value belongs.
+      "Option '-m, --milestone <name>' argument '--config' is invalid. It looks like a flag",
     );
     expect(
       (await refused(["stop", "--project", "A", "--project", "B", "--milestone", "C"])).stderr,

@@ -57,13 +57,23 @@ means the same flag in every command, and no letter is used twice.
   TypeScript; any other parser needs his approval), and follows its conventions: a short form's value
   MAY be the next argument (`-p FGA`) or attached (`-pFGA`), and switches MAY be bundled (`-nj`). A
   long form's value MAY follow an equals sign (`--project=FGA`).
-- **A short form with an equals sign (`-p=FGA`) MUST be refused** with exit 2, because Commander
-  would read the value as `=FGA`.
-- **A value that is itself a flag MUST be refused** with exit 2: one that starts with two dashes, or
-  is one dash and one letter (`-q -n` is a missing value, not the sentence `-n`). This holds in every
-  form, so a project or milestone name MUST NOT look like a flag.
-- Every error message MUST name the flag by its long form, except an unknown short form, which has
-  none and MUST be named as typed (`Unknown flag -x.`).
+- **Three value checks run in Commander's per-value hook**, because it has no setting for them, and
+  each MUST be refused with exit 2: a value that is itself a flag (two dashes, or one dash and one
+  letter: `-q -n` is a missing value, not the sentence `-n`, so a name MUST NOT look like a flag); a
+  value starting with `=` (Commander reads `-p=FGA` as `=FGA`); and the same flag given twice, in
+  either form.
+- **Parsing, its checks and their messages belong to Commander** (Terry, 2026-11-14: "leave CLI
+  parsing to the battle tested library and keep our code limited to our business logic"). Unknown
+  flags, missing values, stray arguments and `--file` combined with a field flag (Commander's option
+  conflicts) MUST be refused with exit 2 in Commander's own words, with the first letter
+  capitalized, for example `Option '-f, --file <path|->' cannot be used with option '-a, --agent
+  <codex|claude>'`. The CLI words only two parse errors itself, because each states a business
+  rule: why there is no `--url` (section 5), and that a command is required.
+- Commander cannot require a flag only when `--file` is absent, so the rule that every field flag
+  except `--needs-me` is required stays with report validation (section 2), which names every
+  missing flag in one message.
+- Help lines MUST NOT wrap: every line a person reads starts with a capital, a flag, or a command
+  name.
 
 Common options, on `report` and `stop`:
 
