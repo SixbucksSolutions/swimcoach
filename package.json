@@ -6,8 +6,9 @@
   "description": "Self-hosted, mobile-first status board for agent-run software projects",
   "license": "MIT",
   "scripts": {
+    "postinstall": "npm ci --prefix cli",
     "types": "wrangler types src/worker-configuration.d.ts",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p cli/tsconfig.json",
     "lint": "biome check --error-on-warnings . && node scripts/biome-no-infos.mjs",
     "test": "vitest run",
     "check": "wrangler types --check src/worker-configuration.d.ts && npm run typecheck && npm run lint && npm test"
