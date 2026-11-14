@@ -16,7 +16,7 @@ import {
 
 const LONG_NAME = "mobile-onboarding-redesign";
 
-describe("fitCards: the 4/8 slot grid", () => {
+describe("fitCards: the 3/6 slot grid (UX-141)", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
@@ -28,20 +28,29 @@ describe("fitCards: the 4/8 slot grid", () => {
     }).not.toThrow();
   });
 
-  it("uses four slots up to four cards: the screen share, and the grid is not half", () => {
+  it("uses three slots up to three cards: the screen share, and the grid is not half", () => {
     installDom();
-    const cards = fakeCards(4);
+    const cards = fakeCards(3);
     run(fakePage(800, cards));
-    expect(cards.props["--slot"]).toBe("192.50px");
+    expect(cards.props["--slot"]).toBe("260.00px");
     expect(cards.classes.has("half")).toBe(false);
   });
 
-  it("uses eight half slots from five cards", () => {
+  it("uses six half slots from four cards", () => {
     installDom();
-    const cards = fakeCards(5);
+    const cards = fakeCards(4);
     run(fakePage(800, cards));
-    expect(cards.props["--slot"]).toBe("91.25px");
+    expect(cards.props["--slot"]).toBe("125.00px");
     expect(cards.classes.has("half")).toBe(true);
+  });
+
+  it("fits six half slots in the iPhone's standalone card area without scrolling", () => {
+    // Terry's phone, 2026-11-14: about 625 CSS px of card area in the home-screen app. Six half slots
+    // need 6 x 83.5 + 5 x 10 = 551 px, so the minimum never forces a scroll there.
+    installDom();
+    const cards = fakeCards(6);
+    run(fakePage(625, cards));
+    expect(cards.props["--slot"]).toBe("95.83px");
   });
 
   it("never goes below the content minimum, so a short screen scrolls", () => {
@@ -56,7 +65,7 @@ describe("fitCards: the 4/8 slot grid", () => {
 
   it("writes no class when the markup already carries the right one", () => {
     installDom();
-    const cards = fakeCards(5, [], true);
+    const cards = fakeCards(4, [], true);
     run(fakePage(800, cards));
     expect(cards.writes.filter((w) => w.startsWith("class"))).toEqual([]);
   });
