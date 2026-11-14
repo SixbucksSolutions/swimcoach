@@ -1,0 +1,162 @@
+/* display 1: all projects (ported from mocks/index.html lines 86-136, less the throb keyframes, which
+   base.css owns). Two reorders against the mock, both with no cascade change: the .pc container-type
+   joined the first .pc rule (noDuplicateSelectors), and the two .pc.kbd / .pc.green overrides moved
+   below the .pc .nm rules they override (noDescendingSpecificity; the higher specificity wins in either
+   order). */
+/* The 4/8 slot grid (concept.md 3.2, Terry 2026-11-13). The overview has 4 equal slots, or 8 half-height
+   slots once there are 5 or more cards. GO TO KEYBOARD takes one slot; red projects leave the list.
+   fitCards() sets --slot from the screen height before the browser paints, never below the height a
+   card's content needs, so more than 8 cards scroll instead of squeezing. */
+.cards {
+  flex: 1 0 auto;
+  display: grid;
+  grid-auto-rows: var(--slot, 105.7px);
+  gap: 10px;
+  align-content: start;
+}
+/* The RTR and its clock hand are the second tier after card color, so they take whatever height the
+   card has (see .pc .rt below), which is why the card is a size container: cqh measures its content box. */
+.pc {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+  border: 0;
+  border-radius: 18px;
+  padding: 12px 18px;
+  background: var(--b);
+  color: var(--f);
+  container-type: size;
+}
+/* GO TO KEYBOARD breathes in step with the LIVE dot (Terry, 2026-11-13): the same 2s ease-in-out cycle
+   peaking at 50%, the same 8 cycles, restarted by the same successful poll (syncBreath). Only while the
+   header says LIVE, so a frozen or stale page stops both together instead of looking alive. */
+.pc.kbd {
+  --b: var(--bad-fill);
+  --f: #fff;
+}
+#phone[data-health="live"] .pc.kbd {
+  animation: throb 2s ease-in-out 8;
+}
+.pc.green {
+  --b: var(--ok-fill);
+  --f: #fff;
+}
+.pc.yellow {
+  --b: var(--risk);
+  --f: #231a00;
+}
+.pc.red {
+  --b: var(--bad-fill);
+  --f: #fff;
+}
+.pc.gray {
+  --b: var(--stack-1);
+  --f: #e2e8f0;
+}
+.pc.done {
+  --b: var(--board);
+  --f: var(--dim);
+}
+/* Name pinned top-left, status below it in up to two wrapped lines (Terry, 2026-11-13: a "..." on the
+   status "defeats the purpose of the detail update"). The RTR block stays centered on the right. */
+.pc .nm {
+  flex: 1;
+  min-width: 0;
+  align-self: flex-start;
+  padding-top: 3.4px;
+}
+/* 3.4px is measured: it puts the top of the name's capitals 18px below the card edge, the same as the
+   18px to their left. */
+/* The name is always one line. fitNames() shrinks a long name's font until it fits, down to 14px, then
+   "..." (Terry: "It'll incentivize me to use shortened names"). */
+.pc .nm b {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.12;
+}
+.pc .nm span {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  opacity: 0.85;
+  margin-top: 5px;
+  padding-left: 12px;
+}
+.pc.kbd .nm b {
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+.pc.green .nm span {
+  opacity: 1;
+}
+/* The status is indented half the name's em (12px of 24px): with the lighter weight, the indent
+   separates detail from title without drawing a line (Terry, 2026-11-13).
+   Content minimums, used by fitCards(): a 4-slot card holds the name and two detail lines with 18px
+   below them, the same 18px as above the name (101.7px). An 8-slot card holds a 20px name and one detail
+   line ending in "..." with the same 18px below (83.5px). */
+.cards.half .pc .nm {
+  padding-top: 4.1px;
+}
+.cards.half .pc .nm b {
+  font-size: 20px;
+}
+.cards.half .pc .nm span {
+  -webkit-line-clamp: 1;
+}
+/* .pc .rt: the hand reaches 1.3em above and below the final digit's center, and the size is the
+   largest that still leaves 16px to the card edge, between 18px and 52px. cqh measures the card's
+   content box, which is 12px inside the edge, so the budget is 50cqh + 12px - 16px = 50cqh - 4px. In an
+   8-slot card that is about 21px; the floor is low so the hand never crowds the edge. */
+.pc .rt {
+  display: flex;
+  align-items: center;
+  font-size: clamp(18px, calc((50cqh - 4px) / 1.3), 52px);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  padding-right: 0.883em;
+}
+/* .883em is measured, not chosen: it puts the inked tip of a 3 o'clock hand exactly the card's 18px
+   padding from the right edge, mirroring the 18px in front of the project name (Terry, 2026-11-13).
+   Every part of the hand is in em, so the match holds at every card size. */
+.arr {
+  width: 0.85em;
+  height: 0.85em;
+  flex: none;
+}
+/* Trend on a clock (concept.md 3.2): the final digit is the clock's center and the arrow is its hand.
+   rotate() points the hand at the hour, then translateX() slides it out along that line, so the arrow
+   sits at the hour AND points at it: 12 strong up, 1:30 up, 3 flat, 4:30 down, 6 hard down. The padding
+   above keeps every number in the same place whichever way its hand points. */
+.pivot {
+  position: relative;
+  display: inline-block;
+}
+.pivot .hand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.8em;
+  height: 0.8em;
+  transform: translate(-50%, -50%) rotate(var(--a)) translateX(0.9em);
+}
+.empty {
+  color: var(--dim);
+  background: var(--panel);
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  font-size: 15px;
+}

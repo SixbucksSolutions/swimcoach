@@ -1,0 +1,236 @@
+/* display 2+: one project (ported from mocks/index.html lines 138-175; the mock's .tldr is retired, UX-083) */
+.back {
+  align-self: flex-start;
+  background: none;
+  border: 0;
+  padding: 4px 0 8px;
+  color: var(--dim);
+  font-size: 15px;
+}
+.page h2 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+}
+/* The hero RTR uses the same clock hand as the cards (concept.md 3.2): padding reserves the hand's reach,
+   .8em above and below the line box and .883em on the right, so it never overlaps the name or the label. */
+.hero .big {
+  display: flex;
+  align-items: center;
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: var(--c);
+  font-variant-numeric: tabular-nums;
+  padding: 0.8em 0.883em 0.8em 0;
+}
+.hero .lab {
+  font-size: 13px;
+  color: var(--dim);
+}
+.hero .lab b {
+  display: block;
+  font-size: 20px;
+  color: var(--c);
+}
+.flag {
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 15px;
+}
+.flag.me {
+  background: #2a1215;
+  color: #fecaca;
+  border: 1px solid var(--me);
+}
+.flag.st {
+  background: #231c10;
+  color: #fde68a;
+  border: 1px solid #7c5e10;
+}
+h4 {
+  margin: 20px 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  font-weight: 600;
+}
+.chart {
+  position: relative;
+  height: 150px;
+  margin-right: 38px;
+  border-left: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.chart svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.chart span {
+  position: absolute;
+  left: 100%;
+  margin-left: 6px;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+.chart span.one {
+  color: var(--dim);
+  font-weight: 700;
+}
+.xax {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 38px 0 0;
+  font-size: 11px;
+  color: var(--faint);
+}
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.tile {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.tile small {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+}
+/* biome-ignore lint/style/noDescendingSpecificity: compared with .hero .lab b, a different element in a different display part; the rule matches selectors by their last part alone. */
+.tile b {
+  display: block;
+  font-size: 22px;
+  line-height: 1.2;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.tile span {
+  display: block;
+  font-size: 12px;
+  color: var(--dim);
+  margin-top: 1px;
+}
+/* A tile caption never strands one word on a line (UX-102). Older browsers just wrap normally. */
+@supports (text-wrap: pretty) {
+  .tile span {
+    text-wrap: pretty;
+  }
+}
+.meter {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 4px 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.meter label {
+  font-size: 12px;
+  color: var(--dim);
+}
+.meter .bar {
+  height: 12px;
+  background: var(--panel2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.meter .bar i {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--c);
+}
+.meter .bar.t i {
+  background: var(--dim);
+}
+.meter .cap {
+  grid-column: 2;
+  font-size: 13px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+.meter .cap b {
+  color: var(--text);
+}
+.stack {
+  display: flex;
+  height: 18px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--panel2);
+  gap: 2px;
+}
+/* biome-ignore lint/style/noDescendingSpecificity: compared with .meter .bar i, a different bar; the rule matches selectors by their last part alone. */
+.stack i {
+  display: block;
+  height: 100%;
+}
+.lanes {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.lanes li {
+  padding: 9px 0 10px;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+.lanes .lt {
+  display: grid;
+  grid-template-columns: 14px 1fr auto 48px;
+  gap: 8px;
+  align-items: center;
+}
+/* biome-ignore lint/style/noDescendingSpecificity: compared with .stack i, a different element; the rule matches selectors by their last part alone. */
+.lanes .lt i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+.lanes .lt b {
+  font-variant-numeric: tabular-nums;
+}
+.lanes .lt span {
+  text-align: right;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+/* Each lane's own bar sits under its row, indented to line up with the lane name (14px swatch + 8px gap). */
+.lanes .lbar {
+  height: 8px;
+  margin: 7px 0 0 22px;
+  border-radius: 4px;
+  background: var(--panel2);
+  overflow: hidden;
+}
+/* biome-ignore lint/style/noDescendingSpecificity: compared with .stack i, a different element; the rule matches selectors by their last part alone. */
+.lanes .lbar i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+}
+.foot {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--faint);
+}
