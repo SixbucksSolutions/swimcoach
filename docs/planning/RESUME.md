@@ -5,6 +5,11 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
 ## Handoff to V1 (2026-11-14, evening)
 
+- **`mvp/integration` is deleted** (Terry, 2026-11-14: "Go ahead and delete mvp branch"), locally and
+  on GitHub, at `4f7237f`, where it equaled `main`. `main` is the only branch. The MVP's relay rules 7
+  and 8 (`mvp-staffing-plan.md`) name that branch; how V1 branches and integrates is for the V1 agent to
+  settle with Terry.
+
 - **The sequence is MVP, then V1, then V2** (Terry, 2026-11-14): "V1 is semi-stable and V2 will be
   rewrite"; "V1 will extend MVP code". The next agent is the V1 dev agent; it works on this codebase.
   Recorded in `docs/concept.md` section 14 and `AGENTS.md`.
