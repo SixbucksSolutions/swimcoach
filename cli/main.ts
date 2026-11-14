@@ -151,7 +151,7 @@ function runHelp(args: readonly string[], o: Output): number {
 
 async function dispatch(argv: readonly string[], io: Io, o: Output): Promise<number> {
   const [first, ...rest] = argv;
-  if (first === "--version" && rest.length === 0) {
+  if ((first === "--version" || first === "-v") && rest.length === 0) {
     o.out(`swimcoach ${pkg.version}`);
     return 0;
   }

@@ -18,7 +18,7 @@ swimcoach report --agent <codex|claude> --project <name> --milestone <name>
                  --ready-for-review <n> --completed <n>
                  [--needs-me <sentence>] [common options]
 
-swimcoach report --file <path> [common options]
+swimcoach report --file <path|-> [common options]
 
 swimcoach stop --project <name> --milestone <name> [common options]
 
@@ -26,13 +26,41 @@ swimcoach --version
 swimcoach help [report | stop]
 ```
 
+### Short forms
+
+Every flag has exactly one short form: one dash and one lowercase letter (Terry, 2026-11-14). A letter
+means the same flag in every command, and no letter is used twice.
+
+| Short | Long | Short | Long |
+| --- | --- | --- | --- |
+| `-a` | `--agent` | `-d` | `--completed` (done) |
+| `-p` | `--project` | `-q` | `--needs-me` (question) |
+| `-m` | `--milestone` | `-f` | `--file` |
+| `-u` | `--active-hours` (used) | `-c` | `--config` |
+| `-b` | `--cap-hours` (budget) | `-n` | `--dry-run` |
+| `-w` | `--ready-for-work` | `-j` | `--json` |
+| `-i` | `--in-progress` | `-v` | `--version` |
+| `-t` | `--needs-terry` | | |
+| `-r` | `--ready-for-review` | | |
+
+- **A short form behaves exactly like its long form**, in every rule of this document: the same value,
+  the same refusals, the same exit codes. The two MAY be mixed in one command, and giving one flag in
+  both forms is the same error as giving it twice.
+- **A short form's value is always the next argument** (`-p FGA`). The CLI MUST refuse an attached
+  value (`-pFGA`, `-p=FGA`) and bundled switches (`-nj`) with exit 2. `--name=value` stays valid for
+  long forms.
+- An argument that is a short form (one dash and one letter) is never taken as the previous flag's
+  value, just as an argument starting with two dashes is not. A name that looks like a flag goes in
+  with an equals sign on the long form: `--project=-x`.
+- Error messages name the long form.
+
 Common options, on `report` and `stop`:
 
 | Option | Meaning |
 | --- | --- |
-| `--dry-run` | Validate and print the JSON body that would be sent, then exit. Nothing is sent, and the config file is not read |
-| `--json` | Print the server's JSON response body on stdout instead of the one-line summary |
-| `--config <path>` | Read this config file instead of the default (section 5). It is the only way to reach a different service |
+| `-n`, `--dry-run` | Validate and print the JSON body that would be sent, then exit. Nothing is sent, and the config file is not read |
+| `-j`, `--json` | Print the server's JSON response body on stdout instead of the one-line summary |
+| `-c`, `--config <path>` | Read this config file instead of the default (section 5). It is the only way to reach a different service |
 
 There is **no `--url` option**, and the CLI MUST refuse one as an unknown flag (exit 2). Section 5 says
 why.

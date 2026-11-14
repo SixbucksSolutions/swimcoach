@@ -28,6 +28,34 @@ const VALUE_FLAGS: Readonly<Record<Command, readonly string[]>> = {
 
 const SWITCHES: readonly string[] = ["dry-run", "json"];
 
+/**
+ * Each flag's one-letter short form (cli.md section 1). A letter means the same flag in every
+ * command, so no letter is reused; `-v` for `--version` is handled before a command is read.
+ */
+const SHORT_FLAGS: Readonly<Record<string, string>> = Object.freeze({
+  a: "agent",
+  p: "project",
+  m: "milestone",
+  u: "active-hours",
+  b: "cap-hours",
+  w: "ready-for-work",
+  i: "in-progress",
+  t: "needs-terry",
+  r: "ready-for-review",
+  d: "completed",
+  q: "needs-me",
+  f: "file",
+  c: "config",
+  n: "dry-run",
+  j: "json",
+});
+
+/** A short flag token: one dash and one letter, nothing attached. */
+const SHORT_TOKEN = /^-[A-Za-z]$/u;
+
+/** One dash and a letter, with or without more after it: a short flag, or a mistyped one. */
+const SHORT_LIKE = /^-[A-Za-z]/u;
+
 interface ParsedFlags {
   readonly flags: ReadonlyMap<string, string>;
   readonly dryRun: boolean;
@@ -62,6 +90,35 @@ function splitToken(token: string): { name: string; inline: string | undefined }
   return { name: token.slice(2, equals), inline: token.slice(equals + 1) };
 }
 
+/**
+ * Reads one flag token as a long name and an inline value. A short form maps to its long name and
+ * never carries an inline value. Returns undefined, after recording why, for a token that is no flag.
+ */
+function readFlag(
+  token: string,
+  state: State,
+): { name: string; inline: string | undefined } | undefined {
+  if (token.startsWith("--")) {
+    return splitToken(token);
+  }
+  if (SHORT_TOKEN.test(token)) {
+    const name = SHORT_FLAGS[token.slice(1)];
+    if (name === undefined) {
+      state.errors.push(`Unknown flag ${token}.`);
+      return undefined;
+    }
+    return { name, inline: undefined };
+  }
+  if (SHORT_LIKE.test(token)) {
+    state.errors.push(
+      `Unexpected argument "${token}"; a short flag is one letter, with its value as the next argument.`,
+    );
+    return undefined;
+  }
+  state.errors.push(`Unexpected argument "${token}"; every value must follow its flag.`);
+  return undefined;
+}
+
 function parseSwitch(name: string, inline: string | undefined, state: State): void {
   if (inline !== undefined) {
     state.errors.push(`The flag --${name} takes no value.`);
@@ -72,10 +129,16 @@ function parseSwitch(name: string, inline: string | undefined, state: State): vo
   }
 }
 
+/** True when an argument is itself a flag, so it can never be taken as the previous flag's value. */
+function isFlagToken(arg: string): boolean {
+  return arg.startsWith("--") || SHORT_TOKEN.test(arg);
+}
+
 /**
- * Takes a flag's value: after an equals sign, or the next argument. A next argument that starts
- * with two dashes is never a value, so a forgotten value cannot swallow the next flag; write
- * --project=--odd for such a name. Returns how many arguments the flag used.
+ * Takes a flag's value: after an equals sign, or the next argument. A next argument that is a flag
+ * (two dashes, or one dash and one letter) is never a value, so a forgotten value cannot swallow
+ * the next flag; write --project=--odd or --project=-x for such a name. Returns how many arguments
+ * the flag used.
  */
 function parseValueFlag(
   name: string,
@@ -86,7 +149,7 @@ function parseValueFlag(
   let value = inline;
   let used = 1;
   if (value === undefined) {
-    if (next === undefined || next.startsWith("--")) {
+    if (next === undefined || isFlagToken(next)) {
       state.errors.push(`The flag --${name} needs a value.`);
       return 1;
     }
@@ -108,12 +171,11 @@ function parseToken(
   index: number,
   state: State,
 ): number {
-  const token = args[index] ?? "";
-  if (!token.startsWith("--")) {
-    state.errors.push(`Unexpected argument "${token}"; every value must follow its flag.`);
+  const flag = readFlag(args[index] ?? "", state);
+  if (flag === undefined) {
     return 1;
   }
-  const { name, inline } = splitToken(token);
+  const { name, inline } = flag;
   if (SWITCHES.includes(name)) {
     parseSwitch(name, inline, state);
     return 1;
@@ -139,4 +201,4 @@ function parseFlags(command: Command, args: readonly string[]): ParseResult {
 }
 
 export type { Command, ParsedFlags, ParseResult };
-export { FIELD_FLAGS, parseFlags, REQUIRED_FIELD_FLAGS };
+export { FIELD_FLAGS, parseFlags, REQUIRED_FIELD_FLAGS, SHORT_FLAGS };
