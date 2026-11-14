@@ -104,6 +104,9 @@ const LONG_TO_SHORT: ReadonlyMap<string, string> = new Map(
   Object.entries(SHORT_FLAGS).map(([letter, name]) => [name, letter]),
 );
 
+/** Commander's unknown-option message for --url itself, with or without a value; not --urlish. */
+const URL_FLAG = /'--url(?:=[^']*)?'/u;
+
 /** The prefix Commander puts on every error message. */
 const ERROR_PREFIX = /^error: /u;
 
@@ -132,7 +135,9 @@ function checkValue(value: string, previous: string | undefined): string {
     throw new InvalidArgumentError("It looks like a flag, not a value.");
   }
   if (value.startsWith("=")) {
-    throw new InvalidArgumentError("A short flag takes its value without an equals sign.");
+    throw new InvalidArgumentError(
+      "A value cannot start with an equals sign (-p=FGA reads as =FGA).",
+    );
   }
   if (previous !== undefined) {
     throw new InvalidArgumentError("The flag is given twice.");
@@ -140,8 +145,11 @@ function checkValue(value: string, previous: string | undefined): string {
   return value;
 }
 
+/** The flags `stop` cannot run without; Commander requires them (makeOptionMandatory). */
+const STOP_REQUIRED: readonly string[] = ["project", "milestone"];
+
 /** One flag as a Commander option: its short form, long form, placeholder and description. */
-function optionFor(name: string): Option {
+function optionFor(name: string, command: Command): Option {
   const [placeholder, description] = FLAG_HELP[name] ?? ["", ""];
   const option = new Option(
     `-${LONG_TO_SHORT.get(name)}, --${name} ${placeholder}`.trimEnd(),
@@ -149,6 +157,9 @@ function optionFor(name: string): Option {
   );
   if (placeholder !== "") {
     option.argParser(checkValue);
+  }
+  if (command === "stop" && STOP_REQUIRED.includes(name)) {
+    option.makeOptionMandatory();
   }
   if (name === "file") {
     // --file carries the whole report, so no field flag MAY come with it (cli.md section 2).
@@ -175,7 +186,7 @@ function programFor(out: string[]): { program: Parser; ran: { command?: Command;
     const sub = program.command(command).description(summary).allowExcessArguments(false);
     sub.helpOption("-h, --help", "Show help for this command");
     for (const name of [...VALUE_FLAGS[command], ...SWITCHES]) {
-      sub.addOption(optionFor(name));
+      sub.addOption(optionFor(name, command));
     }
     sub.addHelpText("after", after);
     sub.action(() => {
@@ -201,7 +212,7 @@ function explain(error: CommanderError, out: readonly string[]): CommandLine {
     // No command, or help for one that does not exist: Commander would print help on stderr.
     return { kind: "error", lines: [NO_COMMAND] };
   }
-  if (error.code === "commander.unknownOption" && error.message.includes("'--url")) {
+  if (error.code === "commander.unknownOption" && URL_FLAG.test(error.message)) {
     return { kind: "error", lines: [NO_URL] };
   }
   return { kind: "error", lines: [capitalized(error.message)] };

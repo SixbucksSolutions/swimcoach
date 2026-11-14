@@ -57,6 +57,10 @@ means the same flag in every command, and no letter is used twice.
   TypeScript; any other parser needs his approval), and follows its conventions: a short form's value
   MAY be the next argument (`-p FGA`) or attached (`-pFGA`), and switches MAY be bundled (`-nj`). A
   long form's value MAY follow an equals sign (`--project=FGA`).
+- **Documentation and examples SHOULD show only the spaced form** (`-p FGA`, `--project FGA`): Terry
+  prefers a space between flag and value. Commander has no setting that refuses the other forms
+  (checked in its 15.0.0 source), and refusing them would take parsing code of our own, so they stay
+  accepted (Terry, 2026-11-14: "only want that if free").
 - **Three value checks run in Commander's per-value hook**, because it has no setting for them, and
   each MUST be refused with exit 2: a value that is itself a flag (two dashes, or one dash and one
   letter: `-q -n` is a missing value, not the sentence `-n`, so a name MUST NOT look like a flag); a

@@ -143,7 +143,10 @@ describe("Commander's conventions for short forms", () => {
 describe("exit 2 for short forms used wrongly, in Commander's own words", () => {
   it.each([
     [["-x", "1"], "Unknown option '-x'"],
-    [["-p=FGA"], "--project <name>' argument '=FGA' is invalid. A short flag takes its value"],
+    [
+      ["-p=FGA"],
+      "--project <name>' argument '=FGA' is invalid. A value cannot start with an equals",
+    ],
     [
       ["-p", "A", "--project", "B"],
       "--project <name>' argument 'B' is invalid. The flag is given twice.",
@@ -165,6 +168,37 @@ describe("exit 2 for short forms used wrongly, in Commander's own words", () => 
     const result = await runCli(["stop", "-p", "A", "-m", "B", "-a", "codex", "-n"]);
     expect(result.code).toBe(2);
     expect(result.stderr).toContain("Unknown option '-a'");
+  });
+
+  it("requires --project and --milestone on stop, through Commander", async () => {
+    const result = await runCli(["stop", "-p", "A", "-n"]);
+    expect(result.code).toBe(2);
+    expect(result.stderr).toBe("Required option '-m, --milestone <name>' not specified\n");
+  });
+});
+
+describe("the two parse messages that are ours, word for word", () => {
+  it("explains why --url does not exist, with or without a value, and only for --url", async () => {
+    const url =
+      "The flag --url does not exist; the service address comes only from the config file.\n";
+    for (const extra of [["--url", "https://x.example"], ["--url=https://x.example"]]) {
+      // biome-ignore lint/performance/noAwaitInLoops: two runs, each checked on its own
+      const result = await runCli(["report", ...SHORT_REPORT, ...extra, "-n"]);
+      expect(result.code).toBe(2);
+      expect(result.stderr).toBe(url);
+    }
+    const urlish = await runCli(["report", ...SHORT_REPORT, "--urlish", "-n"]);
+    expect(urlish.stderr).toBe("Unknown option '--urlish'\n");
+  });
+
+  it("asks for a command when there is none, or none by that help topic", async () => {
+    const ask = "Give a command: report or stop. Run swimcoach help for the commands.\n";
+    for (const argv of [[], ["help", "delete"]]) {
+      // biome-ignore lint/performance/noAwaitInLoops: two runs, each checked on its own
+      const result = await runCli(argv);
+      expect(result.code).toBe(2);
+      expect(result.stderr).toBe(ask);
+    }
   });
 });
 
