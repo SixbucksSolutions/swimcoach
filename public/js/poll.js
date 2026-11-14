@@ -21,7 +21,7 @@ import { toView } from "./state.js";
 
 const STATE_PATH = "/api/2026-11-14/state";
 const POLL_TIMEOUT_MS = 8000;
-const OFFLINE_AFTER_MS = POLL_MS * 3; // three failed polls in a row, 90 s (concept.md 3.1, UX-158)
+const OFFLINE_AFTER_MS = POLL_MS * 3; // three failed polls in a row, 90 s (concept.md 3.1, UX-158, UX-159)
 const AUTH_RELOAD_GAP_MS = 5 * 60_000;
 const AUTH_RELOAD_KEY = "swimcoach.authReloadAt";
 // U+2026, the ellipsis glyph, drawn in Inter (docs/brand.md section 7), until the first poll lands.

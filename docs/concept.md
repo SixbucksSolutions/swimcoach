@@ -144,9 +144,9 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 
 | State | When | Look |
 |---|---|---|
-| LIVE | The page had a 200 from the state endpoint within the last 30 s, and STALE does not apply. This includes an empty board and a board where every project is done | Bold white "LIVE" on dark green, breathing dot, age of newest report once it is 1 min or older ("7m"); no age while fresher or when there are no reports |
+| LIVE | The page had a 200 from the state endpoint within the last three poll intervals (90 s at the 30 s poll), and STALE does not apply. This includes an empty board and a board where every project is done | Bold white "LIVE" on dark green, breathing dot, age of newest report once it is 1 min or older ("7m"); no age while fresher or when there are no reports |
 | STALE | Polls work, but no agent has reported for over 25 min while some project is unfinished | Dark orange box, warning text, all displays grayed to 40% |
-| OFFLINE | Three polls in a row failed (30 s) | Dark red box, warning text, all displays grayed |
+| OFFLINE | Three polls in a row failed (90 s at the 30 s poll) | Dark red box, warning text, all displays grayed |
 | SIGN IN | A poll was refused by Access (redirect, 401 or 403) after the page's one reload | OFFLINE's dark red box, warning text, all displays grayed |
 
 - **An empty board is live data, and the health box MUST say so.** Terry, 2026-11-14, at the MVP-08
@@ -155,11 +155,17 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   all-done board with working polls reads LIVE with the breathing dot, and the "No reports yet today."
   line and the done cards say the rest. STALE still wins while any project is unfinished, because a
   silent agent is the "all good in the hood" failure this box exists to catch.
+- **The page polls every 30 seconds** (Terry, 2026-11-14: project agents report "no more often than
+  once every five minutes", so "we can lower web client poll to every 30 seconds"; UX-156). It polled
+  every 10 seconds before. His "within 30 seconds" above was said at the 10 s poll, when 30 s was three
+  polls; the rule kept is three polls, so LIVE holds through two failed polls and OFFLINE starts at the
+  third, 90 s (UX-158, UX-159).
 
-- The dot's breathing animation runs a fixed 16 seconds and is restarted by each successful poll. If
-  the page's script freezes, the dot stops by itself. A plain infinite animation would keep a dead page
-  looking alive.
-- The page polls `GET /api/state` every 10 seconds.
+- The dot's breathing animation runs a fixed 40 seconds (20 cycles of 2 s; 16 s before the 30 s poll)
+  and is restarted by each successful poll (UX-157). 40 s outlasts a 30 s poll plus its 8 s timeout. If
+  the page's script freezes, the dot stops by itself about 10 s after a missed poll. A plain infinite
+  animation would keep a dead page looking alive.
+- The page polls `GET /api/2026-11-14/state` every 30 seconds.
 - **Alerts button:** when on, a new needs-you item plays a two-tone chime and calls `navigator.vibrate`.
   The page also jumps to the all-projects display. Sound needs that one tap (browser rule). iOS Safari
   has no vibration API, so on the iPhone it is chime only.
@@ -185,7 +191,7 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   reserved for it:** with nothing red, row one is the first green or yellow card. The breathing red is
   confirmed: Terry, "chefs kiss to draw my eye." Each red project's own display still shows its full ask.
 - **GO TO KEYBOARD breathes in step with the LIVE dot.** Terry, 2026-11-13. Same 2 s `ease-in-out` cycle
-  peaking together, same 8 cycles, restarted by the same successful poll, and only while the health
+  peaking together, same 20 cycles (8 before the 30 s poll), restarted by the same successful poll, and only while the health
   box says LIVE. So a frozen or stale page stops both at once rather than leaving the red slot looking alive
   (the dead-page tell in section 3.1). Measured: both animations read the same time to the millisecond
   after load, between polls and after a poll, both stop when OFFLINE and both restart together.
@@ -450,7 +456,7 @@ The MVP shape, set by Terry on 2026-11-13:
 ```
 project agent (Codex or Claude) --> swimcoach CLI --> Worker API (Cloudflare Access) --> Durable Object
                                                                                             |
-                                     phone browser <-- GET / and GET /api/state (every 10 s)
+                                     phone browser <-- GET / and GET /api/state (every 30 s)
 ```
 
 - **Project agents push their own status.** The agent working a project runs the swimcoach CLI on
@@ -554,7 +560,7 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
 | Project agents push complete updates through the swimcoach CLI (2026-11-13) | The agent moving the cards knows its milestone's cards and time, which no board can supply because cards are not tied to milestones; one hop, no relay | A swimcoach or monitoring agent relaying (the prototype's shape); server reading localswim directly; parsing the chatops text (fragile) |
 | Agents send raw counts and hours; server computes RTR | One definition in one place; the agent's 1.23 and the server's 1.24 differ only by rounding | Trusting each agent's own ratio |
 | Standard library Python, one HTML file | Runs on a dev box or NAS with nothing to install or build | A framework stack |
-| Page polls every 10 s | Phones suspend tabs; polling recovers on its own | Server push (SSE, WebSocket) |
+| Page polls every 30 s (10 s until 2026-11-14) | Phones suspend tabs; polling recovers on its own; agents report at most every 5 minutes | Server push (SSE, WebSocket) |
 | Health shown as LIVE/STALE/OFFLINE, displays grayed when not live | Terry's stated worst case is a stale dashboard reading as all good | A "last updated" timestamp alone |
 | RTR plus trend plus a call | Terry: RTR "feels necessary but not sufficient"; 0.80 trending up worries him less | RTR thresholds alone (the first version used < 0.8 = behind) |
 | Projection framed as "does every ticket land in the block" | Mathematically the same as projecting RTR to 1.0, and readable as "20m early" | Fitting a line to the RTR series |
@@ -619,7 +625,7 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
     for example once the next increment has started. For the MVP, entries are removed only by the
     project agent's swimcoach CLI stop command, because that is easier. The MVP's page MUST NOT grow
     this control.
-14. **Push updates to the page (Terry, 2026-11-13).** The MVP polls `GET /api/state` every 10 seconds,
+14. **Push updates to the page (Terry, 2026-11-13).** The MVP polls `GET /api/state` every 30 seconds (10 until 2026-11-14),
     and that is fine for the MVP. Push (server-to-page updates, for example SSE from the Board Durable
     Object) is a goal for V1 and is REQUIRED for V2. V2 MUST still handle a phone that slept and lost
     its connection, by reading the full state on wake. Worker-level Access does not support WebSockets,
