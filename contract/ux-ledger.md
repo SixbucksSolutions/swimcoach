@@ -243,7 +243,7 @@ reaches this mode, so no render exists. Source: c8 item 10, api.md 6.5 and 6.6.
 
 | ID | State or transition | Rule | Render | Check | V1 |
 | --- | --- | --- | --- | --- | --- |
-| UX-131 | A milestone with `total < 3` (`mode` is `count_and_time`): the Card shows "N of M done" and the hours used of the cap, with no RTR and no clock hand | c8 item 10, api.md 6.5 | - | Fixture `state.small-blocks.json` | Pending |
+| UX-131 | A milestone with `total < 3` (`mode` is `count_and_time`): the Card shows "N of M done" and the hours used of the cap, with no RTR and no clock hand | c8 item 10, api.md 6.5 | - | Fixture `state.small-blocks.json`; browser: overview-small.ts "A count_and_time Card shows N of M done and the hours of its cap, with no RTR and no clock hand" | Pending |
 | UX-132 | In `count_and_time` mode the Card is green while `active_hours` is within `cap_hours` (reason `under_budget`) and yellow once it is over (reason `over_budget`); red only for `needs_me`; silent still applies (yellow); done still ranks first | c8 item 10, api.md 6.6 | - | Fixture `state.small-blocks.json`; stalled, running_late, toss_up and too_early do not apply | No: superseded by UX-151 |
 | UX-133 | Detail blurb words for `over_budget` and `under_budget`: api.md 6.6 assigns the wording to this ledger; Terry has not chosen it (needs Terry) | api.md 6.6 | - | Wording pending; the check MUST NOT pass until Terry fixes the words | No: superseded by UX-139 |
 | UX-134 | What the project display shows in `count_and_time` mode (RTR block, charts, projection tiles): no doc defines it (needs Terry) | c8 item 10, api.md 6.5 | - | Pending Terry | No: superseded by UX-140 |
