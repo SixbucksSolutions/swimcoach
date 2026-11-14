@@ -17,6 +17,18 @@ interface Route {
   readonly run: Handler;
 }
 
+/**
+ * Serves one file of the page from the static assets (wrangler.jsonc, ./public). An asset the
+ * directory does not hold answers 404 not_found in the contract's shape, like any unknown path.
+ */
+async function serveAsset(request: Request, env: Env): Promise<Response> {
+  const response = await env.ASSETS.fetch(request);
+  if (response.status === 404) {
+    return errorResponse(404, "not_found", "There is no such path.");
+  }
+  return response;
+}
+
 // Exact paths only (api.md section 1): no trailing-slash variants, no /index.html alias, and the
 // unversioned /api/... paths are not aliases of the dated ones. Each path has exactly one method.
 const ROUTES: ReadonlyMap<string, Route> = new Map<string, Route>([
@@ -24,8 +36,21 @@ const ROUTES: ReadonlyMap<string, Route> = new Map<string, Route>([
   [`${API_PREFIX}/report`, { method: "POST", run: handleReport }],
   [`${API_PREFIX}/stop`, { method: "POST", run: handleStop }],
   [`${API_PREFIX}/state`, { method: "GET", run: (_request, env, now) => handleState(env, now) }],
-  ["/", { method: "GET", run: (request, env) => env.ASSETS.fetch(request) }],
+  ["/", { method: "GET", run: serveAsset }],
 ]);
+
+// The page's stylesheets and modules (t4-interfaces.md, MVP-08): one flat directory each, lowercase
+// names only, so no path can reach anything else in ./public. index.html is reachable only as "/".
+const ASSET_PATH = /^\/(?:css|js)\/[a-z]+\.(?:css|js)$/u;
+const ASSET_ROUTE: Route = { method: "GET", run: serveAsset };
+
+function routeFor(pathname: string): Route | undefined {
+  const exact = ROUTES.get(pathname);
+  if (exact === undefined && ASSET_PATH.test(pathname)) {
+    return ASSET_ROUTE;
+  }
+  return exact;
+}
 
 async function route(request: Request, env: Env, keys?: JwksSource): Promise<Response> {
   const access = await verifyAccess(request, env, keys);
@@ -36,7 +61,7 @@ async function route(request: Request, env: Env, keys?: JwksSource): Promise<Res
   }
   // Query strings are ignored (api.md section 1): only the path picks the route.
   const { pathname } = new URL(request.url);
-  const found = ROUTES.get(pathname);
+  const found = routeFor(pathname);
   if (found === undefined) {
     return errorResponse(404, "not_found", "There is no such path.");
   }
