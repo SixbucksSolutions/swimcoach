@@ -2,18 +2,11 @@
 // Source of truth: contract/api.md sections 1 to 3, 8 and 9.
 
 import { type JwksSource, verifyAccess } from "./access.ts";
-import type { EpochSeconds } from "./contract.ts";
+import { API_VERSION, type EpochSeconds } from "./contract.ts";
 import { errorResponse, jsonResponse, requestTime } from "./http.ts";
 import { handleReport } from "./routes/report.ts";
 import { handleState } from "./routes/state.ts";
 import { handleStop } from "./routes/stop.ts";
-
-/**
- * The date in every API path (contract/api.md, "Versioning"). Adding, removing or changing the
- * behavior of a method or endpoint MUST get a new date; a defect fix that keeps the API unchanged
- * MAY keep this one.
- */
-const API_VERSION = "2026-11-13";
 
 const API_PREFIX = `/api/${API_VERSION}`;
 
@@ -64,8 +57,6 @@ async function route(request: Request, env: Env, keys?: JwksSource): Promise<Res
   }
   return found.run(request, env, time.now);
 }
-
-export { API_VERSION };
 
 /**
  * Answers one request. Every request, the page included, is checked against Cloudflare Access

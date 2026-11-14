@@ -2,7 +2,8 @@ import { env, exports } from "cloudflare:workers";
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from "jose";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { JwksSource } from "../src/access.ts";
-import { API_VERSION, handle } from "../src/index.ts";
+import { API_VERSION } from "../src/contract.ts";
+import { handle } from "../src/index.ts";
 
 // The router (contract/api.md sections 1 to 3, 8 and 9). Every request goes through handle() with
 // a token signed by a key generated here, for the team domain and AUD tag in wrangler.jsonc. This
