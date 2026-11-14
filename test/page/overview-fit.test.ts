@@ -185,4 +185,18 @@ describe("fitCards: a font that lands after the first fit (concept.md 3.4)", () 
     run(page);
     expect([dom.appended, dom.measured, ...names.map((n) => n.writes.length)]).toEqual(refit);
   });
+
+  it("corrects a size one 0.1px step too big, and leaves an equal one alone", () => {
+    installDom();
+    // A 230px box fits LONG_NAME at 19.3px in the stand-in widths; 19.4px is the size a fallback
+    // font left behind, which ends the name in an ellipsis under Inter.
+    const name = fakeName(LONG_NAME, 230);
+    name.style.fontSize = "19.4px";
+    const page = fakePage(800, fakeCards(3, [name]));
+    run(page);
+    expect(name.writes).toEqual(["19.4px", "19.3px"]);
+    fontsLoaded();
+    run(page);
+    expect(name.writes).toEqual(["19.4px", "19.3px"]);
+  });
 });

@@ -28,9 +28,6 @@ const NAME_PX = Object.freeze({ full: 24, half: 20 });
 /** The smallest a shrunken Title line gets before CSS ends it in an ellipsis (UX-068). */
 const NAME_MIN_PX = 14;
 
-/** Two measured font sizes this close are the same size, so a poll does not rewrite one. */
-const NAME_TOLERANCE_PX = 0.1;
-
 // biome-ignore lint/security/noSecrets: display text for the empty state, not a secret.
 const EMPTY_STATE = '<div class="empty">No reports yet today.</div>';
 
@@ -114,22 +111,6 @@ function setPropertyIfChanged(style, name, value) {
   if (style.getPropertyValue(name) !== value) {
     style.setProperty(name, value);
   }
-}
-
-/**
- * True when both sizes are set and within NAME_TOLERANCE_PX of each other, or are the same string.
- * @param {string} have  the inline font-size now, "" when none
- * @param {string} want  the font-size wanted, "" when none
- * @returns {boolean}
- */
-function sameNameSize(have, want) {
-  if (have === want) {
-    return true;
-  }
-  if (have === "" || want === "") {
-    return false;
-  }
-  return Math.abs(Number.parseFloat(have) - Number.parseFloat(want)) <= NAME_TOLERANCE_PX;
 }
 
 /**
@@ -277,7 +258,9 @@ function fitNames(cards, half, basePx) {
   try {
     for (const name of cards.querySelectorAll("b")) {
       const want = wantedNameSize(name, half, basePx, state);
-      if (want !== null && !sameNameSize(name.style.fontSize, want)) {
+      // Exact, with no tolerance: sizes are floored to 0.1px, so one 0.1px step is a real correction
+      // (19.4px ellipsizes a name that fits at 19.3px), and the cache already stops repeat writes.
+      if (want !== null && name.style.fontSize !== want) {
         name.style.fontSize = want;
       }
     }
