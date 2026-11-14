@@ -47,9 +47,9 @@ load-bearing.
 | J. Navigation | UX-113 to UX-124 | 12 |
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
-| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-162 | 28 |
+| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-162, UX-167 to UX-169 | 31 |
 | N. Phone and home screen (MVP-10) | UX-163 to UX-166 | 4 |
-| **Total** | | **166** (28 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 071, 073, 111, 112, 132, 133, 134, 136, 137, 150; 2 retired: UX-037, UX-083) |
+| **Total** | | **169** (31 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 071, 073, 090, 093, 094, 111, 112, 132, 133, 134, 136, 137, 150; 2 retired: UX-037, UX-083) |
 
 ## A. Status line
 
@@ -174,7 +174,7 @@ load-bearing.
 | UX-087 | Projection tiles: RTR at end of block, and RTR trend as a signed change | c3.3 part 5 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-088 | Too early to call: one tile says so and states the gates | c3.3 part 5, c4.6 | `morning-01-docs-site-top.png` |  | Pending |
 | UX-089 | Work against time: two bars, tickets done of total and hours used of allocated | c3.3 part 6 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
-| UX-090 | Work bar takes the display's color on green and yellow only | c3.3 part 7 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
+| UX-090 | Work bar takes the display's color on green and yellow only | c3.3 part 7 | `afternoon-03-fga-t04-bottom.png` |  | No: superseded by UX-167 |
 | UX-091 | Footer: last ticket move, last report time, reporting agent | c3.3 part 8 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-092 | A done project's display shows done styling (lightest neutral, no state color) | c3.3 | `alldone-01-docs-site-top.png`, `alldone-01-docs-site-bottom.png` |  | Pending |
 
@@ -182,8 +182,8 @@ load-bearing.
 
 | ID | State or transition | Rule | Render | Check | V1 |
 | --- | --- | --- | --- | --- | --- |
-| UX-093 | Green or yellow display: three rows: Ready For Work, In progress, Ready for review, plus the Completed row (needs Terry: api.md 4.1 and 6.10 make Completed new to the page; whether it shows as a fourth row is not decided) | c3.3 part 7, api.md 4.1, 6.10 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
-| UX-094 | Each row shows name, count, share, and its own bar under the row; the Completed row follows the same rule, and whether it is hidden at 0 is needs Terry | c3.3 part 7, api.md 6.10 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
+| UX-093 | Green or yellow display: three rows: Ready For Work, In progress, Ready for review, plus the Completed row (needs Terry: api.md 4.1 and 6.10 make Completed new to the page; whether it shows as a fourth row is not decided) | c3.3 part 7, api.md 4.1, 6.10 | `afternoon-03-fga-t04-bottom.png` |  | No: superseded by UX-168 |
+| UX-094 | Each row shows name, count, share, and its own bar under the row; the Completed row follows the same rule, and whether it is hidden at 0 is needs Terry | c3.3 part 7, api.md 6.10 | `afternoon-03-fga-t04-bottom.png` |  | No: superseded by UX-169 |
 | UX-095 | The 100% bar sits below the rows and is split into those lanes | c3.3 part 7 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-096 | Backlog and Blocked lanes are not shown | c3.3 part 7, c3.2 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
 | UX-097 | An empty Needs Terry lane is not shown | c3.3 part 7 | `afternoon-03-fga-t04-bottom.png` |  | Pending |
@@ -283,6 +283,9 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-160 | The LIVE dot and GO TO KEYBOARD breathe in step: same 2 s `ease-in-out` cycle, same peak, 20 cycles | c3.2 breathing sync | `keyboard-00-all-projects.png` | Supersedes UX-071 (8 cycles); compare both animations' current time; MUST agree to the millisecond | Pending |
 | UX-161 | Health box LIVE, with the breathing dot, when every tracked milestone is done and a poll got a 200 within three poll intervals (api.md 6.7 `feed` `idle`) | c3.1 table, Terry 2026-11-14 | `alldone-00-all-projects.png` | Supersedes UX-136 (30 s at the 10 s poll) | Pending |
 | UX-162 | Health box LIVE, with the breathing dot and no age, when no milestone is tracked and a poll got a 200 within three poll intervals (api.md 6.7 `feed` `no_data`) | c3.1 table, Terry 2026-11-14: "I want to know the empty list IS the live data" | - | Supersedes UX-137 (30 s at the 10 s poll); reach with an empty database | Pending |
+| UX-167 | The Work bar takes the display's state color on every level (green, yellow, red, gray, done); the Time bar is neutral (`--dim`) | c3.3 part 7; the approved mock's `.meter` sets `--c` to the display's tone for every level (mocks/index.html 160-163, 392) | `afternoon-03-fga-t04-bottom.png` | Supersedes UX-090, which said "green and yellow only" against the mock (found by MVP-11 B, 2026-11-14) | Pending |
+| UX-168 | Green or yellow display: three Swimlanes rows, Ready For Work, In progress and Ready for review. Completed is never a row, even when it holds tickets, and still counts as finished; Needs Terry never shows here (any ticket in it makes the display red) | c3.3 part 7; Terry 2026-11-13 (t4-interfaces.md decision 3): "Never show completed; usually has a few hundred tickets" | `afternoon-03-fga-t04-bottom.png` | Supersedes UX-093, whose Completed row was "needs Terry" | Pending |
+| UX-169 | Each Swimlanes row shows its name, count and share, with its own bar under the row; there is no Completed row | c3.3 part 7; t4-interfaces.md decision 3 | `afternoon-03-fga-t04-bottom.png` | Supersedes UX-094, whose Completed row was "needs Terry" | Pending |
 
 ## N. Phone and home screen (MVP-10)
 
