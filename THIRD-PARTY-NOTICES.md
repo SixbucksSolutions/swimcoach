@@ -21,3 +21,15 @@ own license, and the full text travels with the component.
 - **License:** MIT. Full text: [`third_party/jose/LICENSE.md`](third_party/jose/LICENSE.md), copied
   unchanged from the npm package.
 - **Version and changes:** 6.2.17 from npm, unmodified. The version is pinned in `package.json`.
+
+## Ajv
+
+- **Used for:** checking API answers against the JSON schemas in `contract/schemas/`, in the API
+  acceptance suite (`acceptance/api/schema.ts`). Not bundled into the Worker.
+- **Copyright:** Copyright (c) 2015-2021 Evgeny Poberezkin (https://github.com/ajv-validator/ajv)
+- **License:** MIT. Full text: [`third_party/ajv/LICENSE`](third_party/ajv/LICENSE), copied unchanged
+  from the npm package. Its own dependencies (`fast-deep-equal`, `fast-uri`, `json-schema-traverse`,
+  `require-from-string`) install with it into `acceptance/node_modules` and carry their own licenses
+  there.
+- **Version and changes:** 8.20.0 from npm, unmodified. The version is pinned in
+  `acceptance/package.json`.

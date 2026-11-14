@@ -1,0 +1,15 @@
+{
+  // The acceptance suite is a Node program, so it gets Node's types and not the Worker types the
+  // root tsconfig.json uses. Same arrangement as cli/tsconfig.json, and for the same reason:
+  // @types/node lives ONLY in acceptance/node_modules, so it never reaches the root tsc program.
+  "extends": "../tsconfig.json",
+  // erasableSyntaxOnly makes tsc refuse what Node's type stripping cannot run: enums, namespaces,
+  // parameter properties.
+  "compilerOptions": {
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node"],
+    "erasableSyntaxOnly": true
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["./node_modules"]
+}
