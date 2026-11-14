@@ -30,6 +30,11 @@ function words(page: Page, body: Json, title: string): Locator {
   return displayOf(page, title, body).locator(".hero .lab b");
 }
 
+/** A card on the overview, found by the title it shows. */
+function overviewCard(page: Page, title: string): Locator {
+  return page.locator("#pages > section.page").first().locator(".pc", { hasText: title });
+}
+
 /** The gap between the title and the hero below it, as the viewer sees it. */
 async function gapUnderTitle(display: Locator): Promise<number> {
   const title = await boxOf(display.locator("h2"));
@@ -95,8 +100,7 @@ export const smallCases: UiCase[] = [
   },
   {
     ids: ["UX-151"],
-    title:
-      "A small block is green under budget, yellow over budget, red on an ask and gray when silent",
+    title: "A small block is green under budget and yellow over budget",
     async run(ctx) {
       const base = ctx.example("small-blocks");
       await showProject(ctx, base, "dotfiles M1");
@@ -118,7 +122,8 @@ export const smallCases: UiCase[] = [
   },
   {
     ids: ["UX-151"],
-    title: "A small block with an ask is red and shows the flag; a silent one is gray and says so",
+    title:
+      "A small block is red only for an ask, and gray when its agent is silent even over budget",
     async run(ctx) {
       const base = ctx.example("small-blocks");
       const body = edit(
@@ -155,6 +160,38 @@ export const smallCases: UiCase[] = [
         await token(ctx.page, "--dim"),
       );
       assert.equal(await gray.locator(".flag.st").count(), 1);
+      // On the overview: the ask goes to the GO TO KEYBOARD slot, and the silent block is a gray card.
+      const slot = overviewCard(ctx.page, "GO TO KEYBOARD");
+      assert.match(await textOf(slot), /dotfiles M1/u);
+      assert.match(
+        (await overviewCard(ctx.page, "flickr-sync T01").getAttribute("class")) ?? "",
+        /\bgray\b/u,
+      );
+    },
+  },
+  {
+    ids: ["UX-151"],
+    title: "A finished small block is done, ranking above over budget",
+    async run(ctx) {
+      const base = ctx.example("small-blocks");
+      // flickr-sync T01 is over budget (2.6 of 2.0 hrs); finishing both tickets makes it done.
+      const body = edit(base, "flickr-sync T01", (m) => {
+        m.color = "done";
+        m.reason = "done";
+        m.finished = 2;
+        m.stalled = false;
+        (m.lanes as Json).in_progress = 0;
+        (m.lanes as Json).ready_for_review = 2;
+      });
+      const display = await showProject(ctx, body, "flickr-sync T01");
+      assert.equal(await plain(display.locator(".hero .lab b")), "Done");
+      assert.equal(
+        await style(display.locator(".hero .lab b"), "color"),
+        await token(ctx.page, "--done"),
+      );
+      const cards = ctx.page.locator("#pages > section.page").first();
+      assert.equal(await cards.locator(".pc.done").count(), 1);
+      assert.equal(await cards.locator(".pc.yellow").count(), 0);
     },
   },
   {
@@ -188,6 +225,13 @@ export const smallCases: UiCase[] = [
       assert.equal(await style(hero.locator(".lab b"), "color"), await token(ctx.page, "--dim"));
       // Fresh agents on the same board keep their hand.
       assert.equal(await displayOf(ctx.page, "FGA T04", body).locator(".hero svg.hand").count(), 1);
+      // The row is about the Card: the blurb names the reason, the RTR stays, and no hand is drawn.
+      const card = overviewCard(ctx.page, "mobile-onboarding M12");
+      assert.match(await textOf(card), new RegExp(`Agent silent for ${durText(quiet)}`, "u"));
+      assert.match(await plain(card), /0\.89/u);
+      assert.equal(await card.locator("svg").count(), 0, "The gray card draws no arrow.");
+      const fresh = overviewCard(ctx.page, "FGA T04");
+      assert.equal(await fresh.locator("svg").count(), 1, "A fresh card keeps its hand.");
     },
   },
 ];

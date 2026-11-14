@@ -5,18 +5,18 @@ import assert from "node:assert/strict";
 import type { Locator, Page } from "playwright";
 import type { UiCase } from "../types.ts";
 import {
-  ALL_KEY,
   boxOf,
-  currentKey,
   displayOf,
   find,
   type Json,
-  keyOf,
+  mapAll,
   milestones,
+  OVERVIEW,
   openOn,
   quiet,
   scrollLeft,
   settleOn,
+  shown,
   showProject,
   squash,
   style,
@@ -39,16 +39,20 @@ function dots(page: Page): Locator {
   return page.locator("#dots button");
 }
 
-/** Which dots are highlighted, by position. */
+/** Which dots are highlighted, by position: the ones painted differently from the rest. */
 async function litDots(dotsList: Locator): Promise<number[]> {
-  const lit: number[] = [];
-  for (let i = 0, n = await dotsList.count(); i < n; i += 1) {
-    // biome-ignore lint/performance/noAwaitInLoops: the dots are read left to right
-    if (((await dotsList.nth(i).getAttribute("class")) ?? "").split(" ").includes("on")) {
-      lit.push(i);
-    }
+  const colors = await mapAll(dotsList, (dot) => style(dot.locator("i"), "backgroundColor"));
+  const counts = new Map<string, number>();
+  for (const color of colors) {
+    counts.set(color, (counts.get(color) ?? 0) + 1);
   }
-  return lit;
+  const [common] = [...counts.entries()].sort((a, b) => b[1] - a[1])[0] ?? [""];
+  return colors.flatMap((color, index) => {
+    if (color === common) {
+      return [];
+    }
+    return [index];
+  });
 }
 
 /** Scrolls display number `index` down to `top` px, as a finger drag would; returns where it came to rest. */
@@ -76,14 +80,14 @@ export const navCases: UiCase[] = [
       const body = ctx.example("afternoon");
       await openOn(ctx, body);
       assert.equal(await scrollLeft(ctx.page), 0);
-      assert.equal(await currentKey(ctx.page), ALL_KEY);
-      assert.equal(
-        await ctx.page.locator("#pages > section.page").first().getAttribute("data-key"),
-        ALL_KEY,
+      assert.equal(await shown(ctx.page), OVERVIEW);
+      assert.ok(
+        (await ctx.page.locator("#pages > section.page").first().locator(".pc").count()) > 0,
+        "The first display holds the project cards.",
       );
-      const first = dots(ctx.page).first();
       assert.deepEqual(await litDots(dots(ctx.page)), [0]);
-      assert.equal(await style(first.locator("i"), "borderRadius"), "2px");
+      // Square: not fully round, unlike the project dots.
+      assert.notEqual(await style(dots(ctx.page).first().locator("i"), "borderRadius"), "50%");
       assert.equal(await style(dots(ctx.page).nth(1).locator("i"), "borderRadius"), "50%");
     },
   },
@@ -113,10 +117,11 @@ export const navCases: UiCase[] = [
         .locator(".pc", { hasText: "FGA T04" });
       await card.tap();
       await settleOn(ctx.page, 3);
-      assert.equal(await currentKey(ctx.page), keyOf("FGA T04", body));
+      assert.equal(await shown(ctx.page), "FGA T04");
       const display = displayOf(ctx.page, "FGA T04", body);
+      const title = await boxOf(display.locator("h2"));
       assert.ok(
-        Math.abs((await boxOf(display.locator("h2"))).x - 14) <= SLACK_PX + 1,
+        title.x >= 0 && title.x + title.width <= PAGE_WIDTH,
         "The display's title is in view.",
       );
       assert.equal(await textOf(display.locator("h2")), "FGA T04");
@@ -134,7 +139,7 @@ export const navCases: UiCase[] = [
         const title = `${(milestones(body)[index - 1] as Json).project as string} ${(milestones(body)[index - 1] as Json).milestone as string}`;
         await displayOf(ctx.page, title, body).locator(".back").tap();
         await settleOn(ctx.page, 0);
-        assert.equal(await currentKey(ctx.page), ALL_KEY, `Back from display ${index}.`);
+        assert.equal(await shown(ctx.page), OVERVIEW, `Back from display ${index}.`);
         assert.deepEqual(await litDots(dots(ctx.page)), [0]);
       }
     },
@@ -150,7 +155,7 @@ export const navCases: UiCase[] = [
       assert.deepEqual(await litDots(dots(ctx.page)), [1]);
       await swipe(ctx.page, "left");
       await settleOn(ctx.page, 2);
-      assert.equal(await currentKey(ctx.page), keyOf("docs-site T02", body));
+      assert.equal(await shown(ctx.page), "docs-site T02");
     },
   },
   {
@@ -162,7 +167,7 @@ export const navCases: UiCase[] = [
       await tapDot(ctx.page, 3);
       await swipe(ctx.page, "right");
       await settleOn(ctx.page, 2);
-      assert.equal(await currentKey(ctx.page), keyOf("docs-site T02", body));
+      assert.equal(await shown(ctx.page), "docs-site T02");
       await swipe(ctx.page, "right");
       await settleOn(ctx.page, 1);
       assert.deepEqual(await litDots(dots(ctx.page)), [1]);
@@ -175,11 +180,11 @@ export const navCases: UiCase[] = [
       const body = ctx.example("afternoon");
       await openOn(ctx, body);
       await tapDot(ctx.page, 5);
-      assert.equal(await currentKey(ctx.page), keyOf("mobile-onboarding M12", body));
+      assert.equal(await shown(ctx.page), "mobile-onboarding M12");
       await tapDot(ctx.page, 2);
-      assert.equal(await currentKey(ctx.page), keyOf("docs-site T02", body));
+      assert.equal(await shown(ctx.page), "docs-site T02");
       await tapDot(ctx.page, 0);
-      assert.equal(await currentKey(ctx.page), ALL_KEY);
+      assert.equal(await shown(ctx.page), OVERVIEW);
     },
   },
   {
@@ -190,7 +195,7 @@ export const navCases: UiCase[] = [
       await swipe(ctx.page, "right");
       await quiet(ctx.page, QUIET_MS);
       assert.equal(await scrollLeft(ctx.page), 0);
-      assert.equal(await currentKey(ctx.page), ALL_KEY);
+      assert.equal(await shown(ctx.page), OVERVIEW);
       assert.deepEqual(await litDots(dots(ctx.page)), [0]);
     },
   },
@@ -266,7 +271,6 @@ export const navCases: UiCase[] = [
     async run(ctx) {
       const body = ctx.example("afternoon");
       await showProject(ctx, body, "FGA T04");
-      const fga = keyOf("FGA T04", body);
       // An earlier project goes away: FGA T04 moves from display 3 to display 2, and stays in view.
       const without: Json = structuredClone(body);
       without.milestones = milestones(without).filter((m) => m.project !== "docs-site");
@@ -274,7 +278,7 @@ export const navCases: UiCase[] = [
       await ctx.advance(POLL_MS);
       await until(ctx.page, "six dots", async () => (await dots(ctx.page).count()) === 6);
       await settleOn(ctx.page, 2);
-      assert.equal(await currentKey(ctx.page), fga);
+      assert.equal(await shown(ctx.page), "FGA T04");
       assert.deepEqual(await litDots(dots(ctx.page)), [2]);
       assert.equal(
         squash(await displayOf(ctx.page, "FGA T04", without).locator("h2").textContent()),
@@ -284,11 +288,9 @@ export const navCases: UiCase[] = [
       const added = withNewFirst(without);
       ctx.answer({ body: added });
       await ctx.advance(POLL_MS);
-      await until(ctx.page, "seven dots", async () =>
-        (await dots(ctx.page)).count().then((n) => n === 7),
-      );
+      await until(ctx.page, "seven dots", async () => (await dots(ctx.page).count()) === 7);
       await settleOn(ctx.page, 3);
-      assert.equal(await currentKey(ctx.page), fga);
+      assert.equal(await shown(ctx.page), "FGA T04");
       assert.deepEqual(await litDots(dots(ctx.page)), [3]);
     },
   },

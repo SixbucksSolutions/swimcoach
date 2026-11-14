@@ -22,10 +22,9 @@ const WAIT_STEP_MS = 50;
 const WAIT_STEPS = 100;
 const PAGE_WIDTH = 402;
 const SWIPE_PX = 120;
-const OVERVIEW_KEY = "*all*";
 
-/** The page's `data-cur` for the overview. */
-export const ALL_KEY = OVERVIEW_KEY;
+/** What `shown()` returns for the overview, which has no project heading. */
+export const OVERVIEW = "";
 export type { Json };
 
 /** The milestones of a state body, in the server's order. */
@@ -59,18 +58,16 @@ export function only(body: Json, titles: readonly string[]): Json {
   return copy;
 }
 
-/** The page's key for a milestone: JSON.stringify([project, milestone]), ASCII-lowercased. */
-export function keyOf(title: string, body: Json): string {
-  const m = find(body, title);
-  return JSON.stringify([
-    (m.project as string).toLowerCase(),
-    (m.milestone as string).toLowerCase(),
-  ]);
-}
-
-/** One project's display, found by its title. */
-export function displayOf(page: Page, title: string, body: Json): Locator {
-  return page.locator(`#pages > section.page[data-key='${keyOf(title, body)}']`);
+/**
+ * One project's display, found by what Terry sees: the display whose heading reads exactly this
+ * title. The page's own keys are not used, so a V2 may key its displays any way it likes. The third
+ * parameter is kept so callers may still pass the body; it is not read.
+ */
+export function displayOf(page: Page, title: string, _body?: Json): Locator {
+  const exact = new RegExp(`^${title.replaceAll(/[.*+?^${}()|[\]\\]/gu, String.raw`\$&`)}$`, "u");
+  return page
+    .locator("#pages > section.page")
+    .filter({ has: page.locator("h2", { hasText: exact }) });
 }
 
 /** A time as the page writes it: 12-hour, lowercase am or pm, no space (UX-006, UX-008). */
@@ -183,9 +180,14 @@ export async function settleOn(page: Page, index: number): Promise<void> {
   );
 }
 
-/** The key of the display in view, from the page's own `data-cur`. */
-export async function currentKey(page: Page): Promise<string> {
-  return await page.evaluate(`document.querySelector("#pages").dataset.cur`);
+/**
+ * The title of the display on screen: the heading of the section that fills the viewport, or ""
+ * (the overview) when that section has none. It reads only what is drawn.
+ */
+export async function shown(page: Page): Promise<string> {
+  return await page.evaluate(
+    `(() => { const s = [...document.querySelectorAll("#pages > section.page")].find((el) => Math.abs(el.getBoundingClientRect().left) < 2); const h = s?.querySelector("h2"); return h ? h.textContent.trim() : ""; })()`,
+  );
 }
 
 /** The Answer for this body, then the page open on it. */
