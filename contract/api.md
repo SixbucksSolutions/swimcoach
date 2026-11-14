@@ -245,6 +245,10 @@ this is the only way a milestone is done.
 
 - The samples are all of the milestone's stored samples, from `first_report_at` on: no day boundary (6.9).
 - **Values MUST NOT be rounded** in `metrics`. Consumers compare with a tolerance.
+- **`chance_on_time` at the limits.** When the negative binomial's success probability `p` rounds to
+  exactly 0 in floating point, `chance_on_time` MUST be 1; when `1 - p` rounds to 0, it MUST be 0.
+  These are the mathematical limits. The prototype raises `ValueError` there instead, so an
+  implementation ported from it literally would fail at those points (MVP-04 B, PR #9 review).
 - `metrics` ignores decision D1 on purpose. A one-story milestone still gets its math, so the golden
   fixtures (MVP-01 B) check one formula everywhere; D1 lives in `mode`, `color` and `reason`.
 
