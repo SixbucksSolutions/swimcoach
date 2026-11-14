@@ -13,6 +13,7 @@ import { loadCases } from "./overview-load.ts";
 import { slotCases } from "./overview-slots.ts";
 import { smallCases } from "./overview-small.ts";
 import { statusCases } from "./overview-status.ts";
+import { warnCases } from "./overview-warn.ts";
 
 const overviewCases: UiCase[] = [
   ...statusCases,
@@ -22,6 +23,7 @@ const overviewCases: UiCase[] = [
   ...keyboardCases,
   ...layoutCases,
   ...slotCases,
+  ...warnCases,
   ...breathCases,
   ...loadCases,
   ...alertCases,
