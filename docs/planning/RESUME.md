@@ -3,6 +3,22 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
+## T3 closed (2026-11-13, Terry's evening)
+
+- `main` at `086d930` holds all of T3: PRs #17-#22 (Lead HTTP helpers, report and stop routes, state
+  route, CLI client, agent instructions, router wiring), each reviewed by Opus 5.5 / high. CI run
+  43546488067 deployed it.
+- **The API is date-versioned:** `/api/2026-11-13/report`, `/stop`, `/state`; `API_VERSION` lives once
+  in `src/contract.ts`. Terry's rule (quoted in `contract/api.md`): rev the date when adding, changing
+  the behavior of, or removing a method or endpoint; a non-breaking defect fix keeps it.
+- **End-to-end proof against production:** `node cli/swimcoach.ts report` for "zz smoke test" T3
+  stored a card (gray, too early, RTR 1.0667 = 0.40 / 0.375); `GET /api/2026-11-13/state` returned it;
+  `swimcoach stop` removed it; state went back to `no_data`; unversioned `/api/state` answered 404.
+- The CLI is its own npm package (`cli/package.json`) so `@types/node` never enters the Worker's type
+  program; a root `postinstall` installs it. `src/**` also denies Node-only globals in Biome.
+- The page still shows the mock's data. **Next: T4** (MVP-08 page on live data, MVP-09 API acceptance
+  suite). Gate after T4: Terry's phone check of MVP-08 before T5.
+
 ## Access proven (2026-11-13, Terry's evening)
 
 - Terry ran the runbook: Zero Trust org `snowy-queen-54cf` (already existed, Free plan), One-time
