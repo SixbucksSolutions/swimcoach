@@ -26,7 +26,11 @@ export function mockSize(base: number, room: number, natural: number): string {
   return `${Math.max(14, Math.floor(((base * room) / natural) * 10) / 10)}px`;
 }
 
-/** A Title line holding `text`, in a box `room` px wide. */
+/**
+ * A Title line holding `text`, in a box `room` px wide. Set `width` to resize the box. As in a
+ * browser, getBoundingClientRect() gives the fractional width and clientWidth the rounded one, so a
+ * fit that read clientWidth would be caught by a fractional box.
+ */
 export function fakeName(text: string, room: number) {
   const writes: string[] = [];
   const style = new Proxy(
@@ -38,13 +42,16 @@ export function fakeName(text: string, room: number) {
       },
     },
   );
-  return Object.assign(new FakeHtmlElement(), {
+  const name = Object.assign(new FakeHtmlElement(), {
     textContent: text,
-    clientWidth: room,
+    width: room,
     writes,
     style,
     closest: () => ({ className: "pc" }),
+    getBoundingClientRect: (): { width: number } => ({ width: name.width }),
   });
+  Object.defineProperty(name, "clientWidth", { get: () => Math.round(name.width) });
+  return name;
 }
 
 export type FakeName = ReturnType<typeof fakeName>;

@@ -1,142 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { dur } from "../../public/js/format.js";
 import { toView } from "../../public/js/state.js";
-import type { CardView } from "../../public/js/view.js";
+import {
+  changed,
+  example,
+  expectedCard,
+  first,
+  type Json,
+  milestones,
+  NAMES,
+} from "./state-stand-ins.ts";
 
 // toView() (public/js/state.js): the state body to the frozen View (t4-interfaces.md, MVP-08 C).
 // Every contract/schemas/examples/state.*.json goes through it, and every field it reads, removed,
-// MUST make it throw, so the controller counts that poll as failed.
-
-declare global {
-  interface ImportMeta {
-    glob: <T>(pattern: string, options: { eager: true; import: "default" }) => Record<string, T>;
-  }
-}
-
-type Json = Record<string, unknown>;
-
-const EXAMPLE_NAME = /state\.(?<name>[a-z-]+)\.json$/u;
-const EXAMPLES = import.meta.glob<Json>("../../contract/schemas/examples/state.*.json", {
-  eager: true,
-  import: "default",
-});
-const NAMES = Object.keys(EXAMPLES).map((path) => EXAMPLE_NAME.exec(path)?.groups?.name ?? "");
-const DIRS: Record<string, CardView["dir"]> = {
-  sharp_up: 2,
-  up: 1,
-  flat: 0,
-  down: -1,
-  sharp_down: -2,
-};
-const WORDS: Record<string, string> = {
-  done: "Done",
-  running_late: "Running late",
-  toss_up: "Toss-up",
-  too_early: "Too early to call",
-  on_time: "On time",
-  over_budget: "Over budget",
-  under_budget: "Under budget",
-};
-
-/** A deep copy of one example, so a test can change it freely. */
-function example(name: string): Json {
-  const body = EXAMPLES[`../../contract/schemas/examples/state.${name}.json`];
-  if (body === undefined) {
-    throw new Error(`no example ${name}`);
-  }
-  return structuredClone(body);
-}
-
-function milestones(body: Json): Json[] {
-  return body.milestones as Json[];
-}
-
-function first(body: Json): Json {
-  const [m] = milestones(body);
-  if (m === undefined) {
-    throw new Error("the example has no milestone");
-  }
-  return m;
-}
-
-/** The words for a reason, worked out from the raw milestone the way view.js states them. */
-function expectedWhy(m: Json, now: number): string {
-  if (m.reason === "needs_terry") {
-    return m.needs_me as string;
-  }
-  if (m.reason === "silent") {
-    return `Agent silent for ${dur(now - (m.updated_at as number))}`;
-  }
-  if (m.reason === "stalled") {
-    return `No ticket moved in ${dur(now - (m.last_move_at as number))}`;
-  }
-  return WORDS[m.reason as string] ?? "?";
-}
-
-/** The call's parts as view.js states them: null when trend is null, done, or count_and_time. */
-function expectedCall(m: Json): Pick<CardView, "trend" | "dir" | "chance"> {
-  const metrics = m.metrics as Json;
-  const t = metrics.trend as Json | null;
-  if (m.mode !== "ratio" || m.color === "done" || t === null) {
-    return { trend: null, dir: null, chance: null };
-  }
-  const trend = {
-    delta: t.delta as number,
-    minutes: t.minutes as number,
-    proj: t.proj as number | null,
-    recentDone: t.recent_done as number,
-    toGo: t.to_go as number,
-  };
-  return {
-    trend,
-    dir: DIRS[metrics.trend_bin as string] ?? null,
-    chance: metrics.chance_on_time as number,
-  };
-}
-
-/** The CardView for one raw milestone, field by field from the frozen typedef. */
-function expectedCard(m: Json, now: number): CardView {
-  const metrics = m.metrics as Json;
-  const ratio = m.mode === "ratio";
-  const projection = metrics.projection_hours as number | null;
-  let marginSeconds: number | null = null;
-  if (projection !== null) {
-    marginSeconds = ((m.cap_hours as number) - projection) * 3600;
-  }
-  let rtr: number | null = null;
-  if (ratio) {
-    rtr = metrics.rtr as number | null;
-  }
-  return {
-    key: JSON.stringify([
-      (m.project as string).toLowerCase(),
-      (m.milestone as string).toLowerCase(),
-    ]),
-    title: `${m.project} ${m.milestone}`,
-    agent: m.agent as CardView["agent"],
-    level: m.color as CardView["level"],
-    reason: m.reason as string,
-    why: expectedWhy(m, now),
-    needsMe: m.needs_me as string | null,
-    stale: m.stale as boolean,
-    silentSeconds: now - (m.updated_at as number),
-    mode: m.mode as CardView["mode"],
-    tooEarly: ratio && m.color !== "done" && metrics.too_early === true,
-    rtr,
-    ...expectedCall(m),
-    marginSeconds,
-    work: metrics.work as number | null,
-    clock: metrics.clock as number,
-    finished: m.finished as number,
-    total: m.total as number,
-    activeHours: m.active_hours as number,
-    capHours: m.cap_hours as number,
-    lanes: m.lanes as CardView["lanes"],
-    spark: m.spark as CardView["spark"],
-    updatedAt: m.updated_at as number,
-    lastMoveAt: m.last_move_at as number,
-  };
-}
+// MUST make it throw, so the controller counts that poll as failed. The fixtures and the expected
+// CardView builder are in state-stand-ins.ts.
 
 describe("toView over every state example", () => {
   it("finds the examples", () => {
@@ -220,14 +97,45 @@ describe("toView: the documented nulls and words", () => {
   });
 });
 
-// Every field toView() reads. One it does not read (first_report_at, stalled, trend_minutes,
-// min_stories_for_rtr, metrics.call, trend.pace, trend.finish) is not listed. "m" is the first card.
+describe("toView: callWhy, the call a red display's hero shows (visual review MVP-08, item 2)", () => {
+  it("words the keyboard example's red cards as the mock's heroes did", () => {
+    const red = toView(example("keyboard")).cards.filter((c) => c.level === "red");
+    expect(red.map((c) => [c.title, c.callWhy])).toEqual([
+      ["localswim V2 T06", "On time"],
+      ["search-index T03", "Running late"],
+    ]);
+    const afternoon = toView(example("afternoon")).cards.find((c) => c.level === "red");
+    expect([afternoon?.title, afternoon?.callWhy]).toEqual(["search-index T03", "Running late"]);
+  });
+
+  it("gives callWhy the same words as why on every other card", () => {
+    for (const name of NAMES) {
+      for (const c of toView(example(name)).cards.filter((x) => x.reason !== "needs_terry")) {
+        expect(c.callWhy).toBe(c.why);
+      }
+    }
+  });
+
+  it("takes the server's call as sent, never recomputed from chance", () => {
+    const body = changed(
+      { color: "red", reason: "needs_terry", needs_me: "Pick one", stalled: true },
+      { call: "toss_up", chance_on_time: 0.99 },
+    );
+    expect(toView(body).cards[0]?.callWhy.startsWith("No ticket moved in ")).toBe(true);
+    Object.assign(first(body), { stalled: false });
+    expect(toView(body).cards[0]?.callWhy).toBe("Toss-up");
+  });
+});
+
+// Every field toView() reads. One it does not read (first_report_at, trend_minutes,
+// min_stories_for_rtr, trend.pace, trend.finish) is not listed. "m" is the first card.
 const READ = [
   "now last_report_at feed thresholds milestones",
   "thresholds.stale_minutes thresholds.stall_minutes thresholds.min_history_minutes",
   "thresholds.min_block_used m.project m.milestone m.agent m.active_hours m.cap_hours m.lanes",
-  "m.needs_me m.updated_at m.last_move_at m.finished m.total m.stale m.mode m.color m.reason",
-  "m.metrics m.spark metrics.work metrics.clock metrics.rtr metrics.too_early metrics.trend",
+  "m.needs_me m.updated_at m.last_move_at m.finished m.total m.stale m.stalled m.mode m.color",
+  "m.reason m.metrics m.spark metrics.work metrics.clock metrics.rtr metrics.too_early",
+  "metrics.call metrics.trend",
   "metrics.trend_bin metrics.projection_hours metrics.chance_on_time trend.delta trend.minutes",
   "trend.proj trend.recent_done trend.to_go lanes.ready_for_work lanes.in_progress",
   "lanes.needs_terry lanes.ready_for_review lanes.completed",
@@ -261,15 +169,6 @@ describe("toView refuses a body missing a field it reads", () => {
     expect(() => toView(body)).toThrow(TypeError);
   });
 });
-
-/** The allgreen example with its first card changed. */
-function changed(patch: Json, metrics: Json = {}): Json {
-  const body = example("allgreen");
-  const m = first(body);
-  Object.assign(m, patch);
-  Object.assign(m.metrics as Json, metrics);
-  return body;
-}
 
 describe("toView refuses a body with a wrong value", () => {
   it.each([

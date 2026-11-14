@@ -8,6 +8,7 @@ import {
   esc,
   fmtTime,
   hm,
+  hoursOfCap,
   LANE_LABELS,
   POLL_MS,
   pct,
@@ -46,6 +47,18 @@ describe("dur", () => {
     [2 * 3600 + 59 * 60 + 40, "3h 00m"],
   ])("writes %i s as %s", (seconds, want) => {
     expect(dur(seconds)).toBe(want);
+  });
+});
+
+describe("hoursOfCap", () => {
+  it.each([
+    [0.75, 2, "0.75 of 2.0"],
+    [1.5, 4, "1.5 of 4.0"],
+    [2, 6, "2 of 6.0"],
+    [2.274, 4.04, "2.27 of 4.0"],
+    [0.1 + 0.2, 1.25, "0.3 of 1.3"],
+  ])("writes %d of %d hours as %s", (used, cap, want) => {
+    expect(hoursOfCap(used, cap)).toBe(want);
   });
 });
 

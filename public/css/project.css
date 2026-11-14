@@ -180,7 +180,7 @@ h4 {
   background: var(--panel2);
   gap: 2px;
 }
-/* biome-ignore lint/style/noDescendingSpecificity: compared with .meter .bar i, a different bar; the rule matches selectors by their last part alone. */
+/* biome-ignore lint/style/noDescendingSpecificity: compared with .meter .bar.t i, a different bar; the rule matches selectors by their last part alone. */
 .stack i {
   display: block;
   height: 100%;
@@ -201,7 +201,7 @@ h4 {
   gap: 8px;
   align-items: center;
 }
-/* biome-ignore lint/style/noDescendingSpecificity: compared with .stack i, a different element; the rule matches selectors by their last part alone. */
+/* biome-ignore lint/style/noDescendingSpecificity: compared with .meter .bar.t i, a different element; the rule matches selectors by their last part alone. */
 .lanes .lt i {
   width: 12px;
   height: 12px;
@@ -223,7 +223,7 @@ h4 {
   background: var(--panel2);
   overflow: hidden;
 }
-/* biome-ignore lint/style/noDescendingSpecificity: compared with .stack i, a different element; the rule matches selectors by their last part alone. */
+/* biome-ignore lint/style/noDescendingSpecificity: compared with .meter .bar.t i, a different element; the rule matches selectors by their last part alone. */
 .lanes .lbar i {
   display: block;
   height: 100%;

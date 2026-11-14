@@ -5,7 +5,18 @@
 
 /** @import { CardView, View } from "./view.js" */
 
-import { ALL, clockRtr, dur, esc, hm, LANE_LABELS, pct, TONE, TREND } from "./format.js";
+import {
+  ALL,
+  clockRtr,
+  dur,
+  esc,
+  hm,
+  hoursOfCap,
+  LANE_LABELS,
+  pct,
+  TONE,
+  TREND,
+} from "./format.js";
 
 /**
  * The lanes that become rows, in board order. Completed is never a row (Terry, 2026-11-13; UX-093,
@@ -92,7 +103,8 @@ function chart(card, tone) {
 
 /**
  * The hero: the big RTR with its clock hand and a label, or the card's `why` alone in small-block mode
- * (UX-134).
+ * (UX-134). A needs_terry card shows its `callWhy` instead: the flag below already carries the ask, and
+ * the mock's hero always showed the call (visual review MVP-08, item 2).
  * @param {CardView} card
  * @param {string} tone
  * @returns {string}
@@ -107,7 +119,11 @@ function hero(card, tone) {
       label += ` &middot; ${TREND[card.dir][0].toLowerCase()}`;
     }
   }
-  return `<div class="hero" style="--c:var(${tone})">${big}<div class="lab">${label}<b>${esc(card.why)}</b></div></div>`;
+  let words = card.why;
+  if (card.reason === "needs_terry") {
+    words = card.callWhy;
+  }
+  return `<div class="hero" style="--c:var(${tone})">${big}<div class="lab">${label}<b>${esc(words)}</b></div></div>`;
 }
 
 /**
@@ -169,7 +185,7 @@ function workAgainstTime(card, tone) {
   if (card.work !== null) {
     rows += `<label>Work</label><div class="bar"><i style="width:${pct(card.work)}%"></i></div><div class="cap"><b>${card.finished} of ${card.total}</b> tickets &middot; ${Math.round(card.work * 100)}%</div>`;
   }
-  const hours = `<b>${Number(card.activeHours.toFixed(2))} of ${card.capHours.toFixed(1)}</b> hrs &middot; ${Math.round(card.clock * 100)}%`;
+  const hours = `<b>${hoursOfCap(card.activeHours, card.capHours)}</b> hrs &middot; ${Math.round(card.clock * 100)}%`;
   rows += `<label>Time</label><div class="bar t"><i style="width:${pct(card.clock)}%"></i></div><div class="cap">${hours}</div>`;
   return `<h4>Work against time</h4><div class="meter" style="--c:var(${tone})">${rows}</div>`;
 }

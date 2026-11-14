@@ -2,12 +2,12 @@
 // The state body to the frozen View (docs/planning/t4-interfaces.md, MVP-08 C). The controller calls
 // toView() once per successful poll of GET /api/2026-11-13/state; both renderers read only its result.
 // The server computes every metric and verdict (contract/api.md section 6). This module renames them,
-// applies the documented nulls, and builds the `why` words. It recomputes no verdict.
+// applies the documented nulls, and words `why` and `callWhy` (words.js). It recomputes no verdict.
 //
 // toView() MUST throw on a body missing a field it reads (or holding the wrong type there), so a
 // half-deployed or foreign body counts as a failed poll rather than painting a wrong board.
 
-import { dur } from "./format.js";
+import { reasonPastAsk, wordsFor } from "./words.js";
 
 /** @import { CardView, Dir, View } from "./view.js" */
 
@@ -17,25 +17,11 @@ const FEEDS = /** @type {const} */ (["no_data", "idle", "stale", "live"]);
 const LEVELS = /** @type {const} */ (["green", "yellow", "red", "gray", "done"]);
 const AGENTS = /** @type {const} */ (["codex", "claude"]);
 const MODES = /** @type {const} */ (["ratio", "count_and_time"]);
+const CALLS = /** @type {const} */ (["on_time", "running_late", "toss_up"]);
 
 /** metrics.trend_bin to the clock-hand direction (concept.md section 3.2). */
 /** @type {Readonly<Record<string, Dir>>} */
 const DIRS = Object.freeze({ sharp_up: 2, up: 1, flat: 0, down: -1, sharp_down: -2 });
-
-/**
- * The fixed words for each state.reason that carries no number (api.md 6.6; Terry, 2026-11-13, for
- * the budget pair, UX-133). needs_terry, silent and stalled are built in whyOf().
- * @type {Readonly<Record<string, string>>}
- */
-const WORDS = Object.freeze({
-  done: "Done",
-  running_late: "Running late",
-  toss_up: "Toss-up",
-  too_early: "Too early to call",
-  on_time: "On time",
-  over_budget: "Over budget",
-  under_budget: "Under budget",
-});
 
 /**
  * Throws a TypeError naming the field, so a failed poll says what was wrong in the console.
@@ -206,7 +192,7 @@ function needsMeOf(m, path) {
 }
 
 /**
- * The words for state.reason, aged to the body's now (frozen in view.js).
+ * The words for state.reason (words.js), or a TypeError naming the field that left none.
  * @param {string} reason
  * @param {string|null} needsMe
  * @param {{silent: number, idle: number}} ages   now - updated_at, now - last_move_at
@@ -214,16 +200,46 @@ function needsMeOf(m, path) {
  * @returns {string}
  */
 function whyOf(reason, needsMe, ages, path) {
+  const words = wordsFor(reason, needsMe, ages);
+  if (words !== null) {
+    return words;
+  }
   if (reason === "needs_terry") {
-    return needsMe ?? bad(`${path}.needs_me`, "a string when reason is needs_terry");
+    return bad(`${path}.needs_me`, "a string when reason is needs_terry");
   }
-  if (reason === "silent") {
-    return `Agent silent for ${dur(ages.silent)}`;
+  return bad(`${path}.reason`, "a known reason");
+}
+
+/**
+ * The words for the call without the ask (view.js, `callWhy`): `why` itself unless the reason is
+ * needs_terry. Reads `stalled` and `metrics.call` on every card, so a body missing either throws
+ * whatever the card's reason.
+ * @param {{reason: string, why: string, needsMe: string|null, mode: CardView["mode"], stale: boolean, tooEarly: boolean, ages: {silent: number, idle: number}}} card
+ * @param {Obj} m
+ * @param {Obj} metrics
+ * @param {string} path
+ * @returns {string}
+ */
+function callWhyOf(card, m, metrics, path) {
+  const stalled = bool(m, "stalled", path);
+  /** @type {string|null} */
+  let call = null;
+  if (metrics.call !== null) {
+    call = oneOf(metrics, "call", CALLS, `${path}.metrics`);
   }
-  if (reason === "stalled") {
-    return `No ticket moved in ${dur(ages.idle)}`;
+  if (card.reason !== "needs_terry") {
+    return card.why;
   }
-  return WORDS[reason] ?? bad(`${path}.reason`, "a known reason");
+  const next = reasonPastAsk({
+    mode: card.mode,
+    stale: card.stale,
+    stalled,
+    call,
+    tooEarly: card.tooEarly,
+    activeHours: num(m, "active_hours", path),
+    capHours: num(m, "cap_hours", path),
+  });
+  return whyOf(next, card.needsMe, card.ages, path);
 }
 
 /**
@@ -317,15 +333,19 @@ function cardOf(raw, now, path) {
     shownRtr = rtr;
   }
   const ages = { silent: now - updatedAt, idle: now - lastMoveAt };
+  const why = whyOf(reason, needsMe, ages, path);
+  const stale = bool(m, "stale", path);
+  const card = { reason, why, needsMe, mode, stale, tooEarly, ages };
   return {
     key: JSON.stringify([asciiLower(project), asciiLower(milestone)]),
     title: `${project} ${milestone}`,
     agent: oneOf(m, "agent", AGENTS, path),
     level,
     reason,
-    why: whyOf(reason, needsMe, ages, path),
+    why,
+    callWhy: callWhyOf(card, m, metrics, path),
     needsMe,
-    stale: bool(m, "stale", path),
+    stale,
     silentSeconds: ages.silent,
     mode,
     tooEarly: callable && tooEarly,

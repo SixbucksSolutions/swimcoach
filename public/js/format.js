@@ -136,6 +136,19 @@ export function dur(sec) {
 }
 
 /**
+ * Hours used of the cap, as "0.75 of 2.0": the used hours to two decimals with trailing zeros dropped,
+ * the cap to one decimal, as the mock's project display wrote them (mocks/index.html 395). The one
+ * spelling for both the small-block card and the display, so a swipe never changes how a number reads
+ * (visual review MVP-08, item 12). The caller adds the unit.
+ * @param {number} used
+ * @param {number} cap
+ * @returns {string}
+ */
+export function hoursOfCap(used, cap) {
+  return `${Number(used.toFixed(2))} of ${cap.toFixed(1)}`;
+}
+
+/**
  * The RTR with its trend as a clock hand around the final digit (concept.md section 3.2). Used by the
  * overview card and the project display's hero.
  * @param {number} ratio

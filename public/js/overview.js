@@ -5,7 +5,7 @@
 
 /** @import { CardView, View } from "./view.js" */
 
-import { clockRtr, esc } from "./format.js";
+import { clockRtr, esc, hoursOfCap } from "./format.js";
 
 /** The gap between slots in px; the same 10px as `.cards{gap}` in overview.css. */
 const SLOT_GAP = 10;
@@ -32,15 +32,6 @@ const NAME_MIN_PX = 14;
 const EMPTY_STATE = '<div class="empty">No reports yet today.</div>';
 
 /**
- * Hours as a short number: 4 stays "4" and 2.25 becomes "2.3", never "2.250000001".
- * @param {number} hours
- * @returns {string}
- */
-function hoursText(hours) {
-  return String(Number(hours.toFixed(1)));
-}
-
-/**
  * The Detail blurb under a card's Title line, or "" for none (concept.md 3.2).
  * Ratio mode: green shows nothing; every other level shows the words for its reason.
  * count_and_time mode (UX-131): "N of M done · H of C hrs", unless the card is done ("Done") or
@@ -53,7 +44,7 @@ function blurb(card) {
     if (card.level === "done" || card.reason === "silent") {
       return card.why;
     }
-    return `${card.finished} of ${card.total} done · ${hoursText(card.activeHours)} of ${hoursText(card.capHours)} hrs`;
+    return `${card.finished} of ${card.total} done · ${hoursOfCap(card.activeHours, card.capHours)} hrs`;
   }
   if (card.level === "green") {
     return "";
@@ -222,7 +213,10 @@ function measureNameSize(probe, spec) {
  * @returns {string|null}
  */
 function wantedNameSize(name, half, basePx, state) {
-  const room = name.clientWidth;
+  // The fractional box, not clientWidth: clientWidth rounds, so a 167.656px box reads 168 and accepts
+  // a 167.969px name that CSS then ellipsizes. No transform sits on the name, so this is its layout
+  // width.
+  const room = name.getBoundingClientRect().width;
   if (room === 0) {
     return null;
   }

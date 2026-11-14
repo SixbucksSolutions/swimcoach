@@ -25,6 +25,7 @@
  * @property {Level} level
  * @property {string} reason          state.reason, unchanged
  * @property {string} why             the words for reason (api.md 6.6), aged to view.now; see below
+ * @property {string} callWhy         the words for the call without the ask; see below
  * @property {string|null} needsMe
  * @property {boolean} stale          state.stale; silentSeconds = now - updatedAt
  * @property {number} silentSeconds
@@ -48,7 +49,7 @@
  */
 
 // The `why` words, one per state.reason (frozen; t4-interfaces.md, and Terry 2026-11-13 for the budget
-// pair, UX-133). state.js builds them; dur() is format.js's.
+// pair, UX-133). words.js words them and state.js calls it; dur() is format.js's.
 //   done           "Done"
 //   needs_terry    the needs_me text
 //   silent         "Agent silent for " + dur(silentSeconds)
@@ -59,5 +60,16 @@
 //   on_time        "On time"
 //   over_budget    "Over budget"
 //   under_budget   "Under budget"
+//
+// `callWhy` is `why` for every reason but needs_terry. On a needs_terry card it is the words for the
+// first api.md 6.6 row AFTER needs_terry that the state's fields match, so a red display's hero keeps
+// the call while the "Go to keyboard" flag carries the ask, the only place the ask shows: the
+// overview's GO TO KEYBOARD slot lists red cards by title (visual review MVP-08, item 2; the mock's
+// facts() never put the ask in the hero). words.js reasonPastAsk() walks those rows' own
+// fields, which state.js reads, in order:
+//   ratio            stale -> silent; metrics.call running_late; stalled; metrics.call toss_up;
+//                    metrics.too_early; else on_time
+//   count_and_time   stale -> silent; active_hours > cap_hours -> over_budget; else under_budget
+// It takes the server's metrics.call as sent and never recomputes it from chance (api.md 6).
 
 export {};
