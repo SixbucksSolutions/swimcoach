@@ -72,7 +72,7 @@ function percent(count: number, total: number): string {
 
 export const laneCases: UiCase[] = [
   {
-    ids: ["UX-093", "UX-094", "UX-096"],
+    ids: ["UX-168", "UX-169", "UX-096"],
     title:
       "Swimlanes: Ready For Work, In progress and Ready for review, each with count, share and its own bar",
     async run(ctx) {

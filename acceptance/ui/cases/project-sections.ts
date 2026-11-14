@@ -208,20 +208,32 @@ export const sectionCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-090"],
-    title: "The Work bar takes the display's color on a green and on a yellow display",
+    ids: ["UX-167"],
+    title: "The Work bar takes the display's color on every level; the Time bar stays neutral",
     async run(ctx) {
       const body = ctx.example("afternoon");
       const green = await showProject(ctx, body, "FGA T04");
-      const yellow = displayOf(ctx.page, "docs-site T02", body);
-      const [ok, risk, dim] = await Promise.all(
-        ["--ok", "--risk", "--dim"].map((name) => token(ctx.page, name)),
+      const levels = [
+        [green, "--ok"],
+        [displayOf(ctx.page, "docs-site T02", body), "--risk"],
+        [displayOf(ctx.page, "search-index T03", body), "--bad"],
+        [displayOf(ctx.page, "auth-refresh M3", body), "--dim"],
+        [displayOf(ctx.page, "localswim V2 T06", body), "--done"],
+      ] as const;
+      const dim = await token(ctx.page, "--dim");
+      const seen = await Promise.all(
+        levels.map(async ([display, tone]) => ({
+          tone,
+          work: await style(workBar(display), "backgroundColor"),
+          want: await token(ctx.page, tone),
+          time: await style(timeBar(display), "backgroundColor"),
+        })),
       );
-      assert.equal(await style(workBar(green), "backgroundColor"), ok);
-      assert.equal(await style(workBar(yellow), "backgroundColor"), risk);
-      // The Time bar is the same neutral on both.
-      assert.equal(await style(timeBar(green), "backgroundColor"), dim);
-      assert.equal(await style(timeBar(yellow), "backgroundColor"), dim);
+      for (const { tone, work, want, time } of seen) {
+        assert.equal(work, want, `${tone}: Work bar`);
+        // The Time bar is the same neutral on every level.
+        assert.equal(time, dim, `${tone}: Time bar`);
+      }
     },
   },
   {
