@@ -17,11 +17,11 @@ node acceptance/api/run.ts --config <file> --suite clock-free|full
 
 Both flags are required. There is no default config and no `--url`.
 
-| Flag | Meaning |
-| --- | --- |
-| `--config <file>` | A JSON file shaped like the CLI's config ([`contract/cli.md`](../contract/cli.md) section 5): `url`, `access_client_id`, `access_client_secret`. The secret goes only to the `url` beside it |
-| `--suite clock-free` | Cases that send no `Swimcoach-Test-Now` header. MAY run against production |
-| `--suite full` | Every case. Needs a test deployment with the test clock on |
+| Flag                 | Meaning                                                                                                                                                                                      |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--config <file>`    | A JSON file shaped like the CLI's config ([`contract/cli.md`](../contract/cli.md) section 5): `url`, `access_client_id`, `access_client_secret`. The secret goes only to the `url` beside it |
+| `--suite clock-free` | Cases that send no `Swimcoach-Test-Now` header. MAY run against production                                                                                                                   |
+| `--suite full`       | Every case. Needs a test deployment with the test clock on                                                                                                                                   |
 
 Production uses `cli.json`. The test deployment uses `cli-test.json` beside it, which Terry makes by
 copying `cli.json` and changing `url`. An agent MUST NOT read or copy either file's values.
@@ -42,20 +42,20 @@ Exit status is `node:test`'s: non-zero when any case fails.
 
 ## Files
 
-| File | Job |
-| --- | --- |
-| `api/types.ts` | The frozen case format. Written by the Lead; not edited here |
-| `api/run.ts` | Parses the flags, loads the config, registers the cases |
-| `api/config.ts` | Reads the config file; errors name keys and paths, never values |
-| `api/transport.ts` | The one HTTP request: Access headers, test clock header, `redirect: "manual"` |
-| `api/guard.ts` | The clock-free tier's production rules |
-| `api/harness.ts` | `createHarness`: `report`, `stop`, `state`, `replay`, the opening reset and the cleanup |
-| `api/runner.ts` | Turns cases into sequential `node:test` tests |
-| `api/schema.ts` | `expectSchema` over `contract/schemas`, with Ajv (2020 dialect) |
-| `api/compare.ts` | `expectClose`: numbers within 1e-9, everything else exact |
-| `api/fixtures.ts` | Loads `contract/fixtures/*.json` |
-| `api/selftest/` | Proves the harness against a local `node:http` stub. `npm run selftest --prefix acceptance` |
-| `api/cases/` | The cases themselves (MVP-09 B) |
+| File               | Job                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| `api/types.ts`     | The frozen case format. Written by the Lead; not edited here                                |
+| `api/run.ts`       | Parses the flags, loads the config, registers the cases                                     |
+| `api/config.ts`    | Reads the config file; errors name keys and paths, never values                             |
+| `api/transport.ts` | The one HTTP request: Access headers, test clock header, `redirect: "manual"`               |
+| `api/guard.ts`     | The clock-free tier's production rules                                                      |
+| `api/harness.ts`   | `createHarness`: `report`, `stop`, `state`, `replay`, the opening reset and the cleanup     |
+| `api/runner.ts`    | Turns cases into sequential `node:test` tests                                               |
+| `api/schema.ts`    | `expectSchema` over `contract/schemas`, with Ajv (2020 dialect)                             |
+| `api/compare.ts`   | `expectClose`: numbers within 1e-9, everything else exact                                   |
+| `api/fixtures.ts`  | Loads `contract/fixtures/*.json`                                                            |
+| `api/selftest/`    | Proves the harness against a local `node:http` stub. `npm run selftest --prefix acceptance` |
+| `api/cases/`       | The cases themselves (MVP-09 B)                                                             |
 
 ## Writing a case
 
