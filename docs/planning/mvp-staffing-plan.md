@@ -145,7 +145,13 @@ every re-reviewer after a correction. Author roles keep the model and effort the
    - **The Lead merges `mvp/integration` into `main` at each turn's close** (Terry, 2026-11-13), once
      every story in the turn is reviewed and squash-merged. That push deploys. Afterward the Lead
      fast-forwards `mvp/integration` to `main` for the next turn.
-8. **The Lead owns turn entry gates** (Terry, 2026-11-13). The Lead alone merges to `main`, and the
+8. **Every turn starts from exactly two branches at one commit** (Terry, 2026-11-14, verbatim: "at
+   start of turn we should have exactly two branches, main and integration, and they should be at the
+   same commit"). Before the first author of a turn is dispatched, the Lead MUST show, locally and on
+   the remote, that `main` and `mvp/integration` are the only branches and that both point at the same
+   commit, and MUST record that commit in RESUME as the turn's base. No dev branch, parked draft or
+   worktree from the last turn carries over.
+   **The Lead owns turn entry gates** (Terry, 2026-11-13). The Lead alone merges to `main`, and the
    Lead alone decides when turn N+1 opens: only after every turn-N story is squash-merged, `main`
    holds the merge, CI's deploy passed, and the deployed Worker shows the turn's result. Terry's own
    gates stay his and the Lead MUST NOT open past them: the MVP-05 Access steps, the MVP-08 phone
