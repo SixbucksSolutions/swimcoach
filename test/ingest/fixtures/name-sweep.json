@@ -1,0 +1,47 @@
+{
+  "provenance": "Verdicts from Python jsonschema 4.26.0 (Draft202012Validator) on contract/schemas/report.schema.json, Python 3.15.2, 2026-11-13, by MVP-03 B. Regenerate with the oracle script described in the PR that added this file.",
+  "points": "Every code point U+0000-U+FFFF (surrogates included), plus U+10000, U+1F600, U+E0001 and U+10FFFF.",
+  "names": {
+    "alone": "c",
+    "start": "c + 'ab'",
+    "middle": "'a' + c + 'b'",
+    "end": "'ab' + c"
+  },
+  "names_checked": 262160,
+  "refused": {
+    "alone": [
+      [0, 32],
+      [127, 160],
+      [5760, 5760],
+      [8192, 8202],
+      [8232, 8233],
+      [8239, 8239],
+      [8287, 8287],
+      [12288, 12288],
+      [65279, 65279]
+    ],
+    "start": [
+      [0, 32],
+      [127, 160],
+      [5760, 5760],
+      [8192, 8202],
+      [8232, 8233],
+      [8239, 8239],
+      [8287, 8287],
+      [12288, 12288],
+      [65279, 65279]
+    ],
+    "middle": [[0, 31], [127, 159], [8232, 8233]],
+    "end": [
+      [0, 32],
+      [127, 160],
+      [5760, 5760],
+      [8192, 8202],
+      [8232, 8233],
+      [8239, 8239],
+      [8287, 8287],
+      [12288, 12288],
+      [65279, 65279]
+    ]
+  }
+}

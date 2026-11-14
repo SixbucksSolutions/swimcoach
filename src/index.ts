@@ -1,6 +1,9 @@
 // Placeholder Worker. Static assets answer "/" before this handler runs; MVP-07 owns the real API.
 // The Lead owns this router (mvp-staffing-plan.md, "Integration ownership").
 
+// biome-ignore lint/performance/noBarrelFile: workerd finds a Durable Object class only as an export of the main module.
+export { Board } from "./board/board.ts";
+
 export default {
   fetch(request: Request): Response {
     const { pathname } = new URL(request.url);

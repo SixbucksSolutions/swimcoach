@@ -63,7 +63,13 @@
         // 1 finding: the cloudflare:workers import in the test. A virtual module supplied by
         // the Workers runtime and typed by @cloudflare/vitest-plugin, so Biome cannot resolve
         // it. False positive; tsc resolves it and is the real check.
-        "noUnresolvedImports": "off"
+        "noUnresolvedImports": "off",
+        // 2 findings in T2 (MVP-03 B on a module-level arrow function, MVP-04 A on an arrow
+        // function in a test), both false positives: this rule checks Qwik's $() lexical-scope
+        // rules, and swimcoach does not use Qwik. Biome's other framework rules (React, Vue,
+        // Svelte, Solid, Next) need framework syntax to fire and have reported nothing; revisit
+        // any of them that ever fires on plain TypeScript.
+        "useQwikValidLexicalScope": "off"
       },
       "style": {
         // 2 findings: src/index.ts and vitest.config.ts. A Worker MUST default-export its
@@ -79,7 +85,9 @@
         // rule stays on for everything else; type and object-literal properties may also be
         // snake_case. Once that override applied, 2 more findings appeared: ACCESS_TEAM_DOMAIN
         // and ACCESS_AUD, Worker variable names, which Cloudflare's own convention writes in
-        // CONSTANT_CASE; type properties may therefore also be CONSTANT_CASE.
+        // CONSTANT_CASE; type properties may therefore also be CONSTANT_CASE. MVP-05 A (PR #11)
+        // then hit the same names in object literals (an AccessConfig built in a test), so
+        // object-literal properties may also be CONSTANT_CASE.
         // Level error, not on: "on" means the rule's default severity, info, which never fails.
         "useNamingConvention": {
           "level": "error",
@@ -91,7 +99,7 @@
               },
               {
                 "selector": { "kind": "objectLiteralProperty" },
-                "formats": ["camelCase", "snake_case"]
+                "formats": ["camelCase", "snake_case", "CONSTANT_CASE"]
               }
             ]
           }
