@@ -79,14 +79,26 @@ html.loading body {
   position: relative;
   display: flex;
   flex-direction: column;
-  /* 100%, not 100dvh: the home-screen app draws under the status bar (black-translucent), and
-     standalone WebKit reports 100dvh as the screen minus that bar, which left a 62 px gap under the
-     dots on an iPhone 16 Pro (UX-172). html and body are 100% of the whole screen. */
-  height: 100%;
+  height: 100dvh;
   width: 100%;
   overflow: hidden;
   padding-top: env(safe-area-inset-top);
   background: var(--bg);
+}
+
+/* The home-screen app (UX-172). It draws from the top of the screen, under the status bar
+   (black-translucent), but standalone WebKit sizes the viewport as the screen minus that bar: on an
+   iPhone 16 Pro, innerHeight, 100%, 100dvh and fixed bottom:0 all measure 812 of 874 px, which left a
+   62 px dead band under the dots. Only 100vh and 100lvh measure the whole screen (measured on Terry's
+   phone, 2026-11-14). html and body grow with the frame, because body's overflow: hidden would
+   otherwise clip it at 812. A browser tab keeps 100dvh, where 100vh could slide under the toolbar. */
+/* biome-ignore lint/suspicious/useBaseline: only iOS WebKit's home-screen app needs this rule; a browser without display-mode skips it and keeps the browser-tab sizing above, the safe fallback. */
+@media (display-mode: standalone) {
+  html,
+  body,
+  #phone {
+    height: 100vh;
+  }
 }
 
 header {
