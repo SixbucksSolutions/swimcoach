@@ -23,6 +23,12 @@ const USAGE =
   "Usage: node acceptance/ui/run.ts (--config <file> | --local <dir>) [--browser webkit|chrome]\n";
 const USAGE_ERROR = 2;
 const UX_ID = /^UX-\d{3}$/u;
+/**
+ * A case that has not finished in two minutes fails instead of hanging the run (the MVP-11 A
+ * author saw runs against the test Worker hang for over ten minutes). The slowest case waits a real
+ * 41 s (UX-157).
+ */
+const CASE_TIMEOUT_MS = 120_000;
 
 function fail(message: string): never {
   process.stderr.write(`${message}\n${USAGE}`);
@@ -148,6 +154,6 @@ describe(`swimcoach UI acceptance (${flags.browser}, ${new URL(target.url).host}
     await stopLocal?.();
   });
   for (const entry of cases) {
-    it(`${entry.ids.join(" ")} ${entry.title}`, () => runCase(entry));
+    it(`${entry.ids.join(" ")} ${entry.title}`, { timeout: CASE_TIMEOUT_MS }, () => runCase(entry));
   }
 });

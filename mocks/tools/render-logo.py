@@ -7,6 +7,11 @@ Writes, next to the SVG:
     swimcoach-512.png        the mark at 512 x 512, transparent corners
     swimcoach-touch-180.png  the iPhone home-screen icon: 180 x 180, the mark centered on the page's
                              dark ground (#0b0f14), full bleed, because iOS rounds the corners itself
+and, for the MVP page's web app manifest, the same full-bleed treatment in public/icons/:
+    icon-192.png, icon-512.png
+The iPhone touch icon stays embedded in the page as a data URI (embed-logo.py): every path on the
+Worker sits behind Cloudflare Access, and a served icon fetched without the login cookie would get the
+login redirect instead.
 """
 
 import argparse
@@ -17,6 +22,8 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
 LOGO = ROOT / "design" / "logo"
+ICONS = ROOT / "public" / "icons"
+GROUND = "#0b0f14"  # --bg in docs/brand.md section 5
 
 
 def page(svg: str, size: int, ground: str | None, inset: float) -> str:
@@ -49,9 +56,16 @@ def main() -> None:
     parser.parse_args()
     svg = (LOGO / "swimcoach.svg").read_text(encoding="utf-8")
     shoot(page(svg, 512, None, 0), 512, LOGO / "swimcoach-512.png")
-    shoot(page(svg, 180, "#0b0f14", 0.16), 180, LOGO / "swimcoach-touch-180.png")
+    shoot(page(svg, 180, GROUND, 0.16), 180, LOGO / "swimcoach-touch-180.png")
     for f in ("swimcoach-512.png", "swimcoach-touch-180.png"):
         print("Wrote", (LOGO / f).relative_to(ROOT))
+    # The manifest's icons, served from /icons/<name>.png. Full bleed on the page ground, like the
+    # touch icon. Not maskable: the mark reaches past a maskable icon's 40 % safe circle.
+    ICONS.mkdir(parents=True, exist_ok=True)
+    sizes = ((192, "icon-192.png"), (512, "icon-512.png"))
+    for size, name in sizes:
+        shoot(page(svg, size, GROUND, 0.16), size, ICONS / name)
+        print("Wrote", (ICONS / name).relative_to(ROOT))
 
 
 if __name__ == "__main__":

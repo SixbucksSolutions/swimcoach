@@ -21,6 +21,7 @@ const VIEWPORT = { width: 402, height: 874 } as const;
 const DEVICE_SCALE = 3;
 const REVEAL_STEP_MS = 100;
 const REVEAL_STEPS = 60;
+const PAUSE_AHEAD_MS = 1000;
 const MS_PER_SECOND = 1000;
 const HTTP_OK = 200;
 const HTTP_FOUND = 302;
@@ -170,9 +171,12 @@ async function newCaseContext(
     startMs: Date.now(),
     failures: [],
   };
-  // Paused, so page time moves only through open() and advance(), and now() always matches it.
+  // Paused, so page time moves only through open() and advance(), and now() always matches it. The
+  // pause point is one second past the install time: real time keeps running between the two calls,
+  // and pausing at the install time itself can land "in the past" (MVP-11 A review, 2026-11-14).
   await page.clock.install({ time: state.startMs });
-  await page.clock.pauseAt(state.startMs);
+  await page.clock.pauseAt(state.startMs + PAUSE_AHEAD_MS);
+  state.advancedMs = PAUSE_AHEAD_MS;
   await routeStatePolls(page, target, state);
   return {
     page,
