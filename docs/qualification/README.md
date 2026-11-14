@@ -3,13 +3,15 @@
 Written 2026-11-14 by MVP-12 A from the two evidence packets beside it:
 [`provenance.md`](provenance.md) (MVP-12 C: what ran where, the fresh runs, independence, renders) and
 [`coverage.md`](coverage.md) (MVP-12 B: what the suites cover and what they do not). RFC 2119
-keywords; the capitals are load-bearing. Every number here is copied from one of those two pages, and
-each is cited; nothing is rounded or added.
+keywords; the capitals are load-bearing. Every number here is copied from one of those two pages, or
+from a command or review named beside it, and each is cited; nothing is rounded or added.
 
-**Status in one line: the deployed MVP passes both black-box suites in production, and MVP-12 is not
-done.** Its "done when" in [`mvp-stories.md`](../planning/mvp-stories.md) has two halves: "both suites
-pass in production and Terry accepts". The first half is met. The second is not given: **Terry has not
-accepted the MVP**, and this record MUST NOT be read as saying he has (section 6).
+**Status in one line: the deployed MVP passes both black-box suites in production, the visual review
+found a page defect the suites missed, and MVP-12 is not done.** Its "done when" in
+[`mvp-stories.md`](../planning/mvp-stories.md) has two halves: "both suites pass in production and
+Terry accepts". The first half is met. The second is not given: **Terry has not accepted the MVP**, and
+this record MUST NOT be read as saying he has (section 6). The defect, which breaks three live ledger
+rows, is recorded in section 1 and its fix is pending.
 
 ## 1. What was qualified
 
@@ -17,7 +19,8 @@ accepted the MVP**, and this record MUST NOT be read as saying he has (section 6
 |---|---|---|
 | Commit the runs used | `13ad8622e2eee6a3d2664605e3c0d320db92e1bb` ("Freeze the T6 interfaces (MVP-12 qualification)"), then `main` = `mvp/integration` | `provenance.md` section 2 |
 | API date | `2026-11-14` (`/api/2026-11-14/...`) | `t6-interfaces.md`, Base |
-| Production Worker version | `824f1136-0ce0-48eb-954f-0d623edd516c`, created 2026-11-14T18:47:15Z, 100% | `provenance.md` section 2 |
+| Production Worker version the runs used | `824f1136-0ce0-48eb-954f-0d623edd516c`, created 2026-11-14T18:47:15Z, 100% | `provenance.md` section 2 |
+| Production Worker version now | `951b085c-673f-4778-856c-4247654a30c4`, created 2026-11-14T18:55:56Z, 100%, after the docs-only push of `e592ef5` | `scripts/wrangler.ps1 deployments list`, run by MVP-12 A on 2026-11-14 |
 | `swimcoach-test` Worker version | `983748d7-3964-4104-a083-84d9c25624f7`, created 2026-11-14T18:02:38Z, 100% | `provenance.md` section 2 |
 | Last CI run on `main` at that commit | Run 43628428609, `success`, started 2026-11-14T18:46:05Z | `provenance.md` section 2 |
 
@@ -29,6 +32,12 @@ empty diff; the version listing does not record a commit (`provenance.md` sectio
 **`main` moved after the runs, and the move changes no code.** `main` is now `e592ef5`, and `git diff
 --stat 13ad862 e592ef5` touches only `docs/planning/RESUME.md`. This record's branch adds
 `docs/qualification/` and `acceptance/ui/render.ts`, a render script that is not a suite case.
+
+**Production redeployed after the runs, with the same code.** Pushing `e592ef5` started CI run
+43629206468 at 18:54:47Z, and production's current version, `951b085c`, was created at 18:55:56Z.
+`git diff --stat 13ad862 e592ef5 -- src public wrangler.jsonc package.json` is empty, so `951b085c`
+serves the code that `824f1136` served when the suites ran. That `951b085c` was built from `e592ef5` is
+an inference from those two times; the version listing does not record a commit.
 
 ### The fresh runs
 
@@ -54,7 +63,29 @@ px, scale 3, in WebKit: the overview for the contract examples `afternoon`, `all
 `silent` and `small-blocks`, and the first project display of `afternoon` (`provenance.md` section 4).
 **They show the page drawn from the contract examples, not live production data**: the render script
 answers the page's state poll itself, as the UI suite does. Whether they match the approved design is
-the T6 visual reviewer's call against `design/ui-mock/`; this record does not judge them.
+the T6 visual reviewer's call against `design/ui-mock/`; this record does not judge them. The
+reviewer's finding is the next subsection.
+
+### Qualification finding: a page defect the suites missed
+
+**Found by the T6 visual review of `overview-stale.png`**
+([PR 46 review](https://github.com/SixbucksSolutions/swimcoach/pull/46#issuecomment-6882705810)).
+When the warning line shows, six half slots no longer fit on one screen, and the sixth Card is cut off
+at the dots bar.
+
+- **Rows broken:** UX-141 and UX-142 (four to six slots are six half slots on one screen; only more
+  than six scroll) and UX-144 (slot height comes from the measured Card display area).
+- **Cause, per the review:** in `public/js/poll.js`, `poll()` calls `onView` before `tick()`, so the
+  slots are fitted before `#warn` gets its text, and the warning line then shrinks the area under slots
+  already sized. The same order affects STALE when it starts, SIGN IN, OFFLINE (for the whole outage,
+  since no good poll follows to refit) and recovery (a gap below the Cards for one poll).
+- **Fix: pending, in a separate pull request by the Lead.** This branch does not edit `public/` and
+  does not re-render, so `overview-stale.png` still shows the defect.
+- **Why the suites passed:** no UI case shows six slots with the warning line. Section 4 records this
+  as gap V, which V2 MUST close.
+
+Every suite run in this record passed with the defect deployed. Until the fix ships, "both suites
+pass" does not mean the page meets the ledger in the STALE, SIGN IN and OFFLINE states.
 
 ## 2. Independence: the suites run unchanged against any implementation of the contract
 
@@ -104,7 +135,7 @@ V2 either way.
 
 | B's # | Gap | Rows | V2 | Reason |
 |---|---|---|---|---|
-| 1 | No black-box check of the real CLI against a deployment | C01 to C29 | MUST close | The CLI is how every project agent reports, so a V2 that broke it would cut every agent off the board and still pass every suite |
+| 1 | No black-box check of the real CLI against a deployment | C01 to C28 | MUST close | The CLI is how every project agent reports, so a V2 that broke it would cut every agent off the board and still pass every suite |
 | 2 | `over_budget` is never produced through the server | A69 | MUST close | It is a verdict Terry sees on a card (D1's yellow), and V2 could compute it wrong and pass every suite |
 | 3 | `stalled` is weakly proven: no case asserts `reason == "stalled"` on its own | A70, A75 | MUST close | Same as 2: a card verdict that the milestone's call can mask in the one case that reaches it |
 | 4 | The Worker's own Access JWT check is internal-test only | A11, A88 | MAY carry | Access answers first, so no black-box request can reach it, and API-001 to API-005 already prove an unauthenticated caller is refused |
@@ -112,13 +143,20 @@ V2 either way.
 | 6 | The test clock's fail-closed values are internal-test only | A100 | MAY carry | The test clock is a test tool, and the behavior that protects Terry's board, production refusing it, is proven by API-080 |
 | 7 | The trend bin `up` has no fixture | A57 | MUST close | Not an edge but a whole value: it draws the card's up arrow (`public/js/state.js`) |
 | 7 | Edges the fixtures avoid on purpose: call edges 0.70 and 0.30, the two too-early gates alone, `chance_on_time` limit branches, spark thinning past 160 samples | A56, A59, A60, A79, S25 | MAY carry | The fixtures avoid them by design, and floating-point edges are where two correct implementations can differ |
-| 8 | Small ones: `405` on `/`, the `GET /` status and type, the error `message` sentence, `500 internal`, 14-day retention, "never removed automatically", the CLI never sending the test clock, sender rules | A17, A18, S15, A95, A102, A103, C26, A42, C29 | MAY carry | None changes what Terry sees on a working board, and several cannot be provoked from outside |
+| 8 | Small ones: `405` on `/`, the `GET /` status and type, the error `message` sentence, `500 internal`, 14-day retention, "never removed automatically" | A17, A18, S15, A95, A102, A103 | MAY carry | None changes what Terry sees on a working board, and several cannot be provoked from outside |
+| 8 | Sender rules: what a report counts (D3) and the push cadence | A42, C29 | MAY carry | They bind the agent's instruction text, not the server or the CLI, so no suite can close them; only a review of that text against `contract/cli.md` section 8 and a real agent's full turn (section 6, item 2) can |
+| V | Six half slots with the warning line shown (the qualification finding in section 1) | UX-141, UX-142, UX-144 | MUST close | It broke three live ledger rows while every suite passed |
 
-B split gap 7 into one row and this record splits it into two, because `up` is a value and the rest
-are edges. **B wrote that V2 SHOULD get a black-box CLI suite; this record raises gap 1 to MUST**,
-for the reason in the table. Rows B listed as untested or internal-only but did not rank (A12, A40,
-S10, C27) MAY be carried on gap 8's reasoning, except C27 (the CLI in cmd, PowerShell and POSIX
-shells), which closes with gap 1.
+**Each row has exactly one call.** B's gap 1 named C01 to C29 and its gap 8 named C26 and C29 again;
+this record resolves both. C26, the CLI never sending `Swimcoach-Test-Now`, is in gap 1 and MUST
+close: a CLI that sent it would have every production report refused, and a CLI suite against a stub
+server sees every header. C29 is in gap 8 and MAY be carried, for the reason in its row. B wrote gaps
+7 and 8 as one row each; this record splits each into two, because `up` is a value and the rest are
+edges, and because the sender rules are not server behavior. Row V is not one of B's gaps: the visual
+review found it after B's audit. **B wrote that V2 SHOULD get a black-box CLI suite; this record raises
+gap 1 to MUST**, for the reason in the table. Rows B listed as untested or internal-only but did not
+rank (A12, A40, S10) MAY be carried on gap 8's reasoning; C27 (the CLI in cmd, PowerShell and POSIX
+shells) is in gap 1.
 
 **The bar V2 MUST clear**, as `docs/concept.md` section 14 asks:
 
@@ -147,6 +185,8 @@ These are open. None of them is done, and none is implied done by anything above
    path that gaps 1 and 5 name: real command, real server, real page (`coverage.md` row C28).
 3. **Terry's hands-on demo and acceptance: not given.** Terry owns acceptance (`mvp-stories.md`,
    MVP-12). Until he gives it, MVP-12 is not done, whatever the suites say.
+4. **The page defect from the visual review: not fixed.** UX-141, UX-142 and UX-144 break while the
+   warning line shows (section 1). The fix is pending in a separate pull request by the Lead.
 
 ## 7. How to re-run
 

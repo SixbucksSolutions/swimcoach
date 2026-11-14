@@ -26,8 +26,8 @@ const SETTLE_STEPS = 100;
 const PAINT_MS = 400;
 const USAGE_ERROR = 2;
 
-// 300 dots per inch is 11811 pixels per metre (300 / 0.0254, rounded).
-const PIXELS_PER_METRE = 11_811;
+// 300 dots per inch is 11811 pixels per meter (300 / 0.0254, rounded).
+const PIXELS_PER_METER = 11_811;
 const PNG_SIGNATURE_BYTES = 8;
 const IHDR_END = 33;
 
@@ -38,9 +38,9 @@ function stamp300Dpi(png: Buffer): Buffer {
     throw new Error("The screenshot is not a PNG.");
   }
   const data = Buffer.alloc(9);
-  data.writeUInt32BE(PIXELS_PER_METRE, 0);
-  data.writeUInt32BE(PIXELS_PER_METRE, 4);
-  data.writeUInt8(1, 8); // unit: the metre
+  data.writeUInt32BE(PIXELS_PER_METER, 0);
+  data.writeUInt32BE(PIXELS_PER_METER, 4);
+  data.writeUInt8(1, 8); // unit: the meter
   const typeAndData = Buffer.concat([Buffer.from("pHYs", "latin1"), data]);
   const chunk = Buffer.alloc(typeAndData.length + 8);
   chunk.writeUInt32BE(data.length, 0);

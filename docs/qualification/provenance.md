@@ -93,9 +93,9 @@ after `npm ci` in the root, `acceptance/` and `cli/`. The production runs used `
 
 | Run | Command | Target | Tests | Pass | Fail | Cancelled | Skipped | Exit | Duration |
 |---|---|---|---|---|---|---|---|---|---|
-| API, clock-free | `node acceptance/api/run.ts --config <cli.json> --suite clock-free` | production (`swimcoach.sixbuckssolutions.workers.dev`) | 41 | 41 | 0 | 0 | 0 | 0 | 17.7 s |
+| API, clock-free | `node acceptance/api/run.ts --config <cli.json> --suite clock-free` | Production (`swimcoach.sixbuckssolutions.workers.dev`) | 41 | 41 | 0 | 0 | 0 | 0 | 17.7 s |
 | API, full | `node acceptance/api/run.ts --config <cli-test.json> --suite full` | `swimcoach-test` | 68 | 68 | 0 | 0 | 0 | 0 | 63.2 s |
-| UI, WebKit | `node acceptance/ui/run.ts --config <cli.json>` | production | 116 | 116 | 0 | 0 | 0 | 0 | 188.8 s |
+| UI, WebKit | `node acceptance/ui/run.ts --config <cli.json>` | Production | 116 | 116 | 0 | 0 | 0 | 0 | 188.8 s |
 | UI, WebKit | `node acceptance/ui/run.ts --config <cli-test.json>` | `swimcoach-test` | 116 | 116 | 0 | 0 | 0 | 0 | 191.0 s |
 
 No run failed. The two UI runs went at the same time as the API runs (production's and test's in two
@@ -107,7 +107,7 @@ parallel chains); the UI suite answers the page's state polls itself and writes 
 and touch on, through the UI harness (`startUi`, `ctx.example`, `ctx.answer`, `ctx.open`). It answers the
 page's state poll with each contract example shifted to the page clock, exactly as the suite does, so it
 sends no write to the server. Each PNG is 1206 x 2622 px and carries a `pHYs` chunk of 11811 pixels per
-metre; Pillow reads it back as 300 DPI (299.9994, the rounding of 11811 / 39.37) on all six files.
+meter; Pillow reads it back as 300 DPI (299.9994, the rounding of 11811 / 39.37) on all six files.
 
 Rendered 2026-11-14 at 13:52 -05:00 from commit `13ad862` plus this branch's `render.ts`. Command:
 `node acceptance/ui/render.ts --config <cli.json>`.
