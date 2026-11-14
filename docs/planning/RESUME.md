@@ -30,6 +30,11 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
     card area is about 625 px (estimate; measure before MVP-12). PR #32 (`a12605e`, authored by the
     Lead per rule 9), deployed as `main` `dcdf18a`; UX-141 to UX-147 supersede the 4/8 rows (ledger:
     147 rows, 16 superseded). Full 68/68 on test (run `1ligdb`), clock-free 41/41 on production.
+  - **A silent card is gray** ("not enough FRESH data to signal green/yellow", Terry) and draws no
+    arrow (the Lead's call, UX-152). The color change in `GET /state` moved the **API date to
+    `2026-11-14`**; `/api/2026-11-13/` now answers 404. PR #33 (`5f7bcdf`), deployed as `main`
+    `e27f8ee`; full 68/68 on test (run `czsfgm`), clock-free 41/41 on production. Ledger: 152 rows,
+    21 superseded. Earlier lines in this file that name `/api/2026-11-13/` are history.
   - Still open from the list below: the desktop column, SIGN IN, small-block hero spacing. The six
     `zz demo` milestones are still on production; stop them when the demo ends.
 
