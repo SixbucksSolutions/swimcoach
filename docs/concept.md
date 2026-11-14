@@ -108,7 +108,7 @@ wrong one). Use these names in docs, code comments and conversation:
 | Name | What it is |
 |---|---|
 | **Status line** | The bar at the top of every display: mark, wordmark, the health box, clock, bell |
-| **Health box** | The LIVE / STALE / OFFLINE / IDLE / NO DATA box inside the status line |
+| **Health box** | The LIVE / STALE / OFFLINE / SIGN IN box inside the status line |
 | **Card display area** | Everything below the status line on the overview: the slot grid |
 | **Card** | One project in the card display area, or the GO TO KEYBOARD slot |
 | **Title line** | A card's first line: the project name, or GO TO KEYBOARD |
@@ -144,11 +144,17 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 
 | State | When | Look |
 |---|---|---|
-| LIVE | The page's last poll succeeded within 30 s and the newest agent report is under 25 min old | Bold white "LIVE" on dark green, breathing dot, age of newest report once it is 1 min or older ("7m"); no age while fresher |
+| LIVE | The page had a 200 from the state endpoint within the last 30 s, and STALE does not apply. This includes an empty board and a board where every project is done | Bold white "LIVE" on dark green, breathing dot, age of newest report once it is 1 min or older ("7m"); no age while fresher or when there are no reports |
 | STALE | Polls work, but no agent has reported for over 25 min while some project is unfinished | Dark orange box, warning text, all displays grayed to 40% |
 | OFFLINE | Three polls in a row failed (30 s) | Dark red box, warning text, all displays grayed |
-| IDLE | Every project reported today is done | Neutral box |
-| NO DATA | No reports today | Neutral box |
+| SIGN IN | A poll was refused by Access (redirect, 401 or 403) after the page's one reload | OFFLINE's dark red box, warning text, all displays grayed |
+
+- **An empty board is live data, and the health box MUST say so.** Terry, 2026-11-14, at the MVP-08
+  phone check: "stay live with a breather if we have had a 200 response within 30 seconds. I want to
+  know the empty list IS the live data." The neutral IDLE and NO DATA states are retired: an empty or
+  all-done board with working polls reads LIVE with the breathing dot, and the "No reports yet today."
+  line and the done cards say the rest. STALE still wins while any project is unfinished, because a
+  silent agent is the "all good in the hood" failure this box exists to catch.
 
 - The dot's breathing animation runs a fixed 16 seconds and is restarted by each successful poll. If
   the page's script freezes, the dot stops by itself. A plain infinite animation would keep a dead page

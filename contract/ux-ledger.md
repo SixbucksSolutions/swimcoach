@@ -57,9 +57,9 @@ load-bearing.
 | UX-013 | Warning line under the Status line gives the exact STALE duration | c3.1 "warning line" | `stale-00-all-projects.png` | |
 | UX-014 | Health box OFFLINE: dark red box, warning text, every display grayed; word only, no age | c3.1 table | `offline-00-all-projects.png` | Trigger: three polls in a row fail (30 s) |
 | UX-015 | OFFLINE with a long outage ("1h 05m") still fits: at least 35 px between wordmark and clock at 402 px **(measured)** | c3.1 | `offline-00-all-projects.png` | |
-| UX-016 | Health box IDLE: neutral box when every tracked milestone is done | c3.1 table, api.md 6.7 | `alldone-00-all-projects.png` | |
-| UX-017 | Health box NO DATA: neutral box when no milestone is tracked | c3.1 table, api.md 6.7 | - | No render; reach with an empty database |
-| UX-018 | STALE does not fire when every project is done (IDLE wins over STALE) | c3.1 STALE "while some project is unfinished" | `alldone-00-all-projects.png` | |
+| UX-016 | Health box LIVE, with the breathing dot, when every tracked milestone is done and a poll got a 200 within 30 s (api.md 6.7 `feed` `idle`; the neutral IDLE box is retired, Terry 2026-11-14) | c3.1 table | `alldone-00-all-projects.png` | |
+| UX-017 | Health box LIVE, with the breathing dot and no age, when no milestone is tracked and a poll got a 200 within 30 s (api.md 6.7 `feed` `no_data`; the neutral NO DATA box is retired, Terry 2026-11-14: "I want to know the empty list IS the live data") | c3.1 table | - | No mock render; reach with an empty database |
+| UX-018 | STALE does not fire when every project is done (LIVE, not STALE) | c3.1 STALE "while some project is unfinished" | `alldone-00-all-projects.png` | |
 | UX-019 | Recovery: the first good poll after OFFLINE returns the box to the state the data calls for, which is LIVE only while the newest report is under 25 min old; the gray is removed | c3.1, api.md 6.7 | - | Transition; no render. Also check a recovery with an old newest report: the box shows STALE, not LIVE |
 | UX-020 | Silent agent alone (one project over 25 min silent, another fresh) keeps the box LIVE and makes that Card yellow | c3.1, c3.2 yellow rules | `silent-00-all-projects.png` | |
 
@@ -232,5 +232,11 @@ reaches this mode, so no render exists. Source: c8 item 10, api.md 6.5 and 6.6.
 | --- | --- | --- | --- | --- |
 | UX-131 | A milestone with `total < 3` (`mode` is `count_and_time`): the Card shows "N of M done" and the hours used of the cap, with no RTR and no clock hand | c8 item 10, api.md 6.5 | - | Fixture `state.small-blocks.json` |
 | UX-132 | In `count_and_time` mode the Card is green while `active_hours` is within `cap_hours` (reason `under_budget`) and yellow once it is over (reason `over_budget`); red only for `needs_me`; silent still applies (yellow); done still ranks first | c8 item 10, api.md 6.6 | - | Fixture `state.small-blocks.json`; stalled, running_late, toss_up and too_early do not apply |
-| UX-133 | Detail blurb words for `over_budget` and `under_budget`: api.md 6.6 assigns the wording to this ledger; Terry has not chosen it (needs Terry) | api.md 6.6 | - | Wording pending; the check MUST NOT pass until Terry fixes the words |
-| UX-134 | What the project display shows in `count_and_time` mode (RTR block, charts, projection tiles): no doc defines it (needs Terry) | c8 item 10, api.md 6.5 | - | Pending Terry |
+| UX-133 | Detail blurb words for `over_budget` and `under_budget`: "Over budget" and "Under budget" | Terry, 2026-11-13 (t4-interfaces.md decision 2) | - | `project.test.ts` small-block cases |
+| UX-134 | The project display in `count_and_time` mode drops the hero RTR, the RTR chart and the projection tiles, puts `why` in the hero, and keeps Work against time, Swimlanes and the footer | Terry, 2026-11-13 (t4-interfaces.md decision 4) | - | `project.test.ts` small-block cases |
+
+## M. Decisions at the MVP-08 phone check (Terry, 2026-11-14)
+
+| ID | State or transition | Rule | Render | Check |
+| --- | --- | --- | --- | --- |
+| UX-135 | A card that arrives after the first render (a new milestone, or the GO TO KEYBOARD slot appearing) fades in over 0.3 s `ease-in`; cards already on screen are untouched, and no animation runs under `prefers-reduced-motion: reduce` | brand.md 6, Terry: "a gentle 0.3s ease in animation as it was startling when they popped on" | - | A steady poll still makes zero DOM mutations (UX-110) |

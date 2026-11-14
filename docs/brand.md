@@ -147,8 +147,11 @@ on. A color that asks for no action, or for an action he cannot take, wears out 
 ## 6. Motion (settled)
 
 - The page appears once, finished: hidden until the font file and the first render are ready, then a
-  single 0.2 s `ease-in` fade of the whole page. Polls MUST NOT fade or flash. Full rules:
-  `docs/concept.md` section 3.4.
+  single 0.2 s `ease-in` fade of the whole page. Polls MUST NOT fade or flash, with one exception: a
+  card that arrives after the first render (a new milestone or a new red slot) fades in over 0.3 s
+  `ease-in`. Terry, 2026-11-14, at the MVP-08 phone check: "Let's do a gentle 0.3s ease in animation as
+  it was startling when they popped on." Only the arriving card animates; every card already on screen
+  MUST stay untouched. Full rules: `docs/concept.md` section 3.4.
 - Motion SHOULD be skipped under `prefers-reduced-motion: reduce`.
 
 ## 7. Voice
