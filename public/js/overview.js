@@ -11,13 +11,17 @@ import { clockRtr, esc, hoursOfCap } from "./format.js";
 const SLOT_GAP = 10;
 
 /**
- * The content minimum of one slot in px, by slot count: 101.7 for 4 slots, 83.5 for 8 (UX-028).
- * @type {Readonly<Record<4|8, number>>}
+ * The content minimum of one slot in px, by slot count: 101.7 for a full slot, 83.5 for a half slot
+ * (UX-028; the minimums are unchanged by the 3/6 grid, UX-141).
+ * @type {Readonly<Record<3|6, number>>}
  */
-const SLOT_MIN = Object.freeze({ 4: 101.7, 8: 83.5 });
+const SLOT_MIN = Object.freeze({ 3: 101.7, 6: 83.5 });
 
-/** More than this many cards flips the overview from four full slots to eight half slots (UX-025). */
-const FULL_SLOTS = 4;
+/**
+ * More than this many slots flips the overview from three full slots to six half slots (UX-141, which
+ * supersedes the 4/8 grid of UX-025 for the MVP: Terry, 2026-11-14, "three is plenty").
+ */
+const FULL_SLOTS = 3;
 
 /**
  * The Title line's font size in px, as the stylesheet sets it: 24 in a full slot, 20 in a half slot.
@@ -140,7 +144,7 @@ function clampName(px) {
  */
 
 /**
- * @param {boolean} half  true in the eight-slot grid, where the stylesheet sets 20px instead of 24px
+ * @param {boolean} half  true in the six-slot grid, where the stylesheet sets 20px instead of 24px
  * @returns {Probe|null}
  */
 function openProbe(half) {
@@ -245,7 +249,7 @@ function wantedNameSize(name, half, basePx, state) {
  * The hidden probe is a twin of the card markup (same classes, so the same stylesheet font and size),
  * placed on the body outside the cards, and removed before the function returns, so it never paints.
  * @param {HTMLElement} cards
- * @param {boolean} half  true in the eight-slot grid, where the stylesheet sets 20px instead of 24px
+ * @param {boolean} half  true in the six-slot grid, where the stylesheet sets 20px instead of 24px
  * @param {number} basePx  the stylesheet's font size for the Title line
  * @returns {void}
  */
@@ -267,7 +271,7 @@ function fitNames(cards, half, basePx) {
 }
 
 /**
- * True when the overview has more slots than four full ones; the GO TO KEYBOARD slot counts as one.
+ * True when the overview has more slots than three full ones; the GO TO KEYBOARD slot counts as one.
  * @param {number} slots
  * @returns {boolean}
  */
@@ -331,9 +335,9 @@ export function fontsLoaded() {
 }
 
 /**
- * The 4/8 slot grid (concept.md 3.2). Up to four slots: four equal slots, two Detail blurb lines. Five
- * or more: eight half-height slots, one blurb line. Slot height comes from the screen but never goes
- * below the content minimum, so more than eight slots scroll. Runs synchronously after the page is
+ * The 3/6 slot grid (concept.md 3.2, UX-141). Up to three slots: three equal slots, two Detail blurb
+ * lines. Four or more: six half-height slots, one blurb line. Slot height comes from the screen but
+ * never goes below the content minimum, so more than six slots scroll. Runs synchronously after the page is
  * rendered, so nothing paints twice. Writes a style or class only when its value changes (UX-110).
  * @param {HTMLElement} page  the overview's `<section class="page">`
  * @returns {void}
@@ -344,11 +348,11 @@ export function fitCards(page) {
     return;
   }
   const half = isHalf(cards.children.length);
-  /** @type {4|8} */
-  let rows = 4;
+  /** @type {3|6} */
+  let rows = 3;
   let basePx = NAME_PX.full;
   if (half) {
-    rows = 8;
+    rows = 6;
     basePx = NAME_PX.half;
   }
   if (cards.classList.contains("half") !== half) {

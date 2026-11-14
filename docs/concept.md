@@ -166,7 +166,14 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 
 ### 3.2 Display 1: all projects ("ruthlessly minimalist")
 
-- **A 4/8 slot grid.** Terry, 2026-11-13. The overview has four equal slots, or eight half-height slots
+- **A 3/6 slot grid for the MVP** (Terry, 2026-11-14, at the phone check; UX-141 to UX-144). Terry:
+  "For MVP let's just lock at 3/6 slots rather than 4/8. three is plenty and we can revisit at V1+."
+  The overview has three equal slots, or six half-height slots once there are four or more things to
+  show; more than six scroll. Why: on his iPhone the home-screen app gives the cards about 625 px, not
+  the mock's full screen, and seven demo cards under the 4/8 grid spilled past the bottom. Six half
+  slots need at least 551 px. The 4/8 grid below is kept as the record of the earlier decision; it is
+  superseded for the MVP and MAY return at V1 or later.
+- **A 4/8 slot grid (superseded for the MVP by the 3/6 grid above).** Terry, 2026-11-13. The overview has four equal slots, or eight half-height slots
   once there are five or more things to show. Slot height comes from the screen height, so eight half
   slots fill exactly the space of four full ones; it never drops below the height a card's content
   needs, so more than eight slots scroll instead of squeezing. Measured at 402 × 874: full slots
