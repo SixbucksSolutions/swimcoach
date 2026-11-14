@@ -92,6 +92,9 @@ FGA T04
 ## 2. Vocabulary
 
 - **RFR:** the Ready for review swimlane. Work the agents have finished; only Terry's review remains.
+- **Work completed / finished:** Terry, 2026-11-13: "work completed" means "how close to a code review
+  am I?" It counts cards in Ready For Review (plus Completed, which is 0 in practice: cards reach
+  Completed only when Terry closes the milestone, after the agent has stopped tracking it).
 - **RTR:** Terry's name for the RFR / Time ratio. `RTR = (share of the block's tickets that are
   finished) / (share of the time block used)`. 1.0 means work is exactly keeping pace with the clock.
   FGA example: 4 of 7 tickets (57%) over 1.85 of 4.0 hours (46%) gives 1.24.
