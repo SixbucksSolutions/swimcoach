@@ -112,7 +112,11 @@ function chart(card, tone) {
 function hero(card, tone) {
   let big = "";
   let label = "";
+  // A hero with no big RTR is "bare": the stylesheet gives it the 10px above that the big RTR's own
+  // height gives a ratio hero (UX-155, Terry 2026-11-14).
+  let cls = "hero bare";
   if (card.mode === "ratio" && card.rtr !== null) {
+    cls = "hero";
     big = `<div class="big">${clockRtr(card.rtr, card.dir)}</div>`;
     label = "RTR";
     if (card.dir !== null) {
@@ -123,7 +127,7 @@ function hero(card, tone) {
   if (card.reason === "needs_terry") {
     words = card.callWhy;
   }
-  return `<div class="hero" style="--c:var(${tone})">${big}<div class="lab">${label}<b>${esc(words)}</b></div></div>`;
+  return `<div class="${cls}" style="--c:var(${tone})">${big}<div class="lab">${label}<b>${esc(words)}</b></div></div>`;
 }
 
 /**

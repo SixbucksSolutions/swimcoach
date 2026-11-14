@@ -19,6 +19,11 @@
   gap: 14px;
   margin: 0;
 }
+/* A hero with no big RTR (small-block mode) would sit flush under the title; 10px gives it the same
+   breathing room the big RTR gives a ratio hero (UX-155, Terry 2026-11-14). */
+.hero.bare {
+  margin-top: 10px;
+}
 /* The hero RTR uses the same clock hand as the cards (concept.md 3.2): padding reserves the hand's reach,
    .8em above and below the line box and .883em on the right, so it never overlaps the name or the label. */
 .hero .big {
