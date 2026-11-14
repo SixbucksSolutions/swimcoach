@@ -3,6 +3,24 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
+## T2 closed (2026-11-14 01:03 UTC); waiting on Terry's Access steps
+
+- `main` at `725a67e` holds all of T2: PRs #6-#15, each reviewed by Opus 5.5 / high and
+  squash-merged into `mvp/integration`, then merged to `main` by the Lead. 935 tests pass.
+- CI run 43538055066 passed `check` and `deploy`. **The CI token (Workers Editor) deployed the new
+  `Board` Durable Object class with `exports`**, so Admin is not needed for that; version
+  `24d4495d-6dbe-473d-aa19-5ea6d6cc3ef6`. Live: `/healthz` 200 with `no-store`, `/api/health` 404,
+  `/` matches the mock by SHA2-256.
+- `mvp/integration` is fast-forwarded to `main` for T3.
+- **Gate: Terry runs `docs/runbooks/access-setup.md`**, then `scripts/check-access.ps1`. The Worker
+  does not verify Access yet: the Lead wires `verifyAccess` into the router once Terry's steps give
+  `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` (Worker variables, not secrets). Zero Trust organizations
+  created on or after 2026-10-05 refuse bad service tokens with 401/403 rather than a redirect; the
+  script accepts both.
+- T3 (MVP-06 CLI client, MVP-07 state and report API) opens after the gate.
+- Process cost seen in T2: small Lead config PRs took up to four review rounds over comment wording.
+  Reviewers were then told to raise only inaccuracies and rule violations, not wording preferences.
+
 ## T1 closed (2026-11-14 00:03 UTC)
 
 - `main` at `95d8f08` holds all of T1: PRs #1-#5, each reviewed by Opus 5.5 / high and
