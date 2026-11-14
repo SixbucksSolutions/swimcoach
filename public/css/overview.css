@@ -118,8 +118,9 @@
 }
 /* .pc .rt: the hand reaches 1.3em above and below the final digit's center, and the size is the
    largest that still leaves 16px to the card edge, between 18px and 52px. cqh measures the card's
-   content box, which is 12px inside the edge, so the budget is 50cqh + 12px - 16px = 50cqh - 4px. In an
-   8-slot card that is about 21px; the floor is low so the hand never crowds the edge. */
+   content box, which is 12px inside the edge, so the budget is 50cqh + 12px - 16px = 50cqh - 4px. In a
+   half slot of the 3/6 grid at 402 x 874 that is about 33px (UX-145); the floor is low so the hand
+   never crowds the edge on a shorter screen. */
 .pc .rt {
   display: flex;
   align-items: center;

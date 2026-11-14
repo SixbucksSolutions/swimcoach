@@ -47,8 +47,8 @@ load-bearing.
 | J. Navigation | UX-113 to UX-124 | 12 |
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
-| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-144 | 10 |
-| **Total** | | **144** (13 superseded: UX-016, 017, 018, 021 to 026, 028, 053, 133, 134) |
+| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-147 | 13 |
+| **Total** | | **147** (16 superseded: UX-016, 017, 018, 021 to 026, 028, 053, 065, 066, 111, 133, 134) |
 
 ## A. Status line
 
@@ -138,8 +138,8 @@ load-bearing.
 | UX-062 | Up arrows sit above the number and down arrows below it; the arrow MUST NOT sit beside the number | c3.2 why position carries trend | `afternoon-00-all-projects.png` |  | Pending |
 | UX-063 | Gray (too early) Card shows the RTR and no arrow (needs Terry, c8 item 3: the gray color) | c3.2 states row 4 | `morning-00-all-projects.png` |  | Pending |
 | UX-064 | RTR block takes the same place and reserved room on every Card, so numbers line up | c3.2 | `afternoon-00-all-projects.png` |  | Pending |
-| UX-065 | RTR weight 900; size scales with Card height, 52 px full and 21.4 px half **(measured)**, between 18 and 52 px | c3.2 second tier | `keyboard-00-all-projects.png`, `afternoon-00-all-projects.png` |  | Pending |
-| UX-066 | The hand stays at least 16 px from the Card edge: 25 px full, 16 px half **(measured)** | c3.2 | `afternoon-00-all-projects.png` |  | Pending |
+| UX-065 | RTR weight 900; size scales with Card height, 52 px full and 21.4 px half **(measured)**, between 18 and 52 px | c3.2 second tier | `keyboard-00-all-projects.png`, `afternoon-00-all-projects.png` |  | No: superseded by UX-145 |
+| UX-066 | The hand stays at least 16 px from the Card edge: 25 px full, 16 px half **(measured)** | c3.2 | `afternoon-00-all-projects.png` |  | No: superseded by UX-146 |
 | UX-067 | Side margins match: 18 px before the name, 18 px from the inked tip of a 3 o'clock hand to the right edge **(measured at ink level)** | c3.2 | `afternoon-00-all-projects.png` |  | Pending |
 | UX-068 | Title line on one line at 24 px (full) or 20 px (half); a long name shrinks to 14 px, then ends in the U+2026 ellipsis glyph (b7; CSS truncation, or `&hellip;` / `String.fromCharCode(0x2026)` in source) | c3.2 name stays on one line, b7 | `afternoon-00-all-projects.png` | Use "mobile-onboarding-redesign" | Pending |
 | UX-069 | Detail blurb is 14 px, weight 500, indented 12 px under the Title line; no separator line between them | c3.2 | `afternoon-00-all-projects.png` |  | Pending |
@@ -204,7 +204,7 @@ load-bearing.
 | UX-108 | Under `prefers-reduced-motion: reduce` the fade is skipped (SHOULD, b6 / c3.4) | c3.4 | - |  | Pending |
 | UX-109 | The 10-second poll never fades, blanks or flashes the page | c3.4 | - | Observe across several polls | Pending |
 | UX-110 | A poll changes only the values that changed (the real page, not the mock's whole-HTML rewrite) | c3.4 | - | Mutation observer: unchanged nodes stay untouched | Pending |
-| UX-111 | The slot mode is chosen in the same step that draws the Cards, before first paint | c3.2, c3.4 | - | No eight-to-four reflow after paint | Pending |
+| UX-111 | The slot mode is chosen in the same step that draws the Cards, before first paint | c3.2, c3.4 | - | No eight-to-four reflow after paint | No: superseded by UX-147 |
 | UX-112 | Polling runs every 10 s against `GET /api/2026-11-13/state` | c3.1 | - |  | Pending |
 
 ## J. Navigation
@@ -264,3 +264,6 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-142 | More than six slots scroll; slots never shrink below the content minimum (101.7 px full, 83.5 px half) | c3.2 | - | Supersedes UX-028; reach with seven projects | Pending |
 | UX-143 | GO TO KEYBOARD takes one of the 3 or 6 slots and counts toward the four-slot threshold | c3.2 | - | Supersedes UX-053 | Pending |
 | UX-144 | Slot height comes from the measured Card display area on the phone, not the mock's screen. On the iPhone 16 Pro as a home-screen app the area is about 625 px (estimated from Terry's screenshot, 2026-11-14), so six half slots (at least 6 x 83.5 + 5 x 10 = 551 px) fit without scrolling | c3.2 | - | Supersedes UX-026, whose 183.3 / 86.6 px assumed the full 874 px screen. Measure the real area on the phone before MVP-12 | Pending |
+| UX-145 | RTR weight 900; size scales with Card height, between 18 and 52 px: 52 px full and about 33.4 px half at 402 x 874 under the 3/6 grid **(measured** in Chrome by the PR #32 review**)** | c3.2 second tier | - | Supersedes UX-065, whose 21.4 px half was the 4/8 grid's | Pending |
+| UX-146 | The hand stays at least 16 px from the Card edge: about 56 px full and at least 16 px half at 402 x 874 under the 3/6 grid **(measured** in Chrome by the PR #32 review**)** | c3.2 | - | Supersedes UX-066, whose 25 px full was the 4/8 grid's | Pending |
+| UX-147 | The slot mode is chosen in the same step that draws the Cards, before first paint | c3.2, c3.4 | - | Supersedes UX-111, whose check named the 4/8 grid; no six-to-three reflow after paint | Pending |

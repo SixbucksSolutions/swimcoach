@@ -144,7 +144,7 @@ function clampName(px) {
  */
 
 /**
- * @param {boolean} half  true in the eight-slot grid, where the stylesheet sets 20px instead of 24px
+ * @param {boolean} half  true in the six-slot grid, where the stylesheet sets 20px instead of 24px
  * @returns {Probe|null}
  */
 function openProbe(half) {
@@ -249,7 +249,7 @@ function wantedNameSize(name, half, basePx, state) {
  * The hidden probe is a twin of the card markup (same classes, so the same stylesheet font and size),
  * placed on the body outside the cards, and removed before the function returns, so it never paints.
  * @param {HTMLElement} cards
- * @param {boolean} half  true in the eight-slot grid, where the stylesheet sets 20px instead of 24px
+ * @param {boolean} half  true in the six-slot grid, where the stylesheet sets 20px instead of 24px
  * @param {number} basePx  the stylesheet's font size for the Title line
  * @returns {void}
  */
@@ -271,7 +271,7 @@ function fitNames(cards, half, basePx) {
 }
 
 /**
- * True when the overview has more slots than four full ones; the GO TO KEYBOARD slot counts as one.
+ * True when the overview has more slots than three full ones; the GO TO KEYBOARD slot counts as one.
  * @param {number} slots
  * @returns {boolean}
  */
