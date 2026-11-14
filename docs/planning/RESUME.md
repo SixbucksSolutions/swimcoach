@@ -15,10 +15,17 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - Lead decision (main `869ceb1`): a clock-free case MAY send `Swimcoach-Test-Now` only to prove
   `400 test_clock_disabled`; the harness fails the run on any other answer. The `full` tier probes the
   test clock before its reset, so a `full` run against production stops nothing.
-- Open: #25 (08-A overview, second review round: the `half` class and an idempotent name fit), #28
-  (08-C controller, after #25), then the MVP-08 visual review. `swimcoach-test` still has no Access
-  app; Terry is setting it up, then makes `cli-test.json` himself (an agent MUST NOT read or copy
-  either config file's values).
+- **`swimcoach-test` is live behind Access** (2026-11-14). Terry's first attempt left the dashboard's
+  default scope, "Previews only", which protects nothing at the workers.dev address; the second used
+  All traffic, policies `swimcoach-cli` and `terry`, 7 days. Its AUD went in via #29 (`3668175`),
+  read from the Access API rather than copied by hand. Deployed version
+  `4e417847-fc83-4cfe-b8f9-97f26e501d3e`. Terry made `cli-test.json` with a one-line PowerShell
+  command; an agent MUST NOT read or copy either config file's values.
+- **`check-access.ps1 -ConfigPath ...\cli-test.json`: 3/3. `--suite full` against the test Worker:
+  68/68** (run `31dvk3`, 34 s), so every golden fixture replays through the real Worker within the
+  contract's tolerances.
+- Open: #25 (08-A overview, third review round: zero DOM work on an unchanged poll, and no ellipsis
+  on a shrunk name), #28 (08-C controller, after #25), then the MVP-08 visual review.
 
 ## T3 closed (2026-11-13, Terry's evening)
 
