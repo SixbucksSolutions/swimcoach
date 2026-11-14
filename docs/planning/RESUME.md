@@ -16,6 +16,17 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   `mvp/integration` remain.
 - **The gate before T5 is Terry's MVP-08 phone check.** His four open calls are listed below. Do not
   start T5 until he passes MVP-08 or names changes.
+- **Phone check, 2026-11-14 morning (in progress).** The empty board and six `zz demo` milestones
+  rendered correctly on his iPhone. His changes, decided and shipped the same morning:
+  - An empty or all-done board reads LIVE with the breathing dot (UX-136 to UX-138, superseding
+    UX-016 to UX-018), and an arriving card fades in over 0.3 s `ease-in` via a keyed morph (UX-135).
+    PR #31 (`30c9aed`), deployed as `main` `820ff36`; full suite 68/68 on test (run `shqq82`),
+    clock-free 41/41 on production (run `oevov2`).
+  - The UX ledger gained a V1 column; changed rows are superseded, never rewritten; the rows still
+    standing become V1 requirements at MVP-12.
+  - Relay rule 9 (`mvp-staffing-plan.md`): subagents only for parallel work or independent review.
+  - Still open from the list below: the desktop column, SIGN IN, small-block hero spacing. The six
+    `zz demo` milestones are still on production; stop them when the demo ends.
 
 ### How T4 went (kept for the record)
 
