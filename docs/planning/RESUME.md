@@ -322,9 +322,11 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
 7. **The CLI must be installed where every project's agent finds it (MVP-06):** on `PATH` for all
    projects, with its Access service token in a file it reads. Its language decides its LSP and linter
    under Terry's global rule.
-8. **The iPhone home-screen app keeps its own cookies (MVP-10).** iOS gives a home-screen web app
-   storage separate from Chrome, so Terry logs in to Access once more inside it, and the session length
-   decides how often. It MUST be tested on the phone, not assumed.
+8. **Resolved 2026-11-14: the home-screen app shares Chrome's cookies (MVP-10).** This risk assumed iOS
+   gives a home-screen web app storage separate from Chrome, so Terry would sign in to Access again inside
+   it. The premise was wrong for an icon added from Chrome: Terry reports it is a link into Chrome, and
+   Chrome's cookie jar is unaffected, so the app asked for no PIN at device check step 4. The 7-day Access
+   session in Chrome is the only session. Device check step 8 still checks that it holds after four hours.
 9. **Access in front of `workers.dev` (MVP-05):** believed supported, not yet verified. MVP-05 MUST
    confirm it before building on it; a custom hostname is the fallback.
 
