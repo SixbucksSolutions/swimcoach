@@ -63,13 +63,14 @@
         // 1 finding: the cloudflare:workers import in the test. A virtual module supplied by
         // the Workers runtime and typed by @cloudflare/vitest-plugin, so Biome cannot resolve
         // it. False positive; tsc resolves it and is the real check.
-        "noUnresolvedImports": "off",
-        // 2 findings in T2 (MVP-03 B on a module-level arrow function, MVP-04 A on an arrow
-        // function in a test), both false positives: this rule checks Qwik's $() lexical-scope
-        // rules, and swimcoach does not use Qwik. Biome's other framework rules (React, Vue,
-        // Svelte, Solid, Next) need framework syntax to fire and have reported nothing; revisit
-        // any of them that ever fires on plain TypeScript.
-        "useQwikValidLexicalScope": "off"
+        "noUnresolvedImports": "off"
+        // useQwikValidLexicalScope stays ON (RFC 2119 keywords below). Two T2 authors reported it
+        // misfiring on plain TypeScript and wrote around it. Neither the Lead nor the PR #14
+        // reviewer could reproduce that on Biome 2.6.7: five plain arrow-function shapes gave 0
+        // findings, while Qwik-shaped $() code does fire it (PR #15 review). The exclusion had no
+        // reproduced evidence, so the off switch from PR #14 was reverted (2026-11-13).
+        // This rule MUST NOT be turned off without a reproduced false positive. Whoever next sees
+        // it fire on plain TypeScript MUST keep that code as the evidence before turning it off.
       },
       "style": {
         // 2 findings: src/index.ts and vitest.config.ts. A Worker MUST default-export its
