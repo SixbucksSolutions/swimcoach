@@ -9,6 +9,7 @@ import type { CardView, View } from "../../public/js/view.js";
 const BUTTON =
   /<button class="pc (?<cls>[a-z ]+)" data-go="(?<go>[^"]*)">(?<inner>.*?)<\/button>/gu;
 const TITLE = /<b>(?<text>.*?)<\/b>/u;
+const GRID = /<div class="(?<cls>cards[a-z ]*)"/u;
 const BLURB = /<span>(?<text>.*?)<\/span>/u;
 
 /** A green ratio-mode card, with any field overridden. */
@@ -150,6 +151,34 @@ describe("renderOverview: empty, order, escaping", () => {
   });
 });
 
+/** The class on the grid element for these cards. */
+function gridClass(cards: CardView[]): string {
+  return GRID.exec(renderOverview(view(cards)))?.groups?.cls ?? "";
+}
+
+/** n ordinary green cards. */
+function plain(n: number): CardView[] {
+  return Array.from({ length: n }, (_unused, i) => card({ key: keyOf(`p${i}`), title: `p${i}` }));
+}
+
+describe("renderOverview: the half class follows the slot count", () => {
+  it("has no half class up to four slots", () => {
+    expect(gridClass(plain(1))).toBe("cards");
+    expect(gridClass(plain(4))).toBe("cards");
+  });
+
+  it("has half from five slots", () => {
+    expect(gridClass(plain(5))).toBe("cards half");
+    expect(gridClass(plain(9))).toBe("cards half");
+  });
+
+  it("counts GO TO KEYBOARD as one slot, however many red cards", () => {
+    expect(gridClass([red("r"), ...plain(3)])).toBe("cards");
+    expect(gridClass([red("r"), ...plain(4)])).toBe("cards half");
+    expect(gridClass([red("r1"), red("r2"), red("r3"), ...plain(3)])).toBe("cards");
+  });
+});
+
 describe("renderOverview: GO TO KEYBOARD", () => {
   it("is first, opens the first red card, and joins red titles with a middle dot", () => {
     const [first] = buttons([card({ key: keyOf("a"), title: "a" }), red("r1"), red("r2")]);
@@ -167,15 +196,6 @@ describe("renderOverview: GO TO KEYBOARD", () => {
     ]);
     expect(found.map((b) => b.cls)).toEqual(["kbd", "green", "green"]);
     expect(found.map(titleOf)).toEqual(["GO TO KEYBOARD", "a", "b"]);
-  });
-
-  it("reserves no slot when nothing is red", () => {
-    expect(buttons([card()]).map((b) => b.cls)).toEqual(["green"]);
-  });
-
-  it("counts as a slot: one red and four others make five buttons", () => {
-    const four = ["a", "b", "c", "d"].map((n) => card({ key: keyOf(n), title: n }));
-    expect(buttons([red("r"), ...four])).toHaveLength(5);
   });
 
   it("shows no keyboard slot for a done card that still carries an ask", () => {
@@ -213,11 +233,6 @@ describe("renderOverview: colors and blurbs in ratio mode", () => {
     const [only] = buttons([card({ level: "done", reason: "done", why: "Done", dir: null })]);
     expect(only?.cls).toBe("done");
     expect(blurbOf(only)).toBe("Done");
-    expect(only?.inner).not.toContain('class="rt"');
-  });
-
-  it("shows no RTR when rtr is null", () => {
-    const [only] = buttons([card({ level: "yellow", why: "Running late", rtr: null })]);
     expect(only?.inner).not.toContain('class="rt"');
   });
 

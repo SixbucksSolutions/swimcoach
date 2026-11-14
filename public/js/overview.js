@@ -134,22 +134,25 @@ function sameNameSize(have, want) {
 
 /**
  * The inline font-size a Title line needs: "" when its text fits at the stylesheet's size, else the
- * size that fits, never below NAME_MIN_PX. The natural width comes from a Range over the text, scaled
- * from the size now showing to the stylesheet's size, so the inline size never has to be cleared and
- * set again to measure. Returns null for a line that is not laid out (width 0), which is left alone.
- * @param {HTMLElement} name
+ * size that fits, never below NAME_MIN_PX. The mock's arithmetic: the text's width AT THE STYLESHEET
+ * SIZE, scaled once. That width is measured on `probeName`, a hidden twin of the Title line outside
+ * the cards, never on the live node: width is not proportional to size (Inter's opsz axis), so a
+ * measure at the size now showing would give a different answer on every poll. The result depends on
+ * the text and the box only. Returns null for a line that is not laid out (width 0), left alone.
+ * @param {HTMLElement} name  the live Title line
+ * @param {HTMLElement} probeName  the hidden twin, at the stylesheet's size
  * @param {number} basePx  the stylesheet's font size for the Title line
  * @returns {string|null}
  */
-function wantedNameSize(name, basePx) {
+function wantedNameSize(name, probeName, basePx) {
   const room = name.clientWidth;
-  const showingPx = Number.parseFloat(getComputedStyle(name).fontSize);
-  if (room === 0 || !(showingPx > 0)) {
+  if (room === 0) {
     return null;
   }
+  probeName.textContent = name.textContent;
   const range = document.createRange();
-  range.selectNodeContents(name);
-  const naturalWidth = (range.getBoundingClientRect().width * basePx) / showingPx;
+  range.selectNodeContents(probeName);
+  const naturalWidth = range.getBoundingClientRect().width;
   if (naturalWidth <= room) {
     return "";
   }
@@ -159,17 +162,50 @@ function wantedNameSize(name, basePx) {
 /**
  * One-line names: shrinks a long name's font until it fits, down to 14px; past that, CSS ends it in an
  * ellipsis. Writes a size only when it differs from the one showing.
+ * The hidden probe is a twin of the card markup (same classes, so the same stylesheet font and size),
+ * placed on the body outside the cards, and removed before the function returns, so it never paints.
  * @param {HTMLElement} cards
+ * @param {boolean} half  true in the eight-slot grid, where the stylesheet sets 20px instead of 24px
  * @param {number} basePx  the stylesheet's font size for the Title line
  * @returns {void}
  */
-function fitNames(cards, basePx) {
-  for (const name of cards.querySelectorAll("b")) {
-    const want = wantedNameSize(name, basePx);
-    if (want !== null && !sameNameSize(name.style.fontSize, want)) {
-      name.style.fontSize = want;
-    }
+function fitNames(cards, half, basePx) {
+  const names = cards.querySelectorAll("b");
+  if (names.length === 0) {
+    return;
   }
+  const probe = document.createElement("div");
+  probe.className = "cards";
+  if (half) {
+    probe.className = "cards half";
+  }
+  probe.style.cssText =
+    "position:absolute;left:-9999px;top:0;visibility:hidden;pointer-events:none";
+  probe.innerHTML = '<button class="pc"><div class="nm"><b></b></div></button>';
+  const probeName = probe.querySelector("b");
+  if (!probeName) {
+    return;
+  }
+  document.body.append(probe);
+  try {
+    for (const name of names) {
+      const want = wantedNameSize(name, probeName, basePx);
+      if (want !== null && !sameNameSize(name.style.fontSize, want)) {
+        name.style.fontSize = want;
+      }
+    }
+  } finally {
+    probe.remove();
+  }
+}
+
+/**
+ * True when the overview has more slots than four full ones; the GO TO KEYBOARD slot counts as one.
+ * @param {number} slots
+ * @returns {boolean}
+ */
+function isHalf(slots) {
+  return slots > FULL_SLOTS;
 }
 
 /**
@@ -184,7 +220,13 @@ export function renderOverview(view) {
   }
   const red = view.cards.filter((card) => card.level === "red");
   const rest = view.cards.filter((card) => card.level !== "red");
+  // `half` comes from the slot count here, as in the mock, so the markup already carries the class
+  // that fitCards would set and a morph never strips it (UX-110).
+  const slots = rest.length + Math.min(red.length, 1);
   let html = '<div class="cards">';
+  if (isHalf(slots)) {
+    html = '<div class="cards half">';
+  }
   if (red.length > 0) {
     html += renderKeyboard(red);
   }
@@ -207,7 +249,7 @@ export function fitCards(page) {
   if (!(cards instanceof HTMLElement)) {
     return;
   }
-  const half = cards.children.length > FULL_SLOTS;
+  const half = isHalf(cards.children.length);
   /** @type {4|8} */
   let rows = 4;
   let basePx = NAME_PX.full;
@@ -225,5 +267,5 @@ export function fitCards(page) {
     Number.parseFloat(computed.paddingBottom);
   const slot = Math.max(SLOT_MIN[rows], (available - (rows - 1) * SLOT_GAP) / rows);
   setPropertyIfChanged(cards.style, "--slot", `${slot.toFixed(2)}px`);
-  fitNames(cards, basePx);
+  fitNames(cards, half, basePx);
 }
