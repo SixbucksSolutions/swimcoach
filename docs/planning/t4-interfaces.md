@@ -11,6 +11,11 @@ Drafted by the Lead's deputy and adopted by the Lead on 2026-11-13, per relay ru
 3. **Completed (UX-093, UX-094): never shown as a Swimlanes row.** Terry: "Never show completed; usually
    has a few hundred tickets." Completed cards still count as finished in every metric; they only get no
    row. Swimlanes shows Ready For Work, In Progress, Needs Terry (hidden when empty) and Ready For Review.
+   In practice Completed is 0 for every milestone on the board: Terry, "By the time tickets move to
+   Completed the project agent will have deleted that work increment" and "That means I've closed the
+   milestone and starting a new one." So a card finishes in Ready For Review (all cards there shows the
+   done card), Terry approves, the agent runs `stop`, and its first report for the next milestone adds
+   a fresh card. The report keeps its required `completed` lane; agents send 0.
 4. **Small-block project display (UX-134):** drop the RTR parts (no hero RTR, no RTR chart, no
    projection tiles); keep Work against time, Swimlanes and the footer, with the card's `why` as the hero.
 5. **The desktop column** keeps the draft's default below.
