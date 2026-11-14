@@ -13,6 +13,12 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - Carried into T2's contract work: Ajv strict mode warns that `project`, `milestone` and `needsMe`
   lack a local `"type": "string"`; the schema says "every code point" but Go cannot test lone
   surrogates; `contract/fixtures/README.md` "Open for Terry" item 1 (midnight) is settled by api.md 6.9.
+- **Lead work at T2 close:** add `jose`
+  6.2.17 (MIT) to `THIRD-PARTY-NOTICES.md`; turn off Biome's framework-specific rules that preset
+  "all" enables for a project with no such framework (`useQwikValidLexicalScope` misfired for two
+  authors), with the count and reason in `biome.jsonc`; and update `t2-interfaces.md` to the
+  `{ path, message }` shape of `problems` that MVP-03 B used, which the contract's `errorResponse`
+  requires.
 - Carried into MVP-09: the Board's retention alarm prunes on the real clock, so on the test Worker,
   samples stamped more than 14 days before real time can vanish within a day (MVP-03 A hand-off).
   The test Worker SHOULD disable or re-base pruning.
