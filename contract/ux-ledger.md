@@ -47,8 +47,8 @@ load-bearing.
 | J. Navigation | UX-113 to UX-124 | 12 |
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
-| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-154 | 20 |
-| **Total** | | **154** (21 superseded: UX-016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 111, 112, 132, 133, 134) |
+| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-155 | 21 |
+| **Total** | | **155** (21 superseded: UX-016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 111, 112, 132, 133, 134) |
 
 ## A. Status line
 
@@ -274,3 +274,4 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-152 | Gray: agent silent over 25 min. The Detail blurb names the reason ("Agent silent for ..."), the RTR stays, and no clock-hand arrow is drawn, as on a too-early card | c3.2 states row 4, api.md 6.6 row 3; Terry 2026-11-14: gray is "not enough FRESH data to signal green/yellow"; no arrow is the Lead's call | `silent-00-all-projects.png` (mock shows yellow) | Supersedes UX-036 | Pending |
 | UX-153 | On a desktop browser the page is a centered 402 x 874 phone-width column with no bezel, notch or side panel; it works exactly as on the phone | Terry 2026-11-14, at the MVP-08 phone check: "Yes laptop is good" | - | New rule; the mock's bezel and scenario panel were mock chrome | Pending |
 | UX-154 | SIGN IN: when Access refuses a poll (a redirect, 401 or 403), the page reloads at most once per 5 minutes per tab so Access can show its login; after that the Health box reads SIGN IN in OFFLINE's red, the displays gray out, and the warning line "Signed out of the board. Tap here to sign in again." reloads on a tap. An auth refusal never counts toward OFFLINE | c3.1 table; the Lead's recommendation, which Terry took on 2026-11-14 ("I'll take your recommendation") | `signin-drawn-00-all-projects.png` (visual review) | New rule | Pending |
+| UX-155 | A project display's hero with no big RTR (small-block mode) gets 10 px of extra space below the title: the visible gap is about 21 px, against about 11 px before **(measured** in Chrome at 402 x 874 by the PR #34 review**)** | Terry 2026-11-14, at the MVP-08 phone check: "Just let it land" | - | New rule; `project.test.ts` checks the `bare` class | Pending |

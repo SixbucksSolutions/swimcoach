@@ -19,6 +19,12 @@
   gap: 14px;
   margin: 0;
 }
+/* A hero with no big RTR (small-block mode) gets 10px more space below the title: Terry's call at the
+   MVP-08 phone check, 2026-11-14 (UX-155). Measured in Chrome at 402 x 874 by the PR #34 review: the
+   visible gap goes from about 11px to about 21px; a ratio hero's arrow sits about 12px below. */
+.hero.bare {
+  margin-top: 10px;
+}
 /* The hero RTR uses the same clock hand as the cards (concept.md 3.2): padding reserves the hand's reach,
    .8em above and below the line box and .883em on the right, so it never overlaps the name or the label. */
 .hero .big {
