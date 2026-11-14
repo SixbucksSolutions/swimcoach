@@ -147,8 +147,9 @@ Source: the Session Duration field in
 
 1. Edit the application from step 4. Find **Session Duration**.
 2. Set it as long as the dashboard allows: the longest option (1 month, if offered). This is a
-   single-user board on your own phone, and the in-app browser on the iPhone keeps its own storage, so
-   every expiry costs you a PIN login (`docs/planning/RESUME.md` risk 8). Shorten it later if you want.
+   single-user board on your own phone, and every expiry costs you a PIN login. The home-screen icon
+   shares Chrome's cookies, so one session covers both (`docs/planning/RESUME.md` risk 8). Shorten it
+   later if you want.
 3. The session duration governs your browser login only. It does not affect the service token.
 4. Save the application.
 

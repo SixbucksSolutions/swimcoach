@@ -48,8 +48,8 @@ load-bearing.
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
 | M. Decisions at and before the MVP-08 phone check | UX-135 to UX-162, UX-167 to UX-170 | 32 |
-| N. Phone and home screen (MVP-10) | UX-163 to UX-166 | 4 |
-| **Total** | | **170** (32 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 070, 071, 073, 090, 093, 094, 111, 112, 132, 133, 134, 136, 137, 150; 2 retired: UX-037, UX-083) |
+| N. Phone and home screen (MVP-10) | UX-163 to UX-166, UX-171 | 5 |
+| **Total** | | **171** (33 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 070, 071, 073, 090, 093, 094, 111, 112, 132, 133, 134, 136, 137, 150, 165; 2 retired: UX-037, UX-083) |
 
 ## A. Status line
 
@@ -297,5 +297,6 @@ only part of each, so each carries its manual step from `docs/runbooks/mvp-10-de
 | --- | --- | --- | --- | --- | --- |
 | UX-163 | Added to the iPhone home screen, the icon's suggested and shown name is exactly `swimcoach` (the page's `apple-mobile-web-app-title` and the manifest's `short_name`), not the page title | MVP-10, RESUME "Carried into MVP-10" | - | manual: device check steps 1 and 2 | Pending |
 | UX-164 | Launched from the home-screen icon, the page opens full-screen (standalone), with no browser address bar or toolbar | MVP-10; Terry 2026-11-13: iOS "opens it like a legit thing, not wrapped in chrome" | - | manual: device check step 3 | Pending |
-| UX-165 | Opened from the home-screen icon four hours or more after the last use, the page shows the board without a sign-in page (the 7-day Access session holds inside the home-screen app's own cookies) | MVP-10, RESUME risk 8 | - | manual: device check steps 4 and 8 | Pending |
+| UX-165 | Opened from the home-screen icon four hours or more after the last use, the page shows the board without a sign-in page (the 7-day Access session holds inside the home-screen app's own cookies) | MVP-10, RESUME risk 8 | - | manual: device check steps 4 and 8 | No: superseded by UX-171 |
 | UX-166 | The home-screen icon is the swimcoach mark on the dark ground (`design/logo/swimcoach-touch-180.png`), never a screenshot of the page. The page embeds it as a data URI, because every served path sits behind Cloudflare Access and a fetch without the login cookie would get the login redirect | MVP-10; MVP-10 review, 2026-11-14 | `design/logo/swimcoach-touch-180.png` | manual: device check step 2; `test/page/assets.test.ts` checks the embedded 180 px PNG | Pending |
+| UX-171 | Opened from the home-screen icon, the page shows the board without a sign-in page, both right after the icon is added and four hours or more after the last use. An icon added from Chrome opens with Chrome's own cookies, so the 7-day Access session signed in through Chrome is the only one | MVP-10, RESUME risk 8 | - | Supersedes UX-165, which put the session in cookies of the app's own, separate from Chrome; an icon added from Chrome is a link into Chrome and its cookie jar is unaffected (Terry, 2026-11-14). manual: device check steps 4 and 8 | Pending |
