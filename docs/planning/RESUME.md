@@ -24,8 +24,21 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - **`check-access.ps1 -ConfigPath ...\cli-test.json`: 3/3. `--suite full` against the test Worker:
   68/68** (run `31dvk3`, 34 s), so every golden fixture replays through the real Worker within the
   contract's tolerances.
-- Open: #25 (08-A overview, third review round: zero DOM work on an unchanged poll, and no ellipsis
-  on a shrunk name), #28 (08-C controller, after #25), then the MVP-08 visual review.
+- MVP-08 merged into integration: #25 (08-A, `7c4247d`, three review rounds), #28 (08-C,
+  `8f93547`, three rounds). Reviewers proved in Chromium at 402 x 874 that an identical poll makes ZERO
+  DOM mutations on `document` (the status clock's once-a-minute change is the only writer), including
+  after Inter loads late. The visual review (57 screens, 0-1.06 % pixel diff) found 2 defects, now in
+  a fix PR (`t4/mvp-08-fix`): a name ellipsized by `clientWidth` rounding, and a red display's hero
+  repeating the ask instead of the call (new `CardView.callWhy`).
+- **For Terry at the MVP-08 phone check (his calls, not yet decided):**
+  1. The desktop view is a centered 402 x 874 column with no bezel or side panel (the one sanctioned
+     layout change; he has not seen it).
+  2. SIGN IN: an auth failure (redirect, 401, 403) reloads once per 5 minutes so Access can show its
+     login, then shows SIGN IN in OFFLINE's red with the displays grayed. If the reload itself is
+     refused, the page shows the header and warning only.
+  3. On a small-block display the hero label ("Under budget") sits flush under the title; the reviewer
+     offers 10px of space if he wants it.
+  4. Whether to post a few `zz demo` milestones with the CLI so the board has cards during the demo.
 
 ## T3 closed (2026-11-13, Terry's evening)
 
