@@ -11,8 +11,7 @@ import overCap from "../../contract/fixtures/over-cap.json" with { type: "json" 
 import silent from "../../contract/fixtures/silent.json" with { type: "json" };
 import stale from "../../contract/fixtures/stale.json" with { type: "json" };
 import zeroProgress from "../../contract/fixtures/zero-progress.json" with { type: "json" };
-// biome-ignore lint/correctness/useImportExtensions: tsc rejects a .ts extension on a value import (TS5097) while tsconfig.json leaves allowImportingTsExtensions off.
-import { chanceToFinish, logGamma } from "../../src/metrics/chance";
+import { chanceToFinish, logGamma } from "../../src/metrics/chance.ts";
 import prototype from "./chance-prototype.json" with { type: "json" };
 
 // contract/fixtures/README.md: numbers compare with an absolute tolerance of 1e-9.
