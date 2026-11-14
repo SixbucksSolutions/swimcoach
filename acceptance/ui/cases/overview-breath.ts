@@ -97,6 +97,11 @@ const breathCases: UiCase[] = [
         "GO TO KEYBOARD is on the board.",
       );
       assert.deepEqual(await running(ctx), { dot: 0, slot: 0 }, "Neither breathes.");
+      assert.equal(
+        await probe<string>(ctx.page, "cs(q('#health i')).opacity"),
+        "1",
+        "The still LIVE dot is lit, not the dim dot of the other states.",
+      );
       await pollOnce(ctx);
       assert.deepEqual(await running(ctx), { dot: 0, slot: 0 }, "A good poll starts no breath.");
       assert.equal(await probe<string>(ctx.page, "cs(document.body).transitionDuration"), "0s");

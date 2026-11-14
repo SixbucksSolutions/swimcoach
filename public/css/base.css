@@ -197,10 +197,12 @@ header h1 .word span {
 #health.live i {
   animation: breathe 2s ease-in-out 20;
 }
-/* No breathing under reduced motion (UX-075, brand.md 6): the dot stays still and full. */
+/* No breathing under reduced motion (UX-075, brand.md 6): the dot stays still and full, so LIVE keeps
+   a lit dot and never shows the 0.3 dim dot of WAIT, STALE and OFFLINE. */
 @media (prefers-reduced-motion: reduce) {
   #health.live i {
     animation: none;
+    opacity: 1;
   }
 }
 
