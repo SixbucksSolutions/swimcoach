@@ -47,9 +47,10 @@
       "name": "swimcoach-test",
       "vars": {
         "ACCESS_TEAM_DOMAIN": "snowy-queen-54cf.cloudflareaccess.com",
-        // A placeholder until Terry enables Access on swimcoach-test and hands over its AUD tag. Until
-        // then no token can match it, so every request fails closed with 401.
-        "ACCESS_AUD": "pending-terry-access-setup",
+        // The AUD tag of the "swimcoach-test - Cloudflare Workers" Access application (Terry enabled
+        // it on 2026-11-14: All traffic, policies swimcoach-cli and terry, 7-day session). It differs
+        // from production's, so a token for one Worker never passes the other.
+        "ACCESS_AUD": "091025920b1bd2727c95710a76add7858cc6788e6c3afc088ed4c0085b5e0e6d",
         // The one enabling value, compared exactly (src/http.ts).
         "SWIMCOACH_TEST_CLOCK": "on"
       },
