@@ -66,7 +66,10 @@ area estimate becomes a measurement. Each result is recorded in the ledger as `m
   request routing, with bodies that MUST match `contract/schemas/state.schema.json`; the API suite is
   what proves the server produces such bodies. So the UI suite is safe against production, needs no
   tiers, and several runs never collide on the shared test Worker's board. Time is Playwright's clock.
-  OFFLINE and SIGN IN are answers too (abort, 401, 403, a redirect), never a broken Worker.
+  OFFLINE and SIGN IN are answers too (abort, 401, 403, a redirect), never a broken Worker. WebKit
+  refuses a scripted redirect, so a redirect answer runs only with `--browser chrome`; 401 and 403 are
+  the WebKit sign-in cases (the page treats all three alike). The page clock is paused: page time moves
+  only through `open()` and `advance()`. An answer the route cannot give fails the case.
 - **Three ways to run:** `node acceptance/ui/run.ts --config <file>` (a deployment through Access),
   `--local public` (a local copy, no secret, for authors), and `--browser chrome` for the fallback.
   Authors develop with `--local`; the Lead and the reviewers run `--config` against `swimcoach-test`,
