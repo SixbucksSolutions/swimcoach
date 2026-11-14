@@ -185,8 +185,8 @@ These are open. None of them is done, and none is implied done by anything above
    path that gaps 1 and 5 name: real command, real server, real page (`coverage.md` row C28).
 3. **Terry's hands-on demo and acceptance: not given.** Terry owns acceptance (`mvp-stories.md`,
    MVP-12). Until he gives it, MVP-12 is not done, whatever the suites say.
-4. **The page defect from the visual review: not fixed.** UX-141, UX-142 and UX-144 break while the
-   warning line shows (section 1). The fix is pending in a separate pull request by the Lead.
+4. ~~**The page defect from the visual review: not fixed.**~~ **Fixed and shipped at the T6 close**
+   (PR #48; section 8). UX-141, UX-142 and UX-144 broke while the warning line showed (section 1).
 
 ## 7. How to re-run
 
@@ -206,7 +206,7 @@ $cfg = Join-Path $env:USERPROFILE '.secrets\swimcoach'
 node acceptance/api/run.ts --config (Join-Path $cfg 'cli.json') --suite clock-free
 node acceptance/api/run.ts --config (Join-Path $cfg 'cli-test.json') --suite full
 
-# UI suite on each deployment (expect 116/116 each).
+# UI suite on each deployment (expect 118/118 each since the T6 ship; 116 at qualification).
 node acceptance/ui/run.ts --config (Join-Path $cfg 'cli.json')
 node acceptance/ui/run.ts --config (Join-Path $cfg 'cli-test.json')
 
@@ -241,3 +241,24 @@ git grep -nE '[''"](\.\./)+(src|public|cli|test)(/|[''"])' -- 'acceptance/*.ts'
 
 Both commands were run on this branch on 2026-11-14: the control listed the six files, and the real
 search printed nothing and exited 1.
+
+## 8. Re-verified at the T6 ship (2026-11-14)
+
+The record above qualified `13ad862`. T6 then shipped three more pull requests to `main` as `014967a`:
+#46 (this record), #47 (the CLI on Commander: short forms, help built by the library, parse checks in
+the library) and #48 (the slot refit, open item 4). Every suite was run again on the shipped build:
+
+| Suite | Deployment | Result |
+| --- | --- | --- |
+| API `--suite full` | `swimcoach-test`, version `822c2786-d335-4d61-a437-b1aa105a4b5b` | 68/68 |
+| API `--suite clock-free` | Production | 41/41 |
+| UI | `swimcoach-test` | 118/118 |
+| UI | Production, version `da5d4cb6-d1be-4c1f-8ca6-7f1f176693ff` | 118/118 |
+
+- The UI suite grew from 116 to 118 cases: #48's two cases in `acceptance/ui/cases/overview-warn.ts`.
+  Both failed on the unfixed page (790 px of slots in a 710 px area) and pass on the shipped one.
+- CI run 43633199666 on `014967a`: `check` and `deploy` success. Production's version is from the
+  later README-only push; no code changed between them.
+- Open items 1 to 3 in section 6 are unchanged. A real agent (the localswim V2 UI lead) was pointed at
+  the README's "Agents Directed To Post Updates" on 2026-11-14 for item 2; its full turn is not yet
+  observed.

@@ -3,6 +3,29 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
+## T6 shipped (2026-11-14); next: watch the first real agent, then Terry's demo and acceptance
+
+- **`main` = `mvp/integration` at the commit that adds this section**, with no other branch, worktree
+  or open PR (relay rule 8). T6 shipped as `014967a` (CI 43633199666, `check` and `deploy` success):
+  PRs #46 (the MVP-12 qualification record, `docs/qualification/`), #47 (the CLI on Commander) and #48
+  (the slot refit). `swimcoach-test` runs version `822c2786`; production `da5d4cb6`.
+- **Verified on the shipped build:** API full 68/68 on test, clock-free 41/41 on production, UI
+  118/118 on both. Recorded in `docs/qualification/README.md` section 8.
+- **The CLI is Commander's now** (Terry, 2026-11-14): `commander` 15.0.0 parses, checks (`--file`
+  conflicts with the field flags; `stop` requires its two flags) and builds every help page from
+  passed-in descriptions. Our code keeps only business rules: no `--url`, a command is required,
+  and every field flag is required unless `--file`. Every flag has a unique one-letter short form
+  (`contract/cli.md` section 1). After any `main` update, `C:\Projects\swimcoach` MUST get `npm ci`,
+  or `bin\swimcoach.cmd` cannot find `commander`.
+- **README "Agents Directed To Post Updates"** is the agent guide, led by JSON on stdin (`report -f
+  -`), every shell example dry-run before commit.
+- **First real agent:** the localswim V2 UI lead (Codex) was told on 2026-11-14 to report every 10
+  minutes on the :x0 marks as `codex` / `localswim V2` / `New UI`. Its full turn closes MVP-12 open
+  item 2. A board watcher (`watch-board.mjs` in the session scratchpad) reports new and changed cards.
+- **Open, all Terry's:** device check step 8; the first agent's full turn; the demo and acceptance.
+- **Punts** go to `docs/planning/post-mvp.md` (Terry: press that button "often/aggressively").
+  Scope rule: the MVP kicks the tires; record preferences as requirements, ship the cheap version.
+
 ## T5 closed (2026-11-14); next: device check step 8, then T6 (MVP-12)
 
 - **`main` = `mvp/integration` at the commit that adds this section**, nothing else on either side:
