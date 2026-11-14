@@ -336,6 +336,13 @@ function cardOf(raw, now, path) {
   const why = whyOf(reason, needsMe, ages, path);
   const stale = bool(m, "stale", path);
   const card = { reason, why, needsMe, mode, stale, tooEarly, ages };
+  const call = callOf(metrics, callable, mp);
+  // A silent card is gray, "not enough FRESH data to signal green/yellow" (api.md 6.6, Terry
+  // 2026-11-14), so it draws no clock-hand arrow either (UX-152). The trend and chance stay for the
+  // display's tiles, which say how old they are through the stale flag.
+  if (reason === "silent") {
+    call.dir = null;
+  }
   return {
     key: JSON.stringify([asciiLower(project), asciiLower(milestone)]),
     title: `${project} ${milestone}`,
@@ -350,7 +357,7 @@ function cardOf(raw, now, path) {
     mode,
     tooEarly: callable && tooEarly,
     rtr: shownRtr,
-    ...callOf(metrics, callable, mp),
+    ...call,
     ...countsOf(m, metrics, path),
     updatedAt,
     lastMoveAt,

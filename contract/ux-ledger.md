@@ -47,8 +47,8 @@ load-bearing.
 | J. Navigation | UX-113 to UX-124 | 12 |
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
-| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-151 | 17 |
-| **Total** | | **151** (20 superseded: UX-016, 017, 018, 020, 021 to 026, 028, 045, 053, 065, 066, 111, 112, 132, 133, 134) |
+| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-152 | 18 |
+| **Total** | | **152** (21 superseded: UX-016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 111, 112, 132, 133, 134) |
 
 ## A. Status line
 
@@ -99,7 +99,7 @@ load-bearing.
 | UX-033 | Done Card when `total > 0` and `finished == total` (api.md 6.2): dark slate, Name plus the Detail blurb 'Done' (needs Terry, c8 item 3: the done color) | c3.2 states row 1, api.md 6.2 | `afternoon-00-all-projects.png` (localswim v2) |  | Pending |
 | UX-034 | Done state ranks above red: a done project with a stale `needs_me` shows done (needs Terry, c8 item 3: the done and gray colors) | c3.2 "first match wins" table order (Done is row 1, Red is row 2), api.md 6.6 | - | Contrived; no render | Pending |
 | UX-035 | Red project: needs-you item (a ticket in Needs Terry, or `needs_me` text) | c3.2 states row 2 | `keyboard-00-all-projects.png` | Red projects leave the list; see area D | Pending |
-| UX-036 | Yellow: agent silent over 25 min | c3.2 states row 3 | `silent-00-all-projects.png` | Detail blurb names the reason | Pending |
+| UX-036 | Yellow: agent silent over 25 min | c3.2 states row 3 | `silent-00-all-projects.png` | Detail blurb names the reason | No: superseded by UX-152 |
 | UX-037 | RETIRED: "Yellow: status `blocked`" cannot happen. The report has no `status` field (api.md 6.2), and Blocked never appears on the dashboard (c3.2, Terry 2026-11-13). c3.2's card-states table row 3 still lists `status blocked`; that row is stale in concept.md | c3.2, api.md 6.2 | - | RETIRED; no check | Pending |
 | UX-038 | Yellow: the call is "Running late" | c3.2 states row 3 | `afternoon-00-all-projects.png` (mobile-onboarding) |  | Pending |
 | UX-039 | Yellow: no ticket moved in 45 min | c3.2 states row 3 | - | No render | Pending |
@@ -271,3 +271,4 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-149 | Precedence: the first matching rule wins: done, red, silent (gray), the yellow rules in the order running_late, over_budget, stalled, toss_up, then too_early (gray), then green | c3.2, api.md 6.6 | - | Supersedes UX-045; table-driven check over the fixture set | Pending |
 | UX-150 | Polling runs every 10 s against `GET /api/2026-11-14/state`; the retired `/api/2026-11-13/` paths answer 404 | c3.1, api.md Versioning | - | Supersedes UX-112 (the API date moved when silent turned gray) | Pending |
 | UX-151 | In `count_and_time` mode the Card is green while `active_hours` is within `cap_hours` (reason `under_budget`) and yellow once it is over (reason `over_budget`); red only for `needs_me`; silent still applies (gray); done still ranks first | c8 item 10, api.md 6.6 | - | Supersedes UX-132; fixture `state.small-blocks.json`; stalled, running_late, toss_up and too_early do not apply | Pending |
+| UX-152 | Gray: agent silent over 25 min. The Detail blurb names the reason ("Agent silent for ..."), the RTR stays, and no clock-hand arrow is drawn, as on a too-early card | c3.2 states row 4, api.md 6.6 row 3; Terry 2026-11-14: gray is "not enough FRESH data to signal green/yellow"; no arrow is the Lead's call | `silent-00-all-projects.png` (mock shows yellow) | Supersedes UX-036 | Pending |
