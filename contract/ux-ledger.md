@@ -47,9 +47,9 @@ load-bearing.
 | J. Navigation | UX-113 to UX-124 | 12 |
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
-| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-162, UX-167 to UX-169 | 31 |
+| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-162, UX-167 to UX-170 | 32 |
 | N. Phone and home screen (MVP-10) | UX-163 to UX-166 | 4 |
-| **Total** | | **169** (31 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 071, 073, 090, 093, 094, 111, 112, 132, 133, 134, 136, 137, 150; 2 retired: UX-037, UX-083) |
+| **Total** | | **170** (32 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 070, 071, 073, 090, 093, 094, 111, 112, 132, 133, 134, 136, 137, 150; 2 retired: UX-037, UX-083) |
 
 ## A. Status line
 
@@ -144,7 +144,7 @@ load-bearing.
 | UX-067 | Side margins match: 18 px before the name, 18 px from the inked tip of a 3 o'clock hand to the right edge **(measured at ink level)** | c3.2 | `afternoon-00-all-projects.png` |  | Pending |
 | UX-068 | Title line on one line at 24 px (full) or 20 px (half); a long name shrinks to 14 px, then ends in the U+2026 ellipsis glyph (b7; CSS truncation, or `&hellip;` / `String.fromCharCode(0x2026)` in source) | c3.2 name stays on one line, b7 | `afternoon-00-all-projects.png` | Use "mobile-onboarding-redesign" | Pending |
 | UX-069 | Detail blurb is 14 px, weight 500, indented 12 px under the Title line; no separator line between them | c3.2 | `afternoon-00-all-projects.png` |  | Pending |
-| UX-070 | Inside a Card: 18 px above the Title line and 18 px below the last Detail blurb line at the content minimum **(measured)** | c3.2 | `afternoon-00-all-projects.png` |  | Pending |
+| UX-070 | Inside a Card: 18 px above the Title line and 18 px below the last Detail blurb line at the content minimum **(measured)** | c3.2 | `afternoon-00-all-projects.png` |  | No: superseded by UX-170 |
 
 ## F. Breathing sync
 
@@ -286,6 +286,7 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-167 | The Work bar takes the display's state color on every level (green, yellow, red, gray, done); the Time bar is neutral (`--dim`) | c3.3 part 7; the approved mock's `.meter` sets `--c` to the display's tone for every level (mocks/index.html 160-163, 392) | `afternoon-03-fga-t04-bottom.png` | Supersedes UX-090, which said "green and yellow only" against the mock (found by MVP-11 B, 2026-11-14) | Pending |
 | UX-168 | Green or yellow display: three Swimlanes rows, Ready For Work, In progress and Ready for review. Completed is never a row, even when it holds tickets, and still counts as finished; Needs Terry never shows here (any ticket in it makes the display red) | c3.3 part 7; Terry 2026-11-13 (t4-interfaces.md decision 3): "Never show completed; usually has a few hundred tickets" | `afternoon-03-fga-t04-bottom.png` | Supersedes UX-093, whose Completed row was "needs Terry" | Pending |
 | UX-169 | Each Swimlanes row shows its name, count and share, with its own bar under the row; there is no Completed row | c3.3 part 7; t4-interfaces.md decision 3 | `afternoon-03-fga-t04-bottom.png` | Supersedes UX-094, whose Completed row was "needs Terry" | Pending |
+| UX-170 | Inside a Card at the content minimum (101.7 px): the Title line's box starts 15.4 px below the Card's top edge (its capitals about 19 px), and 18 px separate the last Detail blurb line from the Card's bottom edge **(measured** in WebKit at 402 x 874; the approved mock and the page agree**)** | c3.2 | `afternoon-00-all-projects.png` | Supersedes UX-070, whose "18 px above the Title line" matched neither the mock nor the page (MVP-11 A, 2026-11-14) | Pending |
 
 ## N. Phone and home screen (MVP-10)
 
