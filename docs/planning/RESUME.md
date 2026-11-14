@@ -3,6 +3,26 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
+## Handoff to V1 (2026-11-14, evening)
+
+- **The sequence is MVP, then V1, then V2** (Terry, 2026-11-14): "V1 is semi-stable and V2 will be
+  rewrite"; "V1 will extend MVP code". The next agent is the V1 dev agent; it works on this codebase.
+  Recorded in `docs/concept.md` section 14 and `AGENTS.md`.
+- **A knowledge-transfer document** for that agent was written outside the repo, at
+  `C:\temp\swimcoach-v1-handoff.md`, at Terry's request, and reviewed by an Opus 5.5 reviewer. The repo
+  outranks it wherever they differ.
+- **Open for Terry before V1 builds:** whether V2 reproduces the MVP's behavior or V1's (the
+  contract and qualification record say "the MVP's" today); whether the MVP's scope rule ("kick the
+  tires", punt aggressively) also binds V1; whether V1 keeps the MVP's branch and review process;
+  `estimate_hours` (D2, `contract/README.md` "Open for Terry" item 1); and acceptance itself.
+- **First real agent, observed 2026-11-14:** localswim V2 UI (`codex` / `localswim V2` / `New UI`)
+  reported at 2:52, 3:13 and 3:20 PM, **all sent by hand**: its Codex automation, set for every 10
+  minutes on the :x0 marks, did not fire at 3:00 or 3:10. Its own diagnosis: Codex appears not to run a
+  scheduled wakeup while the thread is mid-turn. Reporting that does not depend on an idle agent thread
+  is a likely V1 requirement (offered to Terry as a punt; not yet recorded).
+- **Running `npm ci` in `C:\Projects\swimcoach` briefly breaks `bin\swimcoach.cmd`** for every agent
+  while packages reinstall. Do it between the :x0 report marks.
+
 ## T6 shipped (2026-11-14); next: watch the first real agent, then Terry's demo and acceptance
 
 - **`main` = `mvp/integration` at the commit that adds this section**, with no other branch, worktree

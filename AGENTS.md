@@ -14,17 +14,23 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 (displays, card rules, RTR math, localswim lane mapping, architecture, decisions, open questions) is in
 `docs/concept.md`.
 
-## Current phase: mocks done, MVP next
+## Current phase: MVP shipped, V1 next
 
-- **The mock phase closed on 2026-11-13.** Terry: "an MVP is worth a lot more than a concept I never
-  pushed to prod." `mocks/index.html` is now the approved design, with every decision and its reason in
-  `docs/concept.md` sections 2 and 3 and `docs/brand.md`. The MVP MUST match it.
-- **Next: build the MVP, then a greenfield V2 (concept.md section 14).** The MVP exists to get the UX
-  right and MAY be locked to any vendor or language. V2 rebuilds exactly its behavior with no code
-  inherited, so the MVP's API contract, schemas and black-box acceptance suite are what MUST survive;
-  its code does not. MVP stack, decided: a Cloudflare Worker, one SQLite-backed Durable Object,
-  TypeScript, Cloudflare Access. Leading V2 candidate: Terry's static Go plus SQLite container. Nothing
-  is built yet.
+- **The MVP is built, deployed and qualified** (turns T1 to T6, shipped 2026-11-14): a Cloudflare
+  Worker with one SQLite-backed Durable Object, in TypeScript, behind Cloudflare Access, at
+  `https://swimcoach.sixbuckssolutions.workers.dev`. The qualification record is
+  `docs/qualification/README.md`. **Terry has not yet accepted it**; RESUME says what is open.
+- **The sequence is MVP, then V1, then V2** (Terry, 2026-11-14): "V1 is semi-stable and V2 will be
+  rewrite", and "V1 will extend MVP code". So V1 works on this codebase. V2 is the greenfield,
+  zero-reuse rewrite of `docs/concept.md` section 14. Whether V2 reproduces the MVP's behavior or V1's
+  is Terry's call and not yet recorded.
+- **V1's requirements** are the UX ledger rows marked `Yes` at MVP acceptance
+  (`contract/ux-ledger.md`, V1 column). The contract, schemas, ledger and the two black-box suites in
+  `acceptance/` are the behavior; they move together, never by drift.
+- **The mock phase closed on 2026-11-13.** `mocks/index.html` is the approved design, with every
+  decision and its reason in `docs/concept.md` sections 2 and 3 and `docs/brand.md`.
+- **Real use has begun:** the first project agent (localswim V2 UI, on Codex) reports through the CLI
+  following `README.md`'s "Agents Directed To Post Updates".
 - `reference/prototype/` is the earlier "super prototype": a runnable reference and a spec, not code to
   extend. Its known defects are in concept.md section 11.
 

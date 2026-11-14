@@ -5,6 +5,12 @@ Knowledge transfer written 2026-11-13 by the Claude chat that designed swimcoach
 conversation. It was brought into the repo with file paths updated and a screenshots section added
 (section 0.1). Nothing has been built for v1 yet.
 
+> **Update 2026-11-14:** the MVP is now built and shipped (see `docs/planning/RESUME.md` and
+> `docs/qualification/README.md`). **Naming:** in this document's older text, lowercase "v1" (this
+> header, sections 10, 12 and 13, "Out of scope for v1") means what became the MVP. Capital "V1" now
+> means the semi-stable version that follows the MVP and extends its code, and "V2" the greenfield
+> rewrite (section 14).
+
 ## 0. Read this first: what exists and what does not
 
 - **A working prototype exists.** Its complete source is in [`reference/prototype/`](../reference/prototype/).
