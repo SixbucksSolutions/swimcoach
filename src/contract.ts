@@ -32,7 +32,7 @@ export interface Report {
   readonly needs_me?: string;
 }
 
-/** The body of POST /api/stop, already validated. */
+/** The body of POST /api/2026-11-13/stop, already validated. */
 export interface StopRequest {
   readonly project: string;
   readonly milestone: string;

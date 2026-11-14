@@ -193,7 +193,7 @@ load-bearing.
 | UX-109 | The 10-second poll never fades, blanks or flashes the page | c3.4 | - | Observe across several polls |
 | UX-110 | A poll changes only the values that changed (the real page, not the mock's whole-HTML rewrite) | c3.4 | - | Mutation observer: unchanged nodes stay untouched |
 | UX-111 | The slot mode is chosen in the same step that draws the Cards, before first paint | c3.2, c3.4 | - | No eight-to-four reflow after paint |
-| UX-112 | Polling runs every 10 s against `GET /api/state` | c3.1 | - | |
+| UX-112 | Polling runs every 10 s against `GET /api/2026-11-13/state` | c3.1 | - | |
 
 ## J. Navigation
 
