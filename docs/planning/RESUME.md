@@ -26,9 +26,14 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   UX-166), #39 (manifest, icons, `apple-mobile-web-app-title`, touch icon kept as a data URI because
   every path sits behind Access) merged and **shipped mid-turn as `main` `a2840c5`** so Terry can run
   `docs/runbooks/mvp-10-device-check.md`. Production verified: manifest `application/manifest+json`,
-  icons 200, page 16/16, UI case 1/1, clock-free 41/41. Open: #40 (11-B, 42 project-display cases),
-  #41 (ledger: UX-090/093/094 superseded by UX-167 to UX-169), 11-A (overview cases) still writing,
-  #38 (11-C ledger Check column, draft, phase 2 pending).
+  icons 200, page 16/16, UI case 1/1, clock-free 41/41. Since merged into `mvp/integration`: #40
+  (11-B, project-display cases), #41 (UX-090/093/094 superseded by UX-167 to UX-169), #42 (11-A,
+  overview cases; WebKit 114/114 four runs, two against `swimcoach-test`, none hung), and #43
+  (`7aab9fc`, the Lead's fixes: under reduced motion nothing breathes and the still LIVE dot stays
+  lit, UX-075; UI harness pause-ahead and a 120 s per-case timeout; UX-070 superseded by UX-170,
+  UX-165 by UX-171). The UI suite is 115/115 on WebKit. Ledger: 171 rows, 33 superseded, 2 retired.
+  Open: #38 (11-C ledger Check column), phase 2 under way: `browser:` and device check `manual:`
+  entries.
 - **MVP-10 device check, 2026-11-14 (Terry's iPhone 16 Pro), results so far** (record in the ledger
   as `manual:` when the ledger PR lands): steps 1 to 3 PASS, the icon re-added with the suggested name
   exactly `swimcoach` and the stacked-boards mark (UX-163, UX-166), launched full-screen (UX-164).
@@ -40,8 +45,8 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   the overview (UX-126, UX-127). Observed: with the iPhone on silent and Do Not Disturb the page still
   jumped but made no sound, and during a phone call no sound either; iOS mutes web audio then. That is
   platform behavior, not a defect. Step 4: Access did NOT ask for the PIN when the re-added icon first
-  opened (the runbook expected one prompt; none is better). Step 8 (no sign-in four hours later,
-  UX-165) pending, due about 4 pm. Demo milestones stopped; the board is empty.
+  opened (the runbook expected one prompt; Terry then explained why: the icon shares Chrome's
+  cookies, risk 8, UX-171). Step 8 (no sign-in four hours later, UX-171) pending, due about 4 pm. Demo milestones stopped; the board is empty.
 - **MVP-08 PASSED: Terry, 2026-11-14, "Yes". T5 is open.** The `zz demo` milestones are stopped; the
   production board is empty (`feed` `no_data`). Remaining Terry gates: MVP-10's device checklist (the
   Access session is already 7 days and the icon is on his home screen; re-adding the icon MAY be needed
