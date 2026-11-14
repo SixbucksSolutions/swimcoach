@@ -199,7 +199,11 @@ Owns `public/js/main.js`, `public/js/state.js`, `public/js/morph.js`, `test/page
   `access_client_id`, `access_client_secret`; cli.md 5), so the secret goes only to the `url` beside
   it. Production uses `cli.json`; the test deployment uses `cli-test.json` beside it, which Terry makes
   by copying `cli.json` and changing `url`. An agent MUST NOT read or copy either file's values.
-- **Tiers.** `clock-free` sends no `Swimcoach-Test-Now` header and MAY run against production. `full`
+- **Tiers.** `clock-free` MAY run against production. It sends no `Swimcoach-Test-Now` header, with one
+  exception (Lead, 2026-11-13, after the PR #26 review): a clock-free case MAY send the header only to
+  prove `400 test_clock_disabled`, and the harness MUST fail the run if such a request gets any answer
+  other than that 400. Production refuses the header before it touches the Board, so the probe changes
+  nothing. `full`
   runs every case and MUST fail, not skip, if the deployment answers `400 test_clock_disabled`, so a
   test Worker with a broken switch cannot pass by skipping.
 - **Production safety.** On production the suite MUST use project `zz acceptance <runId>` only, MUST
