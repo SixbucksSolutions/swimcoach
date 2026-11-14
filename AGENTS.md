@@ -14,18 +14,20 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 (displays, card rules, RTR math, localswim lane mapping, architecture, decisions, open questions) is in
 `docs/concept.md`.
 
-## Current phase: MVP shipped, V1 next
+## Current phase: MVP accepted, V1 under way
 
-- **The MVP is built, deployed and qualified** (turns T1 to T6, shipped 2026-11-14): a Cloudflare
-  Worker with one SQLite-backed Durable Object, in TypeScript, behind Cloudflare Access, at
+- **The MVP is built, deployed, qualified and accepted** (turns T1 to T6, shipped 2026-11-14; Terry
+  accepted it the same evening, keeping every live ledger row): a Cloudflare Worker with one
+  SQLite-backed Durable Object, in TypeScript, behind Cloudflare Access, at
   `https://swimcoach.sixbuckssolutions.workers.dev`. The qualification record is
-  `docs/qualification/README.md`. **Terry has not yet accepted it**; RESUME says what is open.
+  `docs/qualification/README.md`. V1's work is tracked as cards on the `swimcoach` localswim board
+  (RESUME, "V1 started").
 - **The sequence is MVP, then V1, then V2** (Terry, 2026-11-14): "V1 is semi-stable and V2 will be
   rewrite", and "V1 will extend MVP code". So V1 works on this codebase. V2 is the greenfield,
   zero-reuse rewrite of `docs/concept.md` section 14. Whether V2 reproduces the MVP's behavior or V1's
   is Terry's call and not yet recorded.
 - **V1's requirements** are the UX ledger rows marked `Yes` at MVP acceptance
-  (`contract/ux-ledger.md`, V1 column). The contract, schemas, ledger and the two black-box suites in
+  (`contract/ux-ledger.md`, V1 column): all 136 live rows. The contract, schemas, ledger and the two black-box suites in
   `acceptance/` are the behavior; they move together, never by drift.
 - **The mock phase closed on 2026-11-13.** `mocks/index.html` is the approved design, with every
   decision and its reason in `docs/concept.md` sections 2 and 3 and `docs/brand.md`.

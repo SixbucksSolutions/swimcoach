@@ -13,6 +13,10 @@ Terry accepts". The first half is met. The second is not given: **Terry has not 
 this record MUST NOT be read as saying he has (section 6). The defect, which breaks three live ledger
 rows, is recorded in section 1 and its fix is pending.
 
+**Update, 2026-11-14 evening: MVP-12 is done.** The defect was fixed at the T6 close (section 8), and
+Terry accepted the MVP, keeping every live ledger row ("Accept, all rows Yes"; section 6, item 3). The
+paragraph above is kept as written at the time.
+
 ## 1. What was qualified
 
 | Item | Value | Source |
@@ -183,8 +187,11 @@ These are open. None of them is done, and none is implied done by anything above
 2. **MVP-06's real reports for a full turn: not done.** One real project agent reporting through the
    swimcoach CLI for a full turn, which Terry sets up. It is also the only observation today of the
    path that gaps 1 and 5 name: real command, real server, real page (`coverage.md` row C28).
-3. **Terry's hands-on demo and acceptance: not given.** Terry owns acceptance (`mvp-stories.md`,
-   MVP-12). Until he gives it, MVP-12 is not done, whatever the suites say.
+3. ~~**Terry's hands-on demo and acceptance: not given.** Terry owns acceptance (`mvp-stories.md`,
+   MVP-12). Until he gives it, MVP-12 is not done, whatever the suites say.~~ **Given 2026-11-14
+   evening:** Terry accepted the MVP and kept every live ledger row ("Accept, all rows Yes"), so all
+   136 `Pending` rows in `contract/ux-ledger.md` became `Yes`, V1's requirements. Items 1 and 2 were
+   still open when he accepted; he had ruled item 1 does not block the release.
 4. ~~**The page defect from the visual review: not fixed.**~~ **Fixed and shipped at the T6 close**
    (PR #48; section 8). UX-141, UX-142 and UX-144 broke while the warning line showed (section 1).
 
