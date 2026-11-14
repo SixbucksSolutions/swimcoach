@@ -42,7 +42,7 @@ There is **no create command.** The first `report` for a (project, milestone) ad
 
 ## 2. `swimcoach report`
 
-Sends one complete status report to `POST /api/2026-11-13/report`.
+Sends one complete status report to `POST /api/2026-11-14/report`.
 
 | Flag | Report field | Value |
 | --- | --- | --- |
@@ -78,7 +78,7 @@ Sends one complete status report to `POST /api/2026-11-13/report`.
 
 ## 3. `swimcoach stop`
 
-Tells swimcoach to stop tracking one (project, milestone), through `POST /api/2026-11-13/stop`. Both flags are
+Tells swimcoach to stop tracking one (project, milestone), through `POST /api/2026-11-14/stop`. Both flags are
 required. The server deletes the milestone and its history, and the card leaves the phone.
 
 When to run it (Terry, 2026-11-13): only after Terry tells the project's agent the milestone is
@@ -142,7 +142,7 @@ follows.
 
 ## 6. HTTP behavior
 
-- `report` sends `POST <url>/api/2026-11-13/report`; `stop` sends `POST <url>/api/2026-11-13/stop`.
+- `report` sends `POST <url>/api/2026-11-14/report`; `stop` sends `POST <url>/api/2026-11-14/stop`.
   Both carry `Content-Type: application/json`, `CF-Access-Client-Id` and `CF-Access-Client-Secret`.
 - The CLI MUST send to the dated paths of the API version it was built for ([`api.md`](api.md),
   "Versioning"). The unversioned `/api/...` paths answer `404`.
@@ -178,7 +178,7 @@ contract bind it:
 
 - **Push at milestone start, on every card move, and as a heartbeat at least every 10 minutes while
   working.** A card moving to Ready for review or Needs Terry above all: a Needs Terry card raises GO TO
-  KEYBOARD. A milestone silent for 25 minutes goes yellow and the health box goes STALE.
+  KEYBOARD. A milestone silent for 25 minutes goes gray and the health box goes STALE.
 - **Count only this milestone's epic,** never the whole cumulative board.
 - **Decision D3:** count a card in Needs Terry, and send `--needs-me`, only for a gate waiting on Terry
   himself (visual confirmation, Completed, cutover, a demo). An agent-owned gate changes nothing, and a

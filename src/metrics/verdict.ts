@@ -36,7 +36,9 @@ function colorAndReason(v: VerdictInputs): readonly [Color, Reason] {
   const rows: readonly (readonly [Color, Reason, boolean])[] = [
     ["done", "done", v.done],
     ["red", "needs_terry", v.needsMe !== null],
-    ["yellow", "silent", v.stale],
+    // Gray, not yellow, since API 2026-11-14 (Terry): gray means "not enough FRESH data to signal
+    // green/yellow", and a silent agent's numbers are not fresh. It keeps its place in the order.
+    ["gray", "silent", v.stale],
     ["yellow", "running_late", v.ratio && v.metrics.call === "running_late"],
     ["yellow", "over_budget", !v.ratio && v.overBudget],
     ["yellow", "stalled", v.ratio && v.stalled],

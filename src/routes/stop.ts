@@ -1,4 +1,4 @@
-// POST /api/2026-11-13/stop (MVP-07 B). Source of truth: contract/api.md sections 5 and 8.
+// POST /api/2026-11-14/stop (MVP-07 B). Source of truth: contract/api.md sections 5 and 8.
 
 import type { EpochSeconds } from "../contract.ts";
 import { boardStub, errorResponse, jsonResponse, readJsonBody } from "../http.ts";

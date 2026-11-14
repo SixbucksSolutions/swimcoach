@@ -1,6 +1,6 @@
 // @ts-check
 // The state body to the frozen View (docs/planning/t4-interfaces.md, MVP-08 C). The controller calls
-// toView() once per successful poll of GET /api/2026-11-13/state; both renderers read only its result.
+// toView() once per successful poll of GET /api/2026-11-14/state; both renderers read only its result.
 // The server computes every metric and verdict (contract/api.md section 6). This module renames them,
 // applies the documented nulls, and words `why` and `callWhy` (words.js). It recomputes no verdict.
 //
@@ -358,7 +358,7 @@ function cardOf(raw, now, path) {
 }
 
 /**
- * The 200 body of GET /api/2026-11-13/state to the frozen View. Throws on any field it reads that is
+ * The 200 body of GET /api/2026-11-14/state to the frozen View. Throws on any field it reads that is
  * missing or of the wrong type.
  * @param {unknown} body
  * @returns {View}

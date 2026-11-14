@@ -14,7 +14,7 @@ const LANES = {
 };
 const SECONDS_PER_DAY = 86_400;
 const MILLISECONDS_PER_SECOND = 1000;
-const REPORT = "/api/2026-11-13/report";
+const REPORT = "/api/2026-11-14/report";
 
 /** Test times are built from the real clock: the harness refuses a time outside the last 7 days. */
 const NOW = Math.floor(Date.now() / MILLISECONDS_PER_SECOND);

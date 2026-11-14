@@ -209,7 +209,7 @@
       "stale": true,
       "stalled": false,
       "mode": "ratio",
-      "color": "yellow",
+      "color": "gray",
       "reason": "silent",
       "metrics": {
         "work": 0.4444444444444444,

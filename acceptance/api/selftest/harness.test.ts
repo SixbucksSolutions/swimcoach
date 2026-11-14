@@ -12,7 +12,7 @@ import { ID, RECENT, reportBody, SECRET, THREE_DAYS_AGO, withStub } from "./supp
 describe("request", () => {
   it("stamps the service token, the content type and the test clock", async () => {
     await withStub(true, "full", async (stub, h) => {
-      await h.request("POST", "/api/2026-11-13/report", {
+      await h.request("POST", "/api/2026-11-14/report", {
         body: reportBody(h.project()),
         at: RECENT + 0.25,
       });
@@ -27,7 +27,7 @@ describe("request", () => {
   it("sends no test clock header unless asked, and lets a header override a default", async () => {
     await withStub(true, "full", async (stub, h) => {
       await h.request("GET", "/healthz");
-      await h.request("POST", "/api/2026-11-13/report", {
+      await h.request("POST", "/api/2026-11-14/report", {
         body: reportBody(h.project()),
         headers: { "content-type": "text/plain" },
       });
@@ -45,7 +45,7 @@ describe("request", () => {
         0xbf,
         ...new TextEncoder().encode(JSON.stringify(reportBody(h.project()))),
       ]);
-      const reply = await h.request("POST", "/api/2026-11-13/report", { raw });
+      const reply = await h.request("POST", "/api/2026-11-14/report", { raw });
       assert.equal(reply.status, 200);
       assert.deepEqual([...(stub.requests[0]?.body ?? [])].slice(0, 3), [0xef, 0xbb, 0xbf]);
     });

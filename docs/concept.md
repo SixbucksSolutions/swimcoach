@@ -262,9 +262,15 @@ Card states, first match wins:
 |---|---|---|---|
 | 1 | Done (dark slate) | Report says `status: done`, or every counted ticket is finished | Name |
 | 2 | **Red** | The project has a needs-you item: a ticket in an attention lane (Needs Terry) or a `needs_me` text | Name, the ask, RTR, arrow |
-| 3 | **Yellow** | Any of: agent silent over 25 min; the call is "Running late"; no ticket moved in 45 min; the call is "Toss-up" | Name, one line saying which, RTR, arrow |
-| 4 | Gray | Too early to call | Name, "Too early to call", RTR, no arrow |
-| 5 | **Green** | Everything else, which means the call is "On time" | Name, RTR, arrow, nothing else |
+| 3 | Gray | Agent silent over 25 min (it still outranks every yellow rule) | Name, "Agent silent for ...", RTR |
+| 4 | **Yellow** | Any of: the call is "Running late"; no ticket moved in 45 min; the call is "Toss-up" | Name, one line saying which, RTR, arrow |
+| 5 | Gray | Too early to call | Name, "Too early to call", RTR, no arrow |
+| 6 | **Green** | Everything else, which means the call is "On time" | Name, RTR, arrow, nothing else |
+
+- **Gray means "not enough FRESH data to signal green/yellow."** Terry, 2026-11-14, at the MVP-08 phone
+  check: "let's change agent silent to the 'too early to call' gray. We can describe that color as 'not
+  enough FRESH data to signal green/yellow'." Until then a silent agent's card was yellow (it sat in
+  row 3 with the yellow rules). The change moved the API date to 2026-11-14 (api.md, Versioning).
 
 - **Red is reserved for "Terry must act".** Terry: "RFW -> In Progress -> RFR are green/yellow. Needs
   Terry is red."

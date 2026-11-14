@@ -84,21 +84,22 @@ export const routingCases: Case[] = [
       "api.md 3 Versioning: any date the server does not serve MUST get 404; any other path 404",
     async run(h) {
       await expectNotFound(h, "GET", [
-        "/api/2026-11-12/state",
-        "/api/2026-11-14/state",
-        "/api/2025-11-13/state",
+        "/api/2026-11-13/state",
+        "/api/2026-11-15/state",
+        "/api/2025-11-14/state",
         "/api/v1/state",
-        "/api/2026-11-13",
-        "/api/2026-11-13/",
-        "/api/2026-11-13/nope",
-        "/api/2026-11-13/state/extra",
+        "/api/2026-11-14",
+        "/api/2026-11-14/",
+        "/api/2026-11-14/nope",
+        "/api/2026-11-14/state/extra",
         "/nope",
         "/healthz/extra",
       ]);
       await expectNotFound(h, "POST", [
-        "/api/2026-11-14/report",
-        "/api/2026-11-12/stop",
-        "/api/2026-11-13/create",
+        "/api/2026-11-13/report",
+        "/api/2026-11-13/stop",
+        "/api/2026-11-15/report",
+        "/api/2026-11-14/create",
       ]);
     },
   },
@@ -108,8 +109,8 @@ export const routingCases: Case[] = [
     tier: "clock-free",
     cites: "api.md 1: no trailing-slash variants",
     async run(h) {
-      await expectNotFound(h, "GET", ["/api/2026-11-13/state/", "/healthz/"]);
-      await expectNotFound(h, "POST", ["/api/2026-11-13/report/", "/api/2026-11-13/stop/"]);
+      await expectNotFound(h, "GET", ["/api/2026-11-14/state/", "/healthz/"]);
+      await expectNotFound(h, "POST", ["/api/2026-11-14/report/", "/api/2026-11-14/stop/"]);
     },
   },
   {

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/SixbucksSolutions/swimcoach/main/contract/schemas/report.schema.json",
   "title": "swimcoach status report",
-  "description": "The body of POST /api/2026-11-13/report: a complete picture of one (project, milestone). Every field except needs_me is required, and unknown fields are refused, so a partial or misspelled update fails instead of landing. contract/api.md is the normative text; this schema is its machine-checkable half. The $defs also hold the stop-tracking body and the response bodies of both write routes.",
+  "description": "The body of POST /api/2026-11-14/report: a complete picture of one (project, milestone). Every field except needs_me is required, and unknown fields are refused, so a partial or misspelled update fails instead of landing. contract/api.md is the normative text; this schema is its machine-checkable half. The $defs also hold the stop-tracking body and the response bodies of both write routes.",
   "type": "object",
   "additionalProperties": false,
   "required": ["agent", "project", "milestone", "active_hours", "cap_hours", "lanes"],
@@ -79,7 +79,7 @@
       "minimum": 0
     },
     "stopRequest": {
-      "description": "The body of POST /api/2026-11-13/stop: the (project, milestone) to stop tracking.",
+      "description": "The body of POST /api/2026-11-14/stop: the (project, milestone) to stop tracking.",
       "type": "object",
       "additionalProperties": false,
       "required": ["project", "milestone"],
@@ -89,7 +89,7 @@
       }
     },
     "reportResponse": {
-      "description": "The 200 body of POST /api/2026-11-13/report.",
+      "description": "The 200 body of POST /api/2026-11-14/report.",
       "type": "object",
       "additionalProperties": false,
       "required": ["ok", "project", "milestone", "received_at", "added", "sample"],
@@ -109,7 +109,7 @@
       }
     },
     "stopResponse": {
-      "description": "The 200 body of POST /api/2026-11-13/stop.",
+      "description": "The 200 body of POST /api/2026-11-14/stop.",
       "type": "object",
       "additionalProperties": false,
       "required": ["ok", "project", "milestone"],

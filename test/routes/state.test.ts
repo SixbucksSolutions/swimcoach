@@ -138,7 +138,7 @@ describe("stateBody D1 and silence", () => {
   it("marks a silent agent and a stalled lane count", () => {
     const m = stored({ updated_at: T0 - 26 * MINUTE, last_move_at: T0 - 50 * MINUTE });
     const [card] = build(snapshotOf([m]), T0).milestones;
-    expect(card).toMatchObject({ stale: true, stalled: true, color: "yellow", reason: "silent" });
+    expect(card).toMatchObject({ stale: true, stalled: true, color: "gray", reason: "silent" });
   });
 
   it("builds a spark from the milestone's own samples only", () => {

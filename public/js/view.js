@@ -1,6 +1,6 @@
 // @ts-check
 // The frozen projection (docs/planning/t4-interfaces.md, MVP-08). The controller (state.js) turns
-// GET /api/2026-11-13/state into one View per successful poll. Both renderers read only this; neither
+// GET /api/2026-11-14/state into one View per successful poll. Both renderers read only this; neither
 // reads the API body or recomputes a verdict (contract/api.md section 6).
 //
 // JSDoc types only: nothing here runs. Import them with

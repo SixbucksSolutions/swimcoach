@@ -55,9 +55,9 @@ const TEMPLATE = JSON.parse(
 ) as { milestones: Record<string, unknown>[] } & Record<string, unknown>;
 const OK = 200;
 const MILLISECONDS_PER_SECOND = 1000;
-const REPORT = "/api/2026-11-13/report";
-const STOP = "/api/2026-11-13/stop";
-const STATE = "/api/2026-11-13/state";
+const REPORT = "/api/2026-11-14/report";
+const STOP = "/api/2026-11-14/stop";
+const STATE = "/api/2026-11-14/state";
 
 function keyOf(project: string, milestone: string): string {
   return `${project.toLowerCase()}|${milestone.toLowerCase()}`;
