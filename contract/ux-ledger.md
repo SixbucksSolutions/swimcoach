@@ -47,8 +47,8 @@ load-bearing.
 | J. Navigation | UX-113 to UX-124 | 12 |
 | K. Alerts | UX-125 to UX-130 | 6 |
 | L. count_and_time mode (D1) | UX-131 to UX-134 | 4 |
-| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-154 | 20 |
-| **Total** | | **154** (21 superseded: UX-016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 111, 112, 132, 133, 134) |
+| M. Decisions at and before the MVP-08 phone check | UX-135 to UX-162 | 28 |
+| **Total** | | **162** (28 superseded: UX-011, 014, 016, 017, 018, 020, 021 to 026, 028, 036, 045, 053, 065, 066, 071, 073, 111, 112, 132, 133, 134, 136, 137, 150) |
 
 ## A. Status line
 
@@ -64,10 +64,10 @@ load-bearing.
 | UX-008 | Every other time on the page (chart ends, footer) uses the same formatter as the clock | c3.1 `fmtTime()` | `afternoon-03-fga-t04-bottom.png` | Footer and chart labels read `H:mm` am/pm | Pending |
 | UX-009 | Health box LIVE: bold white "LIVE" on `--ok-fill` `#1B6445`, breathing dot, no age while newest report is under 1 min | c3.1 table | `afternoon-00-all-projects.png` | Fresh state needs a report under 1 min old | Pending |
 | UX-010 | Health box LIVE with age: "LIVE 7m" once the newest report is 1 min or older | c3.1 table | - | Reach with a report 7 min old | Pending |
-| UX-011 | LIVE requires both: last poll succeeded within 30 s AND newest report under 25 min old | c3.1 table | `afternoon-00-all-projects.png` |  | Pending |
+| UX-011 | LIVE requires both: last poll succeeded within 30 s AND newest report under 25 min old | c3.1 table | `afternoon-00-all-projects.png` |  | No: superseded by UX-158 |
 | UX-012 | Health box STALE: dark orange box, warning text, every display grayed to 40%; word only, no age | c3.1 table | `stale-00-all-projects.png` | Trigger: no report for over 25 min with an unfinished project | Pending |
 | UX-013 | Warning line under the Status line gives the exact STALE duration | c3.1 "warning line" | `stale-00-all-projects.png` |  | Pending |
-| UX-014 | Health box OFFLINE: dark red box, warning text, every display grayed; word only, no age | c3.1 table | `offline-00-all-projects.png` | Trigger: three polls in a row fail (30 s) | Pending |
+| UX-014 | Health box OFFLINE: dark red box, warning text, every display grayed; word only, no age | c3.1 table | `offline-00-all-projects.png` | Trigger: three polls in a row fail (30 s) | No: superseded by UX-159 |
 | UX-015 | OFFLINE with a long outage ("1h 05m") still fits: at least 35 px between wordmark and clock at 402 px **(measured)** | c3.1 | `offline-00-all-projects.png` |  | Pending |
 | UX-016 | Health box IDLE: neutral box when every tracked milestone is done | c3.1 table, api.md 6.7 | `alldone-00-all-projects.png` |  | No: superseded by UX-136 |
 | UX-017 | Health box NO DATA: neutral box when no milestone is tracked | c3.1 table, api.md 6.7 | - | No render; reach with an empty database | No: superseded by UX-137 |
@@ -149,9 +149,9 @@ load-bearing.
 
 | ID | State or transition | Rule | Render | Check | V1 |
 | --- | --- | --- | --- | --- | --- |
-| UX-071 | The LIVE dot and GO TO KEYBOARD breathe in step: same 2 s `ease-in-out` cycle, same peak, 8 cycles | c3.2 breathing sync | `keyboard-00-all-projects.png` | Compare both animations' current time; MUST agree to the millisecond | Pending |
+| UX-071 | The LIVE dot and GO TO KEYBOARD breathe in step: same 2 s `ease-in-out` cycle, same peak, 8 cycles | c3.2 breathing sync | `keyboard-00-all-projects.png` | Compare both animations' current time; MUST agree to the millisecond | No: superseded by UX-160 |
 | UX-072 | Each successful poll restarts both animations together | c3.1, c3.2 | - | Transition | Pending |
-| UX-073 | The animation runs a fixed 16 s (8 cycles) and then stops, so a frozen page stops by itself | c3.1 | - | Freeze the page script and watch | Pending |
+| UX-073 | The animation runs a fixed 16 s (8 cycles) and then stops, so a frozen page stops by itself | c3.1 | - | Freeze the page script and watch | No: superseded by UX-157 |
 | UX-074 | GO TO KEYBOARD breathes only while the Health box says LIVE | c3.2 | `stale-00-all-projects.png`, `offline-00-all-projects.png` | Both animations stopped in STALE and OFFLINE | Pending |
 | UX-075 | Under `prefers-reduced-motion: reduce`, no breathing and no fade (SHOULD, b6 / c3.4) | b6, c3.4 | - | Emulate the media query | Pending |
 | UX-076 | Between polls the two animations stay in phase after load, after a poll and after a pause | c3.2 | - |  | Pending |
@@ -255,8 +255,8 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | ID | State or transition | Rule | Render | Check | V1 |
 | --- | --- | --- | --- | --- | --- |
 | UX-135 | A card that arrives after the first render (a new milestone, or the GO TO KEYBOARD slot appearing) fades in over 0.3 s `ease-in`; cards already on screen are untouched, and no animation runs under `prefers-reduced-motion: reduce` | brand.md 6, Terry 2026-11-14: "a gentle 0.3s ease in animation as it was startling when they popped on" | - | New rule; a steady poll still makes zero DOM mutations (UX-110) | Pending |
-| UX-136 | Health box LIVE, with the breathing dot, when every tracked milestone is done and a poll got a 200 within 30 s (api.md 6.7 `feed` `idle`) | c3.1 table, Terry 2026-11-14 | `alldone-00-all-projects.png` | Supersedes UX-016 (the neutral IDLE box is retired) | Pending |
-| UX-137 | Health box LIVE, with the breathing dot and no age, when no milestone is tracked and a poll got a 200 within 30 s (api.md 6.7 `feed` `no_data`) | c3.1 table, Terry 2026-11-14: "I want to know the empty list IS the live data" | - | Supersedes UX-017 (the neutral NO DATA box is retired); reach with an empty database | Pending |
+| UX-136 | Health box LIVE, with the breathing dot, when every tracked milestone is done and a poll got a 200 within 30 s (api.md 6.7 `feed` `idle`) | c3.1 table, Terry 2026-11-14 | `alldone-00-all-projects.png` | Supersedes UX-016 (the neutral IDLE box is retired) | No: superseded by UX-161 |
+| UX-137 | Health box LIVE, with the breathing dot and no age, when no milestone is tracked and a poll got a 200 within 30 s (api.md 6.7 `feed` `no_data`) | c3.1 table, Terry 2026-11-14: "I want to know the empty list IS the live data" | - | Supersedes UX-017 (the neutral NO DATA box is retired); reach with an empty database | No: superseded by UX-162 |
 | UX-138 | STALE does not fire when every project is done (LIVE, not STALE) | c3.1 STALE "while some project is unfinished" | `alldone-00-all-projects.png` | Supersedes UX-018 | Pending |
 | UX-139 | Detail blurb words for `over_budget` and `under_budget`: "Over budget" and "Under budget" | Terry, 2026-11-13 (t4-interfaces.md decision 2) | - | Supersedes UX-133; `project.test.ts` small-block cases | Pending |
 | UX-140 | The project display in `count_and_time` mode drops the hero RTR, the RTR chart and the projection tiles, puts `why` in the hero, and keeps Work against time, Swimlanes and the footer | Terry, 2026-11-13 (t4-interfaces.md decision 4) | - | Supersedes UX-134; `project.test.ts` small-block cases | Pending |
@@ -269,8 +269,16 @@ original text with a "Superseded by" note, so the ledger keeps the history of ea
 | UX-147 | The slot mode is chosen in the same step that draws the Cards, before first paint | c3.2, c3.4 | - | Supersedes UX-111, whose check named the 4/8 grid; no six-to-three reflow after paint | Pending |
 | UX-148 | Silent agent alone (one project over 25 min silent, another fresh) keeps the box LIVE and makes that Card gray, with "Agent silent for ..." as its Detail blurb | c3.2 card states, api.md 6.6; Terry 2026-11-14: gray means "not enough FRESH data to signal green/yellow" | - | Supersedes UX-020 (yellow) | Pending |
 | UX-149 | Precedence: the first matching rule wins: done, red, silent (gray), the yellow rules in the order running_late, over_budget, stalled, toss_up, then too_early (gray), then green | c3.2, api.md 6.6 | - | Supersedes UX-045; table-driven check over the fixture set | Pending |
-| UX-150 | Polling runs every 10 s against `GET /api/2026-11-14/state`; the retired `/api/2026-11-13/` paths answer 404 | c3.1, api.md Versioning | - | Supersedes UX-112 (the API date moved when silent turned gray) | Pending |
+| UX-150 | Polling runs every 10 s against `GET /api/2026-11-14/state`; the retired `/api/2026-11-13/` paths answer 404 | c3.1, api.md Versioning | - | Supersedes UX-112 (the API date moved when silent turned gray) | No: superseded by UX-156 |
 | UX-151 | In `count_and_time` mode the Card is green while `active_hours` is within `cap_hours` (reason `under_budget`) and yellow once it is over (reason `over_budget`); red only for `needs_me`; silent still applies (gray); done still ranks first | c8 item 10, api.md 6.6 | - | Supersedes UX-132; fixture `state.small-blocks.json`; stalled, running_late, toss_up and too_early do not apply | Pending |
 | UX-152 | Gray: agent silent over 25 min. The Detail blurb names the reason ("Agent silent for ..."), the RTR stays, and no clock-hand arrow is drawn, as on a too-early card | c3.2 states row 4, api.md 6.6 row 3; Terry 2026-11-14: gray is "not enough FRESH data to signal green/yellow"; no arrow is the Lead's call | `silent-00-all-projects.png` (mock shows yellow) | Supersedes UX-036 | Pending |
 | UX-153 | On a desktop browser the page is a centered 402 x 874 phone-width column with no bezel, notch or side panel; it works exactly as on the phone | Terry 2026-11-14, at the MVP-08 phone check: "Yes laptop is good" | - | New rule; the mock's bezel and scenario panel were mock chrome | Pending |
 | UX-154 | SIGN IN: when Access refuses a poll (a redirect, 401 or 403), the page reloads at most once per 5 minutes per tab so Access can show its login; after that the Health box reads SIGN IN in OFFLINE's red, the displays gray out, and the warning line "Signed out of the board. Tap here to sign in again." reloads on a tap. An auth refusal never counts toward OFFLINE | c3.1 table; the Lead's recommendation, which Terry took on 2026-11-14 ("I'll take your recommendation") | `signin-drawn-00-all-projects.png` (visual review) | New rule | Pending |
+| UX-155 | A project display's hero with no big RTR (small-block mode) gets 10 px of extra space below the title: the visible gap is about 21 px, against about 11 px before (measured in Chrome at 402 x 874 by the PR #34 review) | Terry 2026-11-14, at the MVP-08 phone check: "Just let it land" | - | New rule; `project.test.ts` checks the `bare` class | Pending |
+| UX-156 | Polling runs every 30 s against `GET /api/2026-11-14/state`; the retired `/api/2026-11-13/` paths answer 404 | c3.1, api.md Versioning; Terry 2026-11-14: agents report "no more often than once every five minutes", so "we can lower web client poll to every 30 seconds" | - | Supersedes UX-150 (every 10 s) | Pending |
+| UX-157 | The breathing runs a fixed 40 s (20 cycles of 2 s) from each good poll and then stops, so a frozen page stops by itself about 10 s after a missed poll; 40 s outlasts a 30 s poll plus its 8 s timeout | c3.1; the Lead's call when the poll moved to 30 s | - | Supersedes UX-073 (16 s, 8 cycles); freeze the page script and watch | Pending |
+| UX-158 | LIVE requires both: a poll got a 200 within the last three poll intervals (90 s at the 30 s poll) AND the newest report is under 25 min old, or no project is unfinished | c3.1 table | `afternoon-00-all-projects.png` | Supersedes UX-011 (30 s at the 10 s poll); LIVE holds through two failed polls | Pending |
+| UX-159 | Health box OFFLINE: dark red box, warning text, every display grayed; word only, no age | c3.1 table | `offline-00-all-projects.png` | Supersedes UX-014; trigger: three polls in a row fail (90 s at the 30 s poll) | Pending |
+| UX-160 | The LIVE dot and GO TO KEYBOARD breathe in step: same 2 s `ease-in-out` cycle, same peak, 20 cycles | c3.2 breathing sync | `keyboard-00-all-projects.png` | Supersedes UX-071 (8 cycles); compare both animations' current time; MUST agree to the millisecond | Pending |
+| UX-161 | Health box LIVE, with the breathing dot, when every tracked milestone is done and a poll got a 200 within three poll intervals (api.md 6.7 `feed` `idle`) | c3.1 table, Terry 2026-11-14 | `alldone-00-all-projects.png` | Supersedes UX-136 (30 s at the 10 s poll) | Pending |
+| UX-162 | Health box LIVE, with the breathing dot and no age, when no milestone is tracked and a poll got a 200 within three poll intervals (api.md 6.7 `feed` `no_data`) | c3.1 table, Terry 2026-11-14: "I want to know the empty list IS the live data" | - | Supersedes UX-137 (30 s at the 10 s poll); reach with an empty database | Pending |

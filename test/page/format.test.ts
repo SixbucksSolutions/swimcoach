@@ -138,7 +138,7 @@ describe("the constants", () => {
 
   it("keeps ALL apart from every card key, which is a JSON array", () => {
     expect(ALL.startsWith("[")).toBe(false);
-    expect(POLL_MS).toBe(10_000);
+    expect(POLL_MS).toBe(30_000);
   });
 
   it("strikes the bell through only while alerts are off", () => {
