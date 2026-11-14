@@ -16,7 +16,14 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   `mvp/integration` remain.
 - **The gate before T5 is Terry's MVP-08 phone check.** His four open calls are listed below. Do not
   start T5 until he passes MVP-08 or names changes.
-- **Phone check, 2026-11-14 morning (in progress).** The empty board and six `zz demo` milestones
+- **MVP-08 PASSED: Terry, 2026-11-14, "Yes". T5 is open.** The `zz demo` milestones are stopped; the
+  production board is empty (`feed` `no_data`). Remaining Terry gates: MVP-10's device checklist (the
+  Access session is already 7 days and the icon is on his home screen; re-adding the icon MAY be needed
+  after the home-screen title fix, because iOS caches the name), and MVP-12's demo and acceptance.
+  **MVP-12 also needs a real project agent reporting through the CLI for a full turn** ("confirm
+  MVP-06's real reports for a full turn"), so Terry has to point one project's agent at
+  `docs/agents/swimcoach-reporting.md` before T6 can close.
+- **Phone check, 2026-11-14 morning (done).** The empty board and six `zz demo` milestones
   rendered correctly on his iPhone. His changes, decided and shipped the same morning:
   - An empty or all-done board reads LIVE with the breathing dot (UX-136 to UX-138, superseding
     UX-016 to UX-018), and an arriving card fades in over 0.3 s `ease-in` via a keyed morph (UX-135).
