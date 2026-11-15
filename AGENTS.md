@@ -115,8 +115,9 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
   2622 at 3×). Earlier docs said iPhone 16 at 393 × 852; Terry corrected the model on 2026-11-13.
 - **Colors come from the palette tokens in `docs/brand.md` section 5, never a new hex.** RFC 2119
   keywords; the capitals are load-bearing. The good-news fill is `--ok-fill` `#1B6445` with pure white
-  text: it MUST clear WCAG AAA (7:1) and measures 7.11:1. Text on it MUST stay at full opacity. A second
-  green MUST NOT be introduced. Terry's requirement, 2026-11-13.
+  text: it MUST clear WCAG AAA (7:1) and measures 7.11:1. Text on it MUST stay at full opacity at rest;
+  a 0.3 s change of state MAY dim fill and text together (Terry, 2026-11-14: "At rest only"; brand.md
+  section 6). A second green MUST NOT be introduced. Terry's requirement, 2026-11-13.
 - **Text is set in the Inter typeface.** A third-party asset MUST NOT be added without its license beside
   it and an entry in `THIRD-PARTY-NOTICES.md`.
 - **Terry gives concepts, not designs.** He asks the agent to turn them into good UI, and to hold the

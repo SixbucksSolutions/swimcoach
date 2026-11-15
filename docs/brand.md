@@ -111,7 +111,7 @@ on. A color that asks for no action, or for an action he cannot take, wears out 
 
 | Token | Meaning | Fill | Text on it | Contrast |
 |---|---|---|---|---|
-| `--ok-fill`, `--ok` | Good news: LIVE, on time | `#1B6445` | white, full opacity | 7.11:1, AAA |
+| `--ok-fill`, `--ok` | Good news: LIVE, on time | `#1B6445` | white, full opacity at rest | 7.11:1, AAA |
 | `--risk` | Needs attention: toss-up, running late, silent agent. Not bad, but slipping in a direction Terry wants to know about | `#facc15` | `#231a00` | 11.25:1 |
 | `--bad-fill`, `--bad` | Needs Terry | `#dc2626` | white | 4.83:1, **not yet AAA** |
 | `--done` (`= --dim`) | Finished | `--board` card | `--dim` | 6.32:1 |
@@ -140,7 +140,9 @@ on. A color that asks for no action, or for an action he cannot take, wears out 
 
 ### Contrast (settled)
 
-- White on the good-news green MUST clear WCAG AAA (7:1), at full opacity. Terry, 2026-11-13.
+- White on the good-news green MUST clear WCAG AAA (7:1), at full opacity, at rest. Terry, 2026-11-13.
+  A 0.3 s change of state MAY dim fill and text together, so the contrast dips only while the state
+  is visibly changing (Terry, 2026-11-14: "At rest only"; section 6, the Health box fade).
 - AAA for the other pairings is not yet required. Measured shortfalls are listed in `docs/concept.md`
   section 13 for when it is.
 
