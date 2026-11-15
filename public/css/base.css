@@ -212,10 +212,11 @@ header h1 .word span {
   background: var(--ok-fill);
 }
 
-/* 15 cycles, 30 s: outlasts the 20 s poll plus its 8 s timeout, and stops about 10 s after a missed
-   poll, so a dead page still stops breathing by itself (UX-197). */
+/* 40 cycles, 80 s: the dot breathes for as long as the box can say LIVE, 75 s after the last good poll
+   (UX-204), plus the 1 s tick that turns it OFFLINE and the 0.3 s fade. A dead page still stops
+   breathing by itself, about 5 s after its LIVE window would have ended (UX-210). */
 #health.live i {
-  animation: breathe 2s ease-in-out 15;
+  animation: breathe 2s ease-in-out 40;
 }
 /* No breathing under reduced motion (UX-075, brand.md 6): the dot stays still and full, so LIVE keeps
    a lit dot and never shows the 0.3 dim dot of WAIT, STALE and OFFLINE. */
