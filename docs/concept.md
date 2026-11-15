@@ -133,10 +133,10 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   the **health box** and the alerts bell, 8 px apart (UX-192).
 - **Mark and wordmark (Terry, 2026-11-15, card #0048).** The mark is 34 px, the bell's height, and the
   wordmark 22 px, so the Status line stays 52 px tall and the Card display area keeps its height
-  (UX-199). 22 px is the widest wordmark that keeps 35 px from an all-done board's "LIVE 12h 05m",
-  which is what Terry sees in the morning: a finished board never turns STALE, so its age keeps
-  growing. A tap on either goes back to the overview from any project display, as "All projects"
-  does; on the overview it does nothing (UX-200).
+  (UX-199, now UX-209). 22 px was sized to keep 35 px from an all-done board's "LIVE 12h 05m"; since
+  LIVE lost its age (#0050) the widest everyday box is OFFLINE, with room to spare. A tap on either
+  goes back to the overview from any project display, as "All projects" does; on the overview it does
+  nothing (UX-200).
 - **One height (Terry, 2026-11-15, card #0049).** The mark and wordmark, the health box and the bell
   are each 34 px tall on one center line, so the Status line looks intentional rather than assembled
   (UX-201). The health box grew from about 27.6 px to 34 px in height only; its width, and so the
@@ -148,25 +148,25 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   2:25 PM", read as a caption, live as of 2:25, so the clock looked like a data timestamp: "wait shit
   is 2:25 still live? is that stale?" With the clock first, "2:25pm LIVE" reads as two facts: "it's
   2:25pm and yes that *is* what time it is and yes that is LIVE data." The order was not to be swapped
-  back. Data age, when it matters, lives in the health box ("LIVE 7m") and the warning line, never in a
-  clock beside the word LIVE.
+  back. Data age, when it matters, lived in the health box ("LIVE 7m") and the warning line, never in a
+  clock beside the word LIVE; since card #0050 only the warning line carries it.
 - **Every time on the page: `H:mm` with lowercase am/pm and no space**, 12-hour, for example
   "1:32am" and "12:47pm". One formatter, `fmtTime()`, serves the chart ends and the footers so they
   cannot disagree (UX-194).
-- **The health box shows an age only when LIVE** (from 1 minute, for example "LIVE 7m"). STALE and
-  OFFLINE show just the word: the warning line under the status line already gives the exact duration,
-  and "OFFLINE 1h 05m" beside a "12:47pm" clock overflowed the status line at 402 px. With the word
-  alone, that worst case kept 35 px between the wordmark and the clock (UX-195, now measured to the
-  health box). Since the bigger wordmark (#0048), the widest everyday box is an all-done board's
-  "LIVE 12h 05m", held to the same 35 px (UX-199).
+- **The health box shows its word alone, in every state** (Terry, 2026-11-15, card #0050: "remove
+  time from LIVE"; UX-203). LIVE says the page is reaching the board; how old the data is, is the
+  warning line's job under STALE and OFFLINE. Until #0050 LIVE carried the newest report's age ("LIVE
+  7m"). STALE and OFFLINE always showed just the word: "OFFLINE 1h 05m" beside a "12:47pm" clock
+  overflowed the status line at 402 px. Every state keeps at least 35 px from the wordmark (UX-195,
+  UX-209).
 - **Health box.** This was a firm requirement: "nothing sucks worse than a dashboard that says all good
   in the hood but it's because it stopped updating yesterday."
 
 | State | When | Look |
 |---|---|---|
-| LIVE | The page had a 200 from the state endpoint within the last three poll intervals (60 s at the 20 s poll), and STALE does not apply. This includes an empty board and a board where every project is done | Bold white "LIVE" on dark green, breathing dot, age of newest report once it is 1 min or older ("7m"); no age while fresher or when there are no reports |
+| LIVE | The page had a 200 from the state endpoint within the last 75 s, and STALE does not apply. This includes an empty board and a board where every project is done | Bold white "LIVE" on dark green, breathing dot, no age |
 | STALE | Polls work, but no agent has reported for over 25 min while some project is unfinished | Dark orange box, warning text, all displays grayed to 40% |
-| OFFLINE | Three polls in a row failed (60 s at the 20 s poll) | Dark red box, warning text, all displays grayed |
+| OFFLINE | 75 s have passed without a poll getting a 200 | Dark red box, warning text, all displays grayed |
 | SIGN IN | A poll was refused by Access (redirect, 401 or 403) after the page's one reload | OFFLINE's dark red box, warning text, all displays grayed |
 
 - **An empty board is live data, and the health box MUST say so.** Terry, 2026-11-14, at the MVP-08
@@ -179,8 +179,11 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   polled every 10 seconds until 2026-11-14, then every 30 (Terry, 2026-11-14: project agents report
   "no more often than once every five minutes", so "we can lower web client poll to every 30
   seconds"; UX-156). His "within 30 seconds" above was said at the 10 s poll, when 30 s was three
-  polls; the rule kept is three polls, so LIVE holds through two failed polls and OFFLINE starts at
-  the third, 60 s at the 20 s poll (UX-158, UX-159).
+  polls; the rule kept was three polls (60 s at the 20 s poll, UX-158, UX-159) until Terry set it
+  outright on 2026-11-15 (card #0050): "As long as we've had one successful poll in last 75 seconds,
+  we are live." LIVE now holds through three failed 20 s polls and OFFLINE starts at 75 s (UX-204,
+  UX-205). He kept STALE the same day: a silent agent on an unfinished board still turns the box
+  orange.
 
 - The dot's breathing animation runs a fixed 30 seconds (15 cycles of 2 s; 16 s at the 10 s poll, 40 s
   at the 30 s poll) and is restarted by each successful poll (UX-197). 30 s outlasts a 20 s poll plus

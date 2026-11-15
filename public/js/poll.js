@@ -22,7 +22,9 @@ import { toView } from "./state.js";
 
 const STATE_PATH = "/api/2026-11-14/state";
 const POLL_TIMEOUT_MS = 8000;
-const OFFLINE_AFTER_MS = POLL_MS * 3; // three failed polls in a row, 60 s (concept.md 3.1, UX-158, UX-159)
+// LIVE needs a successful poll in the last 75 s; past that the box is OFFLINE (Terry, 2026-11-15;
+// concept.md 3.1, UX-204, UX-205). At the 20 s poll that holds through three failed polls.
+const OFFLINE_AFTER_MS = 75_000;
 const AUTH_RELOAD_GAP_MS = 5 * 60_000;
 const AUTH_RELOAD_KEY = "swimcoach.authReloadAt";
 // U+2026, the ellipsis glyph, drawn in Inter (docs/brand.md section 7), until the first poll lands.
@@ -162,9 +164,9 @@ export function signedOut() {
  * answers still turns OFFLINE. OFFLINE comes only from the page's own failed polls.
  *
  * An empty or all-done board with working polls is LIVE (Terry, 2026-11-14: "I want to know the empty
- * list IS the live data"). The neutral IDLE and NO DATA boxes are retired: feed `no_data` is LIVE with
- * no age (UX-137), and feed `idle` is LIVE with its age (UX-136), because STALE applies only while a
- * project is unfinished (UX-138).
+ * list IS the live data"). The neutral IDLE and NO DATA boxes are retired: feed `no_data` and feed
+ * `idle` are LIVE (UX-207, UX-206), because STALE applies only while a project is unfinished (UX-138).
+ * The age is still computed for every state, since STALE needs it, but the box never shows it (UX-203).
  * @param {View|null} view   the last successful poll's View, or null before the first
  * @param {number} lastOkMs
  * @param {number} nowMs
