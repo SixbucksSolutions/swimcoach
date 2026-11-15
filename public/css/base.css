@@ -282,6 +282,8 @@ header h1 .word span {
 }
 
 .page {
+  /* relative: a departing card's ghost is placed inside the page at its old spot (motion.js). */
+  position: relative;
   flex: 0 0 100%;
   width: 100%;
   scroll-snap-align: start;

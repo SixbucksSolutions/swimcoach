@@ -152,8 +152,9 @@ export function setUp(): void {
   vi.stubGlobal("reportError", stubs.reported);
   installFonts("loaded");
   sessionStorage.clear();
-  // A card's fade-in (UX-135) goes through element.animate; record the calls and their elements.
-  stubs.animate = vi.fn();
+  // The overview's motion (motion.js, UX-177 to UX-182) goes through element.animate; record the calls
+  // and their elements. Each returns an Animation stand-in whose listeners a test can fire.
+  stubs.animate = vi.fn(() => new EventTarget());
   Object.defineProperty(Element.prototype, "animate", { value: stubs.animate, configurable: true });
   stubs.reduceMotion = false;
   vi.stubGlobal("matchMedia", (query: string) => ({

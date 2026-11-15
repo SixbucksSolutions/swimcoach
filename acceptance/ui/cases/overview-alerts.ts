@@ -1,25 +1,12 @@
-// Overview checks, area K (alerts, as far as a browser can prove them) and the arrival fade of M
-// (MVP-11 A). The chime's sound is not provable here: Web Audio is replaced by a recorder, so these
+// Overview checks, area K (alerts, as far as a browser can prove them) (MVP-11 A). The arrival fade
+// of M (UX-135) is superseded; its motion cases are in overview-motion.ts. The chime's sound is not provable here: Web Audio is replaced by a recorder, so these
 // cases prove WHEN the page asks the audio system for two tones, and the manual checklist proves it is
 // heard. The recorder takes a pitch however the page sets it: `.value`, `setValueAtTime` or a ramp.
 import assert from "node:assert/strict";
 import type { UiCase, UiContext } from "../types.ts";
-import {
-  at,
-  board,
-  type Json,
-  openWith,
-  pageErrors,
-  pause,
-  pick,
-  pollOnce,
-} from "./overview-kit.ts";
+import { board, type Json, openWith, pageErrors, pause, pick, pollOnce } from "./overview-kit.ts";
 import { tapCard, viewing } from "./overview-nav.ts";
-import { type AnimationInfo, type CardInfo, cardsOf, probe } from "./overview-probe.ts";
-
-const ARRIVE_MS = 300;
-const LOOKS = 400;
-const GTK = "GO TO KEYBOARD";
+import { probe } from "./overview-probe.ts";
 
 const AUDIO_SPY = `
 (() => {
@@ -84,29 +71,9 @@ function asking(ctx: UiContext): Json {
   ]);
 }
 
-/** The animations on a Card that are not its breath: a fade is a single short run. */
-function fades(card: CardInfo): AnimationInfo[] {
-  return card.animations.filter((a) => !(a.duration === 2000 && a.iterations === 20));
-}
-
 async function followToProject(ctx: UiContext, title: string): Promise<void> {
   await tapCard(ctx, title);
   assert.ok(await viewing(ctx, title), "The display slid to the project.");
-}
-
-/** A poll's arrival snapshot, taken as soon as the Card titled `title` is on the page (the fade lasts 300 ms). */
-async function arrivalAfterPoll(ctx: UiContext, title: string): Promise<CardInfo[]> {
-  const answered = ctx.page.waitForResponse((r) => r.url().includes("/state"));
-  await ctx.advance(30_000);
-  await answered;
-  for (let look = 0; look < LOOKS; look += 1) {
-    // biome-ignore lint/performance/noAwaitInLoops: each look follows the last
-    const cards = await cardsOf(ctx.page);
-    if (cards.some((c) => c.name === title)) {
-      return cards;
-    }
-  }
-  throw new Error(`The page never drew "${title}".`);
 }
 
 /** Taps the bell, the page's one tap that turns Alerts on or off. */
@@ -203,56 +170,6 @@ const alertCases: UiCase[] = [
       await pause(800);
       assert.deepEqual(await heard(ctx), { contexts: 0, tones: [] });
       assert.ok(await viewing(ctx, "alpha T02"), "The viewer stays on the project display.");
-    },
-  },
-  {
-    ids: ["UX-135"],
-    title:
-      "A card that arrives after the first render fades in over 0.3 s ease-in; the others are untouched",
-    async run(ctx) {
-      await openWith(ctx, calm(ctx));
-      const before = await cardsOf(ctx.page);
-      assert.ok(
-        before.every((c) => fades(c).length === 0),
-        "Nothing animates in steady state.",
-      );
-      ctx.answer({
-        body: board(ctx, [
-          pick("flat", "alpha"),
-          pick("green", "bravo"),
-          pick("green", "charlie"),
-          pick("green", "delta"),
-        ]),
-      });
-      const cards = await arrivalAfterPoll(ctx, "delta T04");
-      const fresh = fades(at(cards, 3));
-      assert.equal(fresh.length, 1, "The new card animates.");
-      assert.equal(fresh[0]?.duration, ARRIVE_MS);
-      assert.equal(fresh[0]?.easing, "ease-in");
-      assert.ok(
-        cards.slice(0, 3).every((c) => fades(c).length === 0),
-        "Cards already on screen are untouched.",
-      );
-      // GO TO KEYBOARD arriving fades in too.
-      ctx.answer({ body: asking(ctx) });
-      const withSlot = await arrivalAfterPoll(ctx, GTK);
-      const slot = withSlot.find((c) => c.name === GTK);
-      assert.ok(slot, "GO TO KEYBOARD arrived.");
-      assert.equal(fades(slot).filter((a) => a.duration === ARRIVE_MS).length, 1);
-    },
-  },
-  {
-    ids: ["UX-135"],
-    title: "Under reduced motion no card fades in",
-    async run(ctx) {
-      await ctx.page.emulateMedia({ reducedMotion: "reduce" });
-      await openWith(ctx, calm(ctx));
-      ctx.answer({ body: asking(ctx) });
-      const cards = await arrivalAfterPoll(ctx, GTK);
-      assert.ok(
-        cards.every((c) => fades(c).length === 0),
-        "No animation runs.",
-      );
     },
   },
 ];
