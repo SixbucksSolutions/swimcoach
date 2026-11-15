@@ -5,6 +5,11 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
 ## V1 started (2026-11-14, evening)
 
+- **V1's process is settled (card #0019, Terry, 2026-11-14); `AGENTS.md`, "How V1 work flows", is
+  the rule.** In short: one `localswim/<nnnn>-<short-description>` branch per card, a pull request to
+  `main`, an independent `Opus/high` review (the latest Opus), then the agent squash-merges and CI ships it, and the
+  card goes to Ready For Review for Terry. A direct commit to `main` MUST NOT be made.
+
 - **Terry accepted the MVP (2026-11-14 evening: "Accept, all rows Yes").** MVP-12 is done. All 136
   live UX ledger rows changed from `Pending` to `Yes` and are V1's requirements; the 35 superseded or
   retired rows are unchanged. Card #0017 records it. Device check step 8 (#0020) and the first real
@@ -19,9 +24,9 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - **V1 work is tracked as cards on the `swimcoach` board of Terry's shared localswim service**
   (Terry, 2026-11-14: reuse the existing board). Board `62728944-eac7-482c-bd46-4d8f206e5381`; its
   #0001 to #0016 are the retired chatops design's, all Completed and kept as history. V1's cards start
-  at #0017. The decisions that block V1 sit in Needs Terry (#0017 acceptance, #0018 V1's quality bar,
-  #0019 branch and review process, #0020 device check step 8); proposed work and the decisions that
-  can wait sit in Backlog.
+  at #0017. The decisions that blocked V1 went to Needs Terry (#0017 acceptance, #0018 V1's quality
+  bar, #0019 branch and review process, #0020 device check step 8); proposed work and the decisions
+  that can wait sit in Backlog.
 - **Every localswim call MUST go through `scripts/localswim.ps1`**, which runs the CLI as Bot with
   the token at Process scope for one run (Terry granted reading the Bot credential, 2026-11-14). The
   service runs from `C:\Projects\localswim-v2` (the installed build, `127.0.0.1:8811`); the source repo

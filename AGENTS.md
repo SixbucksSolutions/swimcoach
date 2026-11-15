@@ -65,6 +65,28 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 
 ## Working agreements
 
+- **How V1 work flows (Terry, 2026-11-14, card #0019; RFC 2119 keywords, the capitals are
+  load-bearing).** Every change MUST be authorized by a card on the `swimcoach` localswim board, and
+  every change, docs included, MUST reach `main` through a pull request; a direct commit to `main`
+  MUST NOT be made. When no card authorizes a change yet, the agent MUST create one first.
+  - **One branch per card, named for it:** each card's work MUST be done on its own branch,
+    `localswim/<nnnn>-<short-description>`, cut from `main`, where `<nnnn>` is the card's four-digit
+    ticket number (for example `localswim/0035-card-animations`). Terry: "I like branches with a 1:1
+    tie to 'what authorized this work'."
+  - **Review:** every pull request MUST pass an independent `Opus/high` review: the latest Opus at
+    high effort, a reviewer that did not write the change. Terry: "as long as PR's pass an Opus
+    5.5/High independent review they can always be a) merged; and B) pushed to prod." The rule
+    tracks the latest Opus rather than pinning 5.5 (Terry, 2026-11-14: "Track latest: Opus/high").
+    A model named without a version means the latest; a pinned one carries its version.
+  - **Merge and ship:** once the review and CI's `check` pass, the agent MUST squash-merge the pull
+    request into `main` and delete its branch (`gh pr merge --squash --delete-branch`), and CI deploys
+    it to production. Neither step waits for Terry.
+  - **The card:** the agent SHOULD keep it in In Progress while the branch is open, MUST move it to
+    Ready For Review once the change is merged and deployed, and SHOULD comment the pull request and
+    the commit on it. The agent MUST NOT move a card to Completed; only Terry does.
+  - The MVP's relay rules 1 to 8 (`docs/planning/mvp-staffing-plan.md`) and its `mvp/integration`
+    branch are history; they do not bind V1. Relay rule 9, subagents only for parallel work or
+    independent review, still holds.
 - **Push every commit to GitHub right away.** The repo is public and pushes are Terry's backups.
 - **`C:\Projects\swimcoach` on Terry's laptop is the authoritative working copy.** Keep it and
   `github.com/SixbucksSolutions/swimcoach` in sync; after pushing from anywhere else, pull it there.
@@ -108,10 +130,10 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 
 ## Pushing from a sandbox without GitHub credentials
 
-If the laptop copy has commits that a credential-less shell cannot push: run `git bundle create
-<file> origin/main..main` in `C:\Projects\swimcoach`, fetch the bundle into a clone that can push,
-fast-forward `main`, push, then delete the bundle and `git fetch` in `C:\Projects\swimcoach`. Commit
-hashes stay identical.
+If the laptop copy has a card branch that a credential-less shell cannot push: run `git bundle create
+<file> origin/main..localswim/<nnnn>-<short-description>` in `C:\Projects\swimcoach`, fetch the
+bundle into a clone that can push, push that branch and open its pull request, then delete the bundle
+and `git fetch` in `C:\Projects\swimcoach`. Commit hashes stay identical.
 
 ## Open questions waiting on Terry
 
