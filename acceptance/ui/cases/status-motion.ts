@@ -142,7 +142,7 @@ const statusMotionCases: UiCase[] = [
         [h.label, h.bg, h.warnShown, h.pagesOpacity, h.pagesFilter],
         ["LIVE", COLOR.okFill, false, 1, "none"],
       );
-      // The dot breathes again, and GO TO KEYBOARD with it, on one clock (UX-074, UX-160).
+      // The dot breathes again, and GO TO KEYBOARD with it, on one clock (UX-074, UX-198).
       assert.equal(runningBreaths(h.dot).length, 1, "The LIVE dot breathes.");
       const [dot, slot] = await probe<[number, number]>(ctx.page, "breaths()");
       near(dot, slot, 1, "The dot and GO TO KEYBOARD agree after the fade");

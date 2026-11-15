@@ -139,7 +139,7 @@ describe("the Health box after and during a change (UX-183, UX-186)", () => {
     const changes = watchDocument();
     await vi.advanceTimersByTimeAsync(POLL_MS);
     expect(stubs.animate).toHaveBeenCalledTimes(calls);
-    // Only the warning line's running duration may change ("2m", then "3m").
+    // Only the warning line's running duration may change.
     expect(changes().filter((r) => elementOf(r) !== "warn")).toEqual([]);
   });
 });
