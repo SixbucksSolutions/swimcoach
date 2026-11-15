@@ -139,3 +139,6 @@ export function showHealth(h) {
   }
   fadeOut(h);
 }
+
+/** For the breath check (test/page/breath-window.test.ts, UX-210). */
+export { FADE_MS };

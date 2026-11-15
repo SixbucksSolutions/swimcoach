@@ -186,10 +186,13 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   through three failed polls and OFFLINE starts at 75 s (UX-204, UX-205). He kept STALE the same day: a silent agent on an unfinished board still turns the box
   orange.
 
-- The dot's breathing animation runs a fixed 30 seconds (15 cycles of 2 s; 16 s at the 10 s poll, 40 s
-  at the 30 s poll) and is restarted by each successful poll (UX-197). 30 s outlasts a 20 s poll plus
-  its 8 s timeout. If the page's script freezes, the dot stops by itself about 10 s after a missed poll.
-  A plain infinite animation would keep a dead page looking alive.
+- **The dot breathes whenever the box says LIVE** (Terry, 2026-11-15, card #0051: "Dot must be
+  breathing whenever LIVE is up and 75 s is fine"). The breathing animation runs a fixed 80 seconds (40
+  cycles of 2 s) and is restarted by each successful poll (UX-210). 80 s outlasts the 75 s LIVE window,
+  the 1 s tick that turns the box OFFLINE and its 0.3 s fade. If the page's script freezes, the dot
+  stops by itself about 5 s after its LIVE window would have ended. A plain infinite animation would
+  keep a dead page looking alive. Until #0051 the breath ran 30 s (15 cycles; 16 s at the 10 s poll,
+  40 s at the 30 s poll, UX-197), so the box could read LIVE over a still dot.
 - **A change of health box state fades** (Terry, 2026-11-14, localswim swimcoach #0036: "going from
   LIVE to STALE? do a fade out/in to draw my eye gently"; UX-183 to UX-186). The old state and its
   warning line fade out over 0.3 s, then the new ones fade in over 0.3 s while the displays ease into or
@@ -231,7 +234,8 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   reserved for it:** with nothing red, row one is the first green or yellow card. The breathing red is
   confirmed: Terry, "chefs kiss to draw my eye." Each red project's own display still shows its full ask.
 - **GO TO KEYBOARD breathes in step with the LIVE dot.** Terry, 2026-11-13. Same 2 s `ease-in-out` cycle
-  peaking together, same 15 cycles (8 at the 10 s poll, 20 at the 30 s poll), restarted by the same successful poll, and only while the health
+  peaking together, same 40 cycles (UX-211; 8 at the 10 s poll, 20 at the 30 s poll, 15 until card
+  #0051), restarted by the same successful poll, and only while the health
   box says LIVE. So a frozen or stale page stops both at once rather than leaving the red slot looking alive
   (the dead-page tell in section 3.1). Measured: both animations read the same time to the millisecond
   after load, between polls and after a poll, both stop when OFFLINE and both restart together.

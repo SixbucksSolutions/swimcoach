@@ -6,7 +6,11 @@ import type { UiCase, UiContext } from "../types.ts";
 import { near, openWith, pause, pollOnce, settle } from "./overview-kit.ts";
 import { cardsOf, healthOf, probe, runningBreaths } from "./overview-probe.ts";
 
-const FROZEN_WAIT_MS = 31_000;
+/** Past the old 30 s breath (UX-197): a breath that still runs here outlasts it. */
+const PAST_OLD_BREATH_MS = 40_000;
+/** The LIVE window (75 s, UX-204), the 1 s tick and the 0.3 s fade all fit inside the breath. */
+const LIVE_WINDOW_AND_TICK_MS = 76_300;
+const BREATH_MS = 80_000;
 const WARM_UP_MS = 1200;
 
 /** Both breaths' current times, read in one page task so they share one frame of the timeline. */
@@ -31,9 +35,9 @@ async function running(ctx: UiContext): Promise<{ dot: number; slot: number }> {
 
 const breathCases: UiCase[] = [
   {
-    ids: ["UX-198"],
+    ids: ["UX-211"],
     title:
-      "The LIVE dot and GO TO KEYBOARD breathe in step: same 2 s ease-in-out cycle, 15 cycles, same clock",
+      "The LIVE dot and GO TO KEYBOARD breathe in step: same 2 s ease-in-out cycle, 40 cycles, same clock",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       const { dot } = await healthOf(ctx.page);
@@ -42,7 +46,11 @@ const breathCases: UiCase[] = [
       const [slot] = runningBreaths(kbd?.animations ?? []);
       assert.ok(dotBreath && slot, "Both breathe.");
       for (const a of [dotBreath, slot]) {
-        assert.equal(a.end, 30_000, "Fifteen cycles of 2 s, 30 s in all.");
+        assert.equal(a.end, BREATH_MS, "Forty cycles of 2 s, 80 s in all.");
+        assert.ok(
+          a.end > LIVE_WINDOW_AND_TICK_MS,
+          "The breath outlasts the 75 s LIVE window, its 1 s tick and the 0.3 s fade (UX-210).",
+        );
       }
       assert.equal((await healthOf(ctx.page)).dotCss.timing, "ease-in-out");
       assert.equal(kbd?.css.timing, "ease-in-out");
@@ -108,15 +116,18 @@ const breathCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-197"],
+    ids: ["UX-210"],
     title:
-      "A frozen page stops breathing by itself: 30 s after the last good poll both animations have ended",
+      "The dot breathes through the LIVE window, and a frozen page stops breathing by itself 80 s after the last good poll",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       assert.deepEqual(await running(ctx), { dot: 1, slot: 1 });
-      // The page clock is paused, so no poll comes: this is a page whose script has frozen.
-      await pause(FROZEN_WAIT_MS);
-      assert.deepEqual(await running(ctx), { dot: 0, slot: 0 }, "Both have stopped.");
+      // The page clock is paused, so no poll comes: this is a page whose script has frozen. The
+      // animations run on real time, so the waits are real.
+      await pause(PAST_OLD_BREATH_MS);
+      assert.deepEqual(await running(ctx), { dot: 1, slot: 1 }, "Both still breathe at 40 s.");
+      await pause(BREATH_MS - PAST_OLD_BREATH_MS + 1000);
+      assert.deepEqual(await running(ctx), { dot: 0, slot: 0 }, "Both have stopped by 81 s.");
     },
   },
 ];
