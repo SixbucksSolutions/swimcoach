@@ -17,10 +17,12 @@ import { slotCases } from "./overview-slots.ts";
 import { smallCases } from "./overview-small.ts";
 import { statusCases } from "./overview-status.ts";
 import { warnCases } from "./overview-warn.ts";
+import { statusMotionCases } from "./status-motion.ts";
 
 const overviewCases: UiCase[] = [
   ...statusCases,
   ...healthCases,
+  ...statusMotionCases,
   ...cardCases,
   ...doneCases,
   ...smallCases,

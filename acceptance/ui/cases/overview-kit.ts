@@ -30,6 +30,11 @@ const POLL_MS = 30_000;
 const MINUTE_MS = 60_000;
 const SETTLE_REAL_MS = 80;
 const SETTLE_PAGE_MS = 20;
+const STILL_STEP_MS = 50;
+const STILL_STEPS = 60;
+/** Page source: whether the Status line's parts have no animation of their own running. */
+const STILL_PROBE =
+  "['#health', '#warn', '#pages'].every((s) => document.querySelector(s).getAnimations().length === 0)";
 
 /** The kinds of milestone the afternoon and allgreen examples hold, by what they look like. */
 type Kind = "gray" | "yellow" | "green" | "done" | "late" | "red" | "flat";
@@ -175,10 +180,32 @@ function pause(ms: number): Promise<void> {
   return sleep(ms);
 }
 
-/** Lets the page finish what a response started, then flushes its animation-frame work. */
+/**
+ * Waits in real time until the Health box, the warning line and the displays have no animation of
+ * their own: a change of state fades them for about 0.6 s on the browser's own time (UX-183), and a
+ * case reads the state it lands on. A page that is navigating counts as still.
+ */
+async function untilStill(ctx: UiContext): Promise<void> {
+  for (let step = 0; step < STILL_STEPS; step += 1) {
+    // biome-ignore lint/performance/noAwaitInLoops: each step looks, then waits in real time
+    const still = await ctx.page.evaluate<boolean>(STILL_PROBE).catch(() => true);
+    if (still) {
+      return;
+    }
+    await sleep(STILL_STEP_MS);
+  }
+  throw new Error(`The Status line was still moving after ${STILL_STEPS * STILL_STEP_MS} ms.`);
+}
+
+/**
+ * Lets the page finish what a response started, and any fade of the Status line it set off, then
+ * flushes its animation-frame work.
+ */
 async function settle(ctx: UiContext): Promise<void> {
   await sleep(SETTLE_REAL_MS);
+  await untilStill(ctx);
   await ctx.advance(SETTLE_PAGE_MS);
+  await untilStill(ctx);
 }
 
 /** Moves page time on by one poll interval and waits until that poll has been answered. */
