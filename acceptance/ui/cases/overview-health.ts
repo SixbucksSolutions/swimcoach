@@ -169,7 +169,7 @@ const healthCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-015", "UX-191"],
+    ids: ["UX-195", "UX-191"],
     title: "A long outage (1h 05m) shows the word OFFLINE alone and the Status line keeps one row",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
@@ -180,7 +180,7 @@ const healthCases: UiCase[] = [
       assert.equal(h.age, "");
       assert.equal(h.warn, "Can't reach the board for 1h 05m. Everything below is old.");
       const s = await statusBoxesOf(ctx.page);
-      assert.ok(s.clock.x - s.wordmark.r >= 34, "At least 35 px between wordmark and clock.");
+      assert.ok(s.health.x - s.wordmark.r >= 34, "At least 35 px between wordmark and Health box.");
       assert.equal(s.header.h, live.header.h, "The Status line does not wrap.");
       assert.equal(s.bell.w, live.bell.w);
     },

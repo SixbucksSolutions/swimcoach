@@ -91,7 +91,7 @@ export function esc(s) {
 
 /**
  * Every time on the page reads like "1:32am" or "12:47pm": 12-hour, lowercase am/pm, no space
- * (Terry, 2026-11-13). One formatter, so the status line clock and the footers can never disagree.
+ * (Terry, 2026-11-13). One formatter, so the chart ends and the footers can never disagree (UX-194).
  * Local time.
  * @param {Date} d
  * @returns {string}

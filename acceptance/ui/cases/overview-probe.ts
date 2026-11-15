@@ -84,10 +84,11 @@ interface StatusBoxes {
   readonly header: Box;
   readonly brand: Box;
   readonly wordmark: Box;
-  readonly clock: Box;
   readonly health: Box;
   readonly bell: Box;
-  readonly clockText: string;
+  /** How many elements the Status line holds: the mark and wordmark, the Health box and the bell. */
+  readonly parts: number;
+  readonly headerText: string;
 }
 
 /** The Card display area: from the first slot's top to the page's bottom padding edge. */
@@ -148,8 +149,9 @@ const health = () => {
   };
 };
 const statusBoxes = () => ({
-  header: box(q('header')), brand: box(q('#brand')), wordmark: box(q('header h1')), clock: box(q('#clock')),
-  health: box(q('#health')), bell: box(q('#snd')), clockText: q('#clock').textContent,
+  header: box(q('header')), brand: box(q('#brand')), wordmark: box(q('header h1')),
+  health: box(q('#health')), bell: box(q('#snd')), parts: q('header').children.length,
+  headerText: q('header').textContent,
 });
 const gtk = () => qa('#pages .cards .pc').find((c) => q('.nm b', c).textContent === 'GO TO KEYBOARD');
 const breath = (e) => e.getAnimations().find((a) => {
@@ -163,7 +165,7 @@ const wordmark = () => ({
   text: q('header h1').textContent, swim: cs(q('header h1 .word')).color, coach: cs(q('header h1 .word span')).color,
 });
 const texts = () => ({
-  clock: q('#clock').textContent, foot: qa('.foot').map((e) => e.textContent).join('|'),
+  foot: qa('.foot').map((e) => e.textContent).join('|'),
   axis: qa('.xax span').map((e) => e.textContent),
 });
 const bellInfo = () => ({

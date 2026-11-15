@@ -113,7 +113,7 @@ wrong one). Use these names in docs, code comments and conversation:
 
 | Name | What it is |
 |---|---|
-| **Status line** | The bar at the top of every display: mark, wordmark, the health box, clock, bell |
+| **Status line** | The bar at the top of every display: mark, wordmark, the health box, bell |
 | **Health box** | The LIVE / STALE / OFFLINE / SIGN IN box inside the status line |
 | **Card display area** | Everything below the status line on the overview: the slot grid |
 | **Card** | One project in the card display area, or the GO TO KEYBOARD slot |
@@ -130,21 +130,24 @@ position (the first dot is square). Tapping a project card jumps to that project
 Called the "header" in earlier text and in the prototype; section 2 has the agreed name.
 
 - **Layout, left to right:** mark and wordmark alone on the left; then, locked together on the right,
-  the clock, the **health box** and the alerts bell, each 8 px from the next. Terry, 2026-11-13: the
-  health box groups with time, not with the name. Read right to left, it is bell, freshness, time.
-- **Why the clock MUST stay to the left of the health box.** Terry, 2026-11-13: the old order, "LIVE
+  the **health box** and the alerts bell, 8 px apart (UX-192).
+- **No clock (Terry, 2026-11-15, card #0046).** The Status line MUST NOT show a clock: the iPhone's
+  own status bar already shows the time, so ours was redundant (UX-193). Until then the clock sat left
+  of the health box, for the reason below, which is kept as history.
+- **Why the clock stayed to the left of the health box (superseded).** Terry, 2026-11-13: the old order, "LIVE
   2:25 PM", read as a caption, live as of 2:25, so the clock looked like a data timestamp: "wait shit
   is 2:25 still live? is that stale?" With the clock first, "2:25pm LIVE" reads as two facts: "it's
   2:25pm and yes that *is* what time it is and yes that is LIVE data." The order MUST NOT be swapped
   back. Data age, when it matters, lives in the health box ("LIVE 7m") and the warning line, never in a
   clock beside the word LIVE.
-- **Clock and every other time on the page: `H:mm` with lowercase am/pm and no space**, 12-hour, for
-  example "1:32am" and "12:47pm". One formatter, `fmtTime()`, serves the clock and the footers so they
-  cannot disagree.
+- **Every time on the page: `H:mm` with lowercase am/pm and no space**, 12-hour, for example
+  "1:32am" and "12:47pm". One formatter, `fmtTime()`, serves the chart ends and the footers so they
+  cannot disagree (UX-194).
 - **The health box shows an age only when LIVE** (from 1 minute, for example "LIVE 7m"). STALE and
   OFFLINE show just the word: the warning line under the status line already gives the exact duration,
   and "OFFLINE 1h 05m" beside a "12:47pm" clock overflowed the status line at 402 px. With the word
-  alone, that worst case keeps 35 px between the wordmark and the clock.
+  alone, that worst case kept 35 px between the wordmark and the clock; without the clock the gap to
+  the health box only grows (UX-195).
 - **Health box.** This was a firm requirement: "nothing sucks worse than a dashboard that says all good
   in the hood but it's because it stopped updating yesterday."
 

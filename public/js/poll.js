@@ -1,7 +1,7 @@
 // @ts-check
 // Polling and the health box (concept.md 3.1; contract/api.md 6 and 6.7; mock lines 517-546). Polls
 // GET /api/2026-11-14/state every 30 s and when the page comes back into view, and keeps the status
-// line's clock, health box and warning line current every second.
+// line's health box and warning line current every second.
 //
 // Sign-in (contract/api.md section 2). Once the Access session cookie expires, a poll comes back as a
 // redirect (an "opaqueredirect" under redirect: "manual"), a 401 or a 403. That is not the board being
@@ -11,8 +11,8 @@
 // IN in OFFLINE's red, the displays gray out, and the warning line says to tap it; a tap reloads (the
 // home-screen web app has no reload button). The next good poll clears it.
 
-import { restartBreath, setText, ui } from "./dom.js";
-import { dur, fmtTime, POLL_MS } from "./format.js";
+import { restartBreath } from "./dom.js";
+import { dur, POLL_MS } from "./format.js";
 import { showHealth } from "./health.js";
 import { toView } from "./state.js";
 
@@ -95,11 +95,10 @@ function onAuthFailure() {
 }
 
 /**
- * Writes the clock, then shows the health box, the warning line and the displays' gray (health.js),
+ * Shows the health box, the warning line and the displays' gray (health.js),
  * each only when it changed; a change of state fades.
  */
 function tick() {
-  setText(ui("#clock"), fmtTime(new Date()));
   let h = AUTH_HEALTH;
   if (!authFailed) {
     h = healthOf(lastView, lastOk, Date.now());
@@ -134,7 +133,7 @@ function kick() {
 }
 
 /**
- * Starts the clock and the polls. Each successful poll's View goes to draw.
+ * Starts the once-a-second tick and the polls. Each successful poll's View goes to draw.
  * @param {(view: View) => void} draw
  * @returns {Promise<void>}   the first poll, settled
  */
