@@ -11,7 +11,7 @@ import { ALL, esc } from "./format.js";
 /** Seconds before the viewer is taken back to the overview. */
 const RETURN_S = 5;
 
-/** The notice's fade-in, in ms: the 0.3 s of the overview's motion (UX-177 to UX-182). */
+/** The notice's fade-in, in ms: the 0.3 s of the overview's motion (UX-177 to UX-181 and UX-190). */
 const FADE_MS = 300;
 
 /**

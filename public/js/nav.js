@@ -84,7 +84,7 @@ function returnHome() {
  * @param {boolean} overviewInView   whether the overview is the display on screen
  * @returns {Snapshot|null}   where the slots were before the draw, for the motion that follows it
  *   (motion.js); null on the first draw, which the whole-page reveal covers (concept.md 3.4), and
- *   whenever the page MUST NOT move (UX-182)
+ *   whenever the page MUST NOT move (UX-190)
  */
 function drawOverview(el, view, overviewInView) {
   clearGhosts(el);
@@ -254,7 +254,7 @@ export function render(view) {
   const shown = keys()[current()] ?? ALL;
   // Motion plays only when the overview was already the display on screen as this poll landed. When
   // the project display being read goes away, it stays and says so (departed.js), and nothing on
-  // the overview moves, because the overview is off screen (UX-182).
+  // the overview moves, because the overview is off screen (UX-190).
   const overviewInView = shown === ALL;
   const keep = keptDisplay(want, shown);
   const order = withDeparted(want, keep);

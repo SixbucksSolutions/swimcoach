@@ -1,5 +1,5 @@
 // @ts-check
-// The overview's motion (localswim swimcoach #0035; UX-177 to UX-182). Direction carries meaning
+// The overview's motion (localswim swimcoach #0035; UX-177 to UX-181 and UX-190). Direction carries meaning
 // (Terry, 2026-11-14): sideways means a project did it, "outside our sphere of control"; vertical
 // means swimcoach itself did it. A project card arrives from off the left edge and leaves off the
 // right; GO TO KEYBOARD drops from under the status bar and retracts up under it; the GO CODE REVIEW
@@ -59,7 +59,7 @@ function placeOf(el) {
 
 /**
  * True when the page MAY move: the overview is the display on screen, and the viewer has not asked
- * for reduced motion (UX-182).
+ * for reduced motion (UX-190).
  * @param {boolean} overviewInView
  * @returns {boolean}
  */
