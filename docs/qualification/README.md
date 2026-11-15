@@ -179,11 +179,13 @@ C's scan, and adds no check: a gap is a finding, not a failure (`t6-interfaces.m
 
 These are open. None of them is done, and none is implied done by anything above.
 
-1. **Device check step 8, UX-171's second half: not done.** Opened from the home-screen icon four
+1. ~~**Device check step 8, UX-171's second half: not done.** Opened from the home-screen icon four
    hours or more after the last use, the page MUST show the board without a sign-in page
    (`contract/ux-ledger.md`, UX-171). Step 4, the same check right after the icon is added, passed;
    step 8 is outstanding (`coverage.md` section 4). Terry
-   ruled on 2026-11-14 that it does not hold up the MVP's release (`t6-interfaces.md`).
+   ruled on 2026-11-14 that it does not hold up the MVP's release (`t6-interfaces.md`).~~ **Passed
+   2026-11-14 evening** on Terry's iPhone 16 Pro: "Still no sign in, straight to the board"
+   (localswim `swimcoach` card #0020). UX-171 records it as a `manual:` check.
 2. **MVP-06's real reports for a full turn: not done.** One real project agent reporting through the
    swimcoach CLI for a full turn, which Terry sets up. It is also the only observation today of the
    path that gaps 1 and 5 name: real command, real server, real page (`coverage.md` row C28).
