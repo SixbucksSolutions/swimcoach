@@ -137,6 +137,10 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   which is what Terry sees in the morning: a finished board never turns STALE, so its age keeps
   growing. A tap on either goes back to the overview from any project display, as "All projects"
   does; on the overview it does nothing (UX-200).
+- **One height (Terry, 2026-11-15, card #0049).** The mark and wordmark, the health box and the bell
+  are each 34 px tall on one center line, so the Status line looks intentional rather than assembled
+  (UX-201). The health box grew from about 27.6 px to 34 px in height only; its width, and so the
+  wordmark's room, did not change, and the card display area did not move (UX-202).
 - **No clock (Terry, 2026-11-15, card #0046).** The Status line MUST NOT show a clock: the iPhone's
   own status bar already shows the time, so ours was redundant (UX-193). Until then the clock sat left
   of the health box, for the reason below, which is kept as history.
@@ -279,7 +283,9 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   sits 13 px below the top of the screen; the card display area now starts 24 px below it (it was
   15 px, close enough to read as crowded). The 9 px comes out of the slots: at 402 × 874, full slots are
   183.3 px and half slots 86.6 px. **Confirmed by Terry**: "now my brain feels a clear separation between
-  LIVE and GTK widgets." The two breathing widgets MUST NOT be pulled back together.
+  LIVE and GTK widgets." The two breathing widgets MUST NOT be pulled back together. (Card #0049: the
+  health box is now 34 px tall around the same center, so it sits 10 px below the top and the card
+  display area starts 20.8 px below it; the card display area itself did not move, UX-202.)
 - **Inside a card, 18 px above the title line and 18 px below the last detail-blurb line** at the
   content minimum: 101.7 px for a full card with two blurb lines, 83.5 px for a half card with one. A half
   slot fits that with 3.1 px to spare; a shorter screen scrolls rather than cutting into it.

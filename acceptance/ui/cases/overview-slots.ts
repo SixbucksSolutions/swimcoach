@@ -181,15 +181,16 @@ const slotCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-029"],
+    ids: ["UX-202"],
     title:
-      "The Health box sits 13 px below the top and the Card display area starts 24 px below it",
+      "The Health box sits 10 px below the top and the Card display area starts 20.8 px below it",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       const health = await boxOf(ctx.page, "#health");
       const cards = await boxOf(ctx.page, "#pages .cards");
-      near(health.y, 13, 1, "Health box from the top");
-      near(cards.y - health.b, 24, 1, "Health box to the Card display area");
+      near(health.y, 10, 1, "Health box from the top");
+      near(cards.y - health.b, 20.8, 1, "Health box to the Card display area");
+      near(cards.y, 64.8, 1, "The Card display area starts where it did before UX-202");
     },
   },
   {

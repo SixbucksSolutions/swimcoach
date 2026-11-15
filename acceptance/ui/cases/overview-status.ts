@@ -7,6 +7,7 @@ import { tapCard, viewing } from "./overview-nav.ts";
 import { healthOf, probe, runningBreaths, statusBoxesOf, styleOf } from "./overview-probe.ts";
 
 const HEADER_HEIGHT = 52;
+const SHARED_HEIGHT = 34;
 const IDLE_AGE_SECONDS = (12 * 60 + 5) * 60;
 const GUTTER = 14;
 const PAGE_WIDTH = 402;
@@ -120,6 +121,25 @@ const statusCases: UiCase[] = [
         `At least 35 px between wordmark and Health box (${(s.health.x - s.wordmark.r).toFixed(1)}).`,
       );
       assert.equal(s.header.h, HEADER_HEIGHT, "The Status line keeps one row.");
+    },
+  },
+  {
+    ids: ["UX-201"],
+    title:
+      "The mark and wordmark, the Health box and the bell are each 34 px tall, centered on one line",
+    async run(ctx) {
+      await openWith(ctx, ctx.example("afternoon"));
+      const s = await statusBoxesOf(ctx.page);
+      const parts = {
+        mark: s.brand,
+        "mark and wordmark group": s.wordmark,
+        health: s.health,
+        bell: s.bell,
+      };
+      for (const [name, part] of Object.entries(parts)) {
+        near(part.h, SHARED_HEIGHT, 0.5, `${name} height`);
+        near(part.cy, s.bell.cy, 0.5, `${name} center`);
+      }
     },
   },
   {
