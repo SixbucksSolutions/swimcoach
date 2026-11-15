@@ -257,4 +257,4 @@ const motionCases: UiCase[] = [
   },
 ];
 
-export { changeTo, GHOST_GONE_MS, motionCases, type Move, movesOf, RECORDER };
+export { changeTo, GHOST_GONE_MS, type Move, motionCases, movesOf, RECORDER };

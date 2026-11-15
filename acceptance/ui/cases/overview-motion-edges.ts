@@ -37,7 +37,8 @@ export const motionEdgeCases: UiCase[] = [
   },
   {
     ids: ["UX-178"],
-    title: "A poll that lands while a card is leaving leaves no ghost and keeps the GO CODE REVIEW line",
+    title:
+      "A poll that lands while a card is leaving leaves no ghost and keeps the GO CODE REVIEW line",
     async run(ctx) {
       await ctx.page.addInitScript(RECORDER);
       await openWith(ctx, greens(ctx, ["alpha", "bravo", "charlie"]));
@@ -53,6 +54,7 @@ export const motionEdgeCases: UiCase[] = [
         body: board(ctx, [pick("green", "alpha"), pick("green", "charlie"), pick("done", "delta")]),
       });
       const second = ctx.page.waitForResponse((r) => isStatePoll(r.url()));
+      // biome-ignore lint/security/noSecrets: page script text; its punctuation reads as high entropy.
       await ctx.page.evaluate("document.dispatchEvent(new Event('visibilitychange'))");
       await second;
       await pause(GHOST_GONE_MS);

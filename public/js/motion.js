@@ -66,9 +66,7 @@ function placeOf(el) {
 function motionAllowed(overviewInView) {
   // A hidden tab can hold back an exit's finish event, and the ghost with it, so it does not move.
   return (
-    overviewInView &&
-    !document.hidden &&
-    !matchMedia("(prefers-reduced-motion: reduce)").matches
+    overviewInView && !document.hidden && !matchMedia("(prefers-reduced-motion: reduce)").matches
   );
 }
 
