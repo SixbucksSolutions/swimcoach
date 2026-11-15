@@ -21,7 +21,7 @@ import {
 // No motion on the first render, under reduced motion, or on a poll that changed nothing.
 
 const FADE_MS = 300;
-const OFFLINE_AT_MS = 91 * SEC; // the first tick past three poll intervals (UX-159)
+const OFFLINE_AT_MS = 61 * SEC; // the first tick past three poll intervals (UX-159)
 
 const STATUS_PARTS = new Set(["health", "warn", "pages"]);
 
@@ -78,7 +78,7 @@ describe("the Health box changing state (UX-183, UX-184, UX-185)", () => {
     expect($("#warn").textContent).toBe("");
     await vi.advanceTimersByTimeAsync(FADE_MS);
     expect(health()).toEqual(["off", "OFFLINE", "off"]);
-    expect($("#warn").textContent).toBe("Can't reach the board for 2m. Everything below is old.");
+    expect($("#warn").textContent).toBe("Can't reach the board for 1m. Everything below is old.");
     const gray = { opacity: 0.4, filter: "grayscale(1)" };
     const clear = { opacity: 1, filter: "grayscale(0)" };
     expect(motions().slice(1)).toEqual([

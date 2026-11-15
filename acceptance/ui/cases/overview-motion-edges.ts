@@ -3,7 +3,7 @@
 // found by PR #54's independent review. The recorder comes from overview-motion.ts.
 import assert from "node:assert/strict";
 import type { UiCase, UiContext } from "../types.ts";
-import { board, type Json, openWith, pause, pick, pollOnce } from "./overview-kit.ts";
+import { board, type Json, openWith, POLL_MS, pause, pick, pollOnce } from "./overview-kit.ts";
 import { GHOST_GONE_MS, movesOf, RECORDER } from "./overview-motion.ts";
 import { tapDot } from "./project-support.ts";
 
@@ -47,7 +47,7 @@ export const motionEdgeCases: UiCase[] = [
       // Bravo stops: its exit starts (0.3 s of real time).
       ctx.answer({ body: greens(ctx, ["alpha", "charlie"]) });
       const first = ctx.page.waitForResponse((r) => isStatePoll(r.url()));
-      await ctx.advance(30_000);
+      await ctx.advance(POLL_MS);
       await first;
       assert.equal(await ctx.page.locator(".ghost").count(), 1, "Bravo is mid-exit.");
       // A second poll lands at once, as when the app wakes and two polls arrive together, and a

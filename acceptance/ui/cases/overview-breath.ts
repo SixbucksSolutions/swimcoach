@@ -6,7 +6,7 @@ import type { UiCase, UiContext } from "../types.ts";
 import { near, openWith, pause, pollOnce, settle } from "./overview-kit.ts";
 import { cardsOf, healthOf, probe, runningBreaths } from "./overview-probe.ts";
 
-const FROZEN_WAIT_MS = 41_000;
+const FROZEN_WAIT_MS = 31_000;
 const WARM_UP_MS = 1200;
 
 /** Both breaths' current times, read in one page task so they share one frame of the timeline. */
@@ -31,9 +31,9 @@ async function running(ctx: UiContext): Promise<{ dot: number; slot: number }> {
 
 const breathCases: UiCase[] = [
   {
-    ids: ["UX-160"],
+    ids: ["UX-198"],
     title:
-      "The LIVE dot and GO TO KEYBOARD breathe in step: same 2 s ease-in-out cycle, 20 cycles, same clock",
+      "The LIVE dot and GO TO KEYBOARD breathe in step: same 2 s ease-in-out cycle, 15 cycles, same clock",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       const { dot } = await healthOf(ctx.page);
@@ -42,7 +42,7 @@ const breathCases: UiCase[] = [
       const [slot] = runningBreaths(kbd?.animations ?? []);
       assert.ok(dotBreath && slot, "Both breathe.");
       for (const a of [dotBreath, slot]) {
-        assert.equal(a.end, 40_000, "Twenty cycles of 2 s, 40 s in all.");
+        assert.equal(a.end, 30_000, "Fifteen cycles of 2 s, 30 s in all.");
       }
       assert.equal((await healthOf(ctx.page)).dotCss.timing, "ease-in-out");
       assert.equal(kbd?.css.timing, "ease-in-out");
@@ -108,9 +108,9 @@ const breathCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-157"],
+    ids: ["UX-197"],
     title:
-      "A frozen page stops breathing by itself: 40 s after the last good poll both animations have ended",
+      "A frozen page stops breathing by itself: 30 s after the last good poll both animations have ended",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       assert.deepEqual(await running(ctx), { dot: 1, slot: 1 });

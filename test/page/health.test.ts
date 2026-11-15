@@ -46,16 +46,16 @@ function quiet(age: string): string {
 describe("healthOf", () => {
   it.each([
     ["before the first poll", null, 0, ["wait", ELLIPSIS, null, ""]],
-    ["90 s into a first poll", null, 90, ["wait", ELLIPSIS, null, ""]],
+    ["60 s into a first poll", null, 60, ["wait", ELLIPSIS, null, ""]],
     [
       "a board that never answered",
       null,
-      90.001,
-      ["off", "OFFLINE", 90.001, "Can't reach the board for 2m."],
+      60.001,
+      ["off", "OFFLINE", 60.001, "Can't reach the board for 1m."],
     ],
     ["2 minutes after a report", aged(120), 5, ["live", "LIVE", 125, ""]],
-    // Three 30 s polls (UX-156, UX-158): LIVE holds through two failed polls.
-    ["90 s after the last good poll", aged(60), 90, ["live", "LIVE", 150, ""]],
+    // Three 20 s polls (UX-196, UX-158): LIVE holds through two failed polls.
+    ["60 s after the last good poll", aged(60), 60, ["live", "LIVE", 120, ""]],
     ["4 minutes after the last good poll", aged(60), 240, ["off", "OFFLINE", 240, gone("4m")]],
     ["24m 59s after a report", aged(24 * 60 + 50), 9, ["live", "LIVE", 1499, ""]],
     ["aging past 25 minutes", aged(24 * 60 + 50), 11, ["stale", "STALE", 1501, quiet("25m")]],
@@ -66,12 +66,12 @@ describe("healthOf", () => {
     ["every milestone done, an hour on", aged(3600, alldone), 0, ["live", "LIVE", 3600, ""]],
     ["an empty board (feed no_data)", toView(empty), 0, ["live", "LIVE", null, ""]],
     [
-      "an empty board, 90 s after the last good poll",
+      "an empty board, 60 s after the last good poll",
       toView(empty),
-      90,
+      60,
       ["live", "LIVE", null, ""],
     ],
-    ["an empty board, unreachable", toView(empty), 91, ["off", "OFFLINE", 91, gone("2m")]],
+    ["an empty board, unreachable", toView(empty), 61, ["off", "OFFLINE", 61, gone("1m")]],
   ] as const)("%s", (_label, view, seconds, [st, label, age, msg]) => {
     const h = healthOf(view, T0, T0 + seconds * SEC);
     expect([h.st, h.label, rounded(h.age), h.msg]).toEqual([st, label, age, msg]);

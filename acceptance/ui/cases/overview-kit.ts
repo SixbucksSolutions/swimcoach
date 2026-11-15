@@ -30,7 +30,7 @@ const COLOR = {
   text: "rgb(232, 238, 244)", // --text #E8EEF4, primary text; the bell's disc when alerts are on
 } as const;
 
-const POLL_MS = 30_000;
+const POLL_MS = 20_000;
 const MINUTE_MS = 60_000;
 const SETTLE_REAL_MS = 80;
 const SETTLE_PAGE_MS = 20;

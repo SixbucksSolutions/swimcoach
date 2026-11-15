@@ -11,10 +11,10 @@ import { healthOf, probe, runningBreaths } from "./overview-probe.ts";
 const FADE_MS = 300;
 /** How late, on the browser's clock, the fade-in MAY start after the fade-out: a few frames. */
 const FRAME_SLACK_MS = 120;
-const LIVE_TO_OFFLINE_MS = 85_000;
+const LIVE_TO_OFFLINE_MS = 55_000;
 const STALE_SECONDS = 26 * 60;
 const STALE_WARNING = /^No agent has reported for 3\dm\. Everything below is old\.$/u;
-const OFFLINE_WARNING = /^Can't reach the board for 2m\. Everything below is old\.$/u;
+const OFFLINE_WARNING = /^Can't reach the board for 1m\. Everything below is old\.$/u;
 
 const RECORDER = `
 (() => {
