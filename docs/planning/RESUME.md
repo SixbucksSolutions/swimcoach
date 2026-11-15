@@ -3,7 +3,41 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
-## Resume here (2026-11-14, late night; card #0043)
+## Resume here (2026-11-15, evening; cards #0044 to #0051)
+
+- **Eight cards shipped and Terry completed every one; nothing is in flight.** Each went card, branch,
+  PR, independent `Opus 5.5/high` review, squash-merge, deploy, Ready for review, and Terry checked
+  most on his iPhone:
+
+  | Card | PR | Change |
+  |---|---|---|
+  | #0045 | #61 | Alerts-on bell inverted: a bold `--bg` bell on a `--text` disc (UX-191) |
+  | #0046 | #62 | No clock in the Status line; the iPhone shows the time (UX-192 to UX-195) |
+  | #0047 | #63 | Poll every 20 s (UX-196 to UX-198), worked in parallel in its own session |
+  | #0048 | #64 | Mark 34 px, wordmark 22 px; a tap on them goes to the overview (UX-199, UX-200) |
+  | #0049 | #65 | Mark and wordmark, LIVE box and bell share one 34 px height (UX-201, UX-202) |
+  | #0050 | #66 | LIVE shows no age; OFFLINE 75 s after the last good poll; STALE kept (UX-203 to UX-209) |
+  | #0051 | #67 | The LIVE dot breathes 80 s, outlasting the LIVE window (UX-210, UX-211) |
+
+  #0044 was the bell card created in Backlog by mistake, archived and re-created as #0045. The UX ledger
+  is at 211 rows, 59 superseded.
+- **Card lanes (Terry, 2026-11-15): Backlog is reserved for Terry.** An agent MUST create a card it
+  will work in Ready For Work, never Backlog; a Bot-made Backlog card cannot be moved out (HTTP 403)
+  and is archived and re-created in Ready For Work instead.
+- **Terry's rules from today that bind later work:** LIVE means a successful poll within the last 75 s
+  ("gives time for two tries with buffer for status polls") and a report within 25 minutes or a
+  finished board; the dot MUST breathe whenever LIVE is up, and the bounded 80 s breath stays as the
+  dead-page tell (`test/page/breath-window.test.ts` ties it to `OFFLINE_AFTER_MS`).
+- **Working notes:**
+  - To wait for a background reviewer inside one turn, have it write its report to a scratchpad file
+    as its last step and wait on that file.
+  - A Bash heredoc through the agent's shell can drop backslashes; write files with regexes through
+    the Write tool.
+  - Vitest's Node project hands CSS imports over empty, `?raw` included; read style sheets with
+    `node:fs` (`test/page/node-fs.d.ts` declares it).
+- **Still open from before:** the fake-data motion test (below, "Next").
+
+## Earlier resume point (2026-11-14, late night; card #0043)
 
 - **A session SHOULD start by arming the board watcher** (global CLAUDE.md, "Hear Terry's localswim
   board changes as they happen"): under the Monitor tool (deferred: load it with ToolSearch first), run
