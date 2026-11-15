@@ -171,7 +171,8 @@ describe("the controller on a sign-in failure", () => {
     sessionStorage.setItem("swimcoach.authReloadAt", String(T0));
     await loadPage(401, fresh(afternoon));
     expect($("#health b").textContent).toBe("SIGN IN");
-    await vi.advanceTimersByTimeAsync(POLL_MS);
+    // The poll lands at 30 s; SIGN IN fades out for 0.3 s before LIVE is written (UX-183).
+    await vi.advanceTimersByTimeAsync(POLL_MS + 300);
     expect([$("#health b").textContent, $("#warn").textContent]).toEqual(["LIVE", ""]);
   });
 });

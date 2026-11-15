@@ -1,7 +1,8 @@
 // @ts-check
 // The page controller (docs/planning/t4-interfaces.md, MVP-08 C), ported from the approved mock
 // (mocks/index.html, 430-441, 465-469, 471-588). This module only wires the parts together:
-//   poll.js     polling, the health box and sign-in failures
+//   poll.js     polling, the health box's state and sign-in failures
+//   health.js   the health box, the warning line and the displays' gray, faded on a change of state
 //   nav.js      the displays, drawn through morph(), the dots, taps, swipes and the title
 //   alerts.js   the bell and the chime
 //   dom.js      shared DOM helpers and the breathing sync

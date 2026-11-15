@@ -21,7 +21,8 @@
   --faint: #5f7082;
   /* Status: meaning, never decoration. Good news is lane green: --ok for text on the page (9.68:1), and
      --ok-fill, the same hue darkened until pure white on it is 7.11:1 (WCAG AAA). Text on --ok-fill MUST
-     stay full opacity. Done is quiet slate, not a color. */
+     stay full opacity at rest; a 0.3 s change of state MAY dim it (brand.md sections 5 and 6). Done is
+     quiet slate, not a color. */
   --ok: var(--lane-green);
   --ok-fill: #1b6445;
   --risk: #facc15;
@@ -275,6 +276,8 @@ header h1 .word span {
   overscroll-behavior-x: contain;
 }
 
+/* The gray of STALE, OFFLINE and SIGN IN. health.js eases into and out of it on a change of state
+   (UX-185) through the Web Animations API, so no transition sits here. */
 #phone[data-health="off"] #pages,
 #phone[data-health="stale"] #pages {
   opacity: 0.4;
