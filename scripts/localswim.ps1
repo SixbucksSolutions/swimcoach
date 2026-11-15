@@ -32,10 +32,11 @@ if (-not (Test-Path -LiteralPath $exe)) {
 }
 
 # Newest home first; the first receipt that exists wins (card #0053).
-$receiptCandidates = @(
-    (Join-Path $env:LOCALAPPDATA 'localswim-v2\service.json'),
-    (Join-Path $serviceRoot 'runtime\service.json')
-)
+$receiptCandidates = @()
+if ($env:LOCALAPPDATA) {
+    $receiptCandidates += Join-Path $env:LOCALAPPDATA 'localswim-v2\service.json'
+}
+$receiptCandidates += Join-Path $serviceRoot 'runtime\service.json'
 $receiptFile = $receiptCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
 if ($null -eq $receiptFile) {
     throw "Missing the localswim service receipt; tried $($receiptCandidates -join ', '). See docs/planning/RESUME.md."
