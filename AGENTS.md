@@ -66,10 +66,19 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 ## Working agreements
 
 - **How V1 work flows (Terry, 2026-11-14, card #0019; RFC 2119 keywords, the capitals are
-  load-bearing).** Every change MUST be authorized by a card on the `swimcoach` localswim board, and
-  every change, docs included, MUST reach `main` through a pull request; a direct commit to `main`
-  MUST NOT be made. When no card authorizes a change yet, the agent MUST create one first.
-  - **One branch per card, named for it:** each card's work MUST be done on its own branch,
+  load-bearing).** Every change MUST be authorized by a card on the `swimcoach` localswim board; when
+  no card authorizes a change yet, the agent MUST create one first. Every code change MUST reach
+  `main` through a pull request, and a code change MUST NOT be committed to `main` directly.
+  - **Docs go straight to `main`** (Terry, 2026-11-14: "only changes that need a branch and
+    independent review are code -- docs don't need that heavyweight process"). A change that touches
+    only documentation prose (Markdown such as `docs/`, `AGENTS.md`, READMEs) MUST be committed to
+    `main` directly and pushed; it MUST NOT go through a branch or a pull request ("Def don't branch
+    and PR that shit tho"). The agent MAY have an independent reviewer read it first, at its own
+    judgment (Terry: "that judgement call is delegated to you"). Its commit message SHOULD name the
+    card. Everything else is code here: source, tests, scripts, CI, and the
+    contract, schemas and UX ledger, which are the behavior and move with the acceptance suites.
+    When one change touches both, it is code.
+  - **One branch per card, named for it:** each card's code work MUST be done on its own branch,
     `localswim/<nnnn>-<short-description>`, cut from `main`, where `<nnnn>` is the card's four-digit
     ticket number (for example `localswim/0035-card-animations`). Terry: "I like branches with a 1:1
     tie to 'what authorized this work'."
