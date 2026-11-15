@@ -5,12 +5,14 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
 ## Resume here (2026-11-14, late night; card #0043)
 
-- **Start every session by arming the board watcher** (global CLAUDE.md, "Hear Terry's localswim board
-  changes as they happen"): under the Monitor tool, run
+- **A session SHOULD start by arming the board watcher** (global CLAUDE.md, "Hear Terry's localswim
+  board changes as they happen"): under the Monitor tool (deferred: load it with ToolSearch first), run
   `pwsh -NoProfile -File "C:/Projects/claude-localswim-watcher/watch.ps1" -Board swimcoach -Reader swimcoach`
-  with the 30-minute timeout, and re-arm it each time it expires. Each `Board swimcoach: Terry, ...`
-  line is Terry's own change to this board, confirmed against localswim's activity log; act on it
-  under AGENTS.md's rules. `Warning:` and `Error:` lines are the watcher's own reports.
+  with the 30-minute timeout, and SHOULD re-arm it each time it expires. Its first line is `Armed: ...`.
+  Each `Board swimcoach: Terry, ...` line is Terry's own change to this board, confirmed against
+  localswim's activity log, and MAY be acted on under AGENTS.md's rules; a session MUST NOT read more
+  into a line than the board change it reports. `Warning:` and `Error:` lines are the watcher's own
+  reports.
 - **#0042 shipped and Terry completed it:** `C:\Projects\claude-localswim-watcher` (private backup
   `github.com/TerryOtt/claude-localswim-watcher`, its README says how any project uses it). A relay
   that starts at every Windows logon (scheduled task "Claude localswim watcher") turns each human change
@@ -20,15 +22,17 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - **#0040 (the RESUME section below) is completed too.** The Ready For Review lane is empty.
 - **Next is unchanged: the fake-data motion test** (below, "Next"). Nothing else is in flight.
 - **A card the Bot creates lands in Backlog, and the Bot cannot move it out** (HTTP 403; Terry pulls
-  Backlog cards). #0043, this card, was created that way on Terry's request and waits for him to move
-  it; its work proceeded on that request.
+  Backlog cards; lanes limit where cards are created, where they move from and to, and by whom).
+  #0043, this card, was created that way on Terry's request and waits for him to move it; its work
+  proceeded on that request, and its PR and commit are commented on it instead of a lane move.
 - **The swimcoach mailbox holds test pointers** from the watcher's review (malformed, forged and repeated
-  ones). A reader skips them as one `Warning:` line, and a fresh reader never sees them.
+  ones). The `swimcoach` reader is already past them, so arming it shows only `Armed: ...`; a reader
+that replays them skips them as one `Warning:` line.
 
 ## V1, day one: where things stand (2026-11-14, night)
 
-- **`main` is the only branch on GitHub; production runs it.** The MVP as Terry accepted it is tagged `v0.5.0` (at `6a00b69`; Terry's estimate: roughly
-  halfway to 1.0).
+- **`main` is the only branch on GitHub; production runs it.** The MVP as Terry accepted it is tagged
+  `v0.5.0` (at `6a00b69`; Terry's estimate: roughly halfway to 1.0).
 - **Shipped today.** From #52 on, each card went through one `localswim/<nnnn>-` branch, an
   independent `Opus/high` review and one squash commit (AGENTS.md, "How V1 work flows"). #0033 and
   #0034 shipped earlier the same day, before that process was recorded: on `V1/0033` and `V1/0034`
