@@ -6,7 +6,7 @@
 import { syncBreath, ui } from "./dom.js";
 import { ALL, esc } from "./format.js";
 import { morph } from "./morph.js";
-import { motionAllowed, play, snapshot } from "./motion.js";
+import { clearGhosts, motionAllowed, play, snapshot } from "./motion.js";
 import { fitCards, renderOverview, slotKey } from "./overview.js";
 import { renderProject } from "./project.js";
 
@@ -23,6 +23,7 @@ import { renderProject } from "./project.js";
  *   whenever the page MUST NOT move (UX-182)
  */
 function drawOverview(el, view, overviewInView) {
+  clearGhosts(el);
   let before = null;
   if (el.hasChildNodes() && motionAllowed(overviewInView)) {
     before = snapshot(el);
@@ -137,11 +138,15 @@ export function onKey(e) {
  */
 export function render(view) {
   const want = [ALL, ...view.cards.map((c) => c.key)];
-  let target = keys()[current()] ?? ALL;
+  const shown = keys()[current()] ?? ALL;
+  // Motion plays only when the overview was already the display on screen as this poll landed. When
+  // the project display being read goes away, the viewer is moved to the overview below, but the
+  // overview was off screen until then, so nothing on it moves (UX-182).
+  const overviewInView = shown === ALL;
+  let target = shown;
   if (!want.includes(target)) {
     target = ALL;
   }
-  const overviewInView = target === ALL;
   /** @type {{ el: HTMLElement, before: Snapshot }|null} */
   let motion = null;
   for (const [i, el] of placeSections(want).entries()) {

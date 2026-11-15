@@ -64,7 +64,24 @@ function placeOf(el) {
  * @returns {boolean}
  */
 function motionAllowed(overviewInView) {
-  return overviewInView && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // A hidden tab can hold back an exit's finish event, and the ghost with it, so it does not move.
+  return (
+    overviewInView &&
+    !document.hidden &&
+    !matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+/**
+ * Removes every ghost still on the page. Runs first in every overview draw, moving or not, so a poll
+ * that lands mid-exit never morphs, measures or fits a ghost as real content; the cut-short exit ends
+ * where it is.
+ * @param {Element} section  the overview's section
+ */
+function clearGhosts(section) {
+  for (const ghost of section.querySelectorAll(":scope > .ghost")) {
+    ghost.remove();
+  }
 }
 
 /**
@@ -75,14 +92,14 @@ function motionAllowed(overviewInView) {
 function snapshot(section) {
   /** @type {Map<string, Place>} */
   const slots = new Map();
-  for (const el of section.querySelectorAll(":scope > .cards > .pc")) {
+  for (const el of section.querySelectorAll(":scope > .cards:not(.ghost) > .pc")) {
     const key = slotKey(el);
     if (key !== null) {
       slots.set(key, placeOf(el));
     }
   }
-  const grid = section.querySelector(":scope > .cards");
-  const bar = section.querySelector(":scope > .donebar");
+  const grid = section.querySelector(":scope > .cards:not(.ghost)");
+  const bar = section.querySelector(":scope > .donebar:not(.ghost)");
   let barPlace = null;
   if (bar !== null) {
     barPlace = placeOf(bar);
@@ -122,6 +139,8 @@ function ghostOf(section, place, gridClass) {
   const { el } = place;
   if (gridClass === "") {
     el.setAttribute("style", at);
+    // Marked like a card's wrapper, so clearGhosts(), snapshot() and fitCards() all pass it over.
+    el.classList.add("ghost");
     section.append(el);
     return { moving: el, outer: el };
   }
@@ -311,4 +330,4 @@ function play(section, before) {
   playArrivals(section, before, after, delay);
 }
 
-export { motionAllowed, play, snapshot };
+export { clearGhosts, motionAllowed, play, snapshot };

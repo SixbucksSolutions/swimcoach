@@ -98,7 +98,7 @@ export function fakePage(height: number, cards: ReturnType<typeof fakeCards> | n
   return Object.assign(new FakeHtmlElement(), {
     clientHeight: height,
     querySelector: (selector: string) => {
-      if (selector === ".cards") {
+      if (selector === ".cards:not(.ghost)") {
         return cards;
       }
       return null;

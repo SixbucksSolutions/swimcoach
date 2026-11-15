@@ -86,7 +86,7 @@ function named(ctx: UiContext, name: string): string {
   return titleOf(ctx, pick("green", name));
 }
 
-export const motionCases: UiCase[] = [
+const motionCases: UiCase[] = [
   {
     ids: ["UX-177"],
     title:
@@ -191,6 +191,8 @@ export const motionCases: UiCase[] = [
       const sink = moveOf(await movesOf(ctx), "GO CODE REVIEW");
       assert.match(sink.to, /^translateY\(\d/u, "Back down.");
       assert.equal(sink.easing, "ease-in");
+      await pause(GHOST_GONE_MS);
+      assert.equal(await ctx.page.locator(".donebar").count(), 0, "The sunk line's ghost is gone.");
     },
   },
   {
@@ -254,3 +256,5 @@ export const motionCases: UiCase[] = [
     },
   },
 ];
+
+export { changeTo, GHOST_GONE_MS, motionCases, type Move, movesOf, RECORDER };

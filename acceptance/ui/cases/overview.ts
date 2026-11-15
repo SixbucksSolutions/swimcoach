@@ -12,6 +12,7 @@ import { keyboardCases } from "./overview-keyboard.ts";
 import { layoutCases } from "./overview-layout.ts";
 import { loadCases } from "./overview-load.ts";
 import { motionCases } from "./overview-motion.ts";
+import { motionEdgeCases } from "./overview-motion-edges.ts";
 import { slotCases } from "./overview-slots.ts";
 import { smallCases } from "./overview-small.ts";
 import { statusCases } from "./overview-status.ts";
@@ -31,6 +32,7 @@ const overviewCases: UiCase[] = [
   ...loadCases,
   ...alertCases,
   ...motionCases,
+  ...motionEdgeCases,
 ];
 
 export { overviewCases };
