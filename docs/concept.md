@@ -134,7 +134,8 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 - **Mark and wordmark (Terry, 2026-11-15, card #0048).** The mark is 34 px, the bell's height, and the
   wordmark 22 px, so the Status line stays 52 px tall and the Card display area keeps its height
   (UX-199). 22 px is the widest wordmark that keeps 35 px from an all-done board's "LIVE 12h 05m",
-  which is what Terry sees in the morning: a finished board never turns STALE, so its age keeps growing. A tap on either goes back to the overview from any project display, as "All projects"
+  which is what Terry sees in the morning: a finished board never turns STALE, so its age keeps
+  growing. A tap on either goes back to the overview from any project display, as "All projects"
   does; on the overview it does nothing (UX-200).
 - **No clock (Terry, 2026-11-15, card #0046).** The Status line MUST NOT show a clock: the iPhone's
   own status bar already shows the time, so ours was redundant (UX-193). Until then the clock sat left

@@ -19,10 +19,14 @@ const homeCases: UiCase[] = [
       await pause(GLIDE_MS);
       assert.equal(await scrollLeft(ctx.page), 0, "On the overview, the tap starts no glide.");
       assert.equal(await shown(ctx.page), OVERVIEW, "On the overview, the tap stays there.");
+      await tapDot(ctx.page, 1);
+      await settleOn(ctx.page, 1);
+      const onFirst = await scrollLeft(ctx.page);
       await ctx.page.locator("#health").tap();
       await ctx.page.locator("#snd").tap();
+      await ctx.page.locator("#snd").tap();
       await pause(GLIDE_MS);
-      assert.equal(await scrollLeft(ctx.page), 0, "The Health box and bell do not navigate.");
+      assert.equal(await scrollLeft(ctx.page), onFirst, "The Health box and bell do not navigate.");
       for (const [index, part] of [
         [1, "header h1 .word"],
         [4, "#brand"],
