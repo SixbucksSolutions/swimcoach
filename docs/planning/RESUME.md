@@ -143,7 +143,10 @@ that replays them skips them as one `Warning:` line.
 - **Every localswim call MUST go through `scripts/localswim.ps1`**, which runs the CLI as Bot with
   the token at Process scope for one run (Terry granted reading the Bot credential, 2026-11-14). The
   service runs from `C:\Projects\localswim`, its code, at `127.0.0.1:8811`, with its data in the
-  localswim state store; the script reads `runtime\service.json` there (Terry, 2026-11-15, card #0052:
+  localswim state store. The script reads the service receipt from
+  `%LOCALAPPDATA%\localswim-v2\service.json`, where Terry moved it on 2026-11-15 so a `git clean` in the
+  localswim repo cannot delete it, and falls back to the repo's old `runtime\service.json` (card #0053;
+  card #0052:
   `C:\Projects\localswim-v2`, the earlier installed build, is retired and kept in
   `C:\Projects\localswim-recovered`). The live Bot and human credentials still live under
   `%LOCALAPPDATA%\localswim-v2\credentials`, named by the receipt's `credential_directory`; they
