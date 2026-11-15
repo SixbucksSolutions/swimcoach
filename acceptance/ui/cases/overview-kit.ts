@@ -24,6 +24,10 @@ const COLOR = {
   offline: "rgb(153, 27, 27)", // #991B1B, OFFLINE and SIGN IN box
   laneBlue: "rgb(133, 184, 255)", // --lane-blue #85B8FF, "swim"
   laneAmber: "rgb(226, 161, 0)", // --lane-amber #E2A100, "coach"
+  bg: "rgb(11, 15, 20)", // --bg #0B0F14, page; the bell when alerts are on
+  panel: "rgb(19, 26, 34)", // --panel #131A22, tiles; the bell's disc when alerts are off
+  line: "rgb(36, 49, 64)", // --line #243140, borders; the bell's ring when alerts are off
+  text: "rgb(232, 238, 244)", // --text #E8EEF4, primary text; the bell's disc when alerts are on
 } as const;
 
 const POLL_MS = 30_000;

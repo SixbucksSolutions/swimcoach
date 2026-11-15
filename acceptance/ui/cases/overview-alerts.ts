@@ -4,7 +4,16 @@
 // heard. The recorder takes a pitch however the page sets it: `.value`, `setValueAtTime` or a ramp.
 import assert from "node:assert/strict";
 import type { UiCase, UiContext } from "../types.ts";
-import { board, type Json, openWith, pageErrors, pause, pick, pollOnce } from "./overview-kit.ts";
+import {
+  board,
+  COLOR,
+  type Json,
+  openWith,
+  pageErrors,
+  pause,
+  pick,
+  pollOnce,
+} from "./overview-kit.ts";
 import { tapCard, viewing } from "./overview-nav.ts";
 import { contrast, probe } from "./overview-probe.ts";
 
@@ -81,12 +90,6 @@ async function tapBell(ctx: UiContext): Promise<void> {
   await ctx.page.locator("#snd").click();
 }
 
-/** brand.md section 5 tokens, as `getComputedStyle` reports them. */
-const BG = "rgb(11, 15, 20)";
-const PANEL = "rgb(19, 26, 34)";
-const DIM = "rgb(147, 163, 179)";
-const TEXT = "rgb(232, 238, 244)";
-
 function bellOf(ctx: UiContext): Promise<{
   text: string;
   paths: number;
@@ -115,11 +118,12 @@ const alertCases: UiCase[] = [
       const on = await bellOf(ctx);
       assert.equal(on.paths, 2, "On: the plain bell.");
       assert.equal(on.label, "Alerts on");
-      assert.equal(off.fill, PANEL, "Off: the disc is --panel.");
-      assert.equal(off.ink, DIM, "Off: the bell is --dim.");
-      assert.equal(on.fill, TEXT, "On: the disc is --text.");
-      assert.equal(on.ring, TEXT, "On: the ring matches the disc.");
-      assert.equal(on.ink, BG, "On: the bell is --bg.");
+      assert.equal(off.fill, COLOR.panel, "Off: the disc is --panel.");
+      assert.equal(off.ring, COLOR.line, "Off: the ring is --line.");
+      assert.equal(off.ink, COLOR.dim, "Off: the bell is --dim.");
+      assert.equal(on.fill, COLOR.text, "On: the disc is --text.");
+      assert.equal(on.ring, COLOR.text, "On: the ring matches the disc.");
+      assert.equal(on.ink, COLOR.bg, "On: the bell is --bg.");
       assert.ok(
         contrast(on.fill, off.fill) >= 7,
         `On and off discs differ at a glance (${contrast(on.fill, off.fill).toFixed(2)}:1).`,
