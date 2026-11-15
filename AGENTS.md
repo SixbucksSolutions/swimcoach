@@ -65,6 +65,24 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 
 ## Working agreements
 
+- **How V1 work flows (Terry, 2026-11-14, card #0019; RFC 2119 keywords, the capitals are
+  load-bearing).** Every change MUST be authorized by a card on the `swimcoach` localswim board, and
+  every change, docs included, MUST reach `main` through a pull request; a direct commit to `main`
+  MUST NOT be made. When no card authorizes a change yet, the agent MUST create one first.
+  - **One branch per card, named for it:** `localswim/<nnnn>-<short-description>`, where `<nnnn>` is
+    the card's four-digit ticket number (for example `localswim/0035-card-animations`), cut from
+    `main`. Terry: "I like branches with a 1:1 tie to 'what authorized this work'."
+  - **Review:** every pull request MUST pass an independent review by Opus 5.5 at high effort, a
+    reviewer that did not write the change. Terry: "as long as PR's pass an Opus 5.5/High
+    independent review they can always be a) merged; and B) pushed to prod."
+  - **Merge and ship:** once the review passes and CI's `check` passes, the agent squash-merges the
+    pull request into `main` (`gh pr merge --squash --delete-branch`), and CI deploys it to
+    production. Neither step waits for Terry.
+  - **The card:** In Progress while the branch is open; Ready For Review once the change is merged and
+    deployed, with a comment naming the pull request and the commit. Terry looks at the result and
+    moves the card to Completed; only he can.
+  - The MVP's relay rules (`docs/planning/mvp-staffing-plan.md`) and its `mvp/integration` branch are
+    history; they do not bind V1.
 - **Push every commit to GitHub right away.** The repo is public and pushes are Terry's backups.
 - **`C:\Projects\swimcoach` on Terry's laptop is the authoritative working copy.** Keep it and
   `github.com/SixbucksSolutions/swimcoach` in sync; after pushing from anywhere else, pull it there.

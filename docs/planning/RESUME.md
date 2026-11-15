@@ -5,6 +5,11 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
 ## V1 started (2026-11-14, evening)
 
+- **V1's process is settled (card #0019, Terry, 2026-11-14); `AGENTS.md`, "How V1 work flows", is
+  the rule.** In short: one `localswim/<nnnn>-<short-description>` branch per card, a pull request to
+  `main`, an independent Opus 5.5 / high review, then the agent squash-merges and CI ships it, and the
+  card goes to Ready For Review for Terry. No direct commits to `main`.
+
 - **Terry accepted the MVP (2026-11-14 evening: "Accept, all rows Yes").** MVP-12 is done. All 136
   live UX ledger rows changed from `Pending` to `Yes` and are V1's requirements; the 35 superseded or
   retired rows are unchanged. Card #0017 records it. Device check step 8 (#0020) and the first real
