@@ -6,8 +6,10 @@ Runs the shared localswim service's CLI as Bot, with the Bot token for this one 
 .DESCRIPTION
 swimcoach's own work is tracked as cards on the "swimcoach" board of Terry's shared localswim
 service. The service runs from C:\Projects\localswim, its code; its data is in the localswim state
-store (Terry, 2026-11-15, after C:\Projects\localswim-v2 was retired). Its receipt,
-runtime\service.json, gives the base URL and the directory holding the DPAPI-protected credentials.
+store (Terry, 2026-11-15, after C:\Projects\localswim-v2 was retired). Its receipt, service.json,
+gives the base URL and the directory holding the DPAPI-protected credentials. The receipt lives in
+%LOCALAPPDATA%\localswim-v2, moved there on 2026-11-15 out of the localswim repo's runtime folder,
+where a git clean could delete it; the script tries that first and the old runtime copy second.
 
 This script reads the receipt, decrypts bot.xml, sets LOCALSWIM_URL and LOCALSWIM_TOKEN at Process
 scope, runs localswim.exe with every argument it was given, and then clears both variables. It
@@ -25,12 +27,19 @@ $ErrorActionPreference = 'Stop'
 
 $serviceRoot = 'C:\Projects\localswim'
 $exe = Join-Path $serviceRoot 'localswim.exe'
-$receiptFile = Join-Path $serviceRoot 'runtime\service.json'
+if (-not (Test-Path -LiteralPath $exe)) {
+    throw "Missing $exe. See docs/planning/RESUME.md for how swimcoach uses localswim."
+}
 
-foreach ($file in $exe, $receiptFile) {
-    if (-not (Test-Path -LiteralPath $file)) {
-        throw "Missing $file. See docs/planning/RESUME.md for how swimcoach uses localswim."
-    }
+# Newest home first; the first receipt that exists wins (card #0053).
+$receiptCandidates = @()
+if ($env:LOCALAPPDATA) {
+    $receiptCandidates += Join-Path $env:LOCALAPPDATA 'localswim-v2\service.json'
+}
+$receiptCandidates += Join-Path $serviceRoot 'runtime\service.json'
+$receiptFile = $receiptCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+if ($null -eq $receiptFile) {
+    throw "Missing the localswim service receipt; tried $($receiptCandidates -join ', '). See docs/planning/RESUME.md."
 }
 
 $receipt = [IO.File]::ReadAllText($receiptFile) | ConvertFrom-Json
