@@ -226,3 +226,6 @@ export function mayReload(lastReloadMs, nowMs) {
   }
   return nowMs - lastReloadMs >= AUTH_RELOAD_GAP_MS || nowMs < lastReloadMs;
 }
+
+/** For the breath check (test/page/breath-window.test.ts, UX-210). */
+export { OFFLINE_AFTER_MS };
