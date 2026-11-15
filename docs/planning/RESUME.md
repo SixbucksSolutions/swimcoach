@@ -142,13 +142,17 @@ that replays them skips them as one `Warning:` line.
   that can wait sit in Backlog.
 - **Every localswim call MUST go through `scripts/localswim.ps1`**, which runs the CLI as Bot with
   the token at Process scope for one run (Terry granted reading the Bot credential, 2026-11-14). The
-  service runs from `C:\Projects\localswim-v2` (the installed build, `127.0.0.1:8811`); the source repo
-  is `C:\Projects\localswim`, where only UI work is under way. Bot MAY create cards in Backlog, Ready
-  For Work, Blocked and Needs Terry and move them up to Ready For Review; only Terry moves a card to
-  Completed.
-- **The board in a browser:** `http://127.0.0.1:8811/boards/62728944-eac7-482c-bd46-4d8f206e5381` on
-  the installed build (checked 2026-11-14). The new localswim UI under construction uses `/board/<id>`
-  (singular); once that build is activated, the bookmark changes to match.
+  service runs from `C:\Projects\localswim`, its code, at `127.0.0.1:8811`, with its data in the
+  localswim state store; the script reads `runtime\service.json` there (Terry, 2026-11-15, card #0052:
+  `C:\Projects\localswim-v2`, the earlier installed build, is retired and kept in
+  `C:\Projects\localswim-recovered`). The live Bot and human credentials still live under
+  `%LOCALAPPDATA%\localswim-v2\credentials`, named by the receipt's `credential_directory`; they
+  MUST NOT be removed with the retired build. Bot MAY create cards in Ready For Work, Blocked and Needs Terry
+  and move them up to Ready For Review; Backlog is Terry's (2026-11-15), and only Terry moves a card
+  to Completed.
+- **The board in a browser:** `http://127.0.0.1:8811/board/62728944-eac7-482c-bd46-4d8f206e5381`.
+  Since 2026-11-15 the service runs the build in `C:\Projects\localswim`, which answers both
+  `/board/<id>` and the earlier `/boards/<id>` (checked by the PR #68 review).
 - **Baseline re-verified at `4f7237f`:** `npm run check` (1,470 tests), API `--suite full` on
   `swimcoach-test` 68/68, UI 118/118 on both Workers. API `clock-free` on production was skipped on
   purpose so no `zz acceptance` card lands on the live board beside a real agent.
@@ -534,10 +538,12 @@ service tokens, and the Worker's first `workers.dev` deploy. Prepare each step a
      and `LOCALSWIM_TOKEN` (`docs/windows-operations.md`). The help is multi-level: append `--help` to
      an object or action.
    - The reporter MUST NOT parse JSON files, and MUST NOT use any other localswim copy:
-     not `localswim-v2` (corrected 2026-11-14: `C:\Projects\localswim-v2` is the live installed
-     service, which `scripts/localswim.ps1` uses; this rule was written for a reporter that was never
-     built), not `localswim-legacy-v1`, not `localswim-state-store` (V1, before the
-     cutover), and not the uv-installed `localswim` on `PATH`, a broken Python V1 install whose
+     not `localswim-v2` (corrected 2026-11-14: `C:\Projects\localswim-v2` was then the live installed
+     service, which `scripts/localswim.ps1` used until card #0052 moved it to `C:\Projects\localswim`
+     on 2026-11-15; this rule was written for a reporter that was never built), not
+     `localswim-legacy-v1`, not `localswim-state-store` (V1, before the
+     cutover; since 2026-11-15 the live service keeps its data in a localswim state store, which this
+     rule never meant), and not the uv-installed `localswim` on `PATH`, a broken Python V1 install whose
      `localswim.pth` points at the removed `C:\Projects\localswim\src`.
    - **Superseded the same day by Terry's data path** (now in `mvp-stories.md` MVP-06): cards are not
      tied to time blocks, and there is **no relay**. Each running project's own agent, in Codex or
