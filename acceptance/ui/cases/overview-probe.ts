@@ -163,6 +163,7 @@ const inView = () => qa('#pages > section.page').find((s) => Math.abs(s.getBound
 const litDot =(lit) => qa('#dots button i').findIndex((i) => cs(i).backgroundColor === lit);
 const wordmark = () => ({
   text: q('header h1').textContent, swim: cs(q('header h1 .word')).color, coach: cs(q('header h1 .word span')).color,
+  size: num(cs(q('header h1 .word')).fontSize),
 });
 const texts = () => ({
   foot: qa('.foot').map((e) => e.textContent).join('|'),

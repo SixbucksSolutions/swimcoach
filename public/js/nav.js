@@ -223,7 +223,7 @@ export function fitOverview() {
   }
 }
 
-/** @param {Event} e   a tap on a card, the back link or a dot */
+/** @param {Event} e   a tap on a card, the back link, the mark and wordmark, or a dot */
 export function onTap(e) {
   const { target } = e;
   if (!(target instanceof Element)) {

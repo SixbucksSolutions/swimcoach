@@ -7,6 +7,7 @@ import { tapCard, viewing } from "./overview-nav.ts";
 import { healthOf, probe, runningBreaths, statusBoxesOf, styleOf } from "./overview-probe.ts";
 
 const HEADER_HEIGHT = 52;
+const IDLE_AGE_SECONDS = (12 * 60 + 5) * 60;
 const GUTTER = 14;
 const PAGE_WIDTH = 402;
 
@@ -87,19 +88,38 @@ const statusCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-005"],
-    title: "The mark sits beside the wordmark at 26 px",
+    ids: ["UX-199"],
+    title: "The mark is 34 px and the wordmark 22 px, and the Status line stays 52 px tall",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       const s = await statusBoxesOf(ctx.page);
-      near(s.brand.w, 26, 0.5, "mark width");
-      near(s.brand.h, 26, 0.5, "mark height");
+      near(s.brand.w, 34, 0.5, "mark width");
+      near(s.brand.h, 34, 0.5, "mark height");
+      const marks = await probe<{ size: number }>(ctx.page, "wordmark()");
+      near(marks.size, 22, 0.1, "wordmark size");
+      assert.equal(s.header.h, HEADER_HEIGHT, "The Card display area loses no height.");
       const image = await styleOf(ctx.page, "#brand", "backgroundImage");
       assert.notEqual(image, "none", "The mark is drawn.");
       assert.ok(
         s.brand.r <= s.wordmark.r && s.brand.x >= s.wordmark.x,
         "The mark is in the wordmark group.",
       );
+    },
+  },
+  {
+    ids: ["UX-199"],
+    title: "An all-done board's LIVE 12h 05m keeps at least 35 px from the wordmark",
+    async run(ctx) {
+      await openWith(ctx, older(ctx.example("alldone"), IDLE_AGE_SECONDS));
+      const h = await healthOf(ctx.page);
+      assert.equal(h.label, "LIVE", "An all-done board stays LIVE as it ages.");
+      assert.equal(h.age, "12h 05m");
+      const s = await statusBoxesOf(ctx.page);
+      assert.ok(
+        s.health.x - s.wordmark.r >= 34,
+        `At least 35 px between wordmark and Health box (${(s.health.x - s.wordmark.r).toFixed(1)}).`,
+      );
+      assert.equal(s.header.h, HEADER_HEIGHT, "The Status line keeps one row.");
     },
   },
   {

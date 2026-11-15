@@ -3,6 +3,7 @@
 import type { UiCase } from "../types.ts";
 import { departedCases } from "./project-departed.ts";
 import { heroCases } from "./project-hero.ts";
+import { homeCases } from "./project-home.ts";
 import { laneCases } from "./project-lanes.ts";
 import { navCases } from "./project-nav.ts";
 import { sectionCases } from "./project-sections.ts";
@@ -13,6 +14,7 @@ export const projectCases: UiCase[] = [
   ...sectionCases,
   ...laneCases,
   ...navCases,
+  ...homeCases,
   ...departedCases,
   ...smallCases,
 ];
