@@ -112,13 +112,14 @@ header {
 }
 
 /* The mark and wordmark (UX-199): the mark matches the bell's 34 px, so the Status line stays 52 px
-   tall and the Card display area keeps every pixel. A tap on them goes to the overview (UX-200). */
+   tall and the Card display area keeps every pixel. 22 px is the widest wordmark that keeps 35 px from
+   an all-done board's "LIVE 12h 05m". A tap on them goes to the overview (UX-200). */
 header h1 {
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 22px;
   margin: 0;
   font-weight: 700;
   letter-spacing: 0.02em;

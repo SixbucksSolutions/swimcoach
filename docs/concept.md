@@ -132,8 +132,9 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 - **Layout, left to right:** mark and wordmark alone on the left; then, locked together on the right,
   the **health box** and the alerts bell, 8 px apart (UX-192).
 - **Mark and wordmark (Terry, 2026-11-15, card #0048).** The mark is 34 px, the bell's height, and the
-  wordmark 24 px, so the Status line stays 52 px tall and the Card display area keeps its height
-  (UX-199). A tap on either goes back to the overview from any project display, as "All projects"
+  wordmark 22 px, so the Status line stays 52 px tall and the Card display area keeps its height
+  (UX-199). 22 px is the widest wordmark that keeps 35 px from an all-done board's "LIVE 12h 05m",
+  which is what Terry sees in the morning: a finished board never turns STALE, so its age keeps growing. A tap on either goes back to the overview from any project display, as "All projects"
   does; on the overview it does nothing (UX-200).
 - **No clock (Terry, 2026-11-15, card #0046).** The Status line MUST NOT show a clock: the iPhone's
   own status bar already shows the time, so ours was redundant (UX-193). Until then the clock sat left
@@ -150,8 +151,9 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 - **The health box shows an age only when LIVE** (from 1 minute, for example "LIVE 7m"). STALE and
   OFFLINE show just the word: the warning line under the status line already gives the exact duration,
   and "OFFLINE 1h 05m" beside a "12:47pm" clock overflowed the status line at 402 px. With the word
-  alone, that worst case kept 35 px between the wordmark and the clock; without the clock the gap to
-  the health box only grows (UX-195).
+  alone, that worst case kept 35 px between the wordmark and the clock (UX-195, now measured to the
+  health box). Since the bigger wordmark (#0048), the widest everyday box is an all-done board's
+  "LIVE 12h 05m", held to the same 35 px (UX-199).
 - **Health box.** This was a firm requirement: "nothing sucks worse than a dashboard that says all good
   in the hood but it's because it stopped updating yesterday."
 
@@ -754,7 +756,7 @@ confirmed by Terry yet; each is up for review in the mock.
 | Overview trend arrows sit on a clock around the RTR's final digit (12 strong up, 1:30 up, 3 flat, 4:30 down, 6 hard down) instead of beside the number | Terry's idea, 2026-11-13, tried in the mock because "changes are cheap". Section 3.2 has the details. **Confirmed by Terry** |
 | The mock's 45 one-off colors folded into a token palette: four brand colors from the mark, a slate ramp that includes the mark's grays, and status colors. Good news becomes lane green (`--ok` `#4BCE97`, fill `#1B6445`, white 7.11:1 AAA); done becomes quiet slate; the teal accent becomes lane blue | Terry, 2026-11-13: "now that we're building a brand palette, let's use it." See `docs/brand.md` section 5. **Confirmed by Terry** |
 | Wordmark recolored: "swim" in lane blue `#85B8FF`, "coach" in lane amber `#E2A100`, replacing white plus teal `#5eead4` | Terry, 2026-11-13, chose W2 of four measured pairs. Both colors come from the mark; see `docs/brand.md` section 3. **Confirmed by Terry** |
-| A swimcoach mark replaces the wave favicon: the localswim mark, unchanged, on a stack of two gray boards stepping up and right. It is the favicon, the iPhone home-screen icon, and a 26 px mark beside the wordmark | Terry, 2026-11-13: swimcoach watches many localswim boards, and its logo should come from the same family. Chosen from four design rounds; see `design/logo/README.md`. **Confirmed by Terry** |
+| A swimcoach mark replaces the wave favicon: the localswim mark, unchanged, on a stack of two gray boards stepping up and right. It is the favicon, the iPhone home-screen icon, and a 26 px mark beside the wordmark (34 px since #0048) | Terry, 2026-11-13: swimcoach watches many localswim boards, and its logo should come from the same family. Chosen from four design rounds; see `design/logo/README.md`. **Confirmed by Terry** |
 | Text set in the Inter typeface (v4.1, Latin subset, embedded in the mock) instead of the system font | Terry's choice, 2026-11-13. Embedded as a data URI so the mock stays one file with no network. OFL 1.1 credit in `THIRD-PARTY-NOTICES.md` and `third_party/inter/`. **Confirmed by Terry** |
 | One good-news fill: the LIVE box and green cards both use `--ok-fill` `#166534` with pure white text; green-card subtitles lose their 85% opacity | Terry, 2026-11-13: the LIVE box (`#166534`) and the cards (`#15803d`) were two near-identical greens. He asked for one green, kept white on green, and set WCAG AAA for that pairing. White on `#15803d` measured 5.02:1, and the 85% white subtitles 4.09:1, which fails even AA. White on `#166534` measures 7.13:1. **Confirmed by Terry** |
 
