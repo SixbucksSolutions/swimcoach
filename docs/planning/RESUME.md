@@ -28,6 +28,9 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   is `C:\Projects\localswim`, where only UI work is under way. Bot MAY create cards in Backlog, Ready
   For Work, Blocked and Needs Terry and move them up to Ready For Review; only Terry moves a card to
   Completed.
+- **The board in a browser:** `http://127.0.0.1:8811/boards/62728944-eac7-482c-bd46-4d8f206e5381` on
+  the installed build (checked 2026-11-14). The new localswim UI under construction uses `/board/<id>`
+  (singular); once that build is activated, the bookmark changes to match.
 - **Baseline re-verified at `4f7237f`:** `npm run check` (1,470 tests), API `--suite full` on
   `swimcoach-test` 68/68, UI 118/118 on both Workers. API `clock-free` on production was skipped on
   purpose so no `zz acceptance` card lands on the live board beside a real agent.

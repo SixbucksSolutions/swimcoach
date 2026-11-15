@@ -655,8 +655,11 @@ SQLite file, WAL mode, default `data/swimcoach.db`.
     to code review a four hour chunk of work which is definitely not something I do on my phone." That
     would revise D3 ("Ready For Review alone is not a request"), under which a done card stays quiet
     slate. Not decided. Card #0034 on the `swimcoach` localswim board builds the quiet version first: done
-    cards leave the grid for a "Done: N" line above the page dots, a nudge to review and then have the
-    agent send `stop`.
+    cards leave the grid for a slate "GO CODE REVIEW · N" line above the page dots (UX-175), a nudge to
+    review and then have the agent send `stop`. Two constraints, Terry, 2026-11-14: "slate feels right.
+    Red means 'blocked' so we need another action color", so if done becomes a call it MUST get an
+    action color of its own, never red; and a GO CODE REVIEW slot at the top, like GO TO KEYBOARD, MAY
+    come "in the future not now".
 
 ## 9. Design history (superseded; source not kept)
 

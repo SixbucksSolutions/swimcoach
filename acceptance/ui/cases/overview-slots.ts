@@ -230,7 +230,8 @@ const slotCases: UiCase[] = [
         "qa('body > *').filter((e) => cs(e).display !== 'none' && !['SCRIPT', 'STYLE'].includes(e.tagName)).length",
       );
       assert.equal(siblings, 1, "Nothing but the column is on the page.");
-      assert.equal((await cardsOf(ctx.page)).length, 6);
+      // GO TO KEYBOARD and four running Cards; the done milestone is on the GO CODE REVIEW line.
+      assert.equal((await cardsOf(ctx.page)).length, 5);
     },
   },
 ];

@@ -109,7 +109,8 @@ const loadCases: UiCase[] = [
       assert.equal(hidden.loading, true, "The page is hidden while the clock is paused.");
       assert.equal(hidden.opacity, "0");
       const rev = await untilRevealed(ctx);
-      assert.equal(rev.cards, 6, "Every Card was drawn before the reveal.");
+      // GO TO KEYBOARD and four running Cards; the done milestone is on the GO CODE REVIEW line.
+      assert.equal(rev.cards, 5, "Every Card was drawn before the reveal.");
       assert.equal(rev.fonts, "loaded", "The font was ready at the reveal.");
       assert.ok(
         rev.clock !== "" && rev.health === "LIVE",
@@ -163,7 +164,7 @@ const loadCases: UiCase[] = [
       assert.ok(rev.started !== null, "The page's script started.");
       near(rev.t - rev.started, 3000, 300, "The reveal comes 3 s after the page's script starts");
       assert.notEqual(rev.fonts, "loaded", "The font really was stuck.");
-      assert.equal(rev.cards, 6, "The page is complete, in the fallback font.");
+      assert.equal(rev.cards, 5, "The page is complete, in the fallback font.");
       assert.equal(await probe<string>(ctx.page, "document.documentElement.className"), "");
     },
   },

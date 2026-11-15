@@ -49,7 +49,8 @@ describe("a card inserted mid-list (UX-135)", () => {
 
   it("does not animate cards one by one on the first render", async () => {
     await loadPage(fresh(afternoon));
-    expect(slots()).toHaveLength(6);
+    // GO TO KEYBOARD and the four running cards; the done milestone is on the GO CODE REVIEW line.
+    expect(slots()).toHaveLength(5);
     expect(stubs.animate).not.toHaveBeenCalled();
   });
 
@@ -104,7 +105,7 @@ describe("other arrivals (UX-135)", () => {
     stubs.reduceMotion = true;
     await loadPage(fresh(afternoon), withInserted(fresh(afternoon)));
     await vi.advanceTimersByTimeAsync(POLL_MS);
-    expect(slots()).toHaveLength(7);
+    expect(slots()).toHaveLength(6);
     expect(stubs.animate).not.toHaveBeenCalled();
   });
 });

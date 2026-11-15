@@ -93,7 +93,17 @@ export function fakeCards(count: number, names: FakeName[] = [], half = false) {
 
 /** A page `height` px tall, holding the grid (or none). */
 export function fakePage(height: number, cards: ReturnType<typeof fakeCards> | null) {
-  return Object.assign(new FakeHtmlElement(), { clientHeight: height, querySelector: () => cards });
+  // Only the grid exists on this stand-in page: no GO CODE REVIEW line (.donebar), as on a real page
+  // with nothing done.
+  return Object.assign(new FakeHtmlElement(), {
+    clientHeight: height,
+    querySelector: (selector: string) => {
+      if (selector === ".cards") {
+        return cards;
+      }
+      return null;
+    },
+  });
 }
 
 export interface Dom {

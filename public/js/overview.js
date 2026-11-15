@@ -38,17 +38,22 @@ const KBD_KEY = "*kbd*";
 // biome-ignore lint/security/noSecrets: display text for the empty state, not a secret.
 const EMPTY_STATE = '<div class="empty">No reports yet today.</div>';
 
+/** The card area when every tracked milestone is done, above the GO CODE REVIEW line (UX-176). */
+// biome-ignore lint/security/noSecrets: display text for the all-done state, not a secret.
+const NOTHING_RUNNING = '<div class="empty">Nothing running.</div>';
+
 /**
  * The Detail blurb under a card's Title line, or "" for none (concept.md 3.2).
  * Ratio mode: green shows nothing; every other level shows the words for its reason.
- * count_and_time mode (UX-131): "N of M done · H of C hrs", unless the card is done ("Done") or
- * silent (the silence); red never reaches here, because red cards leave the list.
+ * count_and_time mode (UX-131): "N of M done · H of C hrs", unless the card is silent (the silence).
+ * Red and done never reach here: red cards leave the list for GO TO KEYBOARD and done cards for the
+ * GO CODE REVIEW line (UX-173).
  * @param {CardView} card
  * @returns {string}
  */
 function blurb(card) {
   if (card.mode === "count_and_time") {
-    if (card.level === "done" || card.reason === "silent") {
+    if (card.reason === "silent") {
       return card.why;
     }
     return `${card.finished} of ${card.total} done · ${hoursOfCap(card.activeHours, card.capHours)} hrs`;
@@ -71,7 +76,7 @@ function renderCard(card) {
     detail = `<span>${esc(words)}</span>`;
   }
   let rtr = "";
-  if (card.rtr !== null && card.level !== "done") {
+  if (card.rtr !== null) {
     rtr = `<div class="rt">${clockRtr(card.rtr, card.dir)}</div>`;
   }
   return (
@@ -94,6 +99,26 @@ function renderKeyboard(red) {
   return (
     `<button class="pc kbd" data-go="${esc(first.key)}">` +
     `<div class="nm"><b>GO TO KEYBOARD</b><span>${names}</span></div></button>`
+  );
+}
+
+/**
+ * The GO CODE REVIEW line (UX-175, Terry's name for it): done milestones leave the grid and are
+ * counted here, a nudge to review the finished block and then have its agent send stop. It opens the
+ * first of them, as GO TO KEYBOARD opens the first red card. Slate, like the done card it replaces:
+ * red means blocked (Terry, 2026-11-14), and whether done becomes a call of its own, with its own
+ * action color, is open (concept.md section 8, item 15).
+ * @param {CardView[]} done  the done cards, in the server's order; none draws no line
+ * @returns {string}
+ */
+function renderDoneLine(done) {
+  const [first] = done;
+  if (!first) {
+    return "";
+  }
+  return (
+    `<div class="donebar"><button class="doneline" data-go="${esc(first.key)}">` +
+    `GO CODE REVIEW · ${done.length}</button></div>`
   );
 }
 
@@ -280,17 +305,13 @@ function isHalf(slots) {
 }
 
 /**
- * The overview page's inner HTML. Red cards leave the list into one GO TO KEYBOARD slot, first; the
- * other cards keep the server's order, which this function MUST NOT change (api.md 6.9).
- * @param {View} view
+ * The slot grid for the cards still running: GO TO KEYBOARD first when any is red, then the rest.
+ * @param {CardView[]} live  at least one card, none of them done
  * @returns {string}
  */
-export function renderOverview(view) {
-  if (view.cards.length === 0) {
-    return EMPTY_STATE;
-  }
-  const red = view.cards.filter((card) => card.level === "red");
-  const rest = view.cards.filter((card) => card.level !== "red");
+function renderGrid(live) {
+  const red = live.filter((card) => card.level === "red");
+  const rest = live.filter((card) => card.level !== "red");
   // `half` comes from the slot count here, as in the mock, so the markup already carries the class
   // that fitCards would set and a morph never strips it (UX-110).
   const slots = rest.length + Math.min(red.length, 1);
@@ -305,6 +326,25 @@ export function renderOverview(view) {
     html += renderCard(card);
   }
   return `${html}</div>`;
+}
+
+/**
+ * The overview page's inner HTML. Red cards leave the list into one GO TO KEYBOARD slot, first; done
+ * cards leave it into the GO CODE REVIEW line at the bottom (UX-173); the other cards keep the
+ * server's order, which this function MUST NOT change (api.md 6.9).
+ * @param {View} view
+ * @returns {string}
+ */
+export function renderOverview(view) {
+  if (view.cards.length === 0) {
+    return EMPTY_STATE;
+  }
+  const done = view.cards.filter((card) => card.level === "done");
+  const live = view.cards.filter((card) => card.level !== "done");
+  if (live.length === 0) {
+    return NOTHING_RUNNING + renderDoneLine(done);
+  }
+  return renderGrid(live) + renderDoneLine(done);
 }
 
 /**
@@ -359,10 +399,17 @@ export function fitCards(page) {
     cards.classList.toggle("half", half);
   }
   const computed = getComputedStyle(page);
+  // The Done line takes its own height, gap included, from the bottom of the card area (UX-175).
+  const bar = page.querySelector(".donebar");
+  let reserved = 0;
+  if (bar instanceof HTMLElement) {
+    reserved = bar.offsetHeight;
+  }
   const available =
     page.clientHeight -
     Number.parseFloat(computed.paddingTop) -
-    Number.parseFloat(computed.paddingBottom);
+    Number.parseFloat(computed.paddingBottom) -
+    reserved;
   const slot = Math.max(SLOT_MIN[rows], (available - (rows - 1) * SLOT_GAP) / rows);
   setPropertyIfChanged(cards.style, "--slot", `${slot.toFixed(2)}px`);
   fitNames(cards, half, basePx);

@@ -1,50 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { renderOverview } from "../../public/js/overview.js";
-import type { CardView, View } from "../../public/js/view.js";
+import type { CardView } from "../../public/js/view.js";
+import { card, keyOf, view } from "./overview-stand-ins.ts";
 
 // The overview display (public/js/overview.js). The renderer is pure, so these tests build View
 // literals and read the HTML it returns. fitCards, the one function that touches the DOM, is in
-// overview-fit.test.ts.
+// overview-fit.test.ts; done milestones and the GO CODE REVIEW line are in overview-done.test.ts.
 
 const BUTTON =
   /<button class="pc (?<cls>[a-z ]+)" data-go="(?<go>[^"]*)">(?<inner>.*?)<\/button>/gu;
 const TITLE = /<b>(?<text>.*?)<\/b>/u;
 const GRID = /<div class="(?<cls>cards[a-z ]*)"/u;
 const BLURB = /<span>(?<text>.*?)<\/span>/u;
-
-/** A green ratio-mode card, with any field overridden. */
-function card(over: Partial<CardView> = {}): CardView {
-  return {
-    key: '["fga","t04"]',
-    title: "fga t04",
-    agent: "claude",
-    level: "green",
-    reason: "on_time",
-    why: "On time",
-    callWhy: "On time",
-    needsMe: null,
-    stale: false,
-    silentSeconds: 30,
-    mode: "ratio",
-    tooEarly: false,
-    rtr: 1.23,
-    dir: 0,
-    trend: { delta: 0, minutes: 30, proj: 5, recentDone: 2, toGo: 4 },
-    chance: 0.9,
-    marginSeconds: 3600,
-    work: 0.5,
-    clock: 0.4,
-    finished: 5,
-    total: 10,
-    activeHours: 2,
-    capHours: 5,
-    lanes: { ready_for_work: 1, in_progress: 2, needs_terry: 0, ready_for_review: 5, completed: 0 },
-    spark: [],
-    updatedAt: 1_000_000,
-    lastMoveAt: 1_000_000,
-    ...over,
-  };
-}
 
 /** A count_and_time card (a small block): 1 of 2 done, 1.5 of 4 hours, under budget. */
 function small(over: Partial<CardView> = {}): CardView {
@@ -74,23 +41,6 @@ function red(name: string): CardView {
     why: "Fix it",
     needsMe: "Fix it",
   });
-}
-
-/** A View holding the given cards. */
-function view(cards: CardView[]): View {
-  return {
-    now: 1_000_030,
-    lastReportAt: 1_000_000,
-    feed: "live",
-    thresholds: { staleMinutes: 25, stallMinutes: 45, minHistoryMinutes: 20, minBlockUsed: 0.1 },
-    cards,
-    asking: cards.filter((c) => c.needsMe !== null).length,
-  };
-}
-
-/** A card key for a project name, as the server builds one, already escaped for an attribute. */
-function keyOf(name: string): string {
-  return JSON.stringify([name, "m1"]);
 }
 
 /** One rendered button: its classes, its data-go and its inner HTML. */
@@ -198,11 +148,6 @@ describe("renderOverview: GO TO KEYBOARD", () => {
     expect(found.map((b) => b.cls)).toEqual(["kbd", "green", "green"]);
     expect(found.map(titleOf)).toEqual(["GO TO KEYBOARD", "a", "b"]);
   });
-
-  it("shows no keyboard slot for a done card that still carries an ask", () => {
-    const [only] = buttons([card({ level: "done", why: "Done", needsMe: "old ask", rtr: null })]);
-    expect(only?.cls).toBe("done");
-  });
 });
 
 describe("renderOverview: colors and blurbs in ratio mode", () => {
@@ -228,13 +173,6 @@ describe("renderOverview: colors and blurbs in ratio mode", () => {
     expect(blurbOf(only)).toBe("Too early to call");
     // biome-ignore lint/security/noSecrets: an HTML fragment; its punctuation reads as high entropy.
     expect(only?.inner).toContain('<div class="rt">1.2<span class="pivot">3</span></div>');
-  });
-
-  it("done: dark slate, the blurb Done, no RTR", () => {
-    const [only] = buttons([card({ level: "done", reason: "done", why: "Done", dir: null })]);
-    expect(only?.cls).toBe("done");
-    expect(blurbOf(only)).toBe("Done");
-    expect(only?.inner).not.toContain('class="rt"');
   });
 
   it.each([
@@ -275,9 +213,9 @@ describe("renderOverview: count_and_time mode (UX-131)", () => {
     expect(blurb).toBe("1 of 2 done · 0.75 of 2.0 hrs");
   });
 
-  it("shows Done for a done card and the silence for a silent one", () => {
-    expect(blurbFor(small({ level: "done", reason: "done", why: "Done", finished: 2 }))).toBe(
-      "Done",
+  it("gives a done small block no slot, and shows the silence for a silent one", () => {
+    expect(buttons([small({ level: "done", reason: "done", why: "Done", finished: 2 })])).toEqual(
+      [],
     );
     const silent = small({
       level: "yellow",
