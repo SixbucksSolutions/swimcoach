@@ -136,7 +136,7 @@ export const departedCases: UiCase[] = [
     title: "A project that comes back during the countdown makes its display live again",
     async run(ctx) {
       await bravoLeaves(ctx);
-      // Bravo reports again within the countdown. A poll kicked now, not one 30 s of page time
+      // Bravo reports again within the countdown. A poll kicked now, not one 20 s of page time
       // later, which would let the 5 s return run first.
       ctx.answer({ body: greens(ctx, ["alpha", "bravo", "charlie"]) });
       const back = ctx.page.waitForResponse((r) => r.url().includes("/state"));

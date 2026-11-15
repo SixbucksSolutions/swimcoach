@@ -11,10 +11,10 @@ import { healthOf, probe, runningBreaths } from "./overview-probe.ts";
 const FADE_MS = 300;
 /** How late, on the browser's clock, the fade-in MAY start after the fade-out: a few frames. */
 const FRAME_SLACK_MS = 120;
-const LIVE_TO_OFFLINE_MS = 85_000;
+const LIVE_TO_OFFLINE_MS = 55_000;
 const STALE_SECONDS = 26 * 60;
 const STALE_WARNING = /^No agent has reported for 3\dm\. Everything below is old\.$/u;
-const OFFLINE_WARNING = /^Can't reach the board for 2m\. Everything below is old\.$/u;
+const OFFLINE_WARNING = /^Can't reach the board for 1m\. Everything below is old\.$/u;
 
 const RECORDER = `
 (() => {
@@ -142,7 +142,7 @@ const statusMotionCases: UiCase[] = [
         [h.label, h.bg, h.warnShown, h.pagesOpacity, h.pagesFilter],
         ["LIVE", COLOR.okFill, false, 1, "none"],
       );
-      // The dot breathes again, and GO TO KEYBOARD with it, on one clock (UX-074, UX-160).
+      // The dot breathes again, and GO TO KEYBOARD with it, on one clock (UX-074, UX-198).
       assert.equal(runningBreaths(h.dot).length, 1, "The LIVE dot breathes.");
       const [dot, slot] = await probe<[number, number]>(ctx.page, "breaths()");
       near(dot, slot, 1, "The dot and GO TO KEYBOARD agree after the fade");

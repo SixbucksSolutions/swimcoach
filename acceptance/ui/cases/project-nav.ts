@@ -28,7 +28,7 @@ import {
 
 const PAGE_WIDTH = 402;
 const SCREEN_HEIGHT = 874;
-const POLL_MS = 30_000;
+const POLL_MS = 20_000;
 const QUIET_MS = 600;
 const SCROLL_PX = 300;
 const DOTS_ZONE_PX = 80;

@@ -16,5 +16,5 @@ often/aggressively" (Terry, 2026-11-14). RFC 2119 keywords; the capitals are loa
 | --- | --- | --- |
 | Refuse the attached (`-pFGA`) and equals (`--project=FGA`) value forms, so only `-p FGA` / `--project FGA` parse | Terry, 2026-11-14, "only want that if free" | Commander 15 has no setting for it; it would take our own parsing code. The docs show only the spaced form |
 | A UI case for the slot refit across SIGN IN and back | PR #48 review | STALE and OFFLINE cases cover the same code path (the warning line changing the card area) |
-| A hidden tab does not run the slot refit until shown again, which can leave a gap under the last slot for up to 30 s | PR #48 review | Never cuts a slot off, and corrects itself when the tab is shown |
+| A hidden tab does not run the slot refit until shown again, which can leave a gap under the last slot for up to one poll interval (20 s) | PR #48 review | Never cuts a slot off, and corrects itself when the tab is shown |
 | `npm ci` reports the esbuild and workerd install scripts as blocked by `allowScripts` | T5 close, 2026-11-14 | Check, build and deploy all work without them; approving them edits `package.json`, which is Terry's call |

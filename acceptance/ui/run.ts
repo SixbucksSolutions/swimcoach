@@ -26,7 +26,7 @@ const UX_ID = /^UX-\d{3}$/u;
 /**
  * A case that has not finished in two minutes fails instead of hanging the run (the MVP-11 A
  * author saw runs against the test Worker hang for over ten minutes). The slowest case waits a real
- * 41 s (UX-157).
+ * 31 s (UX-197).
  */
 const CASE_TIMEOUT_MS = 120_000;
 

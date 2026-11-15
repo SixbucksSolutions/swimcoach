@@ -1,5 +1,5 @@
 // Overview checks, area A and the health rows of M: the Health box in STALE, OFFLINE and SIGN IN, how
-// it recovers, and the 30 s poll (MVP-11 A). Failing polls go through `answer({ fail })`.
+// it recovers, and the 20 s poll (MVP-11 A). Failing polls go through `answer({ fail })`.
 import assert from "node:assert/strict";
 import type { UiCase, UiContext } from "../types.ts";
 import {
@@ -17,8 +17,10 @@ import { cardsOf, healthOf, runningBreaths, statusBoxesOf } from "./overview-pro
 
 const OUTAGE_MINUTES = 65;
 const LONG_ENOUGH_FOR_OFFLINE_MS = 100_000;
-const TWO_POLLS_AND_A_BIT_MS = 85_000;
+const TWO_POLLS_AND_A_BIT_MS = 55_000;
 const SECONDS_PER_MINUTE = 60;
+/** The page reloads for sign-in at most once per this much page time (UX-154). */
+const RELOAD_GAP_MS = 5 * MINUTE_MS;
 
 /** Loses the board for `ms` of page time: every poll fails, the page clock jumps on. */
 async function loseBoard(ctx: UiContext, ms: number): Promise<void> {
@@ -65,7 +67,8 @@ function signInCase(status: 401 | 403): UiCase {
       const reloaded = ctx.page.waitForEvent("load");
       // If an assert below throws first, this wait still settles later; never as an unhandled rejection.
       reloaded.catch(() => undefined);
-      await ctx.advance(2 * MINUTE_MS);
+      // On to the 5-minute mark, where a poll lands: two polls and two minutes are behind us.
+      await ctx.advance(RELOAD_GAP_MS - 2 * POLL_MS - 2 * MINUTE_MS);
       assert.ok(
         await waitFor(async () => loads.length === 3),
         "A refusal after 5 minutes reloads once more.",
@@ -212,8 +215,8 @@ const healthCases: UiCase[] = [
   signInCase(401),
   signInCase(403),
   {
-    ids: ["UX-156"],
-    title: "The page polls every 30 seconds, not sooner",
+    ids: ["UX-196"],
+    title: "The page polls every 20 seconds, not sooner",
     async run(ctx) {
       const polls = countPolls(ctx);
       const start = ctx.now();
@@ -222,11 +225,11 @@ const healthCases: UiCase[] = [
       const elapsedMs = (ctx.now() - start) * 1000;
       await ctx.advance(POLL_MS - elapsedMs - 2000);
       await settle(ctx);
-      assert.equal(polls.count(), 1, "No second poll before 30 s.");
+      assert.equal(polls.count(), 1, "No second poll before 20 s.");
       await pollOnce(ctx, 4000);
-      assert.equal(polls.count(), 2, "The second poll comes at 30 s.");
+      assert.equal(polls.count(), 2, "The second poll comes at 20 s.");
       await pollOnce(ctx);
-      assert.equal(polls.count(), 3, "And the third 30 s later.");
+      assert.equal(polls.count(), 3, "And the third 20 s later.");
     },
   },
 ];

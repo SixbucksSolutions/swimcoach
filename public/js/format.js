@@ -19,10 +19,10 @@ const ARROW_PATH = '<path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentC
 export const ALL = "*all*";
 
 /**
- * The poll interval (concept.md section 3.1). 30 s since Terry, 2026-11-14: project agents report no
- * more often than every five minutes, so a faster poll only repeats the same answer (UX-156).
+ * The poll interval (concept.md section 3.1): 20 s (UX-196) since Terry, 2026-11-15 (localswim
+ * swimcoach #0047); 30 s before that (UX-156).
  */
-export const POLL_MS = 30_000;
+export const POLL_MS = 20_000;
 
 /**
  * The palette token each card level paints with (docs/brand.md section 5).

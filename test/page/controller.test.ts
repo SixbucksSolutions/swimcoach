@@ -128,13 +128,13 @@ describe("the controller on failed polls", () => {
   beforeEach(setUp);
   afterEach(tearDown);
 
-  it("turns OFFLINE after three failed polls (90 s), never SIGN IN", async () => {
+  it("turns OFFLINE after three failed polls (60 s), never SIGN IN", async () => {
     await loadPage(fresh(afternoon), new TypeError("Failed to fetch"));
     await vi.advanceTimersByTimeAsync(3 * POLL_MS);
     expect(health()).toEqual(["live", "LIVE", "live"]);
     await vi.advanceTimersByTimeAsync(POLL_MS);
     expect(health()).toEqual(["off", "OFFLINE", "off"]);
-    expect($("#warn").textContent).toBe("Can't reach the board for 2m. Everything below is old.");
+    expect($("#warn").textContent).toBe("Can't reach the board for 1m. Everything below is old.");
     expect([stubs.reload, stubs.reported].map((f) => f.mock.calls.length)).toEqual([0, 0]);
   });
 
@@ -159,7 +159,7 @@ describe("the controller on a sign-in failure", () => {
   it("shows SIGN IN, not OFFLINE, when the reload is spent, and a tap reloads", async () => {
     sessionStorage.setItem("swimcoach.authReloadAt", String(T0 - 60 * SEC));
     await loadPage(fresh(afternoon), 401);
-    await vi.advanceTimersByTimeAsync(4 * POLL_MS); // past OFFLINE's 90 s, still SIGN IN
+    await vi.advanceTimersByTimeAsync(4 * POLL_MS); // past OFFLINE's 60 s, still SIGN IN
     expect(stubs.reload).not.toHaveBeenCalled();
     expect(health()).toEqual(["off", "SIGN IN", "off"]);
     expect($("#warn").textContent).toBe("Signed out of the board. Tap here to sign in again.");
@@ -171,7 +171,7 @@ describe("the controller on a sign-in failure", () => {
     sessionStorage.setItem("swimcoach.authReloadAt", String(T0));
     await loadPage(401, fresh(afternoon));
     expect($("#health b").textContent).toBe("SIGN IN");
-    // The poll lands at 30 s; SIGN IN fades out for 0.3 s before LIVE is written (UX-183).
+    // The poll lands at 20 s; SIGN IN fades out for 0.3 s before LIVE is written (UX-183).
     await vi.advanceTimersByTimeAsync(POLL_MS + 300);
     expect([$("#health b").textContent, $("#warn").textContent]).toEqual(["LIVE", ""]);
   });

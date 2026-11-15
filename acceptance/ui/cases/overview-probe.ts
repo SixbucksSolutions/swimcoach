@@ -156,7 +156,7 @@ const statusBoxes = () => ({
 const gtk = () => qa('#pages .cards .pc').find((c) => q('.nm b', c).textContent === 'GO TO KEYBOARD');
 const breath = (e) => e.getAnimations().find((a) => {
   const t = a.effect.getComputedTiming();
-  return t.duration === 2000 && t.iterations === 20;
+  return t.duration === 2000 && t.iterations === 15;
 });
 const breaths = () => [breath(q('#health i')).currentTime, breath(gtk()).currentTime];
 const inView = () => qa('#pages > section.page').find((s) => Math.abs(s.getBoundingClientRect().left) < 2);
@@ -217,9 +217,9 @@ function styleOf(page: Page, selector: string, property: string): Promise<string
   return probe<string>(page, `cs(q(${JSON.stringify(selector)}))[${JSON.stringify(property)}]`);
 }
 
-/** The animations that are a breath: a 2 s cycle run 20 times, still running. Found by timing, not by name. */
+/** The animations that are a breath: a 2 s cycle run 15 times, still running. Found by timing, not by name. */
 function runningBreaths(list: readonly AnimationInfo[]): AnimationInfo[] {
-  return list.filter((a) => a.duration === 2000 && a.iterations === 20 && a.state === "running");
+  return list.filter((a) => a.duration === 2000 && a.iterations === 15 && a.state === "running");
 }
 
 /** Which page dot is lit, by paint: the one filled with the text color (--text #E8EEF4); -1 if none. */
