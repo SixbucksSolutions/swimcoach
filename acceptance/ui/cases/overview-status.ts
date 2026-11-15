@@ -130,7 +130,12 @@ const statusCases: UiCase[] = [
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       const s = await statusBoxesOf(ctx.page);
-      const parts = { mark: s.brand, wordmark: s.wordmark, health: s.health, bell: s.bell };
+      const parts = {
+        mark: s.brand,
+        "mark and wordmark group": s.wordmark,
+        health: s.health,
+        bell: s.bell,
+      };
       for (const [name, part] of Object.entries(parts)) {
         near(part.h, SHARED_HEIGHT, 0.5, `${name} height`);
         near(part.cy, s.bell.cy, 0.5, `${name} center`);
