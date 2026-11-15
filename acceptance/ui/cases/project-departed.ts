@@ -116,8 +116,14 @@ export const departedCases: UiCase[] = [
     title: "A project that comes back during the countdown makes its display live again",
     async run(ctx) {
       await bravoLeaves(ctx);
+      // Bravo reports again within the countdown. A poll kicked now, not one 30 s of page time
+      // later, which would let the 5 s return run first.
       ctx.answer({ body: greens(ctx, ["alpha", "bravo", "charlie"]) });
-      await pollOnce(ctx);
+      const back = ctx.page.waitForResponse((r) => r.url().includes("/state"));
+      // biome-ignore lint/security/noSecrets: page script text; its punctuation reads as high entropy.
+      await ctx.page.evaluate("document.dispatchEvent(new Event('visibilitychange'))");
+      await back;
+      await settle(ctx);
       assert.equal(await notice(ctx), null, "No notice.");
       assert.equal(await ctx.page.locator(".page.departed").count(), 0, "No dimming.");
       await ctx.advance(RETURN_MS + GLIDE_MS);

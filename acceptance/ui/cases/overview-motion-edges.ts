@@ -25,13 +25,15 @@ export const motionEdgeCases: UiCase[] = [
     async run(ctx) {
       await ctx.page.addInitScript(RECORDER);
       await openWith(ctx, greens(ctx, ["alpha", "bravo", "charlie"]));
-      // The viewer reads bravo's display; bravo stops. The page takes the viewer to the overview,
-      // which was off screen as the poll landed, so nothing on it moves.
+      // The viewer reads bravo's display; bravo stops. The overview was off screen as the poll landed,
+      // so nothing on it moves. Since #0037 the departed display stays and its notice fades in
+      // (UX-187); that is the one motion, and it is on the departed display, not the overview.
       await tapDot(ctx.page, 2);
       await movesOf(ctx);
       ctx.answer({ body: greens(ctx, ["alpha", "charlie"]) });
       await pollOnce(ctx);
-      assert.deepEqual(await movesOf(ctx), [], "No card streaks across the overview.");
+      const moves = (await movesOf(ctx)).filter((m) => m.who !== "gone-note");
+      assert.deepEqual(moves, [], "No card streaks across the overview.");
       assert.equal(await ctx.page.locator(".ghost").count(), 0, "No ghost is drawn.");
     },
   },
