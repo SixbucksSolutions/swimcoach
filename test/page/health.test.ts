@@ -46,16 +46,18 @@ function quiet(age: string): string {
 describe("healthOf", () => {
   it.each([
     ["before the first poll", null, 0, ["wait", ELLIPSIS, null, ""]],
-    ["60 s into a first poll", null, 60, ["wait", ELLIPSIS, null, ""]],
+    ["75 s into a first poll", null, 75, ["wait", ELLIPSIS, null, ""]],
     [
       "a board that never answered",
       null,
-      60.001,
-      ["off", "OFFLINE", 60.001, "Can't reach the board for 1m."],
+      75.001,
+      ["off", "OFFLINE", 75.001, "Can't reach the board for 1m."],
     ],
     ["2 minutes after a report", aged(120), 5, ["live", "LIVE", 125, ""]],
-    // Three 20 s polls (UX-196, UX-158): LIVE holds through two failed polls.
+    // LIVE holds for 75 s after the last good poll (UX-204): three failed 20 s polls (UX-196).
     ["60 s after the last good poll", aged(60), 60, ["live", "LIVE", 120, ""]],
+    ["75 s after the last good poll", aged(60), 75, ["live", "LIVE", 135, ""]],
+    ["75.001 s after the last good poll", aged(60), 75.001, ["off", "OFFLINE", 75.001, gone("1m")]],
     ["4 minutes after the last good poll", aged(60), 240, ["off", "OFFLINE", 240, gone("4m")]],
     ["24m 59s after a report", aged(24 * 60 + 50), 9, ["live", "LIVE", 1499, ""]],
     ["aging past 25 minutes", aged(24 * 60 + 50), 11, ["stale", "STALE", 1501, quiet("25m")]],
@@ -66,12 +68,12 @@ describe("healthOf", () => {
     ["every milestone done, an hour on", aged(3600, alldone), 0, ["live", "LIVE", 3600, ""]],
     ["an empty board (feed no_data)", toView(empty), 0, ["live", "LIVE", null, ""]],
     [
-      "an empty board, 60 s after the last good poll",
+      "an empty board, 75 s after the last good poll",
       toView(empty),
-      60,
+      75,
       ["live", "LIVE", null, ""],
     ],
-    ["an empty board, unreachable", toView(empty), 61, ["off", "OFFLINE", 61, gone("1m")]],
+    ["an empty board, unreachable", toView(empty), 76, ["off", "OFFLINE", 76, gone("1m")]],
   ] as const)("%s", (_label, view, seconds, [st, label, age, msg]) => {
     const h = healthOf(view, T0, T0 + seconds * SEC);
     expect([h.st, h.label, rounded(h.age), h.msg]).toEqual([st, label, age, msg]);

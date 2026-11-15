@@ -29,7 +29,7 @@ async function footersAt(ctx: UiContext, hour: number, minute: number): Promise<
 
 const statusCases: UiCase[] = [
   {
-    ids: ["UX-162", "UX-009"],
+    ids: ["UX-207", "UX-203"],
     title: "An empty board reads LIVE with no age, a breathing dot, over the empty-state line",
     async run(ctx) {
       ctx.answer({ body: ctx.example("empty") });
@@ -62,7 +62,7 @@ const statusCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-193"],
+    ids: ["UX-208"],
     title: "The Status line shows no clock; the phone's own status bar shows the time",
     async run(ctx) {
       await ctx.page.clock.setSystemTime(new Date(2026, 10, 14, 14, 25, 0));
@@ -89,7 +89,7 @@ const statusCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-199"],
+    ids: ["UX-209"],
     title: "The mark is 34 px and the wordmark 22 px, and the Status line stays 52 px tall",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
@@ -108,13 +108,13 @@ const statusCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-199"],
-    title: "An all-done board's LIVE 12h 05m keeps at least 35 px from the wordmark",
+    ids: ["UX-209", "UX-203"],
+    title: "An all-done board 12h 05m on reads LIVE alone, at least 35 px from the wordmark",
     async run(ctx) {
       await openWith(ctx, older(ctx.example("alldone"), IDLE_AGE_SECONDS));
       const h = await healthOf(ctx.page);
       assert.equal(h.label, "LIVE", "An all-done board stays LIVE as it ages.");
-      assert.equal(h.age, "12h 05m");
+      assert.equal(h.age, "", "LIVE carries no age, however old the newest report.");
       const s = await statusBoxesOf(ctx.page);
       assert.ok(
         s.health.x - s.wordmark.r >= 34,
@@ -208,8 +208,8 @@ const statusCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-009"],
-    title: "Health box LIVE: bold white LIVE on --ok-fill, breathing dot, no age under a minute",
+    ids: ["UX-203"],
+    title: "Health box LIVE: bold white LIVE on --ok-fill, breathing dot, and never an age",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       const h = await healthOf(ctx.page);
@@ -219,21 +219,12 @@ const statusCases: UiCase[] = [
       assert.equal(h.weight, "800");
       assert.equal(h.age, "");
       assert.equal(runningBreaths(h.dot).length, 1, "The dot breathes.");
-    },
-  },
-  {
-    ids: ["UX-010"],
-    title: "Health box LIVE shows its age once the newest report is a minute old",
-    async run(ctx) {
+      // A newest report 7 minutes old, which once read "LIVE 7m", still reads LIVE alone.
       await openWith(ctx, older(ctx.example("afternoon"), 7 * 60));
-      const h = await healthOf(ctx.page);
-      assert.equal(h.label, "LIVE");
-      assert.equal(h.age, "7m");
-      assert.equal(h.bg, COLOR.okFill);
-      assert.equal(h.warnShown, false);
-      // A minute old shows, 59 seconds does not.
-      await openWith(ctx, older(ctx.example("afternoon"), 59));
-      assert.equal((await healthOf(ctx.page)).age, "");
+      const aged = await healthOf(ctx.page);
+      assert.equal(aged.label, "LIVE");
+      assert.equal(aged.age, "", "No age, however old the newest report.");
+      assert.equal(aged.warnShown, false);
     },
   },
 ];

@@ -12,7 +12,6 @@
 // The fades run through the Web Animations API, so they write nothing to the DOM themselves.
 
 import { setText, syncBreath, ui } from "./dom.js";
-import { dur } from "./format.js";
 
 /** @typedef {{st: string, label: string, age: number|null, msg: string}} Health */
 
@@ -63,13 +62,9 @@ function write(h) {
   if (health.className !== h.st) {
     health.className = h.st;
   }
+  // The box shows its word alone in every state: LIVE never carries an age (UX-203), and STALE and
+  // OFFLINE leave the duration to the warning line (concept.md 3.1).
   setText(ui("#health b"), h.label);
-  // Age shows only when LIVE, from 1 minute (concept.md 3.1).
-  let age = "";
-  if (h.st === "live" && h.age !== null && h.age >= 60) {
-    age = dur(h.age);
-  }
-  setText(ui("#health span"), age);
   const phone = ui("#phone");
   if (phone.dataset.health !== h.st) {
     phone.dataset.health = h.st;

@@ -170,8 +170,8 @@ on. A color that asks for no action, or for an action he cannot take, wears out 
 - **The Health box fades between states** (UX-183 to UX-186). The old state fades out over 0.3 s
   `ease-in`, then the new one is written and fades in over 0.3 s `ease-out`; the warning line under the
   Status line goes out with the old state and comes in with the new one; and the displays ease into or
-  out of their gray over the fade-in's 0.3 s instead of snapping. A new age ("LIVE 7m" to "LIVE 8m") or a
-  new duration in the warning line is written in place and does not fade. The LIVE dot's breath and its
+  out of their gray over the fade-in's 0.3 s instead of snapping. A new duration in the warning line is
+  written in place and does not fade (LIVE carries no age since card #0050). The LIVE dot's breath and its
   step with GO TO KEYBOARD are untouched (concept.md section 3.1). The fade dims the whole box, fill and
   text together, for 0.3 s, so their contrast dips while the state changes; at rest, white on
   `--ok-fill` stays at full opacity as section 5 requires. Terry, 2026-11-14: section 5's full-opacity

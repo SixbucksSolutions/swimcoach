@@ -11,7 +11,7 @@ import { healthOf, probe, runningBreaths } from "./overview-probe.ts";
 const FADE_MS = 300;
 /** How late, on the browser's clock, the fade-in MAY start after the fade-out: a few frames. */
 const FRAME_SLACK_MS = 120;
-const LIVE_TO_OFFLINE_MS = 55_000;
+const LIVE_TO_OFFLINE_MS = 70_000;
 const STALE_SECONDS = 26 * 60;
 const STALE_WARNING = /^No agent has reported for 3\dm\. Everything below is old\.$/u;
 const OFFLINE_WARNING = /^Can't reach the board for 1m\. Everything below is old\.$/u;
@@ -72,7 +72,7 @@ function inAfterOut(out: Fade | undefined, inn: Fade | undefined): void {
   assert.ok(gap <= FADE_MS + FRAME_SLACK_MS, `And right after it (${gap} ms).`);
 }
 
-/** Opens LIVE and loses the board until the box turns OFFLINE (UX-159). */
+/** Opens LIVE and loses the board until the box turns OFFLINE, 75 s after the last good poll (UX-205). */
 async function liveToOffline(ctx: UiContext): Promise<void> {
   await openWith(ctx, ctx.example("afternoon"));
   ctx.answer({ fail: "abort" });

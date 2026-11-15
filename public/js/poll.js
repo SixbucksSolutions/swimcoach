@@ -22,7 +22,9 @@ import { toView } from "./state.js";
 
 const STATE_PATH = "/api/2026-11-14/state";
 const POLL_TIMEOUT_MS = 8000;
-const OFFLINE_AFTER_MS = POLL_MS * 3; // three failed polls in a row, 60 s (concept.md 3.1, UX-158, UX-159)
+// LIVE needs a successful poll in the last 75 s; past that the box is OFFLINE (Terry, 2026-11-15;
+// concept.md 3.1, UX-204, UX-205). At the 20 s poll that holds through three failed polls.
+const OFFLINE_AFTER_MS = 75_000;
 const AUTH_RELOAD_GAP_MS = 5 * 60_000;
 const AUTH_RELOAD_KEY = "swimcoach.authReloadAt";
 // U+2026, the ellipsis glyph, drawn in Inter (docs/brand.md section 7), until the first poll lands.

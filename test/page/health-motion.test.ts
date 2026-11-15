@@ -21,7 +21,7 @@ import {
 // No motion on the first render, under reduced motion, or on a poll that changed nothing.
 
 const FADE_MS = 300;
-const OFFLINE_AT_MS = 61 * SEC; // the first tick past three poll intervals (UX-159)
+const OFFLINE_AT_MS = 76 * SEC; // the first tick past 75 s without a good poll (UX-205)
 
 const STATUS_PARTS = new Set(["health", "warn", "pages"]);
 

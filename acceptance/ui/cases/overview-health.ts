@@ -17,7 +17,7 @@ import { cardsOf, healthOf, runningBreaths, statusBoxesOf } from "./overview-pro
 
 const OUTAGE_MINUTES = 65;
 const LONG_ENOUGH_FOR_OFFLINE_MS = 100_000;
-const TWO_POLLS_AND_A_BIT_MS = 55_000;
+const SEVENTY_SECONDS_MS = 70_000;
 const SECONDS_PER_MINUTE = 60;
 /** The page reloads for sign-in at most once per this much page time (UX-154). */
 const RELOAD_GAP_MS = 5 * MINUTE_MS;
@@ -105,7 +105,7 @@ const healthCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-158"],
+    ids: ["UX-204"],
     title: "LIVE needs a newest report under 25 minutes old: 24 minutes is LIVE, 26 is STALE",
     async run(ctx) {
       await openWith(ctx, older(ctx.example("afternoon"), 24 * SECONDS_PER_MINUTE));
@@ -122,13 +122,13 @@ const healthCases: UiCase[] = [
       const h = await healthOf(ctx.page);
       assert.equal(h.label, "LIVE");
       assert.equal(h.bg, COLOR.okFill);
-      assert.equal(h.age, "40m");
+      assert.equal(h.age, "", "LIVE carries no age (UX-203).");
       assert.equal(h.warnShown, false);
       assert.equal(h.pagesOpacity, 1);
     },
   },
   {
-    ids: ["UX-161"],
+    ids: ["UX-206"],
     title:
       "When every milestone is done and polls work, the Health box is LIVE with a breathing dot",
     async run(ctx) {
@@ -146,16 +146,16 @@ const healthCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-158", "UX-159"],
+    ids: ["UX-204", "UX-205"],
     title:
-      "LIVE holds through two failed polls; the third makes the box OFFLINE, grayed, word only",
+      "LIVE holds for 75 s after the last good poll, through three failed polls; then OFFLINE, grayed, word only",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       ctx.answer({ fail: "abort" });
-      await ctx.advance(TWO_POLLS_AND_A_BIT_MS);
+      await ctx.advance(SEVENTY_SECONDS_MS);
       await settle(ctx);
       const held = await healthOf(ctx.page);
-      assert.equal(held.label, "LIVE", "Two failed polls leave the box LIVE.");
+      assert.equal(held.label, "LIVE", "Three failed polls, 70 s, leave the box LIVE.");
       assert.equal(held.bg, COLOR.okFill);
       assert.equal(held.pagesOpacity, 1);
       await ctx.advance(10_000);

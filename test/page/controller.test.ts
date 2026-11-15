@@ -128,7 +128,7 @@ describe("the controller on failed polls", () => {
   beforeEach(setUp);
   afterEach(tearDown);
 
-  it("turns OFFLINE after three failed polls (60 s), never SIGN IN", async () => {
+  it("turns OFFLINE 75 s after the last good poll, through three failed polls, never SIGN IN", async () => {
     await loadPage(fresh(afternoon), new TypeError("Failed to fetch"));
     await vi.advanceTimersByTimeAsync(3 * POLL_MS);
     expect(health()).toEqual(["live", "LIVE", "live"]);
@@ -159,7 +159,7 @@ describe("the controller on a sign-in failure", () => {
   it("shows SIGN IN, not OFFLINE, when the reload is spent, and a tap reloads", async () => {
     sessionStorage.setItem("swimcoach.authReloadAt", String(T0 - 60 * SEC));
     await loadPage(fresh(afternoon), 401);
-    await vi.advanceTimersByTimeAsync(4 * POLL_MS); // past OFFLINE's 60 s, still SIGN IN
+    await vi.advanceTimersByTimeAsync(4 * POLL_MS); // past OFFLINE's 75 s, still SIGN IN
     expect(stubs.reload).not.toHaveBeenCalled();
     expect(health()).toEqual(["off", "SIGN IN", "off"]);
     expect($("#warn").textContent).toBe("Signed out of the board. Tap here to sign in again.");
