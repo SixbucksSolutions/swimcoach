@@ -63,7 +63,7 @@ export const motionEdgeCases: UiCase[] = [
         "GO CODE REVIEW · 1",
       );
       assert.equal(
-        await ctx.page.locator(".donebar").evaluate("(e) => getComputedStyle(e).position"),
+        await ctx.page.evaluate("getComputedStyle(document.querySelector('.donebar')).position"),
         "sticky",
         "The bar is the real one, not an adopted ghost.",
       );
