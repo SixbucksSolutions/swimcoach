@@ -73,9 +73,11 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
     `localswim/<nnnn>-<short-description>`, cut from `main`, where `<nnnn>` is the card's four-digit
     ticket number (for example `localswim/0035-card-animations`). Terry: "I like branches with a 1:1
     tie to 'what authorized this work'."
-  - **Review:** every pull request MUST pass an independent review by Opus 5.5 at high effort, a
-    reviewer that did not write the change. Terry: "as long as PR's pass an Opus 5.5/High
-    independent review they can always be a) merged; and B) pushed to prod."
+  - **Review:** every pull request MUST pass an independent `Opus/high` review: the latest Opus at
+    high effort, a reviewer that did not write the change. Terry: "as long as PR's pass an Opus
+    5.5/High independent review they can always be a) merged; and B) pushed to prod." The rule
+    tracks the latest Opus rather than pinning 5.5 (Terry, 2026-11-14: "Track latest: Opus/high").
+    A model named without a version means the latest; a pinned one carries its version.
   - **Merge and ship:** once the review and CI's `check` pass, the agent MUST squash-merge the pull
     request into `main` and delete its branch (`gh pr merge --squash --delete-branch`), and CI deploys
     it to production. Neither step waits for Terry.

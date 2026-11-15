@@ -7,7 +7,7 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
 - **V1's process is settled (card #0019, Terry, 2026-11-14); `AGENTS.md`, "How V1 work flows", is
   the rule.** In short: one `localswim/<nnnn>-<short-description>` branch per card, a pull request to
-  `main`, an independent Opus 5.5 / high review, then the agent squash-merges and CI ships it, and the
+  `main`, an independent `Opus/high` review (the latest Opus), then the agent squash-merges and CI ships it, and the
   card goes to Ready For Review for Terry. A direct commit to `main` MUST NOT be made.
 
 - **Terry accepted the MVP (2026-11-14 evening: "Accept, all rows Yes").** MVP-12 is done. All 136
