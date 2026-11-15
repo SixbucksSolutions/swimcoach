@@ -5,3 +5,7 @@ __pycache__/
 .DS_Store
 node_modules/
 .wrangler/
+# Claude Code puts agent worktrees here, inside the checkout (localswim #0038). Biome reads this file
+# too (vcs.useIgnoreFile), so it skips them instead of failing on their nested biome.jsonc. The rest of
+# .claude/ can hold project settings, so only worktrees/ is ignored.
+.claude/worktrees/
