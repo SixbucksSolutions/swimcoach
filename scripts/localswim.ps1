@@ -5,9 +5,9 @@ Runs the shared localswim service's CLI as Bot, with the Bot token for this one 
 
 .DESCRIPTION
 swimcoach's own work is tracked as cards on the "swimcoach" board of Terry's shared localswim
-service. The service runs from C:\Projects\localswim-v2 (the installed build; the source repo is
-C:\Projects\localswim). Its receipt, cutover\v2-service.json, gives the base URL and the directory
-holding the DPAPI-protected credentials.
+service. The service runs from C:\Projects\localswim, its code; its data is in the localswim state
+store (Terry, 2026-11-15, after C:\Projects\localswim-v2 was retired). Its receipt,
+runtime\service.json, gives the base URL and the directory holding the DPAPI-protected credentials.
 
 This script reads the receipt, decrypts bot.xml, sets LOCALSWIM_URL and LOCALSWIM_TOKEN at Process
 scope, runs localswim.exe with every argument it was given, and then clears both variables. It
@@ -23,9 +23,9 @@ pwsh -NoProfile -File scripts/localswim.ps1 card list 62728944-eac7-482c-bd46-4d
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$serviceRoot = 'C:\Projects\localswim-v2'
+$serviceRoot = 'C:\Projects\localswim'
 $exe = Join-Path $serviceRoot 'localswim.exe'
-$receiptFile = Join-Path $serviceRoot 'cutover\v2-service.json'
+$receiptFile = Join-Path $serviceRoot 'runtime\service.json'
 
 foreach ($file in $exe, $receiptFile) {
     if (-not (Test-Path -LiteralPath $file)) {
