@@ -21,7 +21,7 @@ import {
 
 // The controller when the board changes shape: a card that arrives after the first render slides in
 // from the left and leaves every other card node alone, a card that leaves slides out to the right
-// as a ghost that goes when its exit ends, GO TO KEYBOARD drops from the top (UX-177 to UX-182, with
+// as a ghost that goes when its exit ends, GO TO KEYBOARD drops from the top (UX-177 to UX-181 and UX-190, with
 // UX-110 still holding), and an empty or all-done board reads LIVE (UX-136, UX-137, UX-138).
 
 /** A transform that starts off the left edge (UX-177). */
@@ -95,7 +95,7 @@ describe("a card inserted mid-list (UX-177)", () => {
   });
 });
 
-describe("other arrivals and departures (UX-178, UX-179, UX-182)", () => {
+describe("other arrivals and departures (UX-178, UX-179, UX-190)", () => {
   beforeEach(setUp);
   afterEach(tearDown);
 

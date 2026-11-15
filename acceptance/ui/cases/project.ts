@@ -1,6 +1,7 @@
 // Project display checks (MVP-11 B owns this file; t5-interfaces.md). The cases live in the
 // project-*.ts files beside it, split by display part so each file stays under Biome's length limit.
 import type { UiCase } from "../types.ts";
+import { departedCases } from "./project-departed.ts";
 import { heroCases } from "./project-hero.ts";
 import { laneCases } from "./project-lanes.ts";
 import { navCases } from "./project-nav.ts";
@@ -12,5 +13,6 @@ export const projectCases: UiCase[] = [
   ...sectionCases,
   ...laneCases,
   ...navCases,
+  ...departedCases,
   ...smallCases,
 ];

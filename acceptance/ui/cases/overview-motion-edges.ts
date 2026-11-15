@@ -1,4 +1,4 @@
-// Overview motion at its edges (localswim swimcoach #0035; UX-178, UX-182): a project display that
+// Overview motion at its edges (localswim swimcoach #0035; UX-178, UX-190): a project display that
 // goes away while it is on screen, and a poll that lands while a card is still leaving. Both were
 // found by PR #54's independent review. The recorder comes from overview-motion.ts.
 import assert from "node:assert/strict";
@@ -20,18 +20,20 @@ function isStatePoll(url: string): boolean {
 
 export const motionEdgeCases: UiCase[] = [
   {
-    ids: ["UX-182"],
-    title: "Nothing moves when the project display on screen goes away",
+    ids: ["UX-190"],
+    title: "Nothing on the overview moves when the project display on screen goes away",
     async run(ctx) {
       await ctx.page.addInitScript(RECORDER);
       await openWith(ctx, greens(ctx, ["alpha", "bravo", "charlie"]));
-      // The viewer reads bravo's display; bravo stops. The page takes the viewer to the overview,
-      // which was off screen as the poll landed, so nothing on it moves.
+      // The viewer reads bravo's display; bravo stops. The overview was off screen as the poll landed,
+      // so nothing on it moves. Since #0037 the departed display stays and its notice fades in
+      // (UX-187); that is the one motion, and it is on the departed display, not the overview.
       await tapDot(ctx.page, 2);
       await movesOf(ctx);
       ctx.answer({ body: greens(ctx, ["alpha", "charlie"]) });
       await pollOnce(ctx);
-      assert.deepEqual(await movesOf(ctx), [], "No card streaks across the overview.");
+      const moves = (await movesOf(ctx)).filter((m) => m.who !== "gone-note");
+      assert.deepEqual(moves, [], "No card streaks across the overview.");
       assert.equal(await ctx.page.locator(".ghost").count(), 0, "No ghost is drawn.");
     },
   },

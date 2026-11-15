@@ -178,7 +178,7 @@ on. A color that asks for no action, or for an action he cannot take, wears out 
 - The page appears once, finished: hidden until the font file and the first render are ready, then a
   single 0.2 s `ease-in` fade of the whole page. Polls MUST NOT fade or flash, with two exceptions: a
   change of the Health box's state (above), and the overview's slots arriving and leaving, which move
-  rather than fade (card #0035, ledger UX-177 to UX-182, superseding UX-135's 0.3 s fade-in). The
+  rather than fade (card #0035, ledger UX-177 to UX-181 and UX-190, superseding UX-135's 0.3 s fade-in). The
   fade-in came first, from Terry at the MVP-08 phone check, 2026-11-14: "Let's do a gentle 0.3s ease in
   animation as it was startling when they popped on." Full rules: `docs/concept.md` section 3.4.
 - Motion SHOULD be skipped under `prefers-reduced-motion: reduce`.

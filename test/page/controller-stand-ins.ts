@@ -159,7 +159,7 @@ export function setUp(): void {
   vi.stubGlobal("reportError", stubs.reported);
   installFonts("loaded");
   sessionStorage.clear();
-  // The overview's motion (motion.js, UX-177 to UX-182) and the Health box's fades (UX-183 to
+  // The overview's motion (motion.js, UX-177 to UX-181 and UX-190) and the Health box's fades (UX-183 to
   // UX-186) go through element.animate; record the calls and their elements. Each returns an
   // Animation stand-in that fires "finish" once its duration has passed on the fake timers; a test
   // can also fire it by hand.

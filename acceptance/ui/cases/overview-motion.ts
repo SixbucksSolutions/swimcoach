@@ -1,4 +1,4 @@
-// Overview motion in V1 (localswim swimcoach #0035; UX-177 to UX-182). Sideways means a project did
+// Overview motion in V1 (localswim swimcoach #0035; UX-177 to UX-181 and UX-190, which supersedes UX-182). Sideways means a project did
 // it, vertical means swimcoach did it. A recorder installed before the page loads wraps the browser's
 // Element.prototype.animate, so a case reads exactly what the page asked the browser to move, when and
 // how, without racing the real-time animations it starts. It reads the page through the platform only.
@@ -228,8 +228,9 @@ const motionCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-182"],
-    title: "Nothing moves under reduced motion, on a project display, or on a steady poll",
+    ids: ["UX-190"],
+    title:
+      "Nothing on the overview moves under reduced motion, on a project display, or on a steady poll",
     async run(ctx) {
       const before = greens(ctx, ["alpha", "bravo", "delta"]);
       const after = greens(ctx, ["alpha", "bravo", "charlie", "delta"]);
