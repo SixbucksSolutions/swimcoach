@@ -171,6 +171,11 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   and is restarted by each successful poll (UX-157). 40 s outlasts a 30 s poll plus its 8 s timeout. If
   the page's script freezes, the dot stops by itself about 10 s after a missed poll. A plain infinite
   animation would keep a dead page looking alive.
+- **A change of health box state fades** (Terry, 2026-11-14, localswim swimcoach #0036: "going from
+  LIVE to STALE? do a fade out/in to draw my eye gently"; UX-183 to UX-186). The old state and its
+  warning line fade out over 0.3 s, then the new ones fade in over 0.3 s while the displays ease into or
+  out of their gray. A steady poll, the first render and reduced motion move nothing. The rule and its
+  reason are in `docs/brand.md` section 6.
 - The page polls `GET /api/2026-11-14/state` every 30 seconds.
 - **Alerts button:** when on, a new needs-you item plays a two-tone chime and calls `navigator.vibrate`.
   The page also jumps to the all-projects display. Sound needs that one tap (browser rule). iOS Safari

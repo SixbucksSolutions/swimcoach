@@ -11,12 +11,13 @@
 // IN in OFFLINE's red, the displays gray out, and the warning line says to tap it; a tap reloads (the
 // home-screen web app has no reload button). The next good poll clears it.
 
-import { restartBreath, setText, syncBreath, ui } from "./dom.js";
+import { restartBreath, setText, ui } from "./dom.js";
 import { dur, fmtTime, POLL_MS } from "./format.js";
+import { showHealth } from "./health.js";
 import { toView } from "./state.js";
 
 /** @import { View } from "./view.js" */
-/** @typedef {{st: string, label: string, age: number|null, msg: string}} Health */
+/** @import { Health } from "./health.js" */
 /** @typedef {'ok'|'auth'|'fail'} Outcome */
 
 const STATE_PATH = "/api/2026-11-14/state";
@@ -93,30 +94,17 @@ function onAuthFailure() {
   authFailed = true;
 }
 
-/** Writes the clock, the health box and the warning line, each only when it changed. */
+/**
+ * Writes the clock, then shows the health box, the warning line and the displays' gray (health.js),
+ * each only when it changed; a change of state fades.
+ */
 function tick() {
   setText(ui("#clock"), fmtTime(new Date()));
   let h = AUTH_HEALTH;
   if (!authFailed) {
     h = healthOf(lastView, lastOk, Date.now());
   }
-  const health = ui("#health");
-  if (health.className !== h.st) {
-    health.className = h.st;
-  }
-  setText(ui("#health b"), h.label);
-  // Age shows only when LIVE, from 1 minute (concept.md 3.1).
-  let age = "";
-  if (h.st === "live" && h.age !== null && h.age >= 60) {
-    age = dur(h.age);
-  }
-  setText(ui("#health span"), age);
-  const phone = ui("#phone");
-  if (phone.dataset.health !== h.st) {
-    phone.dataset.health = h.st;
-    syncBreath();
-  }
-  setText(ui("#warn"), h.msg);
+  showHealth(h);
 }
 
 async function poll() {

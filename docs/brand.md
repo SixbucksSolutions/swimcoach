@@ -146,12 +146,38 @@ on. A color that asks for no action, or for an action he cannot take, wears out 
 
 ## 6. Motion (settled)
 
+- **Meaningful content that changes SHOULD move gently rather than jump.** Terry, 2026-11-14
+  (localswim swimcoach #0036): "It isn't an edict but a desired goal that anytime we change meaningful
+  content that it should be animated rather than time warp. We may find exceptions but going from LIVE
+  to STALE? do a fade out/in to draw my eye gently." The reason is where the phone sits: in his
+  peripheral vision, which is very sensitive to motion ("it kept us meat sacs alive when we were living
+  in caves and sabre tooth tigers wanted to eat us"). A gentle move draws the eye there without
+  startling it; a jump either startles or goes unseen. It is a goal, not an edict: a change MAY stay
+  instant when there is a reason, and the reason SHOULD be written here.
+  - **Motion MUST fire only on a real change.** A poll or a second that changed nothing MUST NOT
+    animate or mutate anything (UX-110). Motion is what pulls the eye, so motion without news is a
+    false alarm, and like a color that asks for nothing (section 5) it wears out the reflex.
+  - **The first render MUST NOT move.** The page's own 0.2 s fade-in covers it (below).
+  - **Under `prefers-reduced-motion: reduce` a change lands at once**, with no motion (the last bullet
+    of this section).
+  - **Direction is context, not part of this rule.** Card #0035 is giving motion a vocabulary for what
+    arrives and leaves (sideways means a project did it, vertical means swimcoach did it). A state that
+    changes in place, such as the Health box, fades instead.
+- **The Health box fades between states** (UX-183 to UX-186). The old state fades out over 0.3 s
+  `ease-in`, then the new one is written and fades in over 0.3 s `ease-out`; the warning line under the
+  Status line goes out with the old state and comes in with the new one; and the displays ease into or
+  out of their gray over the fade-in's 0.3 s instead of snapping. A new age ("LIVE 7m" to "LIVE 8m") or a
+  new duration in the warning line is written in place and does not fade. The LIVE dot's breath and its
+  step with GO TO KEYBOARD are untouched (concept.md section 3.1). The fade dims the whole box, fill and
+  text together, for 0.3 s; at rest, white on `--ok-fill` stays at full opacity as section 5 requires.
+  The slots refitting as the warning line comes and goes do not move yet: that is a separate follow-up.
 - The page appears once, finished: hidden until the font file and the first render are ready, then a
-  single 0.2 s `ease-in` fade of the whole page. Polls MUST NOT fade or flash, with one exception: a
-  card that arrives after the first render (a new milestone or a new red slot) fades in over 0.3 s
-  `ease-in`. Terry, 2026-11-14, at the MVP-08 phone check: "Let's do a gentle 0.3s ease in animation as
-  it was startling when they popped on." Only the arriving card animates; every card already on screen
-  MUST stay untouched. Full rules: `docs/concept.md` section 3.4.
+  single 0.2 s `ease-in` fade of the whole page. Polls MUST NOT fade or flash, with two exceptions: a
+  change of the Health box's state (above), and a card that arrives after the first render (a new
+  milestone or a new red slot), which fades in over 0.3 s `ease-in`. Terry, 2026-11-14, at the MVP-08
+  phone check: "Let's do a gentle 0.3s ease in animation as it was startling when they popped on." Only
+  the arriving card animates; every card already on screen MUST stay untouched. Full rules:
+  `docs/concept.md` section 3.4.
 - Motion SHOULD be skipped under `prefers-reduced-motion: reduce`.
 
 ## 7. Voice

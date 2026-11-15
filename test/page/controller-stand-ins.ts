@@ -31,6 +31,13 @@ function fakeFetch(): Promise<unknown> {
   return Promise.resolve(reply);
 }
 
+/** An Animation stand-in: an event target that fires "finish" when its duration has passed. */
+function fakeAnimation(_frames: unknown, options?: { duration?: number }): EventTarget {
+  const animation = new EventTarget();
+  setTimeout(() => animation.dispatchEvent(new Event("finish")), options?.duration ?? 0);
+  return animation;
+}
+
 /** Whether a change landed outside the status line's clock (see watchDocument). */
 function outsideClock(record: MutationRecord): boolean {
   const clock = document.querySelector("#clock");
@@ -152,8 +159,10 @@ export function setUp(): void {
   vi.stubGlobal("reportError", stubs.reported);
   installFonts("loaded");
   sessionStorage.clear();
-  // A card's fade-in (UX-135) goes through element.animate; record the calls and their elements.
-  stubs.animate = vi.fn();
+  // A card's fade-in (UX-135) and the Health box's fades (UX-183 to UX-186) go through
+  // element.animate; record the calls and their elements. Each returns an Animation stand-in that
+  // fires "finish" once its duration has passed on the fake timers.
+  stubs.animate = vi.fn(fakeAnimation);
   Object.defineProperty(Element.prototype, "animate", { value: stubs.animate, configurable: true });
   stubs.reduceMotion = false;
   vi.stubGlobal("matchMedia", (query: string) => ({

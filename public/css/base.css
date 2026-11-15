@@ -275,6 +275,8 @@ header h1 .word span {
   overscroll-behavior-x: contain;
 }
 
+/* The gray of STALE, OFFLINE and SIGN IN. health.js eases into and out of it on a change of state
+   (UX-185) through the Web Animations API, so no transition sits here. */
 #phone[data-health="off"] #pages,
 #phone[data-health="stale"] #pages {
   opacity: 0.4;
