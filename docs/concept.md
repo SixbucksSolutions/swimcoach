@@ -137,7 +137,7 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 - **Why the clock stayed to the left of the health box (superseded).** Terry, 2026-11-13: the old order, "LIVE
   2:25 PM", read as a caption, live as of 2:25, so the clock looked like a data timestamp: "wait shit
   is 2:25 still live? is that stale?" With the clock first, "2:25pm LIVE" reads as two facts: "it's
-  2:25pm and yes that *is* what time it is and yes that is LIVE data." The order MUST NOT be swapped
+  2:25pm and yes that *is* what time it is and yes that is LIVE data." The order was not to be swapped
   back. Data age, when it matters, lives in the health box ("LIVE 7m") and the warning line, never in a
   clock beside the word LIVE.
 - **Every time on the page: `H:mm` with lowercase am/pm and no space**, 12-hour, for example

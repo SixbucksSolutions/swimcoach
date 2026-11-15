@@ -30,8 +30,8 @@ finish. You do nothing for that step.
    from Chrome opens with Chrome's own cookies, so the Access session from step 2 carries over (Terry,
    2026-11-14; this step first said the app kept separate cookies, and RESUME risk 8 records why that was
    wrong). A sign-in page here is a defect.
-5. **Safe areas.** **Check:** the status line (wordmark, clock, health box, bell) sits fully below the
-   Dynamic Island and the clock, and the dots at the bottom sit fully above the home indicator bar. Send
+5. **Safe areas.** **Check:** the status line (wordmark, health box, bell) sits fully below the
+   Dynamic Island and the phone's own clock, and the dots at the bottom sit fully above the home indicator bar. Send
    a screenshot.
 6. **Six cards.** With the demo board up, **check:** all six slots fit on one screen without scrolling,
    and the seventh card, if there is one, is reached by scrolling. Send a screenshot; the Lead measures
