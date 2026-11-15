@@ -106,6 +106,8 @@ function listen() {
   pages.addEventListener("touchstart", () => setTouching(true), passive);
   pages.addEventListener("touchend", () => setTouching(false), passive);
   pages.addEventListener("touchcancel", () => setTouching(false), passive);
+  // The mark and wordmark go back to the overview, as "All projects" does (UX-200).
+  ui("header h1").dataset.go = ALL;
   ui("#phone").addEventListener("click", onTap);
   ui("#snd").addEventListener("click", onBell);
   ui("#warn").addEventListener("click", () => {

@@ -111,11 +111,14 @@ header {
   min-width: 0;
 }
 
+/* The mark and wordmark (UX-199): the mark matches the bell's 34 px, so the Status line stays 52 px
+   tall and the Card display area keeps every pixel. A tap on them goes to the overview (UX-200). */
 header h1 {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 16px;
+  cursor: pointer;
+  font-size: 24px;
   margin: 0;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -124,8 +127,8 @@ header h1 {
 
 #brand {
   flex: none;
-  width: 26px;
-  height: 26px;
+  width: 34px;
+  height: 34px;
   background: center / contain no-repeat var(--brand);
 }
 

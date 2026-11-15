@@ -131,6 +131,10 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 
 - **Layout, left to right:** mark and wordmark alone on the left; then, locked together on the right,
   the **health box** and the alerts bell, 8 px apart (UX-192).
+- **Mark and wordmark (Terry, 2026-11-15, card #0048).** The mark is 34 px, the bell's height, and the
+  wordmark 24 px, so the Status line stays 52 px tall and the Card display area keeps its height
+  (UX-199). A tap on either goes back to the overview from any project display, as "All projects"
+  does; on the overview it does nothing (UX-200).
 - **No clock (Terry, 2026-11-15, card #0046).** The Status line MUST NOT show a clock: the iPhone's
   own status bar already shows the time, so ours was redundant (UX-193). Until then the clock sat left
   of the health box, for the reason below, which is kept as history.

@@ -87,13 +87,16 @@ const statusCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-005"],
-    title: "The mark sits beside the wordmark at 26 px",
+    ids: ["UX-199"],
+    title: "The mark is 34 px and the wordmark 24 px, and the Status line stays 52 px tall",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       const s = await statusBoxesOf(ctx.page);
-      near(s.brand.w, 26, 0.5, "mark width");
-      near(s.brand.h, 26, 0.5, "mark height");
+      near(s.brand.w, 34, 0.5, "mark width");
+      near(s.brand.h, 34, 0.5, "mark height");
+      const marks = await probe<{ size: number }>(ctx.page, "wordmark()");
+      near(marks.size, 24, 0.1, "wordmark size");
+      assert.equal(s.header.h, HEADER_HEIGHT, "The Card display area loses no height.");
       const image = await styleOf(ctx.page, "#brand", "backgroundImage");
       assert.notEqual(image, "none", "The mark is drawn.");
       assert.ok(
