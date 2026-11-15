@@ -84,6 +84,20 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
   - **The card:** the agent SHOULD keep it in In Progress while the branch is open, MUST move it to
     Ready For Review once the change is merged and deployed, and SHOULD comment the pull request and
     the commit on it. The agent MUST NOT move a card to Completed; only Terry does.
+  - **Keeping a branch current: merge `main` up, squash-merge down** (Terry, 2026-11-14, card
+    #0039). To bring a card branch up to date, the agent MUST merge `main` into it (`git merge
+    origin/main`) and MUST NOT rebase it: every commit is pushed at once as Terry's backup, so a
+    rebase would rewrite history his backups already hold and need a force-push, which is his call
+    alone. To land it, the squash-merge above turns the whole branch, merges and review fixes
+    included, into one atomic commit on `main` ("I like when cards come into main as a single atomic
+    commit"). The branch's own history stays readable in its pull request.
+  - **Several branches at once:** when parallel work needs its own checkout, the agent SHOULD use a
+    git worktree outside `C:\Projects\swimcoach` (for example `C:\Projects\swimcoach-<nnnn>`) or
+    under `.claude/worktrees/`, which git and Biome ignore (card #0038). A worktree MUST NOT junction
+    or link `node_modules` (run `npm ci` in it; RESUME, "T5 closed", records the incident: removing
+    a worktree followed the junction and emptied the main checkout's), and a branch that will merge after another MUST merge `main` again once
+    the first lands, resolving conflicts there rather than on `main`. Files SHOULD be staged by name,
+    not with `git add -A`.
   - The MVP's relay rules 1 to 8 (`docs/planning/mvp-staffing-plan.md`) and its `mvp/integration`
     branch are history; they do not bind V1. Relay rule 9, subagents only for parallel work or
     independent review, still holds.
