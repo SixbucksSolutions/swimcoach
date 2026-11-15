@@ -111,9 +111,9 @@ header {
   min-width: 0;
 }
 
-/* The mark and wordmark (UX-199): the mark matches the bell's 34 px, so the Status line stays 52 px
-   tall and the Card display area keeps every pixel. 22 px is the widest wordmark that keeps 35 px from
-   an all-done board's "LIVE 12h 05m". A tap on them goes to the overview (UX-200). */
+/* The mark and wordmark (UX-209): the mark matches the bell's 34 px, so the Status line stays 52 px
+   tall and the Card display area keeps every pixel. Every Health box state keeps at least 35 px from
+   the 22 px wordmark; the widest is OFFLINE (UX-195). A tap on them goes to the overview (UX-200). */
 header h1 {
   display: flex;
   align-items: center;
@@ -167,7 +167,7 @@ header h1 .word span {
 }
 
 /* Status line, right to left: bell and health box, 8px apart (header gap). No clock: the phone's own
-   status bar shows the time (UX-193). margin-left:auto on the health box pushes the pair right and
+   status bar shows the time (UX-208). margin-left:auto on the health box pushes the pair right and
    leaves the mark and wordmark alone on the left (UX-192). */
 #health {
   display: inline-flex;
@@ -175,7 +175,7 @@ header h1 .word span {
   margin-left: auto;
   gap: 6px;
   /* The mark, this box and the bell share one 34 px height (UX-201); only the height changes, so the
-     box keeps its width and the wordmark keeps its room (UX-199). */
+     box keeps its width and the wordmark keeps its room (UX-209). */
   box-sizing: border-box;
   height: 34px;
   padding: 0 9px;

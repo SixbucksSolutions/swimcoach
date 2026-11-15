@@ -22,6 +22,9 @@ import {
   watchDocument,
 } from "./controller-stand-ins.ts";
 
+/** LIVE holds 75 s after the last good poll, and not a millisecond longer (UX-204, UX-205). */
+const LIVE_UNTIL_MS = 75 * SEC;
+
 // The controller (public/js/main.js and the modules it wires), loaded into the page shell with fetch
 // and the font set stubbed: drawing, UX-110 on the whole document, late fonts, failed polls and
 // sign-in failures. Cards arriving and the empty board are in arrive.test.ts.
@@ -130,9 +133,9 @@ describe("the controller on failed polls", () => {
 
   it("turns OFFLINE 75 s after the last good poll, through three failed polls, never SIGN IN", async () => {
     await loadPage(fresh(afternoon), new TypeError("Failed to fetch"));
-    await vi.advanceTimersByTimeAsync(3 * POLL_MS);
+    await vi.advanceTimersByTimeAsync(LIVE_UNTIL_MS);
     expect(health()).toEqual(["live", "LIVE", "live"]);
-    await vi.advanceTimersByTimeAsync(POLL_MS);
+    await vi.advanceTimersByTimeAsync(5 * SEC);
     expect(health()).toEqual(["off", "OFFLINE", "off"]);
     expect($("#warn").textContent).toBe("Can't reach the board for 1m. Everything below is old.");
     expect([stubs.reload, stubs.reported].map((f) => f.mock.calls.length)).toEqual([0, 0]);

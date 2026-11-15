@@ -134,8 +134,9 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
 - **Mark and wordmark (Terry, 2026-11-15, card #0048).** The mark is 34 px, the bell's height, and the
   wordmark 22 px, so the Status line stays 52 px tall and the Card display area keeps its height
   (UX-199, now UX-209). 22 px was sized to keep 35 px from an all-done board's "LIVE 12h 05m"; since
-  LIVE lost its age (#0050) the widest everyday box is OFFLINE, with room to spare. A tap on either goes back to the overview from any project display, as "All projects"
-  does; on the overview it does nothing (UX-200).
+  LIVE lost its age (#0050) the widest everyday box is OFFLINE, with room to spare. A tap on either
+  goes back to the overview from any project display, as "All projects" does; on the overview it does
+  nothing (UX-200).
 - **One height (Terry, 2026-11-15, card #0049).** The mark and wordmark, the health box and the bell
   are each 34 px tall on one center line, so the Status line looks intentional rather than assembled
   (UX-201). The health box grew from about 27.6 px to 34 px in height only; its width, and so the
