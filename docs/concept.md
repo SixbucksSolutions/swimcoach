@@ -137,6 +137,10 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   which is what Terry sees in the morning: a finished board never turns STALE, so its age keeps
   growing. A tap on either goes back to the overview from any project display, as "All projects"
   does; on the overview it does nothing (UX-200).
+- **One height (Terry, 2026-11-15, card #0049).** The mark and wordmark, the health box and the bell
+  are each 34 px tall on one center line, so the Status line looks intentional rather than assembled
+  (UX-201). The health box grew from about 27.6 px to 34 px in height only; its width, and so the
+  wordmark's room, did not change, and the card display area did not move (UX-202).
 - **No clock (Terry, 2026-11-15, card #0046).** The Status line MUST NOT show a clock: the iPhone's
   own status bar already shows the time, so ours was redundant (UX-193). Until then the clock sat left
   of the health box, for the reason below, which is kept as history.

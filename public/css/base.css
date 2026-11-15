@@ -174,7 +174,11 @@ header h1 .word span {
   align-items: center;
   margin-left: auto;
   gap: 6px;
-  padding: 5px 9px;
+  /* The mark, this box and the bell share one 34 px height (UX-201); only the height changes, so the
+     box keeps its width and the wordmark keeps its room (UX-199). */
+  box-sizing: border-box;
+  height: 34px;
+  padding: 0 9px;
   border-radius: 7px;
   font-size: 13px;
   color: #fff;

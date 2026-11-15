@@ -25,6 +25,7 @@ regeneration commands and rejected ideas: [`design/logo/README.md`](../design/lo
 - Minimum size: 16 px, the browser tab. It was tested there on dark and light tab bars.
 - In the status line the mark is 34 × 34 px, the bell's height, 8 px from a 22 px wordmark (Terry,
   2026-11-15, card #0048; it was 26 px beside a 16 px wordmark). Tapping either goes to the overview.
+  The health box and the bell share the same 34 px height on one center line (card #0049).
   (Screen-part names, such as status line, card display area, title line and detail blurb, are defined
   in `docs/concept.md` section 2.)
 - The iPhone home-screen icon is `swimcoach-touch-180.png`: full bleed on `#0b0f14`.
