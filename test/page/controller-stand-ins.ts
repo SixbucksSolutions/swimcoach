@@ -159,9 +159,10 @@ export function setUp(): void {
   vi.stubGlobal("reportError", stubs.reported);
   installFonts("loaded");
   sessionStorage.clear();
-  // A card's fade-in (UX-135) and the Health box's fades (UX-183 to UX-186) go through
-  // element.animate; record the calls and their elements. Each returns an Animation stand-in that
-  // fires "finish" once its duration has passed on the fake timers.
+  // The overview's motion (motion.js, UX-177 to UX-182) and the Health box's fades (UX-183 to
+  // UX-186) go through element.animate; record the calls and their elements. Each returns an
+  // Animation stand-in that fires "finish" once its duration has passed on the fake timers; a test
+  // can also fire it by hand.
   stubs.animate = vi.fn(fakeAnimation);
   Object.defineProperty(Element.prototype, "animate", { value: stubs.animate, configurable: true });
   stubs.reduceMotion = false;

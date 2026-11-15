@@ -383,7 +383,8 @@ export function fontsLoaded() {
  * @returns {void}
  */
 export function fitCards(page) {
-  const cards = page.querySelector(".cards");
+  // Not a departing card's ghost wrapper, which carries the old grid's classes (motion.js).
+  const cards = page.querySelector(".cards:not(.ghost)");
   if (!(cards instanceof HTMLElement)) {
     return;
   }
@@ -400,7 +401,7 @@ export function fitCards(page) {
   }
   const computed = getComputedStyle(page);
   // The Done line takes its own height, gap included, from the bottom of the card area (UX-175).
-  const bar = page.querySelector(".donebar");
+  const bar = page.querySelector(".donebar:not(.ghost)");
   let reserved = 0;
   if (bar instanceof HTMLElement) {
     reserved = bar.offsetHeight;

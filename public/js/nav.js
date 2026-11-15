@@ -6,45 +6,30 @@
 import { syncBreath, ui } from "./dom.js";
 import { ALL, esc } from "./format.js";
 import { morph } from "./morph.js";
+import { clearGhosts, motionAllowed, play, snapshot } from "./motion.js";
 import { fitCards, renderOverview, slotKey } from "./overview.js";
 import { renderProject } from "./project.js";
 
 /** @import { View } from "./view.js" */
-
-/** A card that arrives after the first render fades in over 0.3 s `ease-in` (UX-135; brand.md 6). */
-const ARRIVE_MS = 300;
+/** @import { Snapshot } from "./motion.js" */
 
 /**
  * Draws the overview through a keyed morph, so every card already on screen keeps its node.
  * @param {HTMLElement} el   the overview's section
  * @param {View} view
- * @returns {Element[]}   the cards that arrived on this draw; none on the first, which the whole-page
- *   reveal covers (concept.md 3.4)
+ * @param {boolean} overviewInView   whether the overview is the display on screen
+ * @returns {Snapshot|null}   where the slots were before the draw, for the motion that follows it
+ *   (motion.js); null on the first draw, which the whole-page reveal covers (concept.md 3.4), and
+ *   whenever the page MUST NOT move (UX-182)
  */
-function drawOverview(el, view) {
-  const first = !el.hasChildNodes();
-  const before = new Set(el.querySelectorAll(".pc"));
+function drawOverview(el, view, overviewInView) {
+  clearGhosts(el);
+  let before = null;
+  if (el.hasChildNodes() && motionAllowed(overviewInView)) {
+    before = snapshot(el);
+  }
   morph(el, renderOverview(view), slotKey);
-  if (first) {
-    return [];
-  }
-  return [...el.querySelectorAll(".pc")].filter((card) => !before.has(card));
-}
-
-/**
- * Fades the arrived cards in through the Web Animations API, which writes nothing to the DOM, so the
- * next steady poll still mutates nothing (UX-110). None under prefers-reduced-motion.
- * @param {Element[]} arrived
- */
-function fadeIn(arrived) {
-  if (arrived.length === 0 || matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return;
-  }
-  // Opacity alone: no transform, so fitNames' measurements and the GO TO KEYBOARD throb are untouched.
-  const frames = [{ opacity: 0 }, { opacity: 1 }];
-  for (const card of arrived) {
-    card.animate(frames, { duration: ARRIVE_MS, easing: "ease-in" });
-  }
+  return before;
 }
 
 function sections() {
@@ -153,16 +138,24 @@ export function onKey(e) {
  */
 export function render(view) {
   const want = [ALL, ...view.cards.map((c) => c.key)];
-  let target = keys()[current()] ?? ALL;
+  const shown = keys()[current()] ?? ALL;
+  // Motion plays only when the overview was already the display on screen as this poll landed. When
+  // the project display being read goes away, the viewer is moved to the overview below, but the
+  // overview was off screen until then, so nothing on it moves (UX-182).
+  const overviewInView = shown === ALL;
+  let target = shown;
   if (!want.includes(target)) {
     target = ALL;
   }
-  /** @type {Element[]} */
-  let arrived = [];
+  /** @type {{ el: HTMLElement, before: Snapshot }|null} */
+  let motion = null;
   for (const [i, el] of placeSections(want).entries()) {
     const card = view.cards[i - 1];
     if (card === undefined) {
-      arrived = drawOverview(el, view);
+      const before = drawOverview(el, view, overviewInView);
+      if (before !== null) {
+        motion = { el, before };
+      }
     } else {
       morph(el, renderProject(card, view));
     }
@@ -174,7 +167,10 @@ export function render(view) {
   }
   fitOverview();
   syncBreath();
-  fadeIn(arrived);
+  // After the fit, so every slot's new place is final.
+  if (motion !== null) {
+    play(motion.el, motion.before);
+  }
   syncDots();
   const title = titleOf(view.asking);
   if (document.title !== title) {
