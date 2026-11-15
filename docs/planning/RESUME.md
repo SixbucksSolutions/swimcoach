@@ -5,18 +5,21 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
 ## V1, day one: where things stand (2026-11-14, night)
 
-- **`main` is the only branch; production runs it.** The MVP as Terry accepted it is tagged
-  `v0.5.0` (at `6a00b69`; Terry's estimate: roughly halfway to 1.0).
-- **Shipped today, each as one card, one branch, one squash commit, after an independent `Opus/high`
-  review** (AGENTS.md, "How V1 work flows"):
+- **`main` is the only branch on GitHub; production runs it** (once this card's branch merges and
+  goes). The MVP as Terry accepted it is tagged `v0.5.0` (at `6a00b69`; Terry's estimate: roughly
+  halfway to 1.0).
+- **Shipped today.** From #52 on, each card went through one `localswim/<nnnn>-` branch, an
+  independent `Opus/high` review and one squash commit (AGENTS.md, "How V1 work flows"). #0033 and
+  #0034 shipped earlier the same day, before that process was recorded: on `V1/0033` and `V1/0034`
+  branches, with no independent review, and #0033 took two PRs and two commits.
 
   | Card | What | PR | Ledger |
   | --- | --- | --- | --- |
   | #0033 | The home-screen app fills the screen: `100vh` under `display-mode: standalone` (the first fix, `100%`, changed nothing on the phone; a diagnostic build measured why) | #49, #50 | UX-172 |
   | #0034 | Done milestones leave the grid for a slate "GO CODE REVIEW · N" line above the dots; "Nothing running." when all are done | #51 | UX-173 to UX-176 |
-  | #0035 | Card motion: projects arrive from the left and leave to the right, GO TO KEYBOARD drops from the top, the GO CODE REVIEW line rises from the bottom, the 3/6 resize glides | #54 | UX-177 to UX-181, UX-190 |
+  | #0035 | Card motion: projects arrive from the left and leave to the right, GO TO KEYBOARD drops from the top, the GO CODE REVIEW line rises from the bottom, the 3/6 resize glides | #54 | UX-177 to UX-182 (UX-182 since superseded by UX-190) |
   | #0036 | The Health box fades between states; the displays' gray eases (authored by a subagent in a worktree) | #56 | UX-183 to UX-186 |
-  | #0037 | A display whose project leaves while it is on screen stays, dims, says "off the board" and returns by itself after 5 s | #58 | UX-187 to UX-189 |
+  | #0037 | A display whose project leaves while it is on screen stays, dims, says "off the board" and returns by itself after 5 s | #58 | UX-187 to UX-190 |
   | #0038 | Agent worktrees under `.claude/worktrees/` are ignored by git and Biome | #55 | - |
   | #0039 | Merge `main` up, squash-merge down; several branches at once (AGENTS.md) | #57 | - |
   | #0019, #0020 | Records: V1's work flow (AGENTS.md); device check step 8 passed | #52, #53 | UX-171 |
@@ -28,14 +31,15 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   `zz demo` project, as at the MVP-08 phone check), then make them arrive, go red, go done and stop
   while he watches, and `stop` every one of them afterwards.
 - **Verification on `main`:** Vitest 1,486; the UI suite 136/136 (`--local public`, WebKit, run on
-  #0037's head `f7787c7`; later commits changed comments only); the API suites last ran at `4f7237f`
+  #0037's head `f7787c7`; later commits changed comments and one unit-test title); the API suites
+  last ran at `4f7237f`
   (full 68/68 on `swimcoach-test`); no API code has changed since.
 - **Ledger:** 190 rows, 37 superseded, 2 retired. V1's rows are area O, UX-172 to UX-190; the next
   free ID is UX-191. UX-182 is superseded by UX-190 (scoped to the overview).
 - **Decided today, recorded where they bind:** the overview stays 3/6 for V1, since Terry runs at most
   three projects at once (concept.md section 3.2); meaningful content changes SHOULD animate, and
   motion fires only on a real change (brand.md section 6); sideways motion means a project did it and
-  vertical means swimcoach did it (#0035); red means blocked, so a future "done is a call" needs an
+  vertical means swimcoach did it (ledger UX-177 to UX-181, brand.md section 6); red means blocked, so a future "done is a call" needs an
   action color of its own (concept.md section 8, item 15, open); the good-news green's full-opacity
   rule holds at rest (brand.md sections 5 and 6, AGENTS.md).
 - **Backlog, waiting for Terry to pull:** #0021 to #0031 as before, plus #0041 (glide the slots when
@@ -43,12 +47,14 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - **How the day's work actually ran, for the next agent:**
   - The independent review is worth its cost: it caught two visible motion bugs, a ledger
     self-contradiction, a rule left absolute in three places, and a CI failure assumed to be a pass.
-  - Claim a full UI count only after a full run on that head; a partial rerun is not the suite.
+  - An agent MUST NOT claim a full UI count without a full run on that head; a partial rerun is not
+    the suite.
   - Parallel work ran in worktrees (outside the checkout or under `.claude/worktrees/`, each with its
     own `npm ci`); the branch that merges second merges `main` again first.
 - **Loose end:** `.claude/worktrees/agent-a117e3f395d69ab23`, #0036's author's worktree, is left behind
-  and locked by the agent harness. Git and Biome ignore it; it is the harness's to remove, and an
-  agent SHOULD NOT force-unlock it.
+  and locked by the agent harness, and it still holds the local branch
+  `localswim/0036-animate-health-changes` (squash-merged as PR #56; deleted on GitHub). Git and Biome
+  ignore the folder; it is the harness's to remove, and an agent SHOULD NOT force-unlock it.
 
 ## V1 started (2026-11-14, evening)
 
