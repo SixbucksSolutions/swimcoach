@@ -69,7 +69,7 @@ localswim:
 
 | Token | Name | Hex | On `#1D2125` | Used for |
 |---|---|---|---|---|
-| `--lane-blue` | Lane blue | `#85B8FF` | 7.94:1 | "swim" in the wordmark, the bell when alerts are on, mock controls |
+| `--lane-blue` | Lane blue | `#85B8FF` | 7.94:1 | "swim" in the wordmark, mock controls |
 | `--lane-amber` | Lane amber | `#E2A100` | 7.20:1 | "coach" in the wordmark |
 | `--lane-green` | Lane green | `#4BCE97` | 8.16:1 | Good news, through `--ok` (below) |
 | `--board` | Board slate | `#1D2125` | (ground) | The mark's board, raised surfaces, the done card, the desktop phone frame |
@@ -81,7 +81,7 @@ logo's grays are the same grays.
 
 | Token | Hex | Used for |
 |---|---|---|
-| `--bg` | `#0b0f14` | Page |
+| `--bg` | `#0b0f14` | Page; the bell when alerts are on |
 | `--panel` | `#131a22` | Tiles, the mock's scenario sheet |
 | `--panel2` | `= --board` | Health box when idle, bar tracks |
 | `--line` | `#243140` | Borders, dividers, parked lanes |
@@ -89,7 +89,7 @@ logo's grays are the same grays.
 | `--stack-2` | `#5A6573` | Lane shades; the mark's back board |
 | `--faint` | `#5f7082` | Axis labels, footers (3.78:1, deliberately quiet) |
 | `--dim` | `#93a3b3` | Secondary text; done (7.44:1 on `--bg`) |
-| `--text` | `#e8eef4` | Primary text (16.44:1) |
+| `--text` | `#e8eef4` | Primary text (16.44:1); the bell's disc when alerts are on, inverting the off bell (UX-191) |
 
 ### Status colors (settled in part)
 

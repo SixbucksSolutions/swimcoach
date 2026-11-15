@@ -63,17 +63,19 @@ export const LANE_LABELS = Object.freeze({
 });
 
 /**
- * The alerts bell's SVG, struck through while alerts are off. Constant-cased, as in the mock,
- * because the frozen interface names it BELL.
+ * The alerts bell's SVG: struck through while alerts are off, drawn heavier while they are on
+ * (UX-191). Constant-cased, as in the mock, because the frozen interface names it BELL.
  * @type {(on: boolean) => string}
  */
 export const BELL = (on) => {
   let strike = "";
+  let weight = "2.8";
   if (!on) {
     strike = '<path d="M3 3l18 18"/>';
+    weight = "2.2";
   }
   return (
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round">` +
     `<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>${strike}</svg>`
   );
 };

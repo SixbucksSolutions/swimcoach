@@ -165,9 +165,11 @@ header h1 .word span {
   height: 18px;
 }
 
+/* Alerts on inverts the off bell: a bold dark bell on a light disc (UX-191). */
 #snd.on {
-  color: var(--lane-blue);
-  border-color: var(--lane-blue);
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
 }
 
 #health {

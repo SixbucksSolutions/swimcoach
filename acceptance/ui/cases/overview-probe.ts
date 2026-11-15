@@ -169,6 +169,8 @@ const texts = () => ({
 const bellInfo = () => ({
   text: q('#snd').textContent, paths: qa('#snd svg path').length,
   label: q('#snd').getAttribute('aria-label'),
+  fill: cs(q('#snd')).backgroundColor, ink: cs(q('#snd')).color,
+  ring: cs(q('#snd')).borderTopColor, weight: num(cs(q('#snd svg')).strokeWidth),
 });
 const area = () => {
   const p = q('#pages .page');

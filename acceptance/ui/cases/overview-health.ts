@@ -169,7 +169,7 @@ const healthCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-015", "UX-125"],
+    ids: ["UX-015", "UX-191"],
     title: "A long outage (1h 05m) shows the word OFFLINE alone and the Status line keeps one row",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
