@@ -1,4 +1,4 @@
-// Overview motion at its edges (localswim swimcoach #0035; UX-178, UX-182): a project display that
+// Overview motion at its edges (localswim swimcoach #0035; UX-178, UX-190): a project display that
 // goes away while it is on screen, and a poll that lands while a card is still leaving. Both were
 // found by PR #54's independent review. The recorder comes from overview-motion.ts.
 import assert from "node:assert/strict";
@@ -20,8 +20,8 @@ function isStatePoll(url: string): boolean {
 
 export const motionEdgeCases: UiCase[] = [
   {
-    ids: ["UX-182"],
-    title: "Nothing moves when the project display on screen goes away",
+    ids: ["UX-190"],
+    title: "Nothing on the overview moves when the project display on screen goes away",
     async run(ctx) {
       await ctx.page.addInitScript(RECORDER);
       await openWith(ctx, greens(ctx, ["alpha", "bravo", "charlie"]));

@@ -103,6 +103,26 @@ export const departedCases: UiCase[] = [
   },
   {
     ids: ["UX-188"],
+    title: "A viewer who moves to another display during the countdown stays there when it ends",
+    async run(ctx) {
+      await bravoLeaves(ctx);
+      // Displays now: overview, alpha, bravo (departed), charlie. The viewer moves on to charlie.
+      await tapDot(ctx.page, 3);
+      await ctx.advance(RETURN_MS);
+      await pause(SCROLL_MS);
+      await ctx.advance(GLIDE_MS);
+      await settle(ctx);
+      assert.equal(await shown(ctx.page), named(ctx, "charlie"), "The viewer is not pulled away.");
+      assert.equal(
+        await ctx.page.locator("#pages > section.page").count(),
+        3,
+        "Bravo's display went.",
+      );
+      assert.equal(await ctx.page.locator("#dots button").count(), 3, "And its dot.");
+    },
+  },
+  {
+    ids: ["UX-188"],
     title: "A tap on the notice goes back to the overview at once",
     async run(ctx) {
       await bravoLeaves(ctx);
