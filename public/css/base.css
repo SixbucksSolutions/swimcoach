@@ -312,6 +312,43 @@ header h1 .word span {
   flex-shrink: 0;
 }
 
+/* A display whose project left the board while it was on screen (departed.js, localswim #0037): its
+   content eases to the same dim gray STALE gives the displays, under a notice that stays on top. */
+.page.departed > :not(.gone-note) {
+  opacity: 0.4;
+  filter: grayscale(1);
+  transition:
+    opacity 0.3s ease-in,
+    filter 0.3s ease-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page.departed > :not(.gone-note) {
+    transition: none;
+  }
+}
+
+.gone-note {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin-bottom: 10px;
+}
+
+.gone-note button {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 14px;
+  background: var(--board);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+}
+
 #dots {
   flex: none;
   display: flex;
@@ -337,6 +374,11 @@ header h1 .word span {
 
 #dots button.on i {
   background: var(--text);
+}
+
+/* The departed display's dot, dimmed until the display goes (departed.js). */
+#dots button.gone i {
+  opacity: 0.4;
 }
 
 #dots button:first-child i {
