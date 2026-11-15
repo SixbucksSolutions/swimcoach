@@ -8,7 +8,8 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 - **Terry accepted the MVP (2026-11-14 evening: "Accept, all rows Yes").** MVP-12 is done. All 136
   live UX ledger rows changed from `Pending` to `Yes` and are V1's requirements; the 35 superseded or
   retired rows are unchanged. Card #0017 records it. Device check step 8 (#0020) and the first real
-  agent's full turn were still open at acceptance and stay open as observations, not gates.
+  agent's full turn were still open at acceptance, as observations, not gates. Step 8 passed later
+  that evening: "Still no sign in, straight to the board" (Terry, card #0020; UX-171).
 - **V1's bar is stick time** (Terry, 2026-11-14, card #0018): "Basically it needs stick time. We
   rushed to prod with an MVP now I want to see what I like and what I want to add, change, or
   remove." V1's work is what Terry decides from using the board. Agents SHOULD turn each of his
