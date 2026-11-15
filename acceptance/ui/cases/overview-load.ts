@@ -20,8 +20,8 @@ const RECORDER = `
   window.__started = null;
   window.__muts = [];
   new MutationObserver(() => {
-    const clock = document.querySelector('#clock');
-    if (window.__started === null && clock && clock.textContent) { window.__started = performance.now() - t0; }
+    const bell = document.querySelector('#snd svg');
+    if (window.__started === null && bell) { window.__started = performance.now() - t0; }
   }).observe(document, { subtree: true, childList: true, characterData: true });
   window.__rects = () => [...document.querySelectorAll('header > *, #pages .pc')].map((e) => {
     const b = e.getBoundingClientRect();
@@ -34,7 +34,6 @@ const RECORDER = `
       started: window.__started,
       cards: document.querySelectorAll('#pages .pc').length,
       fonts: document.fonts.status,
-      clock: document.querySelector('#clock')?.textContent ?? '',
       health: document.querySelector('#health b')?.textContent ?? '',
       cardsClass: cards ? cards.className : null,
       slot: cards ? cards.style.getPropertyValue('--slot') : null,
@@ -51,9 +50,7 @@ const RECORDER = `
   window.__watch = () => {
     new MutationObserver((records) => {
       for (const r of records) {
-        if (!document.querySelector('#clock').contains(r.target)) {
-          window.__muts.push(r.type + ':' + (r.target.id || r.target.className || r.target.nodeName));
-        }
+        window.__muts.push(r.type + ':' + (r.target.id || r.target.className || r.target.nodeName));
       }
     }).observe(document.documentElement, { subtree: true, attributes: true, childList: true, characterData: true });
     return true;
@@ -66,7 +63,6 @@ interface Snapshot {
   readonly started: number | null;
   readonly cards: number;
   readonly fonts: string;
-  readonly clock: string;
   readonly health: string;
   readonly cardsClass: string | null;
   readonly slot: string | null;
@@ -112,10 +108,7 @@ const loadCases: UiCase[] = [
       // GO TO KEYBOARD and four running Cards; the done milestone is on the GO CODE REVIEW line.
       assert.equal(rev.cards, 5, "Every Card was drawn before the reveal.");
       assert.equal(rev.fonts, "loaded", "The font was ready at the reveal.");
-      assert.ok(
-        rev.clock !== "" && rev.health === "LIVE",
-        "The Status line was filled at the reveal.",
-      );
+      assert.equal(rev.health, "LIVE", "The Status line was filled at the reveal.");
       const face = await probe<string[]>(
         ctx.page,
         "[...document.styleSheets].flatMap((s) => [...s.cssRules]).filter((r) => r.constructor.name === 'CSSFontFaceRule').map((r) => r.style.getPropertyValue('font-display'))",
@@ -179,7 +172,7 @@ const loadCases: UiCase[] = [
   },
   {
     ids: ["UX-109", "UX-110"],
-    title: "Steady polls never fade, blank or flash the page and change nothing but the clock",
+    title: "Steady polls never fade, blank or flash the page and change nothing",
     async run(ctx) {
       await ctx.page.addInitScript(RECORDER);
       await openWith(ctx, ctx.example("afternoon"));
@@ -191,7 +184,7 @@ const loadCases: UiCase[] = [
         assert.equal(opacity, "1", "The page never blanks.");
       }
       const seen = await probe<Snapshot>(ctx.page, "window.__now()");
-      assert.deepEqual(seen.muts, [], "Three unchanged polls touch no node outside the clock.");
+      assert.deepEqual(seen.muts, [], "Three unchanged polls touch no node.");
       assert.equal(seen.again, 0, "The loading state never returns.");
     },
   },

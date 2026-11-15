@@ -1,4 +1,4 @@
-// Overview checks, area A, the Status line's parts and clock (MVP-11 A). The Health box's states are
+// Overview checks, area A, the Status line's parts, and the page's time format (MVP-11 A). The Health box's states are
 // in overview-health.ts.
 import assert from "node:assert/strict";
 import type { UiCase, UiContext } from "../types.ts";
@@ -10,23 +10,19 @@ const HEADER_HEIGHT = 52;
 const GUTTER = 14;
 const PAGE_WIDTH = 402;
 
-/** Opens the page at a local time of day (before any poll), with `body`, and runs the clock tick. */
-async function openAtLocalTime(
-  ctx: UiContext,
-  body: Record<string, unknown>,
-  hour: number,
-  minute: number,
-): Promise<void> {
-  await ctx.page.clock.setSystemTime(new Date(2026, 10, 14, hour, minute, 0));
-  await openWith(ctx, body);
-  await ctx.advance(1000);
-}
+/** A time on the page: H:mm with lowercase am/pm and no space, 12-hour (UX-194). */
+const TIME = /\d{1,2}:\d{2}(?:am|pm)/u;
 
-/** Moves the page's wall clock to a local time of day and runs one tick, then reads the clock. */
-async function clockAt(ctx: UiContext, hour: number, minute: number): Promise<string> {
-  await ctx.page.clock.setSystemTime(new Date(2026, 10, 14, hour, minute, 0));
+/**
+ * Opens the page at a local time of day with every project reporting at that moment, and reads the
+ * footers, which say "reported <time> by <agent>".
+ */
+async function footersAt(ctx: UiContext, hour: number, minute: number): Promise<string> {
+  const at = new Date(2026, 10, 14, hour, minute, 30);
+  await ctx.page.clock.setSystemTime(at);
+  await openWith(ctx, retimed(ctx.example("afternoon"), at.getTime() / 1000));
   await ctx.advance(1000);
-  return await probe<string>(ctx.page, "q('#clock').textContent");
+  return (await probe<{ foot: string }>(ctx.page, "texts()")).foot;
 }
 
 const statusCases: UiCase[] = [
@@ -48,31 +44,32 @@ const statusCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-001"],
+    ids: ["UX-192"],
     title:
-      "Status line: mark and wordmark alone on the left; clock, Health box and bell 8 px apart on the right",
+      "Status line: mark and wordmark alone on the left; Health box and bell 8 px apart on the right",
     async run(ctx) {
       await openWith(ctx, ctx.example("afternoon"));
       const s = await statusBoxesOf(ctx.page);
-      near(s.health.x - s.clock.r, 8, 1, "clock to Health box");
       near(s.bell.x - s.health.r, 8, 1, "Health box to bell");
       assert.ok(s.brand.r <= s.wordmark.r, "The mark sits inside the wordmark group.");
-      assert.ok(s.wordmark.r < s.clock.x, "Nothing sits between the wordmark and the clock.");
+      assert.ok(s.wordmark.r < s.health.x, "The wordmark comes before the Health box.");
+      assert.equal(s.parts, 3, "The Status line holds the wordmark, the Health box and the bell.");
       near(s.bell.r, PAGE_WIDTH - GUTTER, 1, "The bell ends at the page's right gutter");
       near(s.brand.x, GUTTER, 1, "The mark starts at the left gutter");
       assert.equal(s.header.h, HEADER_HEIGHT);
     },
   },
   {
-    ids: ["UX-003"],
-    title: "The clock is left of the Health box, never right of it",
+    ids: ["UX-193"],
+    title: "The Status line shows no clock; the phone's own status bar shows the time",
     async run(ctx) {
-      await openAtLocalTime(ctx, ctx.example("afternoon"), 14, 25);
+      await ctx.page.clock.setSystemTime(new Date(2026, 10, 14, 14, 25, 0));
+      await openWith(ctx, ctx.example("afternoon"));
+      await ctx.advance(1000);
       const s = await statusBoxesOf(ctx.page);
-      assert.ok(s.clock.r < s.health.x, "The clock ends before the Health box starts.");
+      assert.doesNotMatch(s.headerText, TIME, `No time in the Status line ("${s.headerText}").`);
+      assert.ok(s.wordmark.r < s.health.x, "The wordmark is first.");
       assert.ok(s.health.r < s.bell.x, "The bell is last.");
-      assert.ok(s.wordmark.r < s.clock.x, "The wordmark is first.");
-      assert.equal(s.clockText, "2:25pm");
     },
   },
   {
@@ -119,37 +116,45 @@ const statusCases: UiCase[] = [
     },
   },
   {
-    ids: ["UX-006"],
-    title: "The clock reads H:mm with lowercase am/pm and no space, 12-hour",
+    ids: ["UX-194"],
+    title: "A footer's time reads H:mm with lowercase am/pm and no space, 12-hour",
     async run(ctx) {
-      await openAtLocalTime(ctx, ctx.example("afternoon"), 1, 32);
-      assert.equal((await statusBoxesOf(ctx.page)).clockText, "1:32am");
-      assert.equal(await clockAt(ctx, 12, 47), "12:47pm");
-      assert.equal(await clockAt(ctx, 0, 5), "12:05am");
-      assert.equal(await clockAt(ctx, 13, 0), "1:00pm");
+      for (const [hour, minute, text] of [
+        [1, 32, "1:32am"],
+        [12, 47, "12:47pm"],
+        [0, 5, "12:05am"],
+        [13, 0, "1:00pm"],
+      ] as const) {
+        // biome-ignore lint/performance/noAwaitInLoops: each time of day is its own page load
+        const foot = await footersAt(ctx, hour, minute);
+        assert.ok(foot.includes(`reported ${text} by`), `${text} in the footers (${foot}).`);
+      }
     },
   },
   {
-    ids: ["UX-007"],
+    ids: ["UX-194"],
     title: "Midnight and noon read 12:00am and 12:00pm, never 0:00",
     async run(ctx) {
-      await openAtLocalTime(ctx, ctx.example("afternoon"), 0, 0);
-      assert.equal((await statusBoxesOf(ctx.page)).clockText, "12:00am");
-      assert.equal(await clockAt(ctx, 12, 0), "12:00pm");
+      for (const [hour, text] of [
+        [0, "12:00am"],
+        [12, "12:00pm"],
+      ] as const) {
+        // biome-ignore lint/performance/noAwaitInLoops: each time of day is its own page load
+        const foot = await footersAt(ctx, hour, 0);
+        assert.ok(foot.includes(`reported ${text} by`), `${text} in the footers (${foot}).`);
+        assert.ok(!foot.includes(" 0:00"), "Never 0:00.");
+      }
     },
   },
   {
-    ids: ["UX-008"],
-    title: "Chart ends and the footer use the clock's H:mm am/pm format",
+    ids: ["UX-194"],
+    title: "Chart ends and the footer use one H:mm am/pm format",
     async run(ctx) {
       const quarterPast = new Date(2026, 10, 14, 15, 7, 30);
       await ctx.page.clock.setSystemTime(quarterPast);
       await openWith(ctx, retimed(ctx.example("afternoon"), quarterPast.getTime() / 1000));
       await ctx.advance(1000);
-      const texts = await probe<{ clock: string; foot: string; axis: string[] }>(
-        ctx.page,
-        "texts()",
-      );
+      const texts = await probe<{ foot: string; axis: string[] }>(ctx.page, "texts()");
       const time = /^\d{1,2}:\d{2}(?:am|pm)$/u;
       assert.ok(texts.axis.length >= 2, "The charts label their ends.");
       for (const label of texts.axis) {
@@ -157,8 +162,8 @@ const statusCases: UiCase[] = [
       }
       assert.match(texts.foot, /reported \d{1,2}:\d{2}(?:am|pm) by /u);
       assert.ok(
-        texts.foot.includes(`reported ${texts.clock} by`),
-        `The footer's report time (${texts.foot}) matches the clock (${texts.clock}) for the same instant.`,
+        texts.foot.includes("reported 3:07pm by"),
+        `The footer's report time (${texts.foot}) is the report's own instant, 3:07pm.`,
       );
     },
   },
