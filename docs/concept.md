@@ -181,8 +181,9 @@ Called the "header" in earlier text and in the prototype; section 2 has the agre
   seconds"; UX-156). His "within 30 seconds" above was said at the 10 s poll, when 30 s was three
   polls; the rule kept was three polls (60 s at the 20 s poll, UX-158, UX-159) until Terry set it
   outright on 2026-11-15 (card #0050): "As long as we've had one successful poll in last 75 seconds,
-  we are live." LIVE now holds through three failed 20 s polls and OFFLINE starts at 75 s (UX-204,
-  UX-205). He kept STALE the same day: a silent agent on an unfinished board still turns the box
+  we are live." His reason: it "gives time for two tries with buffer for status polls". At the 20 s
+  poll the window in fact spans three tries (20, 40 and 60 s, each with an 8 s timeout), so LIVE holds
+  through three failed polls and OFFLINE starts at 75 s (UX-204, UX-205). He kept STALE the same day: a silent agent on an unfinished board still turns the box
   orange.
 
 - The dot's breathing animation runs a fixed 30 seconds (15 cycles of 2 s; 16 s at the 10 s poll, 40 s
