@@ -219,8 +219,8 @@ export const navCases: UiCase[] = [
     async run(ctx) {
       const body = ctx.example("afternoon");
       const display = await showProject(ctx, body, "FGA T04");
-      const clock = ctx.page.locator("#clock");
-      const clockAt = (await boxOf(clock)).y;
+      const health = ctx.page.locator("#health");
+      const healthAt = (await boxOf(health)).y;
       const nameAt = (await boxOf(display.locator("h2"))).y;
       const reached = await scrollPage(ctx.page, 3, SCROLL_PX);
       assert.ok(reached > 0, "The display is taller than the screen, so it scrolls.");
@@ -228,7 +228,7 @@ export const navCases: UiCase[] = [
         Math.abs((await boxOf(display.locator("h2"))).y - (nameAt - reached)) <= SLACK_PX,
         "The content moves up.",
       );
-      assert.equal((await boxOf(clock)).y, clockAt, "The status line stays where it was.");
+      assert.equal((await boxOf(health)).y, healthAt, "The status line stays where it was.");
       await scrollPage(ctx.page, 3, SCREEN_HEIGHT * 4);
       assert.ok(
         await display.locator(".foot").isVisible(),

@@ -137,16 +137,6 @@ header h1 .word span {
   color: var(--lane-amber);
 }
 
-/* Status line, right to left: bell, health box, clock, locked together at one 8px gap (header gap);
-   margin-left:auto on the clock pushes the group right and leaves the mark and wordmark alone on the left. */
-#clock {
-  font-variant-numeric: tabular-nums;
-  font-size: 16px;
-  font-weight: 600;
-  margin-left: auto;
-  white-space: nowrap;
-}
-
 #snd {
   flex: none;
   display: grid;
@@ -172,9 +162,13 @@ header h1 .word span {
   border-color: var(--text);
 }
 
+/* Status line, right to left: bell and health box, 8px apart (header gap). No clock: the phone's own
+   status bar shows the time (UX-193). margin-left:auto on the health box pushes the pair right and
+   leaves the mark and wordmark alone on the left (UX-192). */
 #health {
   display: inline-flex;
   align-items: center;
+  margin-left: auto;
   gap: 6px;
   padding: 5px 9px;
   border-radius: 7px;

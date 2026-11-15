@@ -4,7 +4,7 @@ import { vi } from "vitest";
 // a fetch that hands out queued answers, a font set, location.reload, reportError, element.animate and
 // matchMedia, all on fake timers. No tests live here.
 
-const SHELL = `<div id="phone"><header><h1><i id="brand"></i><span class="word">swim<span>coach</span></span></h1><span id="clock"></span><span id="health" class="wait"><i></i><b>&hellip;</b><span></span></span><button id="snd" type="button" aria-label="Alerts off"></button></header><div id="warn"></div><main id="pages"></main><nav id="dots"></nav></div>`;
+const SHELL = `<div id="phone"><header><h1><i id="brand"></i><span class="word">swim<span>coach</span></span></h1><span id="health" class="wait"><i></i><b>&hellip;</b><span></span></span><button id="snd" type="button" aria-label="Alerts off"></button></header><div id="warn"></div><main id="pages"></main><nav id="dots"></nav></div>`;
 
 type Spy = ReturnType<typeof vi.fn>;
 
@@ -36,12 +36,6 @@ function fakeAnimation(_frames: unknown, options?: { duration?: number }): Event
   const animation = new EventTarget();
   setTimeout(() => animation.dispatchEvent(new Event("finish")), options?.duration ?? 0);
   return animation;
-}
-
-/** Whether a change landed outside the status line's clock (see watchDocument). */
-function outsideClock(record: MutationRecord): boolean {
-  const clock = document.querySelector("#clock");
-  return clock === null || !clock.contains(record.target);
 }
 
 export const T0 = 1_800_000_000_000; // the page clock, in ms, on a minute boundary
@@ -116,9 +110,8 @@ export async function revealed(): Promise<void> {
 
 /**
  * Records every change anywhere in the document; call the result to read them. Start it after the
- * one-time reveal (the `loading` class), which is the page load's change, not a poll's. The status
- * line's clock is left out: it is UX-110's one allowed writer, once a minute, and a 20 s poll steps
- * over a minute boundary every third time.
+ * one-time reveal (the `loading` class), which is the page load's change, not a poll's. The Status
+ * line has no clock (UX-192), so nothing is left out.
  */
 export function watchDocument(): () => MutationRecord[] {
   // The records reach the callback after the test's awaits, so keep what it is handed.
@@ -126,7 +119,7 @@ export function watchDocument(): () => MutationRecord[] {
   const observer = new MutationObserver((records) => seen.push(...records));
   const all = { subtree: true, childList: true, attributes: true, characterData: true };
   observer.observe(document, all);
-  return () => [...seen, ...observer.takeRecords()].filter(outsideClock);
+  return () => [...seen, ...observer.takeRecords()];
 }
 
 export function $(selector: string): HTMLElement {

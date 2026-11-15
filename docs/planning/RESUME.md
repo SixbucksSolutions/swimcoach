@@ -397,8 +397,9 @@ that replays them skips them as one `Warning:` line.
   compensated sum and moving the Lanczos cutoff from 5 to 4; the "span too small" test never reaches
   the `p = 0` limit. Strengthen them in a later turn.
 - Decided 2026-11-13: the status-line clock STAYS, even though the iPhone's own status bar shows the
-  time above it in the home-screen app. Terry: "Keep it I don't want rework." Do not re-propose
-  dropping or hiding it.
+  time above it in the home-screen app. Terry: "Keep it I don't want rework." **Superseded
+  2026-11-15:** Terry had the clock removed as redundant (card #0046, UX-193); the Status line MUST NOT
+  show a clock.
 - Carried into MVP-10: iOS offered "open as web app" and the home-screen icon launches full-screen
   (standalone), not inside Chrome. Terry added the page to his iPhone home screen on 2026-11-13. The S1 icon is
   right, but the label reads "(1)swimcoach·c..." because iOS took the mock's `<title>` (needs-you count
