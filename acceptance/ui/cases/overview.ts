@@ -6,6 +6,7 @@ import type { UiCase } from "../types.ts";
 import { alertCases } from "./overview-alerts.ts";
 import { breathCases } from "./overview-breath.ts";
 import { cardCases } from "./overview-cards.ts";
+import { doneCases } from "./overview-done.ts";
 import { healthCases } from "./overview-health.ts";
 import { keyboardCases } from "./overview-keyboard.ts";
 import { layoutCases } from "./overview-layout.ts";
@@ -19,6 +20,7 @@ const overviewCases: UiCase[] = [
   ...statusCases,
   ...healthCases,
   ...cardCases,
+  ...doneCases,
   ...smallCases,
   ...keyboardCases,
   ...layoutCases,

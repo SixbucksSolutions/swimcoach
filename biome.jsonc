@@ -77,6 +77,16 @@
         // reproduced evidence, so the off switch from PR #14 was reverted (2026-11-13).
         // This rule MUST NOT be turned off without a reproduced false positive. Whoever next sees
         // it fire on plain TypeScript MUST keep that code as the evidence before turning it off.
+        // Evidence, reproduced 2026-11-14 on Biome 2.6.7 (localswim swimcoach #0034): a plain
+        // Vitest file, no Qwik anywhere, fires it on an arrow function assigned to a const inside
+        // an it() callback:
+        //   it("repro", () => {
+        //     const done = (name: string): { title: string; level: string } =>
+        //       card({ title: name, level: "done" });
+        //     expect(done("d1").level).toBe("done");
+        //   });
+        // "Non-serializable expression must be wrapped with $(...)". Worked around by hoisting the
+        // function to the top level. The rule is still on; turning it off is Terry's call.
       },
       "style": {
         // 2 findings: src/index.ts and vitest.config.ts. A Worker MUST default-export its

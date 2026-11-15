@@ -5,7 +5,6 @@ import type { UiCase } from "../types.ts";
 import {
   board,
   COLOR,
-  fillers,
   named,
   near,
   openWith,
@@ -95,9 +94,10 @@ const cardCases: UiCase[] = [
         pick("red"),
       ];
       const cards = await overviewOf(ctx, picks);
+      // Red leaves for GO TO KEYBOARD and done for the GO CODE REVIEW line (UX-173).
       const wanted = [
         "GO TO KEYBOARD",
-        ...picks.filter((p) => p.kind !== "red").map((p) => titleOf(ctx, p)),
+        ...picks.filter((p) => p.kind !== "red" && p.kind !== "done").map((p) => titleOf(ctx, p)),
       ];
       assert.deepEqual(
         cards.map((c) => c.name),
@@ -123,26 +123,6 @@ const cardCases: UiCase[] = [
       assert.deepEqual(
         after.map((c) => c.box.y),
         before.map((c) => c.box.y),
-      );
-    },
-  },
-  {
-    ids: ["UX-033", "UX-034"],
-    title: "A done Card is dark slate with the blurb Done, and it ranks above a stale ask",
-    async run(ctx) {
-      const cards = await overviewOf(ctx, [
-        pick("done", "finished", { needs_me: "A stale ask" }),
-        ...fillers(1),
-      ]);
-      const done = named(cards, "finished T06");
-      assert.equal(done.bg, COLOR.board);
-      assert.equal(done.fg, COLOR.dim);
-      assert.equal(done.detail, "Done");
-      assert.equal(done.rtr, null, "A done Card shows no RTR.");
-      assert.equal(
-        cards.some((c) => c.name === "GO TO KEYBOARD"),
-        false,
-        "A done project with a stale ask opens no GO TO KEYBOARD slot.",
       );
     },
   },
@@ -241,7 +221,11 @@ const cardCases: UiCase[] = [
         pick("done"),
         pick("red"),
       ]);
-      const fills = [...new Set(cards.map((c) => c.bg))].sort((a, b) => a.localeCompare(b));
+      // The done look is now the GO CODE REVIEW line's slate (UX-175), not a Card.
+      const doneLine = await styleOf(ctx.page, ".doneline", "backgroundColor");
+      const fills = [...new Set([...cards.map((c) => c.bg), doneLine])].sort((a, b) =>
+        a.localeCompare(b),
+      );
       const expected = [COLOR.badFill, COLOR.board, COLOR.okFill, COLOR.risk, COLOR.stack1].sort(
         (a, b) => a.localeCompare(b),
       );
@@ -284,7 +268,18 @@ const cardCases: UiCase[] = [
         true,
         "The red row opens GO TO KEYBOARD.",
       );
-      for (const row of rows.filter((r) => r.want !== "red")) {
+      // Done ranks first, so p1, despite its ask, has no Card and no GO TO KEYBOARD: it is counted on
+      // the GO CODE REVIEW line (UX-173, UX-174).
+      assert.equal(
+        cards.some((c) => c.name.startsWith("p1 ")),
+        false,
+        "The done row has no Card.",
+      );
+      assert.equal(
+        (await ctx.page.locator(".doneline").textContent())?.trim(),
+        "GO CODE REVIEW · 1",
+      );
+      for (const row of rows.filter((r) => r.want !== "red" && r.want !== "done")) {
         const card = cards.find((c) => c.name.startsWith(`${row.name} `));
         assert.ok(card, `${row.name} has a Card.`);
         assert.equal(card.bg, FILL[row.want], `${row.name} fill`);

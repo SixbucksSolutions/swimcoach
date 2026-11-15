@@ -189,9 +189,12 @@ export const smallCases: UiCase[] = [
         await style(display.locator(".hero .lab b"), "color"),
         await token(ctx.page, "--done"),
       );
+      // On the overview it is done, not over budget: no yellow Card, and it is counted on the GO CODE
+      // REVIEW line instead of taking a slot (UX-173).
       const cards = ctx.page.locator("#pages > section.page").first();
-      assert.equal(await cards.locator(".pc.done").count(), 1);
+      assert.equal(await cards.locator(".pc.done").count(), 0);
       assert.equal(await cards.locator(".pc.yellow").count(), 0);
+      assert.equal((await cards.locator(".doneline").textContent())?.trim(), "GO CODE REVIEW · 1");
     },
   },
   {

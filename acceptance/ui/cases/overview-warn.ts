@@ -4,13 +4,16 @@
 // not a poll drew a new view.
 import assert from "node:assert/strict";
 import type { UiCase, UiContext } from "../types.ts";
-import { board, fillers, near, openWith, pollOnce, settle } from "./overview-kit.ts";
-import { areaOf, cardsOf, healthOf } from "./overview-probe.ts";
+import { board, fillers, type Json, near, openWith, pollOnce, settle } from "./overview-kit.ts";
+import { areaOf, boxOf, cardsOf, healthOf } from "./overview-probe.ts";
 
 const SIX = 6;
 const OUTAGE_MS = 100_000;
 
-/** Asserts that every slot fits the area: nothing scrolls, and the last slot ends at its bottom. */
+/**
+ * Asserts that every slot fits the area: nothing scrolls, and the last slot ends at its bottom, or at
+ * the top of the GO CODE REVIEW line's bar when one is drawn (UX-175).
+ */
 async function fitsArea(ctx: UiContext, when: string): Promise<void> {
   const area = await areaOf(ctx.page);
   const cards = await cardsOf(ctx.page);
@@ -22,7 +25,25 @@ async function fitsArea(ctx: UiContext, when: string): Promise<void> {
   );
   const last = cards.at(-1);
   assert.ok(last, `${when}: a last slot.`);
-  near(last.box.b, area.bottom, 1.5, `${when}: the last slot ends at the area's bottom`);
+  let { bottom } = area;
+  if ((await ctx.page.locator(".donebar").count()) > 0) {
+    ({ y: bottom } = await boxOf(ctx.page, ".donebar"));
+  }
+  near(last.box.b, bottom, 1.5, `${when}: the last slot ends at the area's bottom`);
+}
+
+/**
+ * The stale example with one more running milestone: GO TO KEYBOARD and five gray Cards fill six half
+ * slots, and its done milestone draws the GO CODE REVIEW line, so the warning line, six half slots
+ * and the line all share the screen, the tightest the overview gets.
+ */
+function staleWithSixSlots(body: Json): Json {
+  const copy = structuredClone(body);
+  const milestones = copy.milestones as Json[];
+  const gray = milestones.find((m) => m.color === "gray");
+  assert.ok(gray, "The stale example has a gray milestone.");
+  milestones.push({ ...structuredClone(gray), project: "zulu-extra" });
+  return copy;
 }
 
 const warnCases: UiCase[] = [
@@ -30,7 +51,12 @@ const warnCases: UiCase[] = [
     ids: ["UX-142", "UX-144"],
     title: "STALE: the warning line takes its room and six half slots still fit above the dots",
     async run(ctx) {
-      await openWith(ctx, ctx.example("stale"));
+      await openWith(ctx, staleWithSixSlots(ctx.example("stale")));
+      assert.equal(
+        await ctx.page.locator(".doneline").count(),
+        1,
+        "The GO CODE REVIEW line shows.",
+      );
       const h = await healthOf(ctx.page);
       assert.equal(h.label, "STALE");
       assert.equal(h.warnShown, true);

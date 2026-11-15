@@ -134,9 +134,11 @@ const healthCases: UiCase[] = [
       assert.equal(h.label, "LIVE");
       assert.equal(h.bg, COLOR.okFill);
       assert.equal(runningBreaths(h.dot).length, 1, "The dot breathes.");
-      assert.deepEqual(
-        (await cardsOf(ctx.page)).map((c) => c.bg),
-        [COLOR.board, COLOR.board],
+      // Both done: no slots, and both counted on the GO CODE REVIEW line (UX-173, UX-176).
+      assert.deepEqual(await cardsOf(ctx.page), []);
+      assert.equal(
+        (await ctx.page.locator(".doneline").textContent())?.trim(),
+        "GO CODE REVIEW · 2",
       );
     },
   },

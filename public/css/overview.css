@@ -160,6 +160,31 @@
   height: 0.8em;
   transform: translate(-50%, -50%) rotate(var(--a)) translateX(0.9em);
 }
+/* The GO CODE REVIEW line (UX-175): done milestones leave the grid and are counted on one slate bar
+   just above the page dots, GO TO KEYBOARD's quiet counterpart. margin-top: auto keeps it at the bottom
+   under "Nothing running."; sticky keeps it in view when more than six slots scroll; the bar's 10px top
+   padding is the same gap as between slots, and fitCards() takes the bar's whole height from the slots. */
+.donebar {
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+  padding-top: 10px;
+  background: var(--bg);
+}
+.doneline {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  padding: 5px 14px;
+  background: var(--board);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  text-align: center;
+}
 .empty {
   color: var(--dim);
   background: var(--panel);
