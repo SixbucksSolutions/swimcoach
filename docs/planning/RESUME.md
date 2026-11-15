@@ -145,12 +145,14 @@ that replays them skips them as one `Warning:` line.
   service runs from `C:\Projects\localswim`, its code, at `127.0.0.1:8811`, with its data in the
   localswim state store; the script reads `runtime\service.json` there (Terry, 2026-11-15, card #0052:
   `C:\Projects\localswim-v2`, the earlier installed build, is retired and kept in
-  `C:\Projects\localswim-recovered`). Bot MAY create cards in Ready For Work, Blocked and Needs Terry
+  `C:\Projects\localswim-recovered`). The live Bot and human credentials still live under
+  `%LOCALAPPDATA%\localswim-v2\credentials`, named by the receipt's `credential_directory`; they
+  MUST NOT be removed with the retired build. Bot MAY create cards in Ready For Work, Blocked and Needs Terry
   and move them up to Ready For Review; Backlog is Terry's (2026-11-15), and only Terry moves a card
   to Completed.
-- **The board in a browser:** `http://127.0.0.1:8811/boards/62728944-eac7-482c-bd46-4d8f206e5381` on
-  the installed build (checked 2026-11-14). The new localswim UI under construction uses `/board/<id>`
-  (singular); once that build is activated, the bookmark changes to match.
+- **The board in a browser:** `http://127.0.0.1:8811/board/62728944-eac7-482c-bd46-4d8f206e5381`.
+  Since 2026-11-15 the service runs the build in `C:\Projects\localswim`, which answers both
+  `/board/<id>` and the earlier `/boards/<id>` (checked by the PR #68 review).
 - **Baseline re-verified at `4f7237f`:** `npm run check` (1,470 tests), API `--suite full` on
   `swimcoach-test` 68/68, UI 118/118 on both Workers. API `clock-free` on production was skipped on
   purpose so no `zz acceptance` card lands on the live board beside a real agent.
