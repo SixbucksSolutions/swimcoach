@@ -145,4 +145,9 @@ describe("the constants", () => {
     expect(BELL(false)).toContain('<path d="M3 3l18 18"/>');
     expect(BELL(true)).not.toContain('<path d="M3 3l18 18"/>');
   });
+
+  it("draws the bell heavier while alerts are on", () => {
+    expect(BELL(false)).toContain('stroke-width="2.2"');
+    expect(BELL(true)).toContain('stroke-width="2.8"');
+  });
 });

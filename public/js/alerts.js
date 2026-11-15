@@ -1,5 +1,5 @@
 // @ts-check
-// Alerts (concept.md 3.1; UX-125 to UX-130): the bell, and a two-tone chime when a new ask arrives
+// Alerts (concept.md 3.1; UX-126 to UX-130, UX-191): the bell, and a two-tone chime when a new ask arrives
 // with alerts on. Sound needs the bell tap first (UX-129). WebKit has no vibration API (UX-128).
 
 import { ui } from "./dom.js";
@@ -45,7 +45,7 @@ function chime() {
   }
 }
 
-/** Draws the bell: slashed while alerts are off (UX-125). */
+/** Draws the bell: slashed while alerts are off, inverted and bold while on (UX-191). */
 export function paintBell() {
   const snd = ui("#snd");
   snd.innerHTML = BELL(soundOn);
