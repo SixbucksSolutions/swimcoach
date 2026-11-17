@@ -88,9 +88,16 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
     5.5/High independent review they can always be a) merged; and B) pushed to prod." The rule
     tracks the latest Opus rather than pinning 5.5 (Terry, 2026-11-14: "Track latest: Opus/high").
     A model named without a version means the latest; a pinned one carries its version.
-  - **Merge and ship:** once the review and CI's `check` pass, the agent MUST squash-merge the pull
-    request into `main` and delete its branch (`gh pr merge --squash --delete-branch`), and CI deploys
-    it to production. Neither step waits for Terry.
+  - **Merge and ship:** once the review passes, the agent MUST turn on GitHub auto-merge for the
+    pull request (`gh pr merge --auto --squash`). GitHub then squash-merges it into `main` when CI's
+    `check` passes, deletes its branch, and CI deploys it to production. If `check` has already
+    passed, the same command merges at once. Neither step waits for Terry (card #0055, 2026-11-16:
+    "github automerge is almost always what i want").
+  - **What enforces it:** the ruleset "main requires CI check" requires `check` from GitHub Actions
+    on `main`, and the repo deletes a branch when its pull request merges. Repository admins bypass
+    the ruleset, so a docs commit pushed straight to `main`, as the rule above requires, still lands;
+    the push reports the bypass. The agent MUST NOT use that bypass to land code without a pull
+    request.
   - **The card:** the agent SHOULD keep it in In Progress while the branch is open, MUST move it to
     Ready For Review once the change is merged and deployed, and SHOULD comment the pull request and
     the commit on it. The agent MUST NOT move a card to Completed; only Terry does.
