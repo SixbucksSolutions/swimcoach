@@ -14,7 +14,8 @@ where a git clean could delete it; the script tries that first and the old runti
 This script reads the receipt, decrypts bot.xml, sets LOCALSWIM_URL and LOCALSWIM_TOKEN at Process
 scope, runs localswim.exe with every argument it was given, and then clears both variables. It
 never writes to the User or Machine environment and never prints the token. It MUST be used for
-every localswim call an agent makes; the token MUST NOT be read any other way.
+every localswim call an agent makes on Windows, and the token MUST NOT be read any other way there.
+On the agentbox (Linux), scripts/localswim.sh is the path instead (card #0054).
 
 There is no param block on purpose: every argument goes to localswim.exe unchanged.
 
