@@ -98,6 +98,12 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
     the ruleset, so a docs commit pushed straight to `main`, as the rule above requires, still lands;
     the push reports the bypass. The agent MUST NOT use that bypass to land code without a pull
     request.
+  - **Only the lead agent lands anything on `main`** (Terry, 2026-11-16: "subagents cannot push
+    main, that is architect agent only via PR squash merge"). A subagent MUST NOT push to `main`,
+    merge a pull request, or turn on auto-merge; it works on a card branch, or only reports, as a
+    reviewer does. Code reaches `main` only through the lead's squash-merge of a pull request.
+    GitHub cannot enforce this, because every agent pushes with Terry's admin token, which the
+    ruleset lets through; the rule holds because agents follow it.
   - **The card:** the agent SHOULD keep it in In Progress while the branch is open, MUST move it to
     Ready For Review once the change is merged and deployed, and SHOULD comment the pull request and
     the commit on it. The agent MUST NOT move a card to Completed; only Terry does.
