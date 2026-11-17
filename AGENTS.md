@@ -69,41 +69,50 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 - **How V1 work flows (Terry, 2026-11-14, card #0019; RFC 2119 keywords, the capitals are
   load-bearing).** Every change MUST be authorized by a card on the `swimcoach` localswim board; when
   no card authorizes a change yet, the agent MUST create one first. Every code change MUST reach
-  `main` through a pull request, and a code change MUST NOT be committed to `main` directly.
-  - **Docs go straight to `main`** (Terry, 2026-11-14: "only changes that need a branch and
-    independent review are code -- docs don't need that heavyweight process"). A change that touches
-    only documentation prose (Markdown such as `docs/`, `AGENTS.md`, READMEs) MUST be committed to
-    `main` directly and pushed; it MUST NOT go through a branch or a pull request ("Def don't branch
-    and PR that shit tho"). The agent MAY have an independent reviewer read it first, at its own
-    judgment (Terry: "that judgement call is delegated to you"). Its commit message SHOULD name the
-    card. Everything else is code here: source, tests, scripts, CI, and the
-    contract, schemas and UX ledger, which are the behavior and move with the acceptance suites.
-    When one change touches both, it is code.
+  `main` through a pull request. The only direct pushes to `main` are Terry's own and the lead
+  agent's docs-only changes (Terry, 2026-11-16: "PR is only path to main for anyone but Terry",
+  then "Docs are okay for lead to push straight to main").
+  - **The lead pushes docs straight to `main`** (Terry, 2026-11-14: "only changes that need a
+    branch and independent review are code -- docs don't need that heavyweight process"; lead only
+    since 2026-11-16, card #0055). A change that touches only documentation prose (Markdown such as
+    `docs/`, `AGENTS.md`, READMEs) MUST be committed to `main` directly by the lead and pushed; it
+    MUST NOT go through a branch or a pull request ("Def don't branch and PR that shit tho"). The
+    lead MAY have an independent reviewer read it first, at its own judgment (Terry: "that
+    judgement call is delegated to you"). Its commit message SHOULD name the card. Everything else
+    is code here: source, tests, scripts, CI, and the contract, schemas and UX ledger, which are the
+    behavior and move with the acceptance suites. When one change touches both, it is code.
   - **One branch per card, named for it:** each card's code work MUST be done on its own branch,
     `localswim/<nnnn>-<short-description>`, cut from `main`, where `<nnnn>` is the card's four-digit
     ticket number (for example `localswim/0035-card-animations`). Terry: "I like branches with a 1:1
     tie to 'what authorized this work'."
-  - **Review:** every pull request MUST pass an independent `Opus/high` review: the latest Opus at
-    high effort, a reviewer that did not write the change. Terry: "as long as PR's pass an Opus
-    5.5/High independent review they can always be a) merged; and B) pushed to prod." The rule
-    tracks the latest Opus rather than pinning 5.5 (Terry, 2026-11-14: "Track latest: Opus/high").
-    A model named without a version means the latest; a pinned one carries its version.
-  - **Merge and ship:** once the review passes, the agent MUST turn on GitHub auto-merge for the
-    pull request (`gh pr merge --auto --squash`). GitHub then squash-merges it into `main` when CI's
-    `check` passes, deletes its branch, and CI deploys it to production. If `check` has already
-    passed, the same command merges at once. Neither step waits for Terry (card #0055, 2026-11-16:
-    "github automerge is almost always what i want").
+  - **Review: two votes, and both MUST approve** (Terry, 2026-11-16: "once two of them agree it's
+    good, lead approves PR and squash merges"). The lead agent reviews every pull request itself,
+    and MUST also get an independent `Opus/high` review: the latest Opus at high effort, a subagent
+    that did not write the change. Each gives a verdict, approve or changes requested. When either
+    requests changes, the lead fixes them and both review again; the pull request MUST NOT merge
+    while either vote stands at changes requested. Terry, on the independent review: "as long as
+    PR's pass an Opus 5.5/High independent review they can always be a) merged; and B) pushed to
+    prod." The rule tracks the latest Opus rather than pinning 5.5 (Terry, 2026-11-14: "Track
+    latest: Opus/high"). A model named without a version means the latest; a pinned one carries its
+    version.
+  - **The lead owns the approve and merge button** (Terry, 2026-11-16: "Lead's subagent gets a
+    VOTE, but lead owns the approve/squash merge button"; "subagents cannot push main"). A subagent
+    MUST NOT push to `main`, docs included, approve or merge a pull request, or turn on auto-merge;
+    it writes on a card branch, or votes as a reviewer.
+  - **Merge and ship:** once both votes approve, the lead MUST post the approval as a comment on
+    the pull request, naming both verdicts and the subagent reviewer's model and version, and then
+    turn on GitHub auto-merge (`gh pr merge --auto --squash`). The comment is the approval: GitHub
+    does not let an account approve its own pull request, and every agent uses Terry's. GitHub then
+    squash-merges the pull request into `main` when CI's `check` passes, deletes its branch, and CI
+    deploys it to production; if `check` has already passed, the same command merges at once.
+    Neither step waits for Terry (card #0055, 2026-11-16: "github automerge is almost always what i
+    want").
   - **What enforces it:** the ruleset "main requires CI check" requires `check` from GitHub Actions
     on `main`, and the repo deletes a branch when its pull request merges. Repository admins bypass
-    the ruleset, so a docs commit pushed straight to `main`, as the rule above requires, still lands;
-    the push reports the bypass. The agent MUST NOT use that bypass to land code without a pull
-    request.
-  - **Only the lead agent lands anything on `main`** (Terry, 2026-11-16: "subagents cannot push
-    main, that is architect agent only via PR squash merge"). A subagent MUST NOT push to `main`,
-    merge a pull request, or turn on auto-merge; it works on a card branch, or only reports, as a
-    reviewer does. Code reaches `main` only through the lead's squash-merge of a pull request.
-    GitHub cannot enforce this, because every agent pushes with Terry's admin token, which the
-    ruleset lets through; the rule holds because agents follow it.
+    the ruleset, so Terry's own pushes and the lead's docs pushes still land; the push reports the
+    bypass. Every agent uses Terry's admin account, so GitHub cannot tell the lead from a subagent,
+    or docs from code: the rules above hold because agents follow them, and the bypass MUST NOT be
+    used for anything else.
   - **The card:** the agent SHOULD keep it in In Progress while the branch is open, MUST move it to
     Ready For Review once the change is merged and deployed, and SHOULD comment the pull request and
     the commit on it. The agent MUST NOT move a card to Completed; only Terry does.

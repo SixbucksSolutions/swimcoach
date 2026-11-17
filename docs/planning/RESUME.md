@@ -118,9 +118,12 @@ that replays them skips them as one `Warning:` line.
 ## V1 started (2026-11-14, evening)
 
 - **V1's process is settled (card #0019, Terry, 2026-11-14); `AGENTS.md`, "How V1 work flows", is
-  the rule.** In short: one `localswim/<nnnn>-<short-description>` branch per card, a pull request to
-  `main`, an independent `Opus/high` review (the latest Opus), then the agent squash-merges and CI ships it, and the
-  card goes to Ready For Review for Terry. A direct commit to `main` MUST NOT be made.
+  the rule.** In short: one `localswim/<nnnn>-<short-description>` branch per card and a pull
+  request to `main` for every code change; the lead's own review and an independent `Opus/high`
+  vote (the latest Opus) MUST both approve; then the lead posts the approval and turns on
+  auto-merge, GitHub squash-merges once CI's `check` passes, CI ships it, and the card goes to
+  Ready For Review for Terry. Only the lead pushes to `main` directly, and only docs-only changes;
+  a subagent never does (card #0055, 2026-11-16).
 
 - **Terry accepted the MVP (2026-11-14 evening: "Accept, all rows Yes").** MVP-12 is done. All 136
   live UX ledger rows changed from `Pending` to `Yes` and are V1's requirements; the 35 superseded or
