@@ -62,7 +62,7 @@ phone. There is no swimcoach agent and no monitoring agent. The full concept
 | `reference/prototype/` | The prototype (reference only) |
 | `scripts/wrangler.ps1` | Runs Wrangler with the Cloudflare token and account ID read from files in `%USERPROFILE%\.secrets\swimcoach`. Every local Wrangler command MUST use it; Terry keeps these credentials out of environment variables |
 | `scripts/localswim.ps1` | Runs the shared localswim service's CLI as Bot, for swimcoach's own work cards (board `swimcoach`). Every localswim call on Windows MUST use it; RESUME says where the service and credentials live |
-| `scripts/localswim.sh` | The same for Linux: on the agentbox (Terry's EC2 agent host), runs the box's `localswim` wrapper as Bot. Every localswim call on Linux MUST use it; the board is reachable only while Terry is connected, and an agent MUST stop and report when it is not (card #0054) |
+| `scripts/localswim.sh` | The same for the agentbox (Linux), Terry's EC2 agent host: runs the box's `localswim` wrapper as Bot. Every localswim call on the agentbox MUST use it; the board is reachable only while Terry is connected, and an agent MUST stop and report when it is not (card #0054) |
 
 ## Working agreements
 

@@ -140,15 +140,9 @@ that replays them skips them as one `Warning:` line.
   at #0017. The decisions that blocked V1 went to Needs Terry (#0017 acceptance, #0018 V1's quality
   bar, #0019 branch and review process, #0020 device check step 8); proposed work and the decisions
   that can wait sit in Backlog.
-- **On the agentbox, every localswim call MUST go through `scripts/localswim.sh` instead** (card
-  #0054, 2026-11-16). The agentbox is Terry's Graviton EC2 agent host (`C:\Projects\agentbox`,
-  private repo `SixbucksSolutions/agentbox`). Its SSH entry forwards the laptop's board to the box's
-  `127.0.0.1:8811` only while Terry is connected; each connection sends the current Bot token to the
-  box, and the box's `localswim` wrapper, which the script runs, sets it for one run. When the board
-  is unreachable the wrapper refuses, and the agent MUST stop and report rather than work without a
-  card. The rest of this bullet describes the laptop.
-- **Every localswim call on Windows MUST go through `scripts/localswim.ps1`**, which runs the CLI as Bot with
-  the token at Process scope for one run (Terry granted reading the Bot credential, 2026-11-14). The
+- **Every localswim call on Windows MUST go through `scripts/localswim.ps1`**, which runs the CLI
+  as Bot with the token at Process scope for one run (Terry granted reading the Bot credential,
+  2026-11-14). The
   service runs from `C:\Projects\localswim`, its code, at `127.0.0.1:8811`, with its data in the
   localswim state store. The script reads the service receipt from
   `%LOCALAPPDATA%\localswim-v2\service.json`, where Terry moved it on 2026-11-15 so a `git clean` in
@@ -159,6 +153,13 @@ that replays them skips them as one `Warning:` line.
   `credential_directory`; they MUST NOT be removed with the retired build. Bot MAY create cards in
   Ready For Work, Blocked and Needs Terry and move them up to Ready For Review; Backlog is Terry's
   (2026-11-15), and only Terry moves a card to Completed.
+- **On the agentbox (Linux), every localswim call MUST go through `scripts/localswim.sh`** (card
+  #0054, 2026-11-16). The agentbox is Terry's Graviton EC2 agent host (`C:\Projects\agentbox`,
+  private repo `SixbucksSolutions/agentbox`). Its SSH entry forwards the laptop's board to the box's
+  `127.0.0.1:8811` only while Terry is connected; each connection sends the current Bot token to the
+  box, and the box's `localswim` wrapper, which the script runs, sets it for one run. When the board
+  is unreachable the wrapper refuses, and the agent MUST stop and report rather than work without a
+  card. The Bot permissions above apply on the box too.
 - **The board in a browser:** `http://127.0.0.1:8811/board/62728944-eac7-482c-bd46-4d8f206e5381`.
   Since 2026-11-15 the service runs the build in `C:\Projects\localswim`, which answers both
   `/board/<id>` and the earlier `/boards/<id>` (checked by the PR #68 review).
