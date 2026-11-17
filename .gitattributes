@@ -1,2 +1,2 @@
-# Shell scripts run on Linux (the agentbox); a CRLF checkout would break them.
+# Shell scripts run on Linux (agentspace); a CRLF checkout would break them.
 *.sh text eol=lf

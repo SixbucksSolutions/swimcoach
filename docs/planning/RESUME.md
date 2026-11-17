@@ -156,9 +156,10 @@ that replays them skips them as one `Warning:` line.
   `credential_directory`; they MUST NOT be removed with the retired build. Bot MAY create cards in
   Ready For Work, Blocked and Needs Terry and move them up to Ready For Review; Backlog is Terry's
   (2026-11-15), and only Terry moves a card to Completed.
-- **On the agentbox (Linux), every localswim call MUST go through `scripts/localswim.sh`** (card
-  #0054, 2026-11-16). The agentbox is Terry's Graviton EC2 agent host (`C:\Projects\agentbox`,
-  private repo `SixbucksSolutions/agentbox`). Its SSH entry forwards the laptop's board to the box's
+- **On agentspace (Linux), every localswim call MUST go through `scripts/localswim.sh`** (card
+  #0054, 2026-11-16). agentspace is Terry's Graviton EC2 agent host, named agentbox until card
+  #0056 (`C:\Projects\agentspace`, public repo `SixbucksSolutions/agentspace`, built as recorded in
+  its `docs/how-it-was-built.md`). Its SSH entry forwards the laptop's board to the box's
   `127.0.0.1:8811` only while Terry is connected; each connection sends the current Bot token to the
   box, and the box's `localswim` wrapper, which the script runs, sets it for one run. When the board
   is unreachable the wrapper refuses, and the agent MUST stop and report rather than work without a
