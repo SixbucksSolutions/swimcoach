@@ -120,7 +120,7 @@ describe("the page keeps the screen on while it is in view (UX-212)", () => {
     expect(s.request).toHaveBeenCalledTimes(1);
   });
 
-  it("asks once while a lock is held or a request is pending, however often it is nudged", async () => {
+  it("asks once while a lock is held, however often it is nudged", async () => {
     const s = stage();
     s.start();
     await settle();
@@ -179,6 +179,16 @@ describe("the page takes the screen lock again when it has lost it (UX-212)", ()
     await settle();
     await settle();
     expect(s.request).toHaveBeenCalledTimes(2);
+  });
+
+  it("asks once when nudged during a pending request that is then granted", async () => {
+    const s = stage();
+    const first = s.holdNextRequest();
+    s.start();
+    s.tap();
+    first.grant();
+    await settle();
+    expect(s.request).toHaveBeenCalledTimes(1);
   });
 
   it("forgets a lock the browser says it dropped, even if it never marks it released", async () => {
