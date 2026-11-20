@@ -91,6 +91,9 @@ export function stage(visibility: Visibility = "visible") {
     swipe() {
       doc.dispatchEvent(new Event("pointerdown"));
     },
+    press() {
+      doc.dispatchEvent(new Event("keydown"));
+    },
     /** The browser drops every lock, as it does when the page leaves view. */
     dropLocks() {
       for (const lock of service.locks) {

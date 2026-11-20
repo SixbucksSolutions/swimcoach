@@ -3,7 +3,7 @@
 // touched in the last 30 minutes, it holds a screen wake lock, so the phone does not dim or lock
 // however short its Auto-Lock is. After 30 minutes with no touch it lets the lock go, so an OLED
 // screen is not left lit for hours by a page nobody is looking at; the phone then locks on its own
-// schedule. A touch or a return to view starts the 30 minutes again.
+// schedule. A touch, a key press or a return to view starts the 30 minutes again.
 //
 // The browser drops the lock whenever the page leaves view, so the page takes it again each time it
 // returns, and on a tap, which covers a browser that grants it only after a tap. A browser that lacks
@@ -121,6 +121,7 @@ export function keepAwake(nav, doc) {
   doc.addEventListener("visibilitychange", nudge);
   doc.addEventListener("pointerdown", nudge, quietly); // a swipe is a touch too
   doc.addEventListener("click", nudge, quietly); // a tap grants the browser's user activation
+  doc.addEventListener("keydown", nudge, quietly); // the arrow keys move between displays on a desktop
   nudge();
   return true;
 }
