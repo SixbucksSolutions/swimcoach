@@ -21,25 +21,46 @@ export function keepAwake(nav, doc) {
   /** @type {WakeLockSentinel|null} */
   let held = null;
   let asking = false;
+  // A nudge that came while a request was pending. A request made just before the page left view is
+  // refused, and the return to view that followed found it still pending, so ask once more.
+  let missed = false;
+
+  /** @param {WakeLockSentinel} lock */
+  function keep(lock) {
+    held = lock;
+    // The browser says when it drops the lock; `released` alone would leave a stale lock held if a
+    // browser ever dropped one without setting it.
+    lock.addEventListener("release", () => {
+      if (held === lock) {
+        held = null;
+      }
+    });
+  }
+
   function take() {
-    if (asking || doc.visibilityState !== "visible" || (held !== null && !held.released)) {
+    if (doc.visibilityState !== "visible" || (held !== null && !held.released)) {
+      return;
+    }
+    if (asking) {
+      missed = true;
       return;
     }
     asking = true;
+    missed = false;
     locks
       .request("screen")
-      .then(
-        (lock) => {
-          held = lock;
-        },
-        () => {
-          // Refused: the phone locks on its own schedule; the next return to view or tap asks again.
-        },
-      )
+      .then(keep, () => {
+        // Refused: the phone locks on its own schedule; the next return to view or tap asks again.
+      })
       .finally(() => {
         asking = false;
+        if (missed) {
+          missed = false;
+          take();
+        }
       });
   }
+
   doc.addEventListener("visibilitychange", take);
   doc.addEventListener("click", take, { capture: true, passive: true });
   take();
