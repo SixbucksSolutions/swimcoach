@@ -6,6 +6,7 @@
 //   nav.js      the displays, drawn through morph(), the dots, taps, swipes and the title
 //   alerts.js   the bell and the chime
 //   dom.js      shared DOM helpers and the breathing sync
+//   wakelock.js the screen wake lock that keeps the phone from dimming or locking
 // The wiring runs only when this module loads into public/index.html, which carries no test hook.
 
 import { alertOnNewAsk, onBell, paintBell } from "./alerts.js";
@@ -14,6 +15,7 @@ import { ALL } from "./format.js";
 import { fitOverview, go, onKey, onTap, render, syncDots } from "./nav.js";
 import { fontsLoaded } from "./overview.js";
 import { signedOut, startPolling } from "./poll.js";
+import { keepAwake } from "./wakelock.js";
 
 /** @import { View } from "./view.js" */
 
@@ -146,6 +148,7 @@ function reveal() {
 function start() {
   listen();
   paintBell();
+  keepAwake(navigator, document);
   const firstPoll = startPolling(onView);
   const cap = new Promise((resolve) => {
     setTimeout(resolve, REVEAL_CAP_MS);
