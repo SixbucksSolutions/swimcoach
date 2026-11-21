@@ -3,7 +3,58 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
-## Resume here (2026-11-15, evening; cards #0044 to #0051)
+## Resume here (2026-11-20; cards #0052 to #0061)
+
+- **Nine cards shipped since 2026-11-15; Terry completed every one but #0061.** Code went card, branch,
+  PR, two review votes (the lead's and an independent `Opus 5.5/high` subagent's), auto-merge, deploy;
+  #0055 was docs only and went straight to `main`:
+
+  | Card | PR | Change |
+  |---|---|---|
+  | #0052 | #68 | `scripts/localswim.ps1` runs the live service in `C:\Projects\localswim` |
+  | #0053 | #69 | It finds the service receipt in `%LOCALAPPDATA%\localswim-v2` first |
+  | #0054 | #70 | `scripts/localswim.sh` for agents on agentspace (Linux) |
+  | #0055 | none | AGENTS.md: two review votes, the lead merges with auto-merge, lead-only docs pushes |
+  | #0056 | #71 | agentbox renamed agentspace in docs and the localswim scripts |
+  | #0059 | #72 | The page holds a Screen Wake Lock while in view (UX-212); passed on Terry's phone |
+  | #0060 | #73 | It lets the lock go after 30 minutes untouched, against OLED burn-in (UX-213) |
+  | #0061 | #74 | `scripts/localswim.ps1` reads the Bot credential from `bot.json`, not `bot.xml` |
+
+  #0057 and #0058 were agentspace's throwaway lease checks, archived. The UX ledger is at 213 rows,
+  60 superseded.
+- **Waiting on Terry:**
+  - #0061 sits in Backlog (merged as `398ca40`, deployed, commented). The Bot cannot move it out; once
+    Terry moves it to In Progress, the agent moves it to Ready for review.
+  - UX-213's manual check: leave the home-screen app untouched with Auto-Lock at 30 s; it MUST stay
+    lit past 3 minutes and MUST lock within about a minute after the 30 minutes run out. Terry
+    completed #0060 before this was recorded as observed.
+- **The Backlog rule below still binds, and was broken on 2026-11-19:** #0060 was created in Backlog
+  instead of Ready For Work, and Terry had to move it out by hand. An agent MUST create a card it will
+  work in Ready For Work.
+- **Decided and not to be re-proposed:** a 1 px page shift against burn-in was built and dropped
+  before review (#0060). Terry: "most pixels that aren't black are the same color"; a solid block
+  wears evenly however it moves, so a shift only softens a ghost's edges. The 30-minute cap does the
+  work. Rotating between displays was rejected too: the header does not move, and it would switch the
+  display while Terry reads it.
+- **The watcher reads `bot.json` too** (localswim board card #0616, watcher commit `7444b0f`). localswim
+  PR #13 moved the launch credentials from Export-Clixml XML to JSON; the spec is in
+  `C:\Projects\localswim\docs\windows-operations.md`, "The service receipt and credential files".
+- **The `swimcoach` board's lanes for moves:** In progress is `a1e1c1f7-f109-4290-acae-468d89e08ffb`,
+  Ready for review is `f8ff48db-d7d8-4664-8d4f-7ad16901f4c3`. `scripts/localswim.ps1 board get --view
+  lanes <board>` lists them; a plain `board get` does not.
+- **Working notes:**
+  - Biome's `all` preset includes its Qwik rules: an arrow function assigned to a `const` trips
+    `useQwikValidLexicalScope`, so page and test code uses `function` declarations. Functions and
+    `describe` blocks MUST stay under 50 lines (`noExcessiveLinesPerFunction`); shared test helpers go
+    in a `*-stand-ins.ts` file.
+  - happy-dom has no `navigator.wakeLock`, so the controller tests take `keepAwake`'s "not offered"
+    path; `test/page/wakelock*.ts` use their own stand-ins.
+  - A side session started without its own worktree shares `C:\Projects\swimcoach`, and can leave it
+    on a card branch that GitHub deletes at merge. After such a session merges, switch back to `main`
+    and pull.
+- **Still open from before:** the fake-data motion test (below, "Next").
+
+## Earlier resume point (2026-11-15, evening; cards #0044 to #0051)
 
 - **Eight cards shipped and Terry completed every one; nothing is in flight.** Each went card, branch,
   PR, independent `Opus 5.5/high` review, squash-merge, deploy, Ready for review, and Terry checked
