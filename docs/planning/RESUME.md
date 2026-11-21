@@ -3,9 +3,9 @@
 First written 2026-11-13 and kept current since, so the next session starts exactly here. RFC 2119
 keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
-## Resume here (2026-11-20; cards #0052 to #0061)
+## Resume here (2026-11-20; cards #0052 to #0062)
 
-- **Eight cards shipped since 2026-11-15, and Terry completed every one.** Code went card, branch,
+- **Nine cards shipped since 2026-11-15; Terry has completed all but #0062.** Code went card, branch,
   PR, two review votes (the lead's and an independent `Opus 5.5/high` subagent's), auto-merge, deploy;
   #0055 was docs only and went straight to `main`:
 
@@ -19,14 +19,14 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
   | #0059 | #72 | The page holds a Screen Wake Lock while in view (UX-212); passed on Terry's phone |
   | #0060 | #73 | It lets the lock go after 30 minutes untouched, against OLED burn-in (UX-213) |
   | #0061 | #74 | `scripts/localswim.ps1` reads the Bot credential from `bot.json`, not `bot.xml` |
+  | #0062 | #75 | UX-213's phone check recorded as passed |
 
   #0057 and #0058 were agentspace's throwaway lease checks, archived. The UX ledger is at 213 rows,
   60 superseded.
-- **Waiting on Terry:** UX-213's manual check. Leave the home-screen app untouched with Auto-Lock at
-  30 s; it MUST stay lit past 3 minutes and MUST lock within about a minute after the 30 minutes run
-  out. Terry completed #0060 before this was recorded as observed. A Bot-made card in Backlog, such as
-  #0060 and #0061, waits for Terry to move it to In Progress; the agent then moves it to Ready for
-  review.
+- **Nothing waits on Terry but closing #0062.** UX-213's phone check passed on 2026-11-20 and is recorded by #0062
+  (PR #75): with Auto-Lock at 30 s, the page locked after 30 minutes untouched, and a touch extended
+  it. A Bot-made card in Backlog, such as #0060 and #0061, waits for Terry to move it to In Progress;
+  the agent then moves it to Ready for review.
 - **The Backlog rule below still binds, and was broken on 2026-11-19:** #0060 was created in Backlog
   instead of Ready For Work, and Terry had to move it out by hand. An agent MUST create a card it will
   work in Ready For Work.
