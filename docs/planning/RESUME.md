@@ -5,7 +5,7 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
 ## Resume here (2026-11-20; cards #0052 to #0062)
 
-- **Nine cards shipped since 2026-11-15; Terry has completed all but #0062.** Code went card, branch,
+- **Nine cards shipped since 2026-11-15, and Terry completed every one.** Code went card, branch,
   PR, two review votes (the lead's and an independent `Opus 5.5/high` subagent's), auto-merge, deploy;
   #0055 was docs only and went straight to `main`:
 
@@ -23,7 +23,7 @@ keywords; the capitals are load-bearing. **Read this first, then `AGENTS.md`.**
 
   #0057 and #0058 were agentspace's throwaway lease checks, archived. The UX ledger is at 213 rows,
   60 superseded.
-- **Nothing waits on Terry but closing #0062.** UX-213's phone check passed on 2026-11-20 and is recorded by #0062
+- **Nothing waits on Terry; nothing is in flight.** UX-213's phone check passed on 2026-11-20 and is recorded by #0062
   (PR #75): with Auto-Lock at 30 s, the page locked after 30 minutes untouched, and a touch extended
   it. A Bot-made card in Backlog, such as #0060 and #0061, waits for Terry to move it to In Progress;
   the agent then moves it to Ready for review.
