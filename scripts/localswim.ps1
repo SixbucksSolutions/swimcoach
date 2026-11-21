@@ -61,21 +61,25 @@ function Read-BotToken([string]$File) {
     }
     # ConvertFrom-Json refuses member names that differ only in case.
     $credential = $text | ConvertFrom-Json
-    $names = @($credential.PSObject.Properties.Name)
+    $names = @($credential.PSObject.Properties | ForEach-Object Name)
     $expected = 'format', 'format_version', 'role', 'token_dpapi_hex'
     if ($names.Count -ne 4 -or @($names | Where-Object { $_ -cnotin $expected }).Count -ne 0) {
         throw "Unsupported credential format in ${File}: members are not exactly $($expected -join ', ')."
     }
+    # Each string member MUST be checked as a string first: -cne with an array on its left filters
+    # the array instead of comparing it, so ["bot"] or [] would pass.
     $version = $credential.format_version
-    if ($credential.format -cne 'localswim-credential' -or
+    if ($credential.format -isnot [string] -or $credential.format -cne 'localswim-credential' -or
         -not ($version -is [int] -or $version -is [long]) -or $version -ne 1) {
         throw "Unsupported credential format in ${File}: not localswim-credential format_version 1."
     }
-    if ($credential.role -cne 'bot') {
+    if ($credential.role -isnot [string] -or $credential.role -cne 'bot') {
         throw "Unsupported credential format in ${File}: role is not bot."
     }
-    if ($credential.token_dpapi_hex -isnot [string]) {
-        throw "Unsupported credential format in ${File}: token_dpapi_hex is not a string."
+    # Checked before decryption, whose own error would repeat the malformed text.
+    if ($credential.token_dpapi_hex -isnot [string] -or
+        $credential.token_dpapi_hex -cnotmatch '^(?:[0-9a-f]{2})+\z') {
+        throw "Unsupported credential format in ${File}: token_dpapi_hex is not lowercase hexadecimal."
     }
     $token = [Net.NetworkCredential]::new(
         '', (ConvertTo-SecureString -String $credential.token_dpapi_hex)).Password
